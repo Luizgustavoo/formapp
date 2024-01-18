@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+
+class CustomTextStyle {
+  static TextStyle? title(BuildContext context) {
+    return const TextStyle(
+      fontSize: 20,
+      color: Colors.black87,
+      fontFamily: 'Poppins',
+    );
+  }
+
+  static TextStyle? subtitle(BuildContext context) {
+    return const TextStyle(
+      fontSize: 16,
+      color: Colors.black87,
+      fontFamily: 'Poppinss',
+    );
+  }
+
+  static TextStyle? subtitleNegrit(BuildContext context) {
+    return const TextStyle(
+      fontSize: 16,
+      color: Colors.black87,
+      fontFamily: 'Poppins',
+    );
+  }
+
+  static TextStyle? button(BuildContext context) {
+    return const TextStyle(
+      fontSize: 12,
+      color: Colors.white,
+      fontFamily: 'Poppins',
+    );
+  }
+
+  static TextStyle? button2(BuildContext context) {
+    return const TextStyle(
+      fontSize: 12,
+      color: Colors.black87,
+      fontFamily: 'Poppins',
+    );
+  }
+}
