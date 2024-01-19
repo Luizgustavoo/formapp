@@ -2,6 +2,7 @@ class FamilyMember {
   String nomeCompleto = '';
   String sexo = '';
   String cpf = '';
+  String trabalho = '';
   String dataNascimento = '';
   String estadoCivil = '';
   String tituloEleitor = '';
@@ -9,6 +10,9 @@ class FamilyMember {
   String contato = '';
   String redeSocial = '';
   String religiao = '';
+  String cargo = '';
+  String funcIgreja = '';
+  String igreja = '';
 
   FamilyMember({
     required this.nomeCompleto,
@@ -21,6 +25,10 @@ class FamilyMember {
     required this.contato,
     required this.redeSocial,
     required this.religiao,
+    required this.trabalho,
+    required this.cargo,
+    required this.funcIgreja,
+    required this.igreja,
   });
 
   // Método para criar uma cópia do FamilyMember com as alterações desejadas
@@ -35,6 +43,10 @@ class FamilyMember {
     String? contato,
     String? redeSocial,
     String? religiao,
+    String? trabalho,
+    String? cargo,
+    String? funcIgreja,
+    String? igreja,
   }) {
     return FamilyMember(
       nomeCompleto: nomeCompleto ?? this.nomeCompleto,
@@ -47,6 +59,10 @@ class FamilyMember {
       contato: contato ?? this.contato,
       redeSocial: redeSocial ?? this.redeSocial,
       religiao: religiao ?? this.religiao,
+      trabalho: trabalho ?? this.trabalho,
+      cargo: cargo ?? this.cargo,
+      funcIgreja: funcIgreja ?? this.funcIgreja,
+      igreja: igreja ?? this.igreja,
     );
   }
 
@@ -63,6 +79,10 @@ class FamilyMember {
       contato: map['contato'] ?? '',
       redeSocial: map['redeSocial'] ?? '',
       religiao: map['religiao'] ?? '',
+      trabalho: map['trabalho'] ?? '',
+      cargo: map['cargo'],
+      funcIgreja: map['funcaoIgreja'],
+      igreja: map['igreja'],
     );
   }
 
@@ -79,6 +99,10 @@ class FamilyMember {
       'contato': contato,
       'redeSocial': redeSocial,
       'religiao': religiao,
+      'trabalho': trabalho,
+      'funcaoIgreja': funcIgreja,
+      'cargo': cargo,
+      'igreja': igreja,
     };
   }
 }

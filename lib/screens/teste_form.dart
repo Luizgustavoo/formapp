@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/models/family_member.dart';
 import 'package:formapp/widgets/custom_text_style.dart';
 
 class TestForm extends StatefulWidget {
@@ -46,6 +47,24 @@ class _TestFormState extends State<TestForm> {
 
   // Variável para armazenar a foto
   String photoUrl = '';
+
+  FamilyMember familyMember = FamilyMember(
+    nomeCompleto: '',
+    sexo: '',
+    cpf: '',
+    dataNascimento: '',
+    estadoCivil: '',
+    tituloEleitor: '',
+    zonaEleitoral: '',
+    contato: '',
+    redeSocial: '',
+    religiao: '',
+    trabalho: '',
+    cargo: '',
+    funcIgreja: '',
+    igreja: '',
+  );
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -53,10 +72,11 @@ class _TestFormState extends State<TestForm> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Cadastro de Família'),
-          bottom: const TabBar(
-            tabs: [
+          bottom: TabBar(
+            labelStyle: CustomTextStyle.button2(context),
+            tabs: const [
               Tab(text: 'Família'),
-              Tab(text: 'Indivíduo'),
+              Tab(text: 'Composição Familiar'),
             ],
           ),
         ),
@@ -249,61 +269,103 @@ class _TestFormState extends State<TestForm> {
   }
 
   Widget _buildIndividualForm() {
-    return ListView(
-      children: [
-        Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            color: Colors.grey.withOpacity(0.30),
-            padding: const EdgeInsets.all(8.0),
-            child: Stepper(
-                elevation: 5,
-                controlsBuilder: (context, details) {
-                  return Row(
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          if (_currentStep > 0) {
-                            setState(() {
-                              _currentStep -= 1;
-                            });
-                          }
-                        },
-                        child: Text(
-                          'ANTERIOR',
-                          style: CustomTextStyle.button2(context),
+    return Form(
+      key: _individualFormKey,
+      child: ListView(
+        children: [
+          Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              color: Colors.grey.withOpacity(0.30),
+              padding: const EdgeInsets.all(8.0),
+              child: Stepper(
+                  elevation: 5,
+                  controlsBuilder: (context, details) {
+                    return Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            if (_currentStep > 0) {
+                              setState(() {
+                                _currentStep -= 1;
+                              });
+                            }
+                          },
+                          child: Text(
+                            'ANTERIOR',
+                            style: CustomTextStyle.button2(context),
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.orange.shade500,
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.orange.shade500,
+                          ),
+                          onPressed: () {
+                            if (_currentStep < 3) {
+                              setState(() {
+                                _currentStep += 1;
+                              });
+                            } else {
+                              // Chamar o método para salvar os dados
+                              _salvarDados();
+                            }
+                          },
+                          child: _currentStep >= 3
+                              ? Text(
+                                  'ADICIONAR',
+                                  style: CustomTextStyle.button(context),
+                                )
+                              : Text(
+                                  "PRÓXIMO",
+                                  style: CustomTextStyle.button(context),
+                                ),
                         ),
-                        onPressed: () {
-                          if (_currentStep < 3) {
-                            setState(() {
-                              _currentStep += 1;
-                            });
-                          } else {
-                            // Finalizar o formulário, salvar dados, etc.
-                          }
-                        },
-                        child: _currentStep >= 3
-                            ? Text(
-                                'ADICIONAR',
-                                style: CustomTextStyle.button(context),
-                              )
-                            : Text(
-                                "PRÓXIMO",
-                                style: CustomTextStyle.button(context),
-                              ),
-                      ),
-                    ],
-                  );
-                },
-                type: StepperType.horizontal,
-                currentStep: _currentStep,
-                steps: getSteppers())),
-      ],
+                      ],
+                    );
+                  },
+                  type: StepperType.horizontal,
+                  currentStep: _currentStep,
+                  steps: getSteppers())),
+          Card(
+            child: ExpansionTile(
+              title: const Text('Informações do Morador'),
+              children: [
+                ListTile(
+                  title: Text('Nome Completo: ${familyMember.nomeCompleto}'),
+                ),
+                ListTile(
+                  title: Text('Sexo: ${familyMember.tituloEleitor}'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  void _salvarDados() {
+    // Salvar informações da família
+    if (_familyFormKey.currentState!.validate()) {
+      // Atualizar as informações do morador com os dados do formulário
+      familyMember = familyMember.copyWith(
+        nomeCompleto: nomeCompleto,
+        sexo: sexo,
+        cpf: cpf,
+        dataNascimento: dataNascimento,
+        estadoCivil: estadoCivil,
+        tituloEleitor: tituloEleitor,
+        zonaEleitoral: zonaEleitoral,
+        contato: contato,
+        redeSocial: redeSocial,
+        religiao: religiao,
+      );
+
+      // Exemplo de impressão no console (substitua pelo código de salvamento real)
+      print('Informações da família salvas:');
+      print('Nome da Família: $familyName');
+      print('Informações do morador salvas:');
+      print(familyMember.toMap());
+    }
   }
 
   List<Step> getSteppers() => [
@@ -312,7 +374,7 @@ class _TestFormState extends State<TestForm> {
           content: Column(
             children: [
               CircleAvatar(
-                radius: 30,
+                radius: 20,
                 backgroundImage: photoUrl.isNotEmpty
                     ? NetworkImage(photoUrl)
                     : const AssetImage('assets/images/default_avatar.jpg')
@@ -342,8 +404,13 @@ class _TestFormState extends State<TestForm> {
                     flex: 2,
                     child: TextFormField(
                       decoration: const InputDecoration(
-                        labelText: 'Nome Completo',
-                      ),
+                          border: OutlineInputBorder(),
+                          labelText: 'Nome Completo'),
+                      onChanged: (value) {
+                        setState(() {
+                          familyMember.nomeCompleto = value;
+                        });
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, digite o nome da rua';
@@ -376,7 +443,7 @@ class _TestFormState extends State<TestForm> {
                 value: sexo,
                 onChanged: (value) {
                   setState(() {
-                    sexo = value!;
+                    familyMember.sexo = value!;
                   });
                 },
                 items: ['Masculino', 'Feminino']
@@ -386,14 +453,15 @@ class _TestFormState extends State<TestForm> {
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: const InputDecoration(labelText: 'Sexo'),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Sexo'),
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 value: civil,
                 onChanged: (value) {
                   setState(() {
-                    sexo = value!;
+                    familyMember.estadoCivil = value!;
                   });
                 },
                 items: [
@@ -407,7 +475,8 @@ class _TestFormState extends State<TestForm> {
                     child: Text(value),
                   );
                 }).toList(),
-                decoration: const InputDecoration(labelText: 'Estado Civil'),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Estado Civil'),
               ),
               const SizedBox(height: 10)
             ],
@@ -420,32 +489,36 @@ class _TestFormState extends State<TestForm> {
           content: Column(
             children: [
               TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Data de Nascimento'),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Data de Nascimento'),
                 onChanged: (value) {
-                  tituloEleitor = value;
+                  familyMember.dataNascimento = value;
                 },
               ),
               const SizedBox(height: 8),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'CPF'),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'CPF'),
                 onChanged: (value) {
-                  tituloEleitor = value;
+                  familyMember.cpf = value;
                 },
               ),
               const SizedBox(height: 8),
               TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Título de Eleitor'),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Título de Eleitor'),
                 onChanged: (value) {
-                  tituloEleitor = value;
+                  familyMember.tituloEleitor = value;
                 },
               ),
               const SizedBox(height: 8),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Zona Eleitoral'),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Zona Eleitoral'),
                 onChanged: (value) {
-                  zonaEleitoral = value;
+                  familyMember.zonaEleitoral = value;
                 },
               ),
               const SizedBox(height: 10)
@@ -458,30 +531,34 @@ class _TestFormState extends State<TestForm> {
           title: const Text(''),
           content: Column(children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Trabalho'),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Trabalho'),
               onChanged: (value) {
-                contato = value;
+                familyMember.trabalho = value;
               },
             ),
             const SizedBox(height: 8),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Cargo'),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Cargo'),
               onChanged: (value) {
-                redeSocial = value;
+                familyMember.cargo = value;
               },
             ),
             const SizedBox(height: 8),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Telefone'),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Telefone'),
               onChanged: (value) {
-                redeSocial = value;
+                familyMember.contato = value;
               },
             ),
             const SizedBox(height: 8),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Rede Social'),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Rede Social'),
               onChanged: (value) {
-                redeSocial = value;
+                familyMember.redeSocial = value;
               },
             ),
             const SizedBox(height: 10),
@@ -493,9 +570,10 @@ class _TestFormState extends State<TestForm> {
           title: const Text(''),
           content: Column(children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Igreja'),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Igreja'),
               onChanged: (value) {
-                contato = value;
+                familyMember.igreja = value;
               },
             ),
             const SizedBox(height: 8),
@@ -503,7 +581,7 @@ class _TestFormState extends State<TestForm> {
               value: religiao,
               onChanged: (value) {
                 setState(() {
-                  religiao = value!;
+                  familyMember.religiao = value!;
                 });
               },
               items: ['Católica', 'Evangélica', 'Outra']
@@ -513,13 +591,15 @@ class _TestFormState extends State<TestForm> {
                   child: Text(value),
                 );
               }).toList(),
-              decoration: const InputDecoration(labelText: 'Religião'),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Religião'),
             ),
             const SizedBox(height: 8),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Função/Igreja'),
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Função/Igreja'),
               onChanged: (value) {
-                redeSocial = value;
+                familyMember.funcIgreja = value;
               },
             ),
             const SizedBox(height: 10)
