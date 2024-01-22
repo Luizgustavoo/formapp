@@ -40,4 +40,12 @@ class CustomTextStyle {
       fontFamily: 'Poppins',
     );
   }
+
+  static TextStyle? form(BuildContext context) {
+    return const TextStyle(
+      fontSize: 14,
+      color: Colors.black87,
+      fontFamily: 'Poppinss',
+    );
+  }
 }

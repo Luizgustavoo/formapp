@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:formapp/screens/home_page.dart';
+import 'package:formapp/screens/family/home_page_family.dart';
 import 'package:formapp/utils/custom_route.dart';
 
 void main() {
@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
               borderRadius: BorderRadius.circular(5),
             ),
           )),
-
           textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
             shape: RoundedRectangleBorder(
@@ -42,8 +41,17 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontFamily: 'Poppins',
               color: Colors.white,
-            ), //TextStyle
-          ), //AppBarThem
+            ),
+          ),
+          tabBarTheme: TabBarTheme(
+            indicatorColor: Colors.grey.shade900,
+          ),
+          cardTheme: CardTheme(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5))),
+          expansionTileTheme: const ExpansionTileThemeData(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
           inputDecorationTheme: InputDecorationTheme(
             contentPadding: const EdgeInsets.all(10),
             isDense: true,
@@ -69,6 +77,6 @@ class MyApp extends StatelessWidget {
             TargetPlatform.iOS: CustomPageTransitionsBuilder(),
           }),
         ),
-        home: const HomePage());
+        home: const HomePageFamily());
   }
 }

@@ -1,6 +1,7 @@
+// ignore: file_names
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
-import 'package:formapp/widgets/custom_text_style.dart';
+import 'package:formapp/utils/custom_text_style.dart';
 
 class CreateFamily extends StatefulWidget {
   const CreateFamily({super.key});
