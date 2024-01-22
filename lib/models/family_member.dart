@@ -5,6 +5,7 @@ class FamilyMember {
   String trabalho = '';
   String dataNascimento = '';
   String estadoCivil = '';
+  String provedor = '';
   String tituloEleitor = '';
   String zonaEleitoral = '';
   String contato = '';
@@ -29,6 +30,7 @@ class FamilyMember {
     required this.cargo,
     required this.funcIgreja,
     required this.igreja,
+    required this.provedor,
   });
 
   // Método para criar uma cópia do FamilyMember com as alterações desejadas
@@ -63,6 +65,7 @@ class FamilyMember {
       cargo: cargo ?? this.cargo,
       funcIgreja: funcIgreja ?? this.funcIgreja,
       igreja: igreja ?? this.igreja,
+      provedor: provedor,
     );
   }
 
@@ -83,6 +86,7 @@ class FamilyMember {
       cargo: map['cargo'],
       funcIgreja: map['funcaoIgreja'],
       igreja: map['igreja'],
+      provedor: map['provedor'],
     );
   }
 
@@ -103,6 +107,7 @@ class FamilyMember {
       'funcaoIgreja': funcIgreja,
       'cargo': cargo,
       'igreja': igreja,
+      'provedor': provedor,
     };
   }
 }

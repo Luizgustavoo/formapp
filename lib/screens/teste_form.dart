@@ -6,46 +6,28 @@ class TestForm extends StatefulWidget {
   const TestForm({super.key});
 
   @override
-  _TestFormState createState() => _TestFormState();
+  State<TestForm> createState() => _TestFormState();
 }
 
 class _TestFormState extends State<TestForm> {
   final GlobalKey<FormState> _familyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _individualFormKey = GlobalKey<FormState>();
 
-  // Dados da Família
-  String familyName = '';
-  String cep = '';
-  String neighborhood = '';
-  String street = '';
-  String number = '';
-  String city = '';
-  String uf = '';
-
   int _currentStep = 0;
 
-  // Dados Individuais
-  // Dados do formulário
-  String nomeCompleto = '';
   String sexo = 'Masculino';
-  String cpf = '';
-  String dataNascimento = '';
-  String estadoCivil = '';
-  String tituloEleitor = '';
-  String zonaEleitoral = '';
-  String contato = '';
   String civil = 'Solteiro(a)';
-  String redeSocial = '';
   String religiao = 'Católica';
+  String provedor = 'Não';
 
-  // Adicione os demais campos individuais aqui conforme necessário
-
-  String selectedSexo = 'Masculino';
   bool _residenceOwn = false;
   bool provedorCheckboxValue = false;
   final _formKey = GlobalKey<FormState>();
 
-  // Variável para armazenar a foto
+  int editedFamilyMemberIndex = -1;
+
+  List<FamilyMember> familyMembersList = [];
+
   String photoUrl = '';
 
   FamilyMember familyMember = FamilyMember(
@@ -63,7 +45,36 @@ class _TestFormState extends State<TestForm> {
     cargo: '',
     funcIgreja: '',
     igreja: '',
+    provedor: '',
   );
+
+  TextEditingController nomeCompletoController = TextEditingController();
+  TextEditingController dataNascimentoController = TextEditingController();
+  TextEditingController cpfController = TextEditingController();
+  TextEditingController tituloEleitorController = TextEditingController();
+  TextEditingController zonaEleitoralController = TextEditingController();
+  TextEditingController trabalhoController = TextEditingController();
+  TextEditingController cargoController = TextEditingController();
+  TextEditingController contatoController = TextEditingController();
+  TextEditingController redeSocialController = TextEditingController();
+  TextEditingController igrejaController = TextEditingController();
+  TextEditingController funcIgrejaController = TextEditingController();
+
+  @override
+  void dispose() {
+    nomeCompletoController.dispose();
+    dataNascimentoController.dispose();
+    cpfController.dispose();
+    tituloEleitorController.dispose();
+    zonaEleitoralController.dispose();
+    trabalhoController.dispose();
+    cargoController.dispose();
+    contatoController.dispose();
+    redeSocialController.dispose();
+    igrejaController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -282,42 +293,56 @@ class _TestFormState extends State<TestForm> {
                   controlsBuilder: (context, details) {
                     return Row(
                       children: [
-                        TextButton(
-                          onPressed: () {
-                            if (_currentStep > 0) {
-                              setState(() {
-                                _currentStep -= 1;
-                              });
-                            }
-                          },
-                          child: Text(
-                            'ANTERIOR',
-                            style: CustomTextStyle.button2(context),
+                        SizedBox(
+                          height: 30,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.all(5),
+                            ),
+                            onPressed: () {
+                              if (_currentStep > 0) {
+                                setState(() {
+                                  _currentStep -= 1;
+                                });
+                              }
+                            },
+                            child: Text(
+                              'ANTERIOR',
+                              style: CustomTextStyle.button2(context),
+                            ),
                           ),
                         ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.orange.shade500,
+                        SizedBox(
+                          height: 30,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.all(5),
+                              backgroundColor: Colors.orange.shade500,
+                            ),
+                            onPressed: () {
+                              if (_currentStep < 3) {
+                                setState(() {
+                                  _currentStep += 1;
+                                });
+                              } else if (_individualFormKey.currentState!
+                                  .validate()) {
+                                setState(() {
+                                  familyMembersList.add(familyMember);
+
+                                  _individualFormKey.currentState!.reset();
+                                });
+                              }
+                            },
+                            child: _currentStep >= 3
+                                ? Text(
+                                    'ADICIONAR',
+                                    style: CustomTextStyle.button(context),
+                                  )
+                                : Text(
+                                    "PRÓXIMO",
+                                    style: CustomTextStyle.button(context),
+                                  ),
                           ),
-                          onPressed: () {
-                            if (_currentStep < 3) {
-                              setState(() {
-                                _currentStep += 1;
-                              });
-                            } else {
-                              // Chamar o método para salvar os dados
-                              _salvarDados();
-                            }
-                          },
-                          child: _currentStep >= 3
-                              ? Text(
-                                  'ADICIONAR',
-                                  style: CustomTextStyle.button(context),
-                                )
-                              : Text(
-                                  "PRÓXIMO",
-                                  style: CustomTextStyle.button(context),
-                                ),
                         ),
                       ],
                     );
@@ -327,15 +352,41 @@ class _TestFormState extends State<TestForm> {
                   steps: getSteppers())),
           Card(
             child: ExpansionTile(
-              title: const Text('Informações do Morador'),
-              children: [
-                ListTile(
-                  title: Text('Nome Completo: ${familyMember.nomeCompleto}'),
-                ),
-                ListTile(
-                  title: Text('Sexo: ${familyMember.tituloEleitor}'),
-                ),
-              ],
+              title: const Text('Composição Familiar'),
+              children: familyMembersList.map((member) {
+                return Card(
+                  color: Colors.orange.shade200,
+                  child: ListTile(
+                    leading: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          editedFamilyMemberIndex =
+                              familyMembersList.indexOf(member);
+
+                          nomeCompletoController.text = member.nomeCompleto;
+                          dataNascimentoController.text = member.dataNascimento;
+                          cpfController.text = member.cpf;
+                          tituloEleitorController.text = member.tituloEleitor;
+                          zonaEleitoralController.text = member.zonaEleitoral;
+                          trabalhoController.text = member.trabalho;
+                          cargoController.text = member.cargo;
+                          contatoController.text = member.contato;
+                          redeSocialController.text = member.redeSocial;
+                          igrejaController.text = member.igreja;
+                          funcIgrejaController.text = member.funcIgreja;
+
+                          _currentStep = 0;
+                        });
+                      },
+                      icon: const Icon(Icons.edit_rounded),
+                    ),
+                    trailing: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.delete_rounded)),
+                    title: Text('Nome Completo: ${member.nomeCompleto}'),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ],
@@ -343,100 +394,76 @@ class _TestFormState extends State<TestForm> {
     );
   }
 
-  void _salvarDados() {
-    // Salvar informações da família
-    if (_familyFormKey.currentState!.validate()) {
-      // Atualizar as informações do morador com os dados do formulário
-      familyMember = familyMember.copyWith(
-        nomeCompleto: nomeCompleto,
-        sexo: sexo,
-        cpf: cpf,
-        dataNascimento: dataNascimento,
-        estadoCivil: estadoCivil,
-        tituloEleitor: tituloEleitor,
-        zonaEleitoral: zonaEleitoral,
-        contato: contato,
-        redeSocial: redeSocial,
-        religiao: religiao,
-      );
-
-      // Exemplo de impressão no console (substitua pelo código de salvamento real)
-      print('Informações da família salvas:');
-      print('Nome da Família: $familyName');
-      print('Informações do morador salvas:');
-      print(familyMember.toMap());
-    }
-  }
-
   List<Step> getSteppers() => [
         Step(
           title: const Text(''),
           content: Column(
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: photoUrl.isNotEmpty
-                    ? NetworkImage(photoUrl)
-                    : const AssetImage('assets/images/default_avatar.jpg')
-                        as ImageProvider,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    backgroundBlendMode: BlendMode
-                        .multiply, // Ajuste o blend mode conforme necessário
-                    color: Colors
-                        .grey[300], // Ajuste a cor de fundo conforme necessário
+              Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: CircleAvatar(
+                      radius: 35,
+                      backgroundImage: photoUrl.isNotEmpty
+                          ? NetworkImage(photoUrl)
+                          : const AssetImage('assets/images/default_avatar.jpg')
+                              as ImageProvider,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          backgroundBlendMode: BlendMode.multiply,
+                          color: Colors.grey[300],
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.camera_alt),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
                   ),
-                  child: IconButton(
-                    icon: const Icon(Icons.camera_alt),
-                    onPressed: () {
-                      // Adicione a lógica para carregar a foto aqui
-                    },
-                  ),
-                ),
+                  Expanded(
+                      flex: 3,
+                      child: DropdownButtonFormField<String>(
+                        value: civil,
+                        onChanged: (value) {
+                          setState(() {
+                            familyMember.provedor = value!;
+                          });
+                        },
+                        items: [
+                          'Não',
+                          'Sim',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Provedor'),
+                      )),
+                ],
               ),
               const SizedBox(
                 height: 8,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Nome Completo'),
-                      onChanged: (value) {
-                        setState(() {
-                          familyMember.nomeCompleto = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor, digite o nome da rua';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 0),
-                  Expanded(
-                    flex: 3,
-                    child: CheckboxListTile(
-                      activeColor: Colors.orange.shade500,
-                      title: Text(
-                        'PROVEDOR?',
-                        style: CustomTextStyle.button2(context),
-                      ),
-                      value: provedorCheckboxValue,
-                      onChanged: (value) {
-                        setState(() {
-                          provedorCheckboxValue = value!;
-                        });
-                      },
-                    ),
-                  ),
-                ],
+              TextFormField(
+                controller: nomeCompletoController,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Nome Completo'),
+                onChanged: (value) {
+                  setState(() {
+                    familyMember.nomeCompleto = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, digite o nome da rua';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
@@ -478,7 +505,7 @@ class _TestFormState extends State<TestForm> {
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(), labelText: 'Estado Civil'),
               ),
-              const SizedBox(height: 10)
+              const SizedBox(height: 10),
             ],
           ),
           state: _currentStep == 0 ? StepState.editing : StepState.complete,
@@ -531,6 +558,7 @@ class _TestFormState extends State<TestForm> {
           title: const Text(''),
           content: Column(children: [
             TextFormField(
+              controller: trabalhoController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Trabalho'),
               onChanged: (value) {
@@ -539,6 +567,7 @@ class _TestFormState extends State<TestForm> {
             ),
             const SizedBox(height: 8),
             TextFormField(
+              controller: cargoController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Cargo'),
               onChanged: (value) {
@@ -547,6 +576,7 @@ class _TestFormState extends State<TestForm> {
             ),
             const SizedBox(height: 8),
             TextFormField(
+              controller: contatoController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Telefone'),
               onChanged: (value) {
@@ -555,6 +585,7 @@ class _TestFormState extends State<TestForm> {
             ),
             const SizedBox(height: 8),
             TextFormField(
+              controller: redeSocialController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Rede Social'),
               onChanged: (value) {
@@ -570,6 +601,7 @@ class _TestFormState extends State<TestForm> {
           title: const Text(''),
           content: Column(children: [
             TextFormField(
+              controller: igrejaController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Igreja'),
               onChanged: (value) {
@@ -596,6 +628,7 @@ class _TestFormState extends State<TestForm> {
             ),
             const SizedBox(height: 8),
             TextFormField(
+              controller: funcIgrejaController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Função/Igreja'),
               onChanged: (value) {
@@ -608,5 +641,4 @@ class _TestFormState extends State<TestForm> {
           isActive: _currentStep == 3,
         ),
       ];
-  // Adicione métodos para salvar os dados conforme necessário
 }
