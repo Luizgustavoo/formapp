@@ -386,6 +386,9 @@ class _CreateFamilyState extends State<CreateFamily> {
                   steps: getSteppers())),
           Card(
             child: ExpansionTile(
+              shape:
+                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+              initiallyExpanded: true,
               title: const Text('Composição Familiar'),
               children: familyMembersList.map((member) {
                 return Card(
@@ -396,7 +399,6 @@ class _CreateFamilyState extends State<CreateFamily> {
                         setState(() {
                           editedFamilyMemberIndex =
                               familyMembersList.indexOf(member);
-
                           nomeCompletoController.text = member.nomeCompleto;
                           dataNascimentoController.text = member.dataNascimento;
                           cpfController.text = member.cpf;
@@ -408,7 +410,6 @@ class _CreateFamilyState extends State<CreateFamily> {
                           redeSocialController.text = member.redeSocial;
                           igrejaController.text = member.igreja;
                           funcIgrejaController.text = member.funcIgreja;
-
                           _currentStep = 0;
                         });
                       },

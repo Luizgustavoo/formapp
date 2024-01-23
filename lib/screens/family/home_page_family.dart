@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/screens/family/widgets/custom_drawer_family.dart';
 import 'package:formapp/screens/family/widgets/custom_list_tile_family.dart';
 
 class HomePageFamily extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
       appBar: AppBar(
         title: const Text('NOME DA FAMILIA'),
       ),
-      // drawer: const CustomDrawer(),
+      drawer: const CustomDrawerFamily(),
       body: Column(
         children: [
           Column(
@@ -29,7 +30,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
               Container(
                 margin: const EdgeInsets.only(left: 12),
                 child: const Text(
-                  'Seus Familiares',
+                  'Composição Familiar',
                   style: TextStyle(
                     color: Colors.black87,
                     fontFamily: 'Poppins',

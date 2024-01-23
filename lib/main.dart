@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:formapp/screens/family/home_page_family.dart';
+import 'package:formapp/screens/login_page.dart';
 import 'package:formapp/utils/custom_route.dart';
 
 void main() {
@@ -77,6 +77,6 @@ class MyApp extends StatelessWidget {
             TargetPlatform.iOS: CustomPageTransitionsBuilder(),
           }),
         ),
-        home: const HomePageFamily());
+        home: const LoginPage());
   }
 }

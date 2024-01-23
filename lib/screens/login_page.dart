@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/screens/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -160,45 +161,6 @@ class _LoginPageState extends State<LoginPage> {
                                   contentPadding: const EdgeInsets.all(0),
                                 ),
                                 _gap(),
-                                // Padding(
-                                //   padding: const EdgeInsets.only(bottom: 13),
-                                //   child: Row(
-                                //     mainAxisAlignment:
-                                //         MainAxisAlignment.center,
-                                //     children: [
-                                //       ToggleSwitch(
-                                //         initialLabelIndex: 0,
-                                //         activeFgColor: Colors.white,
-                                //         minWidth: 130.0,
-                                //         minHeight: 38.0,
-                                //         cornerRadius: 10.0,
-                                //         onToggle: (index) =>
-                                //             onToggle = index!,
-                                //         labels: const [
-                                //           'CREDENCIADO',
-                                //           'FAMILIAR'
-                                //         ],
-                                //         inactiveBgColor: Colors.transparent,
-                                //         activeBgColor: [
-                                //           Colors.orange.shade500,
-                                //         ],
-                                //         customTextStyles: const [
-                                //           TextStyle(
-                                //             color: Colors.black87,
-                                //             fontSize: 14.0,
-                                //             fontFamily: 'Poppins',
-                                //           ),
-                                //           TextStyle(
-                                //             color: Colors.black87,
-                                //             fontSize: 14.0,
-                                //             fontFamily: 'Poppins',
-                                //           )
-                                //         ],
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
-                                // _gap(),
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
@@ -217,10 +179,15 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      if (_formKey.currentState?.validate() ??
-                                          false) {
-                                        /// do something
-                                      }
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  const HomePage())));
+                                      // if (_formKey.currentState?.validate() ??
+                                      //     false) {
+                                      //   /// do something
+                                      // }
                                     },
                                   ),
                                 ),
