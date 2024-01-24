@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/screens/create_family.dart';
+import 'package:formapp/screens/create_user.dart';
 import 'package:formapp/screens/list_family.dart';
 import 'package:formapp/widgets/custom_card.dart';
 import 'package:formapp/widgets/custom_drawer.dart';
@@ -16,12 +17,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white.withAlpha(230),
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.notifications_rounded))
-        ],
-      ),
+      appBar: AppBar(),
       drawer: const CustomDrawer(),
       body: Column(
         children: [
@@ -75,13 +71,13 @@ class CategoryItems extends StatelessWidget {
         shrinkWrap: true,
         childAspectRatio: 1,
         scrollDirection: Axis.vertical,
-        crossAxisCount: 2,
+        crossAxisCount: 3,
         crossAxisSpacing: 2,
         mainAxisSpacing: 2,
         padding: const EdgeInsets.all(8),
         children: [
           CustomCard(
-              title: 'Cadastro de Família',
+              title: 'Controle de Família',
               ontap: () {
                 Navigator.push(
                     context,
@@ -91,7 +87,12 @@ class CategoryItems extends StatelessWidget {
               imageUrl: 'assets/images/users.png'),
           CustomCard(
               title: 'Cadastro de Usuário',
-              ontap: () {},
+              ontap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => const CreateUser())));
+              },
               imageUrl: 'assets/images/user.png'),
           CustomCard(
               title: 'Listagem de Famílias',
@@ -100,6 +101,10 @@ class CategoryItems extends StatelessWidget {
                     MaterialPageRoute(builder: ((context) => ListFamily())));
               },
               imageUrl: 'assets/images/list.png'),
+          CustomCard(
+              title: 'Controle de Atendimento',
+              ontap: () {},
+              imageUrl: 'assets/images/atendimento.png'),
           CustomCard(
               title: 'Mensagens',
               ontap: () {},

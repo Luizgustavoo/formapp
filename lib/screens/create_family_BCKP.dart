@@ -1,16 +1,14 @@
-// ignore: file_names
-import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/utils/custom_text_style.dart';
 
-class CreateFamily extends StatefulWidget {
-  const CreateFamily({super.key});
+class CreateFamilyBCKP extends StatefulWidget {
+  const CreateFamilyBCKP({super.key});
 
   @override
-  State<CreateFamily> createState() => _CreateFamilyState();
+  State<CreateFamilyBCKP> createState() => _CreateFamilyBCKPState();
 }
 
-class _CreateFamilyState extends State<CreateFamily>
+class _CreateFamilyBCKPState extends State<CreateFamilyBCKP>
     with SingleTickerProviderStateMixin {
   late Animation<double> _animation;
   late AnimationController _animationController;
@@ -300,53 +298,53 @@ class _CreateFamilyState extends State<CreateFamily>
       // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
 
       //Init Floating Action Bubble
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
-        child: FloatingActionBubble(
-          // Menu items
-          items: [
-            // Floating action menu item
-            Bubble(
-              title: "Morador",
-              iconColor: Colors.white,
-              bubbleColor: Colors.orange.shade500,
-              icon: Icons.add_rounded,
-              titleStyle: const TextStyle(
-                  fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
-              onPress: () {
-                _animationController.reverse();
-              },
-            ),
-            // Floating action menu item
-            Bubble(
-              title: "Salvar",
-              iconColor: Colors.white,
-              bubbleColor: Colors.green,
-              icon: Icons.save_rounded,
-              titleStyle: const TextStyle(
-                  fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
-              onPress: () {
-                _animationController.reverse();
-              },
-            ),
-          ],
+      // floatingActionButton: Padding(
+      //   padding: const EdgeInsets.only(bottom: 5),
+      //   child: FloatingActionBubble(
+      //     // Menu items
+      //     items: [
+      //       // Floating action menu item
+      //       Bubble(
+      //         title: "Morador",
+      //         iconColor: Colors.white,
+      //         bubbleColor: Colors.orange.shade500,
+      //         icon: Icons.add_rounded,
+      //         titleStyle: const TextStyle(
+      //             fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
+      //         onPress: () {
+      //           _animationController.reverse();
+      //         },
+      //       ),
+      //       // Floating action menu item
+      //       Bubble(
+      //         title: "Salvar",
+      //         iconColor: Colors.white,
+      //         bubbleColor: Colors.green,
+      //         icon: Icons.save_rounded,
+      //         titleStyle: const TextStyle(
+      //             fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
+      //         onPress: () {
+      //           _animationController.reverse();
+      //         },
+      //       ),
+      //     ],
 
-          // animation controller
-          animation: _animation,
+      //     // animation controller
+      //     animation: _animation,
 
-          // On pressed change animation state
-          onPress: () => _animationController.isCompleted
-              ? _animationController.reverse()
-              : _animationController.forward(),
+      //     // On pressed change animation state
+      //     onPress: () => _animationController.isCompleted
+      //         ? _animationController.reverse()
+      //         : _animationController.forward(),
 
-          // Floating Action button Icon color
-          iconColor: Colors.white,
+      //     // Floating Action button Icon color
+      //     iconColor: Colors.white,
 
-          // Flaoting Action button Icon
-          iconData: Icons.menu_rounded,
-          backGroundColor: Colors.orange.shade500,
-        ),
-      ),
+      //     // Flaoting Action button Icon
+      //     iconData: Icons.menu_rounded,
+      //     backGroundColor: Colors.orange.shade500,
+      //   ),
+      // ),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/models/family_member.dart';
+import 'package:formapp/data/models/family_member.dart';
 import 'package:formapp/utils/custom_text_style.dart';
 
 class CreateFamily extends StatefulWidget {
@@ -109,24 +109,37 @@ class _CreateFamilyState extends State<CreateFamily> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Cadastro de Família'),
-          bottom: TabBar(
-            labelStyle: CustomTextStyle.button2(context),
-            labelColor: Colors.white,
-            tabs: const [
-              Tab(text: 'Família'),
-              Tab(text: 'Composição Familiar'),
+          appBar: AppBar(
+            title: const Text('Controle de Família'),
+            bottom: TabBar(
+              labelStyle: CustomTextStyle.button2(context),
+              labelColor: Colors.white,
+              tabs: const [
+                Tab(text: 'Família'),
+                Tab(text: 'Composição Familiar'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              _buildFamilyForm(),
+              _buildIndividualForm(),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildFamilyForm(),
-            _buildIndividualForm(),
-          ],
-        ),
-      ),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: FloatingActionButton(
+              elevation: 5,
+              onPressed: () {},
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              backgroundColor: Colors.orange.shade700,
+              child: const Icon(
+                Icons.save_outlined,
+                color: Colors.white,
+              ),
+            ),
+          )),
     );
   }
 
@@ -464,7 +477,7 @@ class _CreateFamilyState extends State<CreateFamily> {
                         style: CustomTextStyle.form(context),
                       ),
                       Switch(
-                        activeColor: Colors.green.shade700,
+                        activeColor: Colors.orange.shade700,
                         inactiveThumbColor: Colors.orange.shade500,
                         inactiveTrackColor: Colors.orange.shade100,
                         value: provedorCheckboxValue,
@@ -634,15 +647,6 @@ class _CreateFamilyState extends State<CreateFamily> {
         Step(
           title: const Text(''),
           content: Column(children: [
-            TextFormField(
-              controller: igrejaController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Igreja'),
-              onChanged: (value) {
-                familyMember.igreja = value;
-              },
-            ),
-            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: religiao,
               onChanged: (value) {
@@ -659,6 +663,15 @@ class _CreateFamilyState extends State<CreateFamily> {
               }).toList(),
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Religião'),
+            ),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: igrejaController,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(), labelText: 'Igreja'),
+              onChanged: (value) {
+                familyMember.igreja = value;
+              },
             ),
             const SizedBox(height: 8),
             TextFormField(
