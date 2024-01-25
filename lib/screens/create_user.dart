@@ -51,21 +51,27 @@ class _CreateUserState extends State<CreateUser> {
               children: [
                 TextFormField(
                   decoration: const InputDecoration(
-                      labelText: 'Nome Completo', border: OutlineInputBorder()),
+                      suffixIcon: Icon(Icons.person),
+                      labelText: 'Nome Completo',
+                      border: OutlineInputBorder()),
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
-                      labelText: 'Login', border: OutlineInputBorder()),
+                      suffixIcon: Icon(Icons.person),
+                      labelText: 'Login',
+                      border: OutlineInputBorder()),
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(
-                      labelText: 'Senha', border: OutlineInputBorder()),
+                      suffixIcon: Icon(Icons.lock),
+                      labelText: 'Senha',
+                      border: OutlineInputBorder()),
                 ),
                 const SizedBox(
                   height: 8,

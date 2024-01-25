@@ -245,5 +245,4 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _gap() => const SizedBox(height: 16);
-  Widget _gap2() => const SizedBox(height: 32);
 }

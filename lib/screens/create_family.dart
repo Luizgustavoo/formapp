@@ -123,7 +123,6 @@ class _CreateFamilyState extends State<CreateFamily>
         initialIndex: tabIndex,
         length: 2,
         child: Scaffold(
-          backgroundColor: Colors.white.withAlpha(220),
           appBar: AppBar(
             title: const Text('Controle de Família'),
             bottom: TabBar(
