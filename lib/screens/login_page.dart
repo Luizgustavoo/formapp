@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/screens/family/home_page_family.dart';
 import 'package:formapp/screens/home_page.dart';
+import 'package:formapp/utils/custom_text_style.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -39,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Card(
-                      color: Colors.white.withAlpha(220),
+                      color: Colors.white.withAlpha(190),
                       child: Container(
                         padding:
                             const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
@@ -62,21 +65,46 @@ class _LoginPageState extends State<LoginPage> {
                                         fontSize: 25,
                                       )),
                                 ),
-                                _gap2(),
+                                const SizedBox(height: 5),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ToggleSwitch(
+                                      initialLabelIndex: 0,
+                                      minWidth: 130,
+                                      minHeight: 30.0,
+                                      cornerRadius: 5.0,
+                                      onToggle: (index) => onToggle = index!,
+                                      labels: const ['CREDENCIADO', 'FAMILIAR'],
+                                      activeBgColor: [Colors.orange.shade500],
+                                      inactiveBgColor: Colors.transparent,
+                                      customTextStyles: const [
+                                        TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14.0,
+                                            fontFamily: 'Poppinss',
+                                            fontWeight: FontWeight.w900),
+                                        TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14.0,
+                                            fontFamily: 'Poppinss',
+                                            fontWeight: FontWeight.w900)
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
                                 TextFormField(
                                   validator: (value) {
-                                    // add email validation
                                     if (value == null || value.isEmpty) {
                                       return 'Por favor digite seu usuário';
                                     }
-
                                     bool emailValid = RegExp(
                                             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                         .hasMatch(value);
                                     if (!emailValid) {
                                       return 'Digite um e-mail válido';
                                     }
-
                                     return null;
                                   },
                                   decoration: InputDecoration(
@@ -154,7 +182,10 @@ class _LoginPageState extends State<LoginPage> {
                                       _rememberMe = value;
                                     });
                                   },
-                                  title: const Text('Salvar senha'),
+                                  title: Text(
+                                    'Salvar senha',
+                                    style: CustomTextStyle.button2(context),
+                                  ),
                                   controlAffinity:
                                       ListTileControlAffinity.leading,
                                   dense: true,
@@ -179,11 +210,19 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  const HomePage())));
+                                      if (onToggle == 0) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: ((context) =>
+                                                    const HomePage())));
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: ((context) =>
+                                                    const HomePageFamily())));
+                                      }
                                       // if (_formKey.currentState?.validate() ??
                                       //     false) {
                                       //   /// do something

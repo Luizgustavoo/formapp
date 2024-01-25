@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/screens/create_family.dart';
 import 'package:formapp/screens/create_user.dart';
 import 'package:formapp/screens/list_family.dart';
 import 'package:formapp/widgets/custom_card.dart';
@@ -77,16 +76,14 @@ class CategoryItems extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         children: [
           CustomCard(
-              title: 'Controle de Família',
+              title: 'Famílias',
               ontap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => const CreateFamily())));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: ((context) => ListFamily())));
               },
               imageUrl: 'assets/images/users.png'),
           CustomCard(
-              title: 'Cadastro de Usuário',
+              title: 'Usuários',
               ontap: () {
                 Navigator.push(
                     context,
@@ -95,14 +92,7 @@ class CategoryItems extends StatelessWidget {
               },
               imageUrl: 'assets/images/user.png'),
           CustomCard(
-              title: 'Listagem de Famílias',
-              ontap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: ((context) => ListFamily())));
-              },
-              imageUrl: 'assets/images/list.png'),
-          CustomCard(
-              title: 'Controle de Atendimento',
+              title: 'Atendimentos',
               ontap: () {},
               imageUrl: 'assets/images/atendimento.png'),
           CustomCard(

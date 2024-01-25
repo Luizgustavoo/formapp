@@ -9,11 +9,10 @@ class CreateFamily extends StatefulWidget {
   State<CreateFamily> createState() => _CreateFamilyState();
 }
 
-class _CreateFamilyState extends State<CreateFamily> {
+class _CreateFamilyState extends State<CreateFamily>
+    with TickerProviderStateMixin {
   final GlobalKey<FormState> _familyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _individualFormKey = GlobalKey<FormState>();
-
-  int _currentStep = 0;
 
   String sexo = 'Masculino';
   String civil = 'Solteiro(a)';
@@ -22,9 +21,11 @@ class _CreateFamilyState extends State<CreateFamily> {
 
   bool _residenceOwn = false;
   bool provedorCheckboxValue = false;
+  bool familyInfo = true;
   final _formKey = GlobalKey<FormState>();
 
   int editedFamilyMemberIndex = -1;
+  int tabIndex = 0;
 
   List<FamilyMember> familyMembersList = [];
 
@@ -59,6 +60,7 @@ class _CreateFamilyState extends State<CreateFamily> {
   TextEditingController redeSocialController = TextEditingController();
   TextEditingController igrejaController = TextEditingController();
   TextEditingController funcIgrejaController = TextEditingController();
+  late TabController _tabController;
 
   void _excluirMembroFamilia(int index) {
     setState(() {
@@ -83,13 +85,24 @@ class _CreateFamilyState extends State<CreateFamily> {
       redeSocialController.text = editedMember.redeSocial;
       igrejaController.text = editedMember.igreja;
       funcIgrejaController.text = editedMember.funcIgreja;
+    });
+  }
 
-      _currentStep = 0;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+
+    _tabController.addListener(() {
+      setState(() {
+        tabIndex = _tabController.index;
+      });
     });
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     nomeCompletoController.dispose();
     dataNascimentoController.dispose();
     cpfController.dispose();
@@ -107,11 +120,14 @@ class _CreateFamilyState extends State<CreateFamily> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+        initialIndex: tabIndex,
+        length: 2,
+        child: Scaffold(
+          backgroundColor: Colors.white.withAlpha(220),
           appBar: AppBar(
             title: const Text('Controle de Família'),
             bottom: TabBar(
+              controller: _tabController,
               labelStyle: CustomTextStyle.button2(context),
               labelColor: Colors.white,
               tabs: const [
@@ -121,51 +137,71 @@ class _CreateFamilyState extends State<CreateFamily> {
             ),
           ),
           body: TabBarView(
+            controller: _tabController,
             children: [
               _buildFamilyForm(),
-              _buildIndividualForm(),
+              _familyComposition(),
             ],
           ),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: FloatingActionButton(
               elevation: 5,
-              onPressed: () {},
+              onPressed: () {
+                if (tabIndex == 0) {
+                  print('Adicionar novo membro à Composição Familiar');
+                } else if (tabIndex == 1) {
+                  print('Salvar informações da Família');
+                }
+              },
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              backgroundColor: Colors.orange.shade700,
-              child: const Icon(
-                Icons.save_outlined,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              backgroundColor: tabIndex == 1
+                  ? Colors.green.shade800
+                  : Colors.orange.shade700,
+              child: Icon(
+                tabIndex == 1 ? Icons.save_outlined : Icons.add,
                 color: Colors.white,
               ),
             ),
-          )),
-    );
+          ),
+        ));
   }
 
   Widget _buildFamilyForm() {
     return Form(
       key: _familyFormKey,
       child: ListView(
-        padding: const EdgeInsets.all(2.0),
+        padding: const EdgeInsets.all(12.0),
         children: [
-          Card(
-            color: Colors.white,
-            margin: const EdgeInsets.all(8),
-            elevation: 2,
-            child: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 10.0, bottom: 15.0, left: 10.0, right: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Informações da Família',
-                      style: CustomTextStyle.subtitleNegrit(context),
+          Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ExpansionTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  key: GlobalKey(),
+                  initiallyExpanded: familyInfo,
+                  onExpansionChanged: (value) {
+                    familyInfo = value;
+                  },
+                  title: const Text(
+                    'Informações da Família',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontFamily: 'Poppins',
+                      fontSize: 20,
                     ),
-                    const SizedBox(height: 15),
+                  ),
+                  subtitle: Divider(
+                    height: 5,
+                    thickness: 3,
+                    color: Colors.orange.shade500,
+                  ),
+                  children: [
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Nome da Família',
@@ -201,25 +237,12 @@ class _CreateFamilyState extends State<CreateFamily> {
                     const SizedBox(height: 10),
                     TextFormField(
                       decoration: const InputDecoration(
-                        labelText: 'Bairro',
+                        labelText: 'Logradouro',
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, digite o nome da rua';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        labelText: 'Complemento',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor, digite o número da rua';
                         }
                         return null;
                       },
@@ -231,7 +254,7 @@ class _CreateFamilyState extends State<CreateFamily> {
                           flex: 3,
                           child: TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Rua',
+                              labelText: 'Complemento',
                               border: OutlineInputBorder(),
                             ),
                             validator: (value) {
@@ -259,6 +282,19 @@ class _CreateFamilyState extends State<CreateFamily> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Bairro',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, digite o número da rua';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -300,20 +336,291 @@ class _CreateFamilyState extends State<CreateFamily> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Checkbox(
+                        Text(
+                          'Residência Própria: ',
+                          style: CustomTextStyle.form(context),
+                        ),
+                        Switch(
+                          activeColor: Colors.orange.shade700,
+                          inactiveThumbColor: Colors.orange.shade500,
+                          inactiveTrackColor: Colors.orange.shade100,
                           value: _residenceOwn,
                           onChanged: (value) {
                             setState(() {
-                              _residenceOwn = value ?? false;
+                              _residenceOwn = value;
                             });
                           },
                         ),
-                        const Text('Residência própria'),
                       ],
                     ),
                   ],
                 ),
-              ),
+
+                //-------------->INFORMAÇÕES DO FAMILIAR<-------------------
+                ExpansionTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  initiallyExpanded: true,
+                  title: const Text(
+                    'Informações do Familiar',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontFamily: 'Poppins',
+                      fontSize: 20,
+                    ),
+                  ),
+                  subtitle: Divider(
+                    height: 5,
+                    thickness: 3,
+                    color: Colors.orange.shade500,
+                  ),
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundImage: photoUrl.isNotEmpty
+                              ? NetworkImage(photoUrl)
+                              : const AssetImage(
+                                      'assets/images/default_avatar.jpg')
+                                  as ImageProvider,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              backgroundBlendMode: BlendMode.multiply,
+                              color: Colors.grey[300],
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.camera_alt),
+                              onPressed: () {},
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Text(
+                          'Provedor da casa: ',
+                          style: CustomTextStyle.form(context),
+                        ),
+                        Switch(
+                          activeColor: Colors.orange.shade700,
+                          inactiveThumbColor: Colors.orange.shade500,
+                          inactiveTrackColor: Colors.orange.shade100,
+                          value: provedorCheckboxValue,
+                          onChanged: (value) {
+                            setState(() {
+                              provedorCheckboxValue = value;
+                              familyMember.provedor =
+                                  provedorCheckboxValue ? 'Sim' : 'Não';
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: nomeCompletoController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Nome Completo'),
+                      onChanged: (value) {
+                        setState(() {
+                          familyMember.nomeCompleto = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, digite o nome da rua';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: sexo,
+                            onChanged: (value) {
+                              setState(() {
+                                familyMember.sexo = value!;
+                              });
+                            },
+                            items: ['Masculino', 'Feminino']
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Sexo'),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: civil,
+                            onChanged: (value) {
+                              setState(() {
+                                familyMember.estadoCivil = value!;
+                              });
+                            },
+                            items: [
+                              'Solteiro(a)',
+                              'Casado(a)',
+                              'Divorciado(a)',
+                              'Emancipado(a)'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Estado Civil'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Data de Nascimento'),
+                      onChanged: (value) {
+                        familyMember.dataNascimento = value;
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'CPF'),
+                      onChanged: (value) {
+                        familyMember.cpf = value;
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Título de Eleitor'),
+                            onChanged: (value) {
+                              familyMember.tituloEleitor = value;
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 2,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Zona Eleitoral'),
+                            onChanged: (value) {
+                              familyMember.zonaEleitoral = value;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: trabalhoController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'Trabalho'),
+                      onChanged: (value) {
+                        familyMember.trabalho = value;
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: cargoController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'Cargo'),
+                      onChanged: (value) {
+                        familyMember.cargo = value;
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: contatoController,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Telefone'),
+                            onChanged: (value) {
+                              familyMember.contato = value;
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextFormField(
+                            controller: redeSocialController,
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Rede Social'),
+                            onChanged: (value) {
+                              familyMember.redeSocial = value;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<String>(
+                      value: religiao,
+                      onChanged: (value) {
+                        setState(() {
+                          familyMember.religiao = value!;
+                        });
+                      },
+                      items: ['Católica', 'Evangélica', 'Outra']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'Religião'),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: igrejaController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'Igreja'),
+                      onChanged: (value) {
+                        familyMember.igreja = value;
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: funcIgrejaController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Função/Igreja'),
+                      onChanged: (value) {
+                        familyMember.funcIgreja = value;
+                      },
+                    ),
+                    const SizedBox(height: 10)
+                  ],
+                )
+              ],
             ),
           ),
         ],
@@ -321,82 +628,11 @@ class _CreateFamilyState extends State<CreateFamily> {
     );
   }
 
-  Widget _buildIndividualForm() {
+  Widget _familyComposition() {
     return Form(
       key: _individualFormKey,
       child: ListView(
         children: [
-          Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              color: Colors.grey.withOpacity(0.30),
-              padding: const EdgeInsets.all(8.0),
-              child: Stepper(
-                  elevation: 5,
-                  controlsBuilder: (context, details) {
-                    return Row(
-                      children: [
-                        SizedBox(
-                          height: 30,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(5),
-                            ),
-                            onPressed: () {
-                              if (_currentStep > 0) {
-                                setState(() {
-                                  _currentStep -= 1;
-                                });
-                              }
-                            },
-                            child: _currentStep <= 0
-                                ? Text(
-                                    '',
-                                    style: CustomTextStyle.button2(context),
-                                  )
-                                : Text(
-                                    'ANTERIOR',
-                                    style: CustomTextStyle.button2(context),
-                                  ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(5),
-                              backgroundColor: Colors.orange.shade500,
-                            ),
-                            onPressed: () {
-                              if (_currentStep < 3) {
-                                setState(() {
-                                  _currentStep += 1;
-                                });
-                              } else if (_individualFormKey.currentState!
-                                  .validate()) {
-                                setState(() {
-                                  familyMembersList.add(familyMember);
-
-                                  _individualFormKey.currentState!.reset();
-                                });
-                              }
-                            },
-                            child: _currentStep >= 3
-                                ? Text(
-                                    'ADICIONAR',
-                                    style: CustomTextStyle.button(context),
-                                  )
-                                : Text(
-                                    "PRÓXIMO",
-                                    style: CustomTextStyle.button(context),
-                                  ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  type: StepperType.horizontal,
-                  currentStep: _currentStep,
-                  steps: getSteppers())),
           Card(
             child: ExpansionTile(
               shape:
@@ -423,7 +659,6 @@ class _CreateFamilyState extends State<CreateFamily> {
                           redeSocialController.text = member.redeSocial;
                           igrejaController.text = member.igreja;
                           funcIgrejaController.text = member.funcIgreja;
-                          _currentStep = 0;
                         });
                       },
                       icon: const Icon(Icons.edit_rounded),
@@ -441,251 +676,4 @@ class _CreateFamilyState extends State<CreateFamily> {
       ),
     );
   }
-
-  List<Step> getSteppers() => [
-        Step(
-          title: const Text(''),
-          content: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: CircleAvatar(
-                      radius: 35,
-                      backgroundImage: photoUrl.isNotEmpty
-                          ? NetworkImage(photoUrl)
-                          : const AssetImage('assets/images/default_avatar.jpg')
-                              as ImageProvider,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          backgroundBlendMode: BlendMode.multiply,
-                          color: Colors.grey[300],
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.camera_alt),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Provedor da casa: ',
-                        style: CustomTextStyle.form(context),
-                      ),
-                      Switch(
-                        activeColor: Colors.orange.shade700,
-                        inactiveThumbColor: Colors.orange.shade500,
-                        inactiveTrackColor: Colors.orange.shade100,
-                        value: provedorCheckboxValue,
-                        onChanged: (value) {
-                          setState(() {
-                            provedorCheckboxValue = value;
-                            familyMember.provedor =
-                                provedorCheckboxValue ? 'Sim' : 'Não';
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              TextFormField(
-                controller: nomeCompletoController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Nome Completo'),
-                onChanged: (value) {
-                  setState(() {
-                    familyMember.nomeCompleto = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, digite o nome da rua';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: sexo,
-                onChanged: (value) {
-                  setState(() {
-                    familyMember.sexo = value!;
-                  });
-                },
-                items: ['Masculino', 'Feminino']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Sexo'),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: civil,
-                onChanged: (value) {
-                  setState(() {
-                    familyMember.estadoCivil = value!;
-                  });
-                },
-                items: [
-                  'Solteiro(a)',
-                  'Casado(a)',
-                  'Divorciado(a)',
-                  'Emancipado(a)'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Estado Civil'),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-          state: _currentStep == 0 ? StepState.editing : StepState.complete,
-          isActive: _currentStep == 0,
-        ),
-        Step(
-          title: const Text(''),
-          content: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Data de Nascimento'),
-                onChanged: (value) {
-                  familyMember.dataNascimento = value;
-                },
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'CPF'),
-                onChanged: (value) {
-                  familyMember.cpf = value;
-                },
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Título de Eleitor'),
-                onChanged: (value) {
-                  familyMember.tituloEleitor = value;
-                },
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Zona Eleitoral'),
-                onChanged: (value) {
-                  familyMember.zonaEleitoral = value;
-                },
-              ),
-              const SizedBox(height: 10)
-            ],
-          ),
-          state: _currentStep == 1 ? StepState.editing : StepState.complete,
-          isActive: _currentStep == 1,
-        ),
-        Step(
-          title: const Text(''),
-          content: Column(children: [
-            TextFormField(
-              controller: trabalhoController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Trabalho'),
-              onChanged: (value) {
-                familyMember.trabalho = value;
-              },
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: cargoController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Cargo'),
-              onChanged: (value) {
-                familyMember.cargo = value;
-              },
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: contatoController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Telefone'),
-              onChanged: (value) {
-                familyMember.contato = value;
-              },
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: redeSocialController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Rede Social'),
-              onChanged: (value) {
-                familyMember.redeSocial = value;
-              },
-            ),
-            const SizedBox(height: 10),
-          ]),
-          state: _currentStep == 2 ? StepState.editing : StepState.complete,
-          isActive: _currentStep == 2,
-        ),
-        Step(
-          title: const Text(''),
-          content: Column(children: [
-            DropdownButtonFormField<String>(
-              value: religiao,
-              onChanged: (value) {
-                setState(() {
-                  familyMember.religiao = value!;
-                });
-              },
-              items: ['Católica', 'Evangélica', 'Outra']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Religião'),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: igrejaController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Igreja'),
-              onChanged: (value) {
-                familyMember.igreja = value;
-              },
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: funcIgrejaController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(), labelText: 'Função/Igreja'),
-              onChanged: (value) {
-                familyMember.funcIgreja = value;
-              },
-            ),
-            const SizedBox(height: 10)
-          ]),
-          state: _currentStep == 3 ? StepState.editing : StepState.complete,
-          isActive: _currentStep == 3,
-        ),
-      ];
 }

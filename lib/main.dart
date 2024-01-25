@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5))),
           expansionTileTheme: const ExpansionTileThemeData(
+              tilePadding: EdgeInsets.zero,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero)),
           inputDecorationTheme: InputDecorationTheme(
             contentPadding: const EdgeInsets.all(10),
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
                 fontSize: 12),
             border: OutlineInputBorder(
                 borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(5)),
           ),
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/screens/edit_person.dart';
 import 'package:formapp/screens/family/widgets/custom_drawer_family.dart';
-import 'package:formapp/screens/family/widgets/custom_list_tile_family.dart';
+import 'package:formapp/widgets/custom_person_card.dart';
+import 'package:formapp/widgets/message_modal.dart';
 
 class HomePageFamily extends StatefulWidget {
   const HomePageFamily({super.key});
@@ -48,7 +50,45 @@ class _HomePageFamilyState extends State<HomePageFamily> {
               ),
             ],
           ),
-          const Expanded(child: CustomListTileFamily())
+          Expanded(
+              child: ListView.builder(
+                  itemCount: 20,
+                  itemBuilder: (context, index) {
+                    return CustomFamilyCard(
+                        memberName: 'Luiz',
+                        memberContact: '43 99928-9380',
+                        editMember: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) => const EditPerson())));
+                        },
+                        messageMember: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: MessageModal(
+                                showWidget: false,
+                              ),
+                            ),
+                          );
+                        },
+                        supportMember: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) => Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: MessageModal(
+                                showWidget: true,
+                              ),
+                            ),
+                          );
+                        },
+                        deleteMember: () {});
+                  }))
         ],
       ),
     );
