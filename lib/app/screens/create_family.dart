@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/data/models/family_member.dart';
-import 'package:formapp/utils/custom_text_style.dart';
+import 'package:formapp/app/data/models/family_member.dart';
+import 'package:formapp/app/utils/custom_text_style.dart';
 
 class CreateFamily extends StatefulWidget {
   const CreateFamily({super.key});

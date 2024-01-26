@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/screens/family/home_page_family.dart';
-import 'package:formapp/screens/home_page.dart';
-import 'package:formapp/utils/custom_text_style.dart';
+import 'package:formapp/app/modules/login/login_controller.dart';
+import 'package:formapp/app/screens/family/home_page_family.dart';
+import 'package:formapp/app/screens/home_page.dart';
+import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  int onToggle = 0;
-  bool _isPasswordVisible = false;
-  bool _rememberMe = false;
+class LoginView extends GetView<LoginController> {
+  LoginView({super.key});
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -74,7 +67,8 @@ class _LoginPageState extends State<LoginPage> {
                                       minWidth: 130,
                                       minHeight: 30.0,
                                       cornerRadius: 5.0,
-                                      onToggle: (index) => onToggle = index!,
+                                      onToggle: (index) =>
+                                          controller.onToggle.value = index!,
                                       labels: const ['CREDENCIADO', 'FAMILIAR'],
                                       activeBgColor: [Colors.orange.shade500],
                                       inactiveBgColor: Colors.transparent,
@@ -141,7 +135,8 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                     return null;
                                   },
-                                  obscureText: !_isPasswordVisible,
+                                  obscureText:
+                                      !controller.isPasswordVisible.value,
                                   decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.all(10),
                                       isDense: true,
@@ -162,25 +157,23 @@ class _LoginPageState extends State<LoginPage> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       suffixIcon: IconButton(
-                                        icon: Icon(_isPasswordVisible
-                                            ? Icons.visibility_off
-                                            : Icons.visibility),
+                                        icon: Icon(
+                                            controller.isPasswordVisible.value
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
                                         onPressed: () {
-                                          setState(() {
-                                            _isPasswordVisible =
-                                                !_isPasswordVisible;
-                                          });
+                                          controller.isPasswordVisible.value =
+                                              !controller
+                                                  .isPasswordVisible.value;
                                         },
                                       )),
                                 ),
                                 _gap(),
                                 CheckboxListTile(
-                                  value: _rememberMe,
+                                  value: controller.rememberMe.value,
                                   onChanged: (value) {
                                     if (value == null) return;
-                                    setState(() {
-                                      _rememberMe = value;
-                                    });
+                                    controller.rememberMe.value = value;
                                   },
                                   title: Text(
                                     'Salvar senha',
@@ -210,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      if (onToggle == 0) {
+                                      if (controller.onToggle.value == 0) {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(

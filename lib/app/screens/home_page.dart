@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/screens/create_user.dart';
-import 'package:formapp/screens/list_family.dart';
-import 'package:formapp/widgets/custom_card.dart';
-import 'package:formapp/widgets/custom_drawer.dart';
+import 'package:formapp/app/screens/create_user.dart';
+import 'package:formapp/app/screens/list_family.dart';
+import 'package:formapp/app/global/widgets/custom_card.dart';
+import 'package:formapp/app/global/widgets/custom_drawer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

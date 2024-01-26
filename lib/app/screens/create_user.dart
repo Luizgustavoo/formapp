@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/utils/custom_text_style.dart';
+import 'package:formapp/app/utils/custom_text_style.dart';
 
 class CreateUser extends StatefulWidget {
   const CreateUser({super.key});

@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
-import 'package:formapp/utils/custom_text_style.dart';
+import 'package:formapp/app/utils/custom_text_style.dart';
 
 // ignore: must_be_immutable
 class CustomFamilyCard extends StatelessWidget {

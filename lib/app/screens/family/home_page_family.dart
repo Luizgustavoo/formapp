@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/screens/edit_person.dart';
-import 'package:formapp/screens/family/widgets/custom_drawer_family.dart';
-import 'package:formapp/widgets/custom_person_card.dart';
-import 'package:formapp/widgets/message_modal.dart';
+import 'package:formapp/app/screens/edit_person.dart';
+import 'package:formapp/app/screens/family/widgets/custom_drawer_family.dart';
+import 'package:formapp/app/global/widgets/custom_person_card.dart';
+import 'package:formapp/app/global/widgets/message_modal.dart';
 
 class HomePageFamily extends StatefulWidget {
   const HomePageFamily({super.key});
