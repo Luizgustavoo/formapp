@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/login/login_controller.dart';
-import 'package:formapp/app/screens/family/home_page_family.dart';
-import 'package:formapp/app/screens/home_page.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class LoginView extends GetView<LoginController> {
-  LoginView({super.key});
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +37,7 @@ class LoginView extends GetView<LoginController> {
                             const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
                         constraints: BoxConstraints(maxWidth: size.width),
                         child: Form(
-                          key: _formKey,
+                          key: controller.formKey,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
@@ -89,6 +85,7 @@ class LoginView extends GetView<LoginController> {
                                 ),
                                 const SizedBox(height: 10),
                                 TextFormField(
+                                  controller: controller.usernameCtrl,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Por favor digite seu usuário';
@@ -124,105 +121,119 @@ class LoginView extends GetView<LoginController> {
                                   ),
                                 ),
                                 _gap(),
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor digite sua senha';
-                                    }
+                                Obx(() => TextFormField(
+                                      controller: controller.passwordCtrl,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Por favor digite sua senha';
+                                        }
 
-                                    if (value.length < 8) {
-                                      return 'A senha deve conter 8 caracteres';
-                                    }
-                                    return null;
-                                  },
-                                  obscureText:
-                                      !controller.isPasswordVisible.value,
-                                  decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.all(10),
-                                      isDense: true,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      labelText: 'Senha',
-                                      labelStyle: TextStyle(
-                                          color: Colors.grey.shade500,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 14),
-                                      hintText: 'Digite sua senha...',
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey.shade500,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 12),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                            controller.isPasswordVisible.value
-                                                ? Icons.visibility_off
-                                                : Icons.visibility),
-                                        onPressed: () {
-                                          controller.isPasswordVisible.value =
-                                              !controller
-                                                  .isPasswordVisible.value;
-                                        },
-                                      )),
-                                ),
+                                        if (value.length < 4) {
+                                          return 'A senha deve conter 4 caracteres';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText:
+                                          !controller.isPasswordVisible.value,
+                                      decoration: InputDecoration(
+                                          contentPadding:
+                                              const EdgeInsets.all(10),
+                                          isDense: true,
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          labelText: 'Senha',
+                                          labelStyle: TextStyle(
+                                              color: Colors.grey.shade500,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 14),
+                                          hintText: 'Digite sua senha...',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey.shade500,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          suffixIcon: Obx(() => IconButton(
+                                                icon: Icon(controller
+                                                        .isPasswordVisible.value
+                                                    ? Icons.visibility_off
+                                                    : Icons.visibility),
+                                                onPressed: () {
+                                                  print(controller
+                                                      .isPasswordVisible.value);
+                                                  controller.isPasswordVisible
+                                                          .value =
+                                                      !controller
+                                                          .isPasswordVisible
+                                                          .value;
+                                                },
+                                              ))),
+                                    )),
                                 _gap(),
-                                CheckboxListTile(
-                                  value: controller.rememberMe.value,
-                                  onChanged: (value) {
-                                    if (value == null) return;
-                                    controller.rememberMe.value = value;
-                                  },
-                                  title: Text(
-                                    'Salvar senha',
-                                    style: CustomTextStyle.button2(context),
-                                  ),
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  dense: true,
-                                  contentPadding: const EdgeInsets.all(0),
-                                ),
+                                Obx(() => CheckboxListTile(
+                                      value: controller.rememberMe.value,
+                                      onChanged: (value) {
+                                        if (value == null) return;
+                                        controller.rememberMe.value = value;
+                                      },
+                                      title: Text(
+                                        'Salvar senha',
+                                        style: CustomTextStyle.button2(context),
+                                      ),
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                      dense: true,
+                                      contentPadding: const EdgeInsets.all(0),
+                                    )),
                                 _gap(),
                                 SizedBox(
                                   width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.orange.shade500,
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Text(
-                                        'Acessar',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
+                                  child: Obx(
+                                    () => Visibility(
+                                      visible: !controller.loading.value,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.orange.shade500,
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(10.0),
+                                          child: Text(
+                                            'Acessar',
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          controller.login();
+                                        },
                                       ),
                                     ),
-                                    onPressed: () {
-                                      if (controller.onToggle.value == 0) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: ((context) =>
-                                                    const HomePage())));
-                                      } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: ((context) =>
-                                                    const HomePageFamily())));
-                                      }
-                                      // if (_formKey.currentState?.validate() ??
-                                      //     false) {
-                                      //   /// do something
-                                      // }
-                                    },
                                   ),
                                 ),
+                                Obx(() => Visibility(
+                                    visible: controller.loading.value,
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                        ),
+                                        onPressed: null,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 5,
+                                          color: Colors.orange.shade700,
+                                        ),
+                                      ),
+                                    )))
                               ],
                             ),
                           ),

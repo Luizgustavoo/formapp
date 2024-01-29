@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:formapp/app/routes/app_pages.dart';
 import 'package:formapp/app/routes/app_routes.dart';
-import 'package:formapp/app/screens/login_page.dart';
 import 'package:formapp/app/theme/app_theme.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
@@ -16,6 +17,5 @@ void main() {
     theme: appThemeData,
     initialRoute: Routes.LOGIN,
     getPages: ApppPages.routes,
-    home: const LoginPage(),
   ));
 }

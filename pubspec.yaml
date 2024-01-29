@@ -38,7 +38,7 @@ dependencies:
   toggle_switch: ^2.1.0
   get: ^4.6.5
   http: ^0.13.6
-  get_storage: ^2.1.1
+  get_storage: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ import 'package:formapp/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 
 class ApppPages {
-  static const INITIAL = Routes.LOGIN;
+  static const LOGIN = Routes.LOGIN;
 
   static final routes = [
     GetPage(
