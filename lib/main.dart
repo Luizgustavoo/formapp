@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 void main() async {
-  await GetStorage.init();
+  await GetStorage.init('credenciado');
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
@@ -15,7 +15,7 @@ void main() async {
     debugShowCheckedModeBanner: false,
     title: 'Flutter Demo',
     theme: appThemeData,
-    initialRoute: Routes.LOGIN,
+    initialRoute: Routes.INITIAL,
     getPages: ApppPages.routes,
   ));
 }

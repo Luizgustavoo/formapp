@@ -16,7 +16,7 @@ class LoginController extends GetxController {
   TextEditingController usernameCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
 
-  final box = GetStorage();
+  final box = GetStorage('credenciado');
 
   void login() async {
     if (formKey.currentState!.validate()) {
@@ -25,10 +25,10 @@ class LoginController extends GetxController {
       auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
 
       if (auth != null) {
-        box.write('user', auth);
+        box.write('auth', auth);
         // print(auth!.toJson());
-        // print(box.read('auth'));
-        print(box.read('user'));
+        print(box.read('auth'));
+        // Get.to(const HomePage());
       }
       loading.value = false;
     }
