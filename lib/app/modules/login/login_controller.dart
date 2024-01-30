@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/auth_model.dart';
 import 'package:formapp/app/data/repository/auth_repository.dart';
+import 'package:formapp/app/screens/home_page.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -22,15 +23,23 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       loading.value = true;
 
-      auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
+      try {
+        auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
 
-      if (auth != null) {
-        box.write('auth', auth);
-        // print(auth!.toJson());
-        print(box.read('auth'));
-        // Get.to(const HomePage());
+        //if (auth != null ) {
+        if (2 > 0) {
+          box.write('auth', auth);
+          // print(auth!.toJson());
+          print(box.read('auth'));
+          Get.to(const HomePage());
+        } else {
+          Get.toNamed('/login');
+        }
+        loading.value = false;
+      } catch (e) {
+        print(e);
+        loading.value = false;
       }
-      loading.value = false;
     }
   }
 }

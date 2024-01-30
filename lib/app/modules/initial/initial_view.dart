@@ -23,7 +23,7 @@ class InitialView extends GetView<InitialController> {
       showLoader: true,
       loadingText: const Text("Loading..."),
       navigator: Routes.LOGIN,
-      durationInSeconds: 5,
+      durationInSeconds: 3,
     );
   }
 }
