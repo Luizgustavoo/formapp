@@ -25,14 +25,10 @@ class LoginController extends GetxController {
 
       auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
 
-      print(auth);
-
       if (auth != null) {
         box.write('auth', auth?.toJson());
-        print('logou');
         Get.offAllNamed('/home');
       } else {
-        print('não logou');
         Get.offAllNamed('/login');
       }
 
