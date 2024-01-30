@@ -26,9 +26,7 @@ class LoginController extends GetxController {
 
       if (auth != null) {
         box.write('auth', auth);
-        // print(auth!.toJson());
-        print(box.read('auth'));
-        // Get.to(const HomePage());
+        Get.offAllNamed('/home');
       }
       loading.value = false;
     }

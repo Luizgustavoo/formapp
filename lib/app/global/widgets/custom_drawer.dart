@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/global/widgets/custom_list_tile.dart';
+import 'package:formapp/app/modules/home/home_controller.dart';
+import 'package:get/get.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends GetView<HomeController> {
   const CustomDrawer({super.key});
 
   @override
@@ -37,7 +39,7 @@ class CustomDrawer extends StatelessWidget {
                             bottom: Divider.createBorderSide(context,
                                 color: Colors.transparent, width: 0.0))),
                     duration: const Duration(milliseconds: 200),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Row(
@@ -60,17 +62,19 @@ class CustomDrawer extends StatelessWidget {
                         //   ],
                         // ),
                         Padding(
-                          padding: EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.only(top: 15),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Text(
-                                  'NOME DO CREDENCIADO',
-                                  style: TextStyle(
-                                      fontSize: 16, fontFamily: 'Poppins'),
-                                ),
+                                child: Obx(() => Text(
+                                      controller.username.value.isNotEmpty
+                                          ? controller.username.value
+                                          : 'NOME DO CREDENCIADO',
+                                      style: const TextStyle(
+                                          fontSize: 16, fontFamily: 'Poppins'),
+                                    )),
                               ),
                             ],
                           ),
@@ -83,7 +87,9 @@ class CustomDrawer extends StatelessWidget {
               CustomListTile(Icons.home_rounded, 'HOME', () {}, true),
               CustomListTile(
                   Icons.settings_rounded, 'CONFIGURAÇÕES', () {}, true),
-              CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {}, true),
+              CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {
+                controller.clear();
+              }, true),
             ],
           ),
         ),
