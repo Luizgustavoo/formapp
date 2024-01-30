@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/models/auth_model.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthApiClient {
@@ -16,8 +14,11 @@ class AuthApiClient {
           .post(loginUrl, body: {'username': username, 'password': password});
       if (response.statusCode == 200) {
         return json.decode(response.body);
+      } else if (response.statusCode == 401) {
+        print('Erro de autenticação: Usuário ou senha inválidos');
+        // Adicione uma lógica para tratar o erro de autenticação aqui
       } else {
-        print('erro -get:${response.body}');
+        print('Erro - get:${response.body}');
       }
     } catch (e) {
       print(e);

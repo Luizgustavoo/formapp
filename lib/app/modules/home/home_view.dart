@@ -77,8 +77,7 @@ class CategoryItems extends StatelessWidget {
           CustomCard(
               title: 'Famílias',
               ontap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: ((context) => ListFamily())));
+                Get.toNamed("/list-family");
               },
               imageUrl: 'assets/images/users.png'),
           CustomCard(

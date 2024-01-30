@@ -1,3 +1,5 @@
+import 'package:formapp/app/modules/family/family_binding.dart';
+import 'package:formapp/app/modules/family/family_view.dart';
 import 'package:formapp/app/modules/home/home_binding.dart';
 import 'package:formapp/app/modules/home/home_view.dart';
 import 'package:formapp/app/modules/initial/initial_binding.dart';
@@ -23,6 +25,11 @@ class ApppPages {
       name: Routes.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: Routes.LIST_FAMILY,
+      page: () => FamilyView(),
+      binding: FamilyBinding(),
     ),
   ];
 }

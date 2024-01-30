@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/auth_model.dart';
 import 'package:formapp/app/data/repository/auth_repository.dart';
-import 'package:formapp/app/screens/home_page.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -19,6 +18,9 @@ class LoginController extends GetxController {
 
   final box = GetStorage('credenciado');
 
+  RxString errorMessage = ''.obs;
+
+  RxBool showErrorSnackbar = false.obs;
   void login() async {
     if (formKey.currentState!.validate()) {
       loading.value = true;
@@ -29,7 +31,7 @@ class LoginController extends GetxController {
         box.write('auth', auth?.toJson());
         Get.offAllNamed('/home');
       } else {
-        Get.offAllNamed('/login');
+        showErrorSnackbar.value = true;
       }
 
       loading.value = false;

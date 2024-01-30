@@ -4,8 +4,13 @@ import 'package:formapp/app/data/provider/auth_provider.dart';
 class AuthRepository {
   final AuthApiClient apiClient = AuthApiClient();
 
-  Future<Auth> getLogin(String username, String password) async {
+  Future<Auth?> getLogin(String username, String password) async {
     Map<String, dynamic>? json = await apiClient.getLogin(username, password);
-    return Auth.fromJson(json!);
+
+    if (json != null) {
+      return Auth.fromJson(json);
+    } else {
+      return null;
+    }
   }
 }
