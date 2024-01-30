@@ -63,11 +63,11 @@ class _ListFamilyState extends State<ListFamily> {
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
-                itemCount: familias.length,
+                itemCount: 10,
                 itemBuilder: (context, index) {
                   return CustomFamilyCard(
                       stripe: index % 2 == 0 ? true : false,
-                      memberName: familias[index],
+                      memberName: "Claudinei",
                       memberContact: 'Provedor: Nome do Provedor',
                       editMember: () {
                         Navigator.push(

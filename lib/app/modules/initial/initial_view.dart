@@ -2,6 +2,7 @@ import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/initial/initial_controller.dart';
 import 'package:formapp/app/routes/app_routes.dart';
+import 'package:formapp/app/screens/home_page.dart';
 import 'package:get/get.dart';
 
 class InitialView extends GetView<InitialController> {

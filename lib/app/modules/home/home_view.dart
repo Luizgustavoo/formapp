@@ -12,14 +12,12 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final stor = controller.box.read('auth');
-
-    print("Nome -> " + stor['user']['nome']);
+    final auth = controller.box.read('auth');
 
     return Scaffold(
       appBar: AppBar(),
       drawer: CustomDrawer(
-        nome: stor['user']['nome'],
+        nome: auth['user']['nome'],
       ),
       body: Column(
         children: [

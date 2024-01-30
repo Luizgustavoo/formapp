@@ -7,12 +7,11 @@ class InitialController extends GetxController {
   final box = GetStorage('credenciado');
 
   verifyAuth() {
-    Auth auth = Auth.fromJson(box.read('auth'));
-    print(auth);
-    if (!auth.isNull) {
+    final auth = box.read('auth');
+
+    if (auth != null) {
       return Routes.HOME;
-    } else {
-      return Routes.LOGIN;
     }
+    return Routes.LOGIN;
   }
 }

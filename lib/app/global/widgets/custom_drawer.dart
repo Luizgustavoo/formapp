@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/global/widgets/custom_list_tile.dart';
+import 'package:formapp/app/modules/home/home_controller.dart';
+import 'package:formapp/app/screens/login_page.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends GetView<HomeController> {
   String nome;
   CustomDrawer({super.key, required this.nome});
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = Get.size;
+
     return SafeArea(
       child: SizedBox(
         width: size.width * 0.70,
@@ -84,7 +89,10 @@ class CustomDrawer extends StatelessWidget {
               CustomListTile(Icons.home_rounded, 'HOME', () {}, true),
               CustomListTile(
                   Icons.settings_rounded, 'CONFIGURAÇÕES', () {}, true),
-              CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {}, true),
+              CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {
+                controller.box.remove('auth');
+                Get.to(const LoginPage());
+              }, true),
             ],
           ),
         ),
