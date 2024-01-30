@@ -12,13 +12,11 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = controller.box.read('auth');
+    // final auth = controller.box.read('auth');
 
     return Scaffold(
       appBar: AppBar(),
-      drawer: CustomDrawer(
-        nome: auth['user']['nome'],
-      ),
+      drawer: const CustomDrawer(),
       body: Column(
         children: [
           Column(

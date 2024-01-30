@@ -23,23 +23,20 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       loading.value = true;
 
-      try {
-        auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
+      auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
 
-        //if (auth != null ) {
-        if (2 > 0) {
-          box.write('auth', auth);
-          // print(auth!.toJson());
-          print(box.read('auth'));
-          Get.to(const HomePage());
-        } else {
-          Get.toNamed('/login');
-        }
-        loading.value = false;
-      } catch (e) {
-        print(e);
-        loading.value = false;
+      print(auth);
+
+      if (auth != null) {
+        box.write('auth', auth?.toJson());
+        print('logou');
+        Get.offAllNamed('/home');
+      } else {
+        print('não logou');
+        Get.offAllNamed('/login');
       }
+
+      loading.value = false;
     }
   }
 }

@@ -16,9 +16,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: CustomDrawer(
-        nome: "Teste",
-      ),
+      drawer: const CustomDrawer(),
       body: Column(
         children: [
           Column(

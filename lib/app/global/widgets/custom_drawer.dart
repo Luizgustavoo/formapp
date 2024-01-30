@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/global/widgets/custom_list_tile.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:formapp/app/screens/login_page.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class CustomDrawer extends GetView<HomeController> {
-  String nome;
-  CustomDrawer({super.key, required this.nome});
+  const CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +69,13 @@ class CustomDrawer extends GetView<HomeController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Text(
-                                  nome,
-                                  style: const TextStyle(
-                                      fontSize: 16, fontFamily: 'Poppins'),
-                                ),
+                                child: Obx(() => Text(
+                                      controller.username.value.isNotEmpty
+                                          ? controller.username.value
+                                          : "",
+                                      style: const TextStyle(
+                                          fontSize: 16, fontFamily: 'Poppins'),
+                                    )),
                               ),
                             ],
                           ),
@@ -90,8 +89,7 @@ class CustomDrawer extends GetView<HomeController> {
               CustomListTile(
                   Icons.settings_rounded, 'CONFIGURAÇÕES', () {}, true),
               CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {
-                controller.box.remove('auth');
-                Get.to(const LoginPage());
+                controller.clear();
               }, true),
             ],
           ),
