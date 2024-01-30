@@ -5,15 +5,22 @@ import 'package:formapp/app/screens/create_user.dart';
 import 'package:formapp/app/screens/list_family.dart';
 import 'package:formapp/app/global/widgets/custom_card.dart';
 import 'package:formapp/app/global/widgets/custom_drawer.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final stor = controller.box.read('auth');
+
+    print("Nome -> " + stor['user']['nome']);
+
     return Scaffold(
       appBar: AppBar(),
-      drawer: const CustomDrawer(),
+      drawer: CustomDrawer(
+        nome: stor['user']['nome'],
+      ),
       body: Column(
         children: [
           Column(

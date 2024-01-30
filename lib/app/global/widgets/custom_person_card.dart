@@ -4,6 +4,7 @@ import 'package:formapp/app/utils/custom_text_style.dart';
 
 // ignore: must_be_immutable
 class CustomFamilyCard extends StatelessWidget {
+  bool stripe = false;
   String memberName;
   String memberContact;
   VoidCallback editMember;
@@ -19,6 +20,7 @@ class CustomFamilyCard extends StatelessWidget {
     required this.messageMember,
     required this.supportMember,
     required this.deleteMember,
+    required this.stripe,
   }) : super(key: key);
 
   @override
@@ -26,10 +28,16 @@ class CustomFamilyCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5),
       child: Card(
+        color: stripe ? Colors.grey.shade300 : Colors.white,
         child: Column(
           children: [
             ListTile(
-              leading: const CircleAvatar(),
+              leading: CircleAvatar(
+                  child: Text(
+                memberName[0].toString(),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              )),
               title: Text(memberName,
                   style: CustomTextStyle.subtitleNegrit(context)),
               subtitle:

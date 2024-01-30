@@ -55,6 +55,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                   itemCount: 20,
                   itemBuilder: (context, index) {
                     return CustomFamilyCard(
+                        stripe: index % 2 == 0 ? true : false,
                         memberName: 'Luiz',
                         memberContact: '43 99928-9380',
                         editMember: () {

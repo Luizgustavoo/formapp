@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/global/widgets/custom_list_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+  String nome;
+  CustomDrawer({super.key, required this.nome});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class CustomDrawer extends StatelessWidget {
                             bottom: Divider.createBorderSide(context,
                                 color: Colors.transparent, width: 0.0))),
                     duration: const Duration(milliseconds: 200),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Row(
@@ -60,15 +61,15 @@ class CustomDrawer extends StatelessWidget {
                         //   ],
                         // ),
                         Padding(
-                          padding: EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.only(top: 15),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
                                 child: Text(
-                                  'NOME DO CREDENCIADO',
-                                  style: TextStyle(
+                                  nome,
+                                  style: const TextStyle(
                                       fontSize: 16, fontFamily: 'Poppins'),
                                 ),
                               ),
