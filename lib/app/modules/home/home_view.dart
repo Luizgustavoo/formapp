@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
+import 'package:formapp/app/screens/family/home_page_family.dart';
 import 'package:get/get.dart';
 import 'package:formapp/app/screens/create_user.dart';
 import 'package:formapp/app/screens/list_family.dart';
@@ -95,7 +96,9 @@ class CategoryItems extends StatelessWidget {
               imageUrl: 'assets/images/atendimento.png'),
           CustomCard(
               title: 'Mensagens',
-              ontap: () {},
+              ontap: () {
+                Get.to(() => const HomePageFamily());
+              },
               imageUrl: 'assets/images/mensage.png'),
         ],
       ),

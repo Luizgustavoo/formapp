@@ -73,7 +73,8 @@ class FamilyView extends GetView<FamilyController> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) => const EditPerson())));
+                                  builder: ((context) =>
+                                      const CreateFamily())));
                         },
                         messageMember: () {
                           showModalBottomSheet(
