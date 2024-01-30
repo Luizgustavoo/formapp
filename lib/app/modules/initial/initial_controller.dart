@@ -8,6 +8,7 @@ class InitialController extends GetxController {
 
   verifyAuth() {
     Auth auth = Auth.fromJson(box.read('auth'));
+    print(auth);
     if (!auth.isNull) {
       return Routes.HOME;
     } else {

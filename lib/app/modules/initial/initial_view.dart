@@ -22,7 +22,7 @@ class InitialView extends GetView<InitialController> {
       backgroundColor: Colors.grey.shade400,
       showLoader: true,
       loadingText: const Text("Loading..."),
-      navigator: Routes.LOGIN,
+      navigator: controller.verifyAuth(),
       durationInSeconds: 3,
     );
   }
