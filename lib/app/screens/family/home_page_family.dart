@@ -51,45 +51,47 @@ class _HomePageFamilyState extends State<HomePageFamily> {
             ],
           ),
           Expanded(
-              child: ListView.builder(
-                  itemCount: 20,
-                  itemBuilder: (context, index) {
-                    return CustomFamilyCard(
-                        stripe: index % 2 == 0 ? true : false,
-                        memberName: 'Luiz',
-                        memberContact: '43 99928-9380',
-                        editMember: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => const EditPerson())));
-                        },
-                        messageMember: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) => Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: MessageModal(
-                                showWidget: false,
-                              ),
-                            ),
-                          );
-                        },
-                        supportMember: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) => Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: MessageModal(
-                                showWidget: true,
-                              ),
-                            ),
-                          );
-                        },
-                        deleteMember: () {});
-                  }))
+            child: ListView.builder(
+              itemCount: 20,
+              itemBuilder: (context, index) {
+                return CustomFamilyCard(
+                    stripe: index % 2 == 0 ? true : false,
+                    memberName: 'Luiz',
+                    memberContact: '43 99928-9380',
+                    editMember: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => const EditPerson())));
+                    },
+                    messageMember: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: MediaQuery.of(context).viewInsets,
+                          child: MessageModal(
+                            showWidget: false,
+                          ),
+                        ),
+                      );
+                    },
+                    supportMember: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: MediaQuery.of(context).viewInsets,
+                          child: MessageModal(
+                            showWidget: true,
+                          ),
+                        ),
+                      );
+                    },
+                    deleteMember: () {});
+              },
+            ),
+          )
         ],
       ),
     );

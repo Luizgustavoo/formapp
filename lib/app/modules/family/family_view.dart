@@ -6,7 +6,7 @@ import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/screens/create_family.dart';
-import 'package:formapp/app/screens/edit_person.dart';
+import 'package:formapp/app/screens/edit_family.dart';
 import 'package:get/get.dart';
 
 class FamilyView extends GetView<FamilyController> {
@@ -73,8 +73,7 @@ class FamilyView extends GetView<FamilyController> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) =>
-                                      const CreateFamily())));
+                                  builder: ((context) => const EditFamily())));
                         },
                         messageMember: () {
                           showModalBottomSheet(
