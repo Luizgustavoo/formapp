@@ -15,6 +15,7 @@ class Family {
   int? status;
   String? data_cadastro;
   String? data_update;
+  String? cep;
   User? user;
   List<Pessoas>? pessoas;
 
@@ -32,6 +33,7 @@ class Family {
       this.status,
       this.data_cadastro,
       this.data_update,
+      this.cep,
       this.user,
       this.pessoas});
 
@@ -49,6 +51,7 @@ class Family {
     status = json['status'] as int;
     data_cadastro = json['data_cadastro'];
     data_update = json['data_update'];
+    cep = json['cep'];
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     if (json['pessoas'] != null) {
       pessoas = <Pessoas>[];
@@ -73,6 +76,7 @@ class Family {
     data['status'] = status;
     data['data_cadastro'] = data_cadastro;
     data['data_update'] = data_update;
+    data['cep'] = cep;
     if (user != null) {
       data['usuario'] = user!.toJson();
     }

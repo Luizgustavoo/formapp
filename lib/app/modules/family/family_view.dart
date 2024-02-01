@@ -6,18 +6,13 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
-import 'package:formapp/app/modules/family/edit_family_view.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/family/family_edit_controller.dart';
 import 'package:formapp/app/screens/create_family.dart';
-import 'package:formapp/app/screens/edit_family.dart';
 import 'package:get/get.dart';
 
 class FamilyView extends GetView<FamilyController> {
   final List<FamilyMember> familyMembersList = [];
   final TextEditingController _searchController = TextEditingController();
-
-  FamilyEditController? familyEditController;
 
   FamilyView({super.key});
 
@@ -62,7 +57,14 @@ class FamilyView extends GetView<FamilyController> {
                         memberName: family.nome.toString(),
                         memberContact: "Provedor: $provedorCasa",
                         editMember: () {
-                          familyEditController?.nomeDaFamilia.value = "TESTE";
+                          // controller.nomeFamiliaController.text =
+                          //     family.nome.toString();
+                          // controller.cepFamiliaController.text =
+                          //     family.cep.toString();
+
+                          controller.selectedFamily = family;
+
+                          controller.popularCampos();
 
                           Get.toNamed('/edit-family', arguments: family);
                         },

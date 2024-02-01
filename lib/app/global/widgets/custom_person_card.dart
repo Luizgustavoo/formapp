@@ -26,8 +26,9 @@ class CustomFamilyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5, right: 5),
+      padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Card(
+        elevation: 3,
         color: stripe ? Colors.grey.shade300 : Colors.white,
         child: Column(
           children: [
