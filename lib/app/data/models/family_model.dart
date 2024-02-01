@@ -49,13 +49,13 @@ class Family {
     status = json['status'] as int;
     data_cadastro = json['data_cadastro'];
     data_update = json['data_update'];
-    // user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
-    // if (json['pessoas'] != null) {
-    //   pessoas = <Pessoas>[];
-    //   json['pessoas'].forEach((v) {
-    //     pessoas!.add(Pessoas.fromJson(v));
-    //   });
-    // }
+    user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
+    if (json['pessoas'] != null) {
+      pessoas = <Pessoas>[];
+      json['pessoas'].forEach((v) {
+        pessoas!.add(Pessoas.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -73,12 +73,12 @@ class Family {
     data['status'] = status;
     data['data_cadastro'] = data_cadastro;
     data['data_update'] = data_update;
-    // if (user != null) {
-    //   data['usuario'] = user!.toJson();
-    // }
-    // if (pessoas != null) {
-    //   data['pessoas'] = pessoas!.map((v) => v.toJson()).toList();
-    // }
+    if (user != null) {
+      data['usuario'] = user!.toJson();
+    }
+    if (pessoas != null) {
+      data['pessoas'] = pessoas!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

@@ -1,4 +1,6 @@
+import 'package:formapp/app/modules/family/edit_family_view.dart';
 import 'package:formapp/app/modules/family/family_binding.dart';
+import 'package:formapp/app/modules/family/family_edit_binding.dart';
 import 'package:formapp/app/modules/family/family_view.dart';
 import 'package:formapp/app/modules/home/home_binding.dart';
 import 'package:formapp/app/modules/home/home_view.dart';
@@ -30,6 +32,11 @@ class ApppPages {
       name: Routes.LIST_FAMILY,
       page: () => FamilyView(),
       binding: FamilyBinding(),
+    ),
+    GetPage(
+      name: Routes.EDIT_FAMILY,
+      page: () => EditFamilyView(),
+      binding: FamilyEditBinding(),
     ),
   ];
 }

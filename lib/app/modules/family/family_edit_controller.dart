@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:formapp/app/data/models/auth_model.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/repository/family_repository.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-class FamilyController extends GetxController {
+class FamilyEditController extends GetxController {
   final box = GetStorage('credenciado');
-  List<Family>? families;
-
-  Family? selectedFamily;
 
   RxInt tabIndex = 0.obs;
 
-  RxList<Family> listFamilies = <Family>[].obs;
+  RxString nomeDaFamilia = "".obs;
 
   TextEditingController nomeFamiliaController = TextEditingController();
 
@@ -44,19 +37,10 @@ class FamilyController extends GetxController {
   RxBool familyInfo = true.obs;
   final formKey = GlobalKey<FormState>();
 
-  final repository = Get.find<FamilyRepository>();
-
   @override
   void onInit() {
-    getFamilies();
+    nomeFamiliaController.text = "teste";
+    print(nomeDaFamilia.value);
     super.onInit();
-  }
-
-  void getFamilies() async {
-    final token = box.read('auth')['access_token'];
-
-    listFamilies.value = await repository.getALl("Bearer " + token);
-
-    print(listFamilies.value);
   }
 }

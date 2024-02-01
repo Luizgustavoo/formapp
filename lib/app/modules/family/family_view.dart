@@ -1,10 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
+import 'package:formapp/app/modules/family/edit_family_view.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/family/family_edit_controller.dart';
 import 'package:formapp/app/screens/create_family.dart';
 import 'package:formapp/app/screens/edit_family.dart';
 import 'package:get/get.dart';
@@ -13,30 +17,12 @@ class FamilyView extends GetView<FamilyController> {
   final List<FamilyMember> familyMembersList = [];
   final TextEditingController _searchController = TextEditingController();
 
+  FamilyEditController? familyEditController;
+
   FamilyView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<String> familias = [
-      "Família Silva",
-      "Família Fernandes",
-      "Família Moura",
-      "Família Tales",
-      "Família Oliveira",
-      "Família Vieira",
-      "Família Farias",
-      "Família Albert",
-      "Família Nunes",
-      "Família Coimbra",
-      "Família Kimberly",
-      "Família Krois",
-      "Família Android",
-      "Família Windows",
-      "Família Linux",
-      "Família Mac",
-      "Família Google",
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Famílias Cadastradas'),
@@ -65,15 +51,20 @@ class FamilyView extends GetView<FamilyController> {
                   itemBuilder: (context, index) {
                     Family family = controller.listFamilies[index];
 
+                    String? provedorCasa = "";
+
+                    for (var p in family.pessoas!) {
+                      provedorCasa = (p.provedor_casa == 'sim') ? p.nome : "";
+                    }
+
                     return CustomFamilyCard(
                         stripe: index % 2 == 0 ? true : false,
                         memberName: family.nome.toString(),
-                        memberContact: 'Provedor: Nome do Provedor',
+                        memberContact: "Provedor: $provedorCasa",
                         editMember: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) => const EditFamily())));
+                          familyEditController?.nomeDaFamilia.value = "TESTE";
+
+                          Get.toNamed('/edit-family', arguments: family);
                         },
                         messageMember: () {
                           showModalBottomSheet(

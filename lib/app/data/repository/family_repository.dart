@@ -12,9 +12,11 @@ class FamilyRepository {
     var response = await apiClient.getAll(token);
 
     response.forEach((e) {
-      print(Family.fromJson(e).toJson());
+      // print(Family.fromJson(e).toJson());
       list.add(Family.fromJson(e));
     });
+
+    //print("Usuário: ${list[0].pessoas?[0].nome}");
 
     return list;
   }

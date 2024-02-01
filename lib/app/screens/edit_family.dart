@@ -122,50 +122,51 @@ class _EditFamilyState extends State<EditFamily> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        initialIndex: tabIndex,
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Controle de Família'),
-            bottom: TabBar(
-              controller: _tabController,
-              labelStyle: CustomTextStyle.button2(context),
-              labelColor: Colors.white,
-              tabs: const [
-                Tab(text: 'Família'),
-                Tab(text: 'Composição Familiar'),
-              ],
-            ),
-          ),
-          body: TabBarView(
+      initialIndex: tabIndex,
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Controle de Família'),
+          bottom: TabBar(
             controller: _tabController,
-            children: [
-              _buildFamilyForm(),
-              _familyComposition(),
+            labelStyle: CustomTextStyle.button2(context),
+            labelColor: Colors.white,
+            tabs: const [
+              Tab(text: 'Família'),
+              Tab(text: 'Composição Familiar'),
             ],
           ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: FloatingActionButton(
-              elevation: 5,
-              onPressed: () {
-                if (tabIndex == 0) {
-                  print('Adicionar novo membro à Composição Familiar');
-                } else if (tabIndex == 1) {
-                  print('Salvar informações da Família');
-                }
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              backgroundColor: Colors.green.shade800,
-              child: const Icon(
-                Icons.save_outlined,
-                color: Colors.white,
-              ),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildFamilyForm(),
+            _familyComposition(),
+          ],
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: FloatingActionButton(
+            elevation: 5,
+            onPressed: () {
+              if (tabIndex == 0) {
+                print('Adicionar novo membro à Composição Familiar');
+              } else if (tabIndex == 1) {
+                print('Salvar informações da Família');
+              }
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            backgroundColor: Colors.green.shade800,
+            child: const Icon(
+              Icons.save_outlined,
+              color: Colors.white,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildFamilyForm() {
