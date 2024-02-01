@@ -7,9 +7,11 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    // Obtém o nome do usuário ao inicializar o controlador
     super.onInit();
-    username.value = box.read('user')?['nome'] ?? '';
+
+    var authData = box.read('auth') ?? {};
+
+    username.value = authData['user']['nome'] ?? '';
   }
 
   void clear() {

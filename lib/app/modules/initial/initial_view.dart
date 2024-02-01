@@ -22,7 +22,7 @@ class InitialView extends GetView<InitialController> {
       showLoader: true,
       loadingText: const Text("Loading..."),
       navigator: controller.verifyAuth(),
-      durationInSeconds: 5,
+      durationInSeconds: 1,
     );
   }
 }

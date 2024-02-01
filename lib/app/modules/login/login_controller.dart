@@ -18,6 +18,9 @@ class LoginController extends GetxController {
 
   final box = GetStorage('credenciado');
 
+  RxString errorMessage = ''.obs;
+
+  RxBool showErrorSnackbar = false.obs;
   void login() async {
     if (formKey.currentState!.validate()) {
       loading.value = true;
@@ -25,9 +28,12 @@ class LoginController extends GetxController {
       auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
 
       if (auth != null) {
-        box.write('auth', auth);
+        box.write('auth', auth?.toJson());
         Get.offAllNamed('/home');
+      } else {
+        showErrorSnackbar.value = true;
       }
+
       loading.value = false;
     }
   }
