@@ -112,10 +112,7 @@ class buildCompositionForm extends StatelessWidget {
                     memberName: controller.listPessoas![index].nome!,
                     memberContact: controller.listPessoas![index].telefone!,
                     editMember: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => const EditPerson())));
+                      Get.toNamed('/edit-people');
                     },
                     messageMember: () {
                       showModalBottomSheet(

@@ -1,12 +1,14 @@
-import 'package:formapp/app/modules/family/edit_family_view.dart';
 import 'package:formapp/app/modules/family/family_binding.dart';
-import 'package:formapp/app/modules/family/family_view.dart';
+import 'package:formapp/app/modules/family/views/edit_family_view.dart';
+import 'package:formapp/app/modules/family/views/family_view.dart';
 import 'package:formapp/app/modules/home/home_binding.dart';
 import 'package:formapp/app/modules/home/home_view.dart';
 import 'package:formapp/app/modules/initial/initial_binding.dart';
 import 'package:formapp/app/modules/initial/initial_view.dart';
 import 'package:formapp/app/modules/login/login_binding.dart';
 import 'package:formapp/app/modules/login/login_view.dart';
+import 'package:formapp/app/modules/people/people_binding.dart';
+import 'package:formapp/app/modules/people/views/edit_people_view.dart';
 import 'package:formapp/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 
@@ -36,6 +38,11 @@ class ApppPages {
       name: Routes.EDIT_FAMILY,
       page: () => EditFamilyView(),
       binding: FamilyBinding(),
+    ),
+    GetPage(
+      name: Routes.EDIT_PEOPLE,
+      page: () => EditPeopleView(),
+      binding: PeopleBinding(),
     ),
   ];
 }
