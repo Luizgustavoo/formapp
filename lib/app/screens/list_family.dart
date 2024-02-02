@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/screens/create_family.dart';
 import 'package:formapp/app/screens/edit_person.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
@@ -8,8 +7,7 @@ import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 
 class ListFamily extends StatefulWidget {
-  final List<FamilyMember> familyMembersList = [];
-  ListFamily({super.key});
+  const ListFamily({super.key});
 
   @override
   State<ListFamily> createState() => _ListFamilyState();

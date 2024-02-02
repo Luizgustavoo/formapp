@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class EditPerson extends StatefulWidget {
@@ -21,24 +20,6 @@ class _EditPersonState extends State<EditPerson> {
 
   final GlobalKey<FormState> _familyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  FamilyMember familyMember = FamilyMember(
-    nomeCompleto: '',
-    sexo: '',
-    cpf: '',
-    dataNascimento: '',
-    estadoCivil: '',
-    tituloEleitor: '',
-    zonaEleitoral: '',
-    contato: '',
-    redeSocial: '',
-    religiao: '',
-    trabalho: '',
-    cargo: '',
-    funcIgreja: '',
-    igreja: '',
-    provedor: '',
-  );
 
   TextEditingController nomeCompletoController = TextEditingController();
   TextEditingController dataNascimentoController = TextEditingController();
@@ -120,13 +101,7 @@ class _EditPersonState extends State<EditPerson> {
                             inactiveThumbColor: Colors.orange.shade500,
                             inactiveTrackColor: Colors.orange.shade100,
                             value: provedorCheckboxValue,
-                            onChanged: (value) {
-                              setState(() {
-                                provedorCheckboxValue = value;
-                                familyMember.provedor =
-                                    provedorCheckboxValue ? 'Sim' : 'Não';
-                              });
-                            },
+                            onChanged: (value) {},
                           ),
                         ],
                       ),
@@ -138,11 +113,7 @@ class _EditPersonState extends State<EditPerson> {
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Nome Completo'),
-                        onChanged: (value) {
-                          setState(() {
-                            familyMember.nomeCompleto = value;
-                          });
-                        },
+                        onChanged: (value) {},
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor, digite o nome da rua';
@@ -156,11 +127,7 @@ class _EditPersonState extends State<EditPerson> {
                           Expanded(
                             child: DropdownButtonFormField<String>(
                               value: sexo,
-                              onChanged: (value) {
-                                setState(() {
-                                  familyMember.sexo = value!;
-                                });
-                              },
+                              onChanged: (value) {},
                               items: [
                                 'Masculino',
                                 'Feminino'
@@ -179,11 +146,7 @@ class _EditPersonState extends State<EditPerson> {
                           Expanded(
                             child: DropdownButtonFormField<String>(
                               value: civil,
-                              onChanged: (value) {
-                                setState(() {
-                                  familyMember.estadoCivil = value!;
-                                });
-                              },
+                              onChanged: (value) {},
                               items: [
                                 'Solteiro(a)',
                                 'Casado(a)',
@@ -207,17 +170,13 @@ class _EditPersonState extends State<EditPerson> {
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Data de Nascimento'),
-                        onChanged: (value) {
-                          familyMember.dataNascimento = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(), labelText: 'CPF'),
-                        onChanged: (value) {
-                          familyMember.cpf = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -228,9 +187,7 @@ class _EditPersonState extends State<EditPerson> {
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Título de Eleitor'),
-                              onChanged: (value) {
-                                familyMember.tituloEleitor = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -240,9 +197,7 @@ class _EditPersonState extends State<EditPerson> {
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Zona Eleitoral'),
-                              onChanged: (value) {
-                                familyMember.zonaEleitoral = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                         ],
@@ -253,18 +208,14 @@ class _EditPersonState extends State<EditPerson> {
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Trabalho'),
-                        onChanged: (value) {
-                          familyMember.trabalho = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: cargoController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(), labelText: 'Cargo'),
-                        onChanged: (value) {
-                          familyMember.cargo = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -275,9 +226,7 @@ class _EditPersonState extends State<EditPerson> {
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Telefone'),
-                              onChanged: (value) {
-                                familyMember.contato = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -287,9 +236,7 @@ class _EditPersonState extends State<EditPerson> {
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Rede Social'),
-                              onChanged: (value) {
-                                familyMember.redeSocial = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                         ],
@@ -298,9 +245,7 @@ class _EditPersonState extends State<EditPerson> {
                       DropdownButtonFormField<String>(
                         value: religiao,
                         onChanged: (value) {
-                          setState(() {
-                            familyMember.religiao = value!;
-                          });
+                          setState(() {});
                         },
                         items: ['Católica', 'Evangélica', 'Outra']
                             .map<DropdownMenuItem<String>>((String value) {
@@ -318,9 +263,7 @@ class _EditPersonState extends State<EditPerson> {
                         controller: igrejaController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(), labelText: 'Igreja'),
-                        onChanged: (value) {
-                          familyMember.igreja = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
@@ -328,9 +271,7 @@ class _EditPersonState extends State<EditPerson> {
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Função/Igreja'),
-                        onChanged: (value) {
-                          familyMember.funcIgreja = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 10)
                     ],

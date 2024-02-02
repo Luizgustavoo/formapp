@@ -6,8 +6,13 @@ class InitialController extends GetxController {
   final box = GetStorage('credenciado');
   var auth;
 
+  @override
+  void onInit() {
+    auth = box.read('auth');
+    super.onInit();
+  }
+
   String verifyAuth() {
-    final auth = box.read('auth');
     if (auth != null) {
       return Routes.HOME;
     }

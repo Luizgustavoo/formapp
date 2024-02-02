@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/modules/home/home_controller.dart';
+import 'package:formapp/app/screens/family/home_page_family.dart';
+import 'package:get/get.dart';
+import 'package:formapp/app/screens/create_user.dart';
+
 import 'package:formapp/app/global/widgets/custom_card.dart';
 import 'package:formapp/app/global/widgets/custom_drawer.dart';
-import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:formapp/app/modules/user/user_view.dart';
-import 'package:formapp/app/screens/list_family.dart';
-import 'package:get/get.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // final auth = controller.box.read('auth');
+
     return Scaffold(
       appBar: AppBar(),
       drawer: const CustomDrawer(),
@@ -74,13 +77,16 @@ class CategoryItems extends StatelessWidget {
           CustomCard(
               title: 'Famílias',
               ontap: () {
-                Get.to(() => ListFamily());
+                Get.toNamed("/list-family");
               },
               imageUrl: 'assets/images/users.png'),
           CustomCard(
               title: 'Usuários',
               ontap: () {
-                Get.to(() => const UserView());
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => const CreateUser())));
               },
               imageUrl: 'assets/images/user.png'),
           CustomCard(
@@ -89,7 +95,9 @@ class CategoryItems extends StatelessWidget {
               imageUrl: 'assets/images/atendimento.png'),
           CustomCard(
               title: 'Mensagens',
-              ontap: () {},
+              ontap: () {
+                Get.to(() => const HomePageFamily());
+              },
               imageUrl: 'assets/images/mensage.png'),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class CreateFamily extends StatefulWidget {
@@ -27,27 +26,7 @@ class _CreateFamilyState extends State<CreateFamily>
   int editedFamilyMemberIndex = -1;
   int tabIndex = 0;
 
-  List<FamilyMember> familyMembersList = [];
-
   String photoUrl = '';
-
-  FamilyMember familyMember = FamilyMember(
-    nomeCompleto: '',
-    sexo: '',
-    cpf: '',
-    dataNascimento: '',
-    estadoCivil: '',
-    tituloEleitor: '',
-    zonaEleitoral: '',
-    contato: '',
-    redeSocial: '',
-    religiao: '',
-    trabalho: '',
-    cargo: '',
-    funcIgreja: '',
-    igreja: '',
-    provedor: '',
-  );
 
   TextEditingController nomeCompletoController = TextEditingController();
   TextEditingController dataNascimentoController = TextEditingController();
@@ -63,28 +42,12 @@ class _CreateFamilyState extends State<CreateFamily>
   late TabController _tabController;
 
   void _excluirMembroFamilia(int index) {
-    setState(() {
-      familyMembersList.removeAt(index);
-    });
+    setState(() {});
   }
 
   void _editarMembroFamilia(int index) {
     setState(() {
       editedFamilyMemberIndex = index;
-
-      FamilyMember editedMember = familyMembersList[index];
-
-      nomeCompletoController.text = editedMember.nomeCompleto;
-      dataNascimentoController.text = editedMember.dataNascimento;
-      cpfController.text = editedMember.cpf;
-      tituloEleitorController.text = editedMember.tituloEleitor;
-      zonaEleitoralController.text = editedMember.zonaEleitoral;
-      trabalhoController.text = editedMember.trabalho;
-      cargoController.text = editedMember.cargo;
-      contatoController.text = editedMember.contato;
-      redeSocialController.text = editedMember.redeSocial;
-      igrejaController.text = editedMember.igreja;
-      funcIgrejaController.text = editedMember.funcIgreja;
     });
   }
 
@@ -408,13 +371,7 @@ class _CreateFamilyState extends State<CreateFamily>
                           inactiveThumbColor: Colors.orange.shade500,
                           inactiveTrackColor: Colors.orange.shade100,
                           value: provedorCheckboxValue,
-                          onChanged: (value) {
-                            setState(() {
-                              provedorCheckboxValue = value;
-                              familyMember.provedor =
-                                  provedorCheckboxValue ? 'Sim' : 'Não';
-                            });
-                          },
+                          onChanged: (value) {},
                         ),
                       ],
                     ),
@@ -427,9 +384,7 @@ class _CreateFamilyState extends State<CreateFamily>
                           border: OutlineInputBorder(),
                           labelText: 'Nome Completo'),
                       onChanged: (value) {
-                        setState(() {
-                          familyMember.nomeCompleto = value;
-                        });
+                        setState(() {});
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -445,9 +400,7 @@ class _CreateFamilyState extends State<CreateFamily>
                           child: DropdownButtonFormField<String>(
                             value: sexo,
                             onChanged: (value) {
-                              setState(() {
-                                familyMember.sexo = value!;
-                              });
+                              setState(() {});
                             },
                             items: ['Masculino', 'Feminino']
                                 .map<DropdownMenuItem<String>>((String value) {
@@ -466,9 +419,7 @@ class _CreateFamilyState extends State<CreateFamily>
                           child: DropdownButtonFormField<String>(
                             value: civil,
                             onChanged: (value) {
-                              setState(() {
-                                familyMember.estadoCivil = value!;
-                              });
+                              setState(() {});
                             },
                             items: [
                               'Solteiro(a)',
@@ -493,17 +444,13 @@ class _CreateFamilyState extends State<CreateFamily>
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Data de Nascimento'),
-                      onChanged: (value) {
-                        familyMember.dataNascimento = value;
-                      },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: 'CPF'),
-                      onChanged: (value) {
-                        familyMember.cpf = value;
-                      },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -514,9 +461,7 @@ class _CreateFamilyState extends State<CreateFamily>
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Título de Eleitor'),
-                            onChanged: (value) {
-                              familyMember.tituloEleitor = value;
-                            },
+                            onChanged: (value) {},
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -526,9 +471,7 @@ class _CreateFamilyState extends State<CreateFamily>
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Zona Eleitoral'),
-                            onChanged: (value) {
-                              familyMember.zonaEleitoral = value;
-                            },
+                            onChanged: (value) {},
                           ),
                         ),
                       ],
@@ -538,18 +481,14 @@ class _CreateFamilyState extends State<CreateFamily>
                       controller: trabalhoController,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: 'Trabalho'),
-                      onChanged: (value) {
-                        familyMember.trabalho = value;
-                      },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: cargoController,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: 'Cargo'),
-                      onChanged: (value) {
-                        familyMember.cargo = value;
-                      },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -560,9 +499,7 @@ class _CreateFamilyState extends State<CreateFamily>
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Telefone'),
-                            onChanged: (value) {
-                              familyMember.contato = value;
-                            },
+                            onChanged: (value) {},
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -572,9 +509,7 @@ class _CreateFamilyState extends State<CreateFamily>
                             decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Rede Social'),
-                            onChanged: (value) {
-                              familyMember.redeSocial = value;
-                            },
+                            onChanged: (value) {},
                           ),
                         ),
                       ],
@@ -583,9 +518,7 @@ class _CreateFamilyState extends State<CreateFamily>
                     DropdownButtonFormField<String>(
                       value: religiao,
                       onChanged: (value) {
-                        setState(() {
-                          familyMember.religiao = value!;
-                        });
+                        setState(() {});
                       },
                       items: ['Católica', 'Evangélica', 'Outra']
                           .map<DropdownMenuItem<String>>((String value) {
@@ -602,9 +535,7 @@ class _CreateFamilyState extends State<CreateFamily>
                       controller: igrejaController,
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(), labelText: 'Igreja'),
-                      onChanged: (value) {
-                        familyMember.igreja = value;
-                      },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
@@ -612,9 +543,7 @@ class _CreateFamilyState extends State<CreateFamily>
                       decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Função/Igreja'),
-                      onChanged: (value) {
-                        familyMember.funcIgreja = value;
-                      },
+                      onChanged: (value) {},
                     ),
                     const SizedBox(height: 10)
                   ],
@@ -630,49 +559,28 @@ class _CreateFamilyState extends State<CreateFamily>
   Widget _familyComposition() {
     return Form(
       key: _individualFormKey,
-      child: ListView(
-        children: [
-          Card(
+      child: ListView(children: [
+        Card(
             child: ExpansionTile(
-              shape:
-                  const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-              initiallyExpanded: true,
-              title: const Text('Composição Familiar'),
-              children: familyMembersList.map((member) {
-                return Card(
-                  color: Colors.orange.shade200,
-                  child: ListTile(
-                    leading: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          editedFamilyMemberIndex =
-                              familyMembersList.indexOf(member);
-                          nomeCompletoController.text = member.nomeCompleto;
-                          dataNascimentoController.text = member.dataNascimento;
-                          cpfController.text = member.cpf;
-                          tituloEleitorController.text = member.tituloEleitor;
-                          zonaEleitoralController.text = member.zonaEleitoral;
-                          trabalhoController.text = member.trabalho;
-                          cargoController.text = member.cargo;
-                          contatoController.text = member.contato;
-                          redeSocialController.text = member.redeSocial;
-                          igrejaController.text = member.igreja;
-                          funcIgrejaController.text = member.funcIgreja;
-                        });
-                      },
-                      icon: const Icon(Icons.edit_rounded),
-                    ),
-                    trailing: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete_rounded)),
-                    title: Text('Nome Completo: ${member.nomeCompleto}'),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero),
+                initiallyExpanded: true,
+                title: const Text('Composição Familiar'),
+                children: [
+              Card(
+                color: Colors.orange.shade200,
+                child: ListTile(
+                  leading: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.edit_rounded),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
+                  trailing: IconButton(
+                      onPressed: () {}, icon: const Icon(Icons.delete_rounded)),
+                  title: const Text('Nome Completo:'),
+                ),
+              ),
+            ]))
+      ]),
     );
   }
 }

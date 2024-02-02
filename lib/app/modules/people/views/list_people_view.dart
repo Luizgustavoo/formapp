@@ -1,7 +1,4 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
@@ -11,7 +8,6 @@ import 'package:formapp/app/screens/create_family.dart';
 import 'package:get/get.dart';
 
 class FamilyView extends GetView<FamilyController> {
-  final List<FamilyMember> familyMembersList = [];
   final TextEditingController _searchController = TextEditingController();
 
   FamilyView({super.key});

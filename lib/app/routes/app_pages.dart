@@ -1,11 +1,15 @@
+import 'package:formapp/app/modules/family/family_binding.dart';
+import 'package:formapp/app/modules/family/views/create_family_view.dart';
+import 'package:formapp/app/modules/family/views/edit_family_view.dart';
+import 'package:formapp/app/modules/family/views/list_family_view.dart';
 import 'package:formapp/app/modules/home/home_binding.dart';
 import 'package:formapp/app/modules/home/home_view.dart';
 import 'package:formapp/app/modules/initial/initial_binding.dart';
 import 'package:formapp/app/modules/initial/initial_view.dart';
 import 'package:formapp/app/modules/login/login_binding.dart';
 import 'package:formapp/app/modules/login/login_view.dart';
-import 'package:formapp/app/modules/user/user_binding.dart';
-import 'package:formapp/app/modules/user/user_view.dart';
+import 'package:formapp/app/modules/people/people_binding.dart';
+import 'package:formapp/app/modules/people/views/edit_people_view.dart';
 import 'package:formapp/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 
@@ -27,9 +31,24 @@ class ApppPages {
       binding: HomeBinding(),
     ),
     GetPage(
-      name: Routes.USER,
-      page: () => const UserView(),
-      binding: UserBinding(),
+      name: Routes.LIST_FAMILY,
+      page: () => const FamilyView(),
+      binding: FamilyBinding(),
+    ),
+    GetPage(
+      name: Routes.EDIT_FAMILY,
+      page: () => const EditFamilyView(),
+      binding: FamilyBinding(),
+    ),
+    GetPage(
+      name: Routes.CREATE_FAMILY,
+      page: () => const CreateFamilyView(),
+      binding: FamilyBinding(),
+    ),
+    GetPage(
+      name: Routes.EDIT_PEOPLE,
+      page: () => const EditPeopleView(),
+      binding: PeopleBinding(),
     ),
   ];
 }

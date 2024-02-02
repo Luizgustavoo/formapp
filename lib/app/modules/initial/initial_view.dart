@@ -1,6 +1,7 @@
 import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/initial/initial_controller.dart';
+
 import 'package:get/get.dart';
 
 class InitialView extends GetView<InitialController> {
@@ -22,7 +23,7 @@ class InitialView extends GetView<InitialController> {
       showLoader: true,
       loadingText: const Text("Loading..."),
       navigator: controller.verifyAuth(),
-      durationInSeconds: 1,
+      durationInSeconds: 3,
     );
   }
 }

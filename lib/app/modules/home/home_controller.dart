@@ -2,16 +2,14 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class HomeController extends GetxController {
-  final box = GetStorage('credenciado');
-  RxString username = ''.obs;
+  var box;
+  RxString username = "".obs;
 
   @override
   void onInit() {
+    box = GetStorage('credenciado');
+    username.value = box.read('auth')['user']['nome'] ?? "Sem dados";
     super.onInit();
-
-    var authData = box.read('auth') ?? {};
-
-    username.value = authData['user']['nome'] ?? '';
   }
 
   void clear() {

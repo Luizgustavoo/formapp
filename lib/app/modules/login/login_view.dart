@@ -216,7 +216,8 @@ class LoginView extends GetView<LoginController> {
                                     ),
                                   ),
                                 ),
-                                Obx(() => Visibility(
+                                Obx(
+                                  () => Visibility(
                                     visible: controller.loading.value,
                                     child: Container(
                                       color: Colors.transparent,
@@ -233,7 +234,25 @@ class LoginView extends GetView<LoginController> {
                                           color: Colors.orange.shade700,
                                         ),
                                       ),
-                                    )))
+                                    ),
+                                  ),
+                                ),
+                                Obx(() {
+                                  if (controller.showErrorSnackbar.value) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      Get.snackbar(
+                                        'Erro de Autenticação',
+                                        'Usuário ou senha inválidos',
+                                        backgroundColor: Colors.red,
+                                        colorText: Colors.white,
+                                      );
+                                      controller.showErrorSnackbar.value =
+                                          false;
+                                    });
+                                  }
+                                  return const SizedBox.shrink();
+                                }),
                               ],
                             ),
                           ),

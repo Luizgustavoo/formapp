@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/screens/edit_person.dart';
@@ -29,28 +28,6 @@ class _EditFamilyState extends State<EditFamily> with TickerProviderStateMixin {
   int editedFamilyMemberIndex = -1;
   int tabIndex = 0;
 
-  List<FamilyMember> familyMembersList = [];
-
-  String photoUrl = '';
-
-  FamilyMember familyMember = FamilyMember(
-    nomeCompleto: '',
-    sexo: '',
-    cpf: '',
-    dataNascimento: '',
-    estadoCivil: '',
-    tituloEleitor: '',
-    zonaEleitoral: '',
-    contato: '',
-    redeSocial: '',
-    religiao: '',
-    trabalho: '',
-    cargo: '',
-    funcIgreja: '',
-    igreja: '',
-    provedor: '',
-  );
-
   TextEditingController nomeCompletoController = TextEditingController();
   TextEditingController dataNascimentoController = TextEditingController();
   TextEditingController cpfController = TextEditingController();
@@ -65,29 +42,11 @@ class _EditFamilyState extends State<EditFamily> with TickerProviderStateMixin {
   late TabController _tabController;
 
   void _excluirMembroFamilia(int index) {
-    setState(() {
-      familyMembersList.removeAt(index);
-    });
+    setState(() {});
   }
 
   void _editarMembroFamilia(int index) {
-    setState(() {
-      editedFamilyMemberIndex = index;
-
-      FamilyMember editedMember = familyMembersList[index];
-
-      nomeCompletoController.text = editedMember.nomeCompleto;
-      dataNascimentoController.text = editedMember.dataNascimento;
-      cpfController.text = editedMember.cpf;
-      tituloEleitorController.text = editedMember.tituloEleitor;
-      zonaEleitoralController.text = editedMember.zonaEleitoral;
-      trabalhoController.text = editedMember.trabalho;
-      cargoController.text = editedMember.cargo;
-      contatoController.text = editedMember.contato;
-      redeSocialController.text = editedMember.redeSocial;
-      igrejaController.text = editedMember.igreja;
-      funcIgrejaController.text = editedMember.funcIgreja;
-    });
+    setState(() {});
   }
 
   @override

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
@@ -8,10 +7,7 @@ import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:get/get.dart';
 
 class FamilyView extends GetView<FamilyController> {
-  final List<FamilyMember> familyMembersList = [];
-  final TextEditingController _searchController = TextEditingController();
-
-  FamilyView({super.key});
+  const FamilyView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +17,7 @@ class FamilyView extends GetView<FamilyController> {
         actions: [
           IconButton(
               onPressed: () {
-                Get.toNamed('edit-family');
+                Get.toNamed('/create-family');
               },
               icon: const Icon(Icons.add_rounded))
         ],
@@ -29,7 +25,7 @@ class FamilyView extends GetView<FamilyController> {
       body: Column(
         children: [
           SearchWidget(
-              controller: _searchController,
+              controller: controller.searchController,
               onSearchPressed: (context, a, query) {}),
           Expanded(
             child: Obx(() => ListView.builder(

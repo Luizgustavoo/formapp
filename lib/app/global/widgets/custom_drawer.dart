@@ -40,7 +40,7 @@ class CustomDrawer extends GetView<HomeController> {
                             bottom: Divider.createBorderSide(context,
                                 color: Colors.transparent, width: 0.0))),
                     duration: const Duration(milliseconds: 200),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Row(
@@ -63,17 +63,19 @@ class CustomDrawer extends GetView<HomeController> {
                         //   ],
                         // ),
                         Padding(
-                          padding: EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.only(top: 15),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Text(
-                                  'NOME DO CREDENCIADO',
-                                  style: TextStyle(
-                                      fontSize: 16, fontFamily: 'Poppins'),
-                                ),
+                                child: Obx(() => Text(
+                                      controller.username.value.isNotEmpty
+                                          ? controller.username.value
+                                          : "",
+                                      style: const TextStyle(
+                                          fontSize: 16, fontFamily: 'Poppins'),
+                                    )),
                               ),
                             ],
                           ),
@@ -83,9 +85,7 @@ class CustomDrawer extends GetView<HomeController> {
                   ),
                 ),
               ),
-              CustomListTile(Icons.home_rounded, 'HOME', () {
-                Get.offAllNamed('/home');
-              }, true),
+              CustomListTile(Icons.home_rounded, 'HOME', () {}, true),
               CustomListTile(
                   Icons.settings_rounded, 'CONFIGURAÇÕES', () {}, true),
               CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {

@@ -5,12 +5,8 @@ import 'package:get/get.dart';
 class PeopleBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<PeopleController>(() => PeopleController());
-    Get.lazyPut<PeopleController>(
-      () => PeopleController(),
-    );
-    Get.lazyPut<PeopleApiClient>(
-      () => PeopleApiClient(),
-    );
+    Get.lazyPut<EditPeopleController>(() => EditPeopleController());
+    Get.lazyPut<EditPeopleController>(() => EditPeopleController());
+    Get.lazyPut<PeopleApiClient>(() => PeopleApiClient());
   }
 }
