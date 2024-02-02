@@ -8,7 +8,8 @@ class CustomDrawer extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = Get.size;
+
     return SafeArea(
       child: SizedBox(
         width: size.width * 0.70,
@@ -39,7 +40,7 @@ class CustomDrawer extends GetView<HomeController> {
                             bottom: Divider.createBorderSide(context,
                                 color: Colors.transparent, width: 0.0))),
                     duration: const Duration(milliseconds: 200),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Row(
@@ -62,19 +63,17 @@ class CustomDrawer extends GetView<HomeController> {
                         //   ],
                         // ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 15),
+                          padding: EdgeInsets.only(top: 15),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Obx(() => Text(
-                                      controller.username.value.isNotEmpty
-                                          ? controller.username.value
-                                          : 'NOME DO CREDENCIADO',
-                                      style: const TextStyle(
-                                          fontSize: 16, fontFamily: 'Poppins'),
-                                    )),
+                                child: Text(
+                                  'NOME DO CREDENCIADO',
+                                  style: TextStyle(
+                                      fontSize: 16, fontFamily: 'Poppins'),
+                                ),
                               ),
                             ],
                           ),

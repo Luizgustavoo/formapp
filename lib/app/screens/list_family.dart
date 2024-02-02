@@ -19,6 +19,26 @@ class _ListFamilyState extends State<ListFamily> {
   final TextEditingController _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    List<String> familias = [
+      "Família Silva",
+      "Família Fernandes",
+      "Família Moura",
+      "Família Tales",
+      "Família Oliveira",
+      "Família Vieira",
+      "Família Farias",
+      "Família Albert",
+      "Família Nunes",
+      "Família Coimbra",
+      "Família Kimberly",
+      "Família Krois",
+      "Família Android",
+      "Família Windows",
+      "Família Linux",
+      "Família Mac",
+      "Família Google",
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Famílias Cadastradas'),
@@ -43,11 +63,12 @@ class _ListFamilyState extends State<ListFamily> {
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 physics: const BouncingScrollPhysics(),
-                itemCount: 20,
+                itemCount: familias.length,
                 itemBuilder: (context, index) {
                   return CustomFamilyCard(
-                      memberName: 'Luiz',
-                      memberContact: '43 99928-9380',
+                      stripe: index % 2 == 0 ? true : false,
+                      memberName: familias[index],
+                      memberContact: 'Provedor: Nome do Provedor',
                       editMember: () {
                         Navigator.push(
                             context,

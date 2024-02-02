@@ -4,13 +4,13 @@ import 'package:get_storage/get_storage.dart';
 
 class InitialController extends GetxController {
   final box = GetStorage('credenciado');
+  var auth;
 
   String verifyAuth() {
     final auth = box.read('auth');
     if (auth != null) {
       return Routes.HOME;
-    } else {
-      return Routes.LOGIN;
     }
+    return Routes.LOGIN;
   }
 }
