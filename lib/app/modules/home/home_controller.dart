@@ -1,4 +1,3 @@
-import 'package:formapp/app/data/models/auth_model.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 

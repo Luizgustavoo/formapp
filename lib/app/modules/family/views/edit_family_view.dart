@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/screens/edit_person.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
 class EditFamilyView extends GetView<FamilyController> {
-  final List<FamilyMember> familyMembersList = [];
-
-  int editedFamilyMemberIndex = -1;
-
-  EditFamilyView({super.key});
+  const EditFamilyView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +31,10 @@ class EditFamilyView extends GetView<FamilyController> {
           controller: controller.tabController,
           children: [
             //**DADOS DA FAMILIA*/
-            buildfamilyform(controller: controller),
+            Buildfamilyform(controller: controller),
 
             //**DADOS DA COMPOSIÇÃO FAMILIAR*/
-            buildCompositionForm(controller: controller),
+            BuildCompositionForm(controller: controller),
           ],
         ),
         floatingActionButton: Padding(
@@ -69,8 +63,8 @@ class EditFamilyView extends GetView<FamilyController> {
   }
 }
 
-class buildCompositionForm extends StatelessWidget {
-  const buildCompositionForm({super.key, required this.controller});
+class BuildCompositionForm extends StatelessWidget {
+  const BuildCompositionForm({super.key, required this.controller});
 
   final FamilyController controller;
 
@@ -148,8 +142,8 @@ class buildCompositionForm extends StatelessWidget {
   }
 }
 
-class buildfamilyform extends StatelessWidget {
-  const buildfamilyform({
+class Buildfamilyform extends StatelessWidget {
+  const Buildfamilyform({
     super.key,
     required this.controller,
   });

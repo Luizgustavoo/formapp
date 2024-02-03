@@ -3,10 +3,9 @@ import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:formapp/app/screens/family/home_page_family.dart';
 import 'package:get/get.dart';
 import 'package:formapp/app/screens/create_user.dart';
-import 'package:formapp/app/screens/list_family.dart';
+
 import 'package:formapp/app/global/widgets/custom_card.dart';
 import 'package:formapp/app/global/widgets/custom_drawer.dart';
-import 'package:get_storage/get_storage.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});

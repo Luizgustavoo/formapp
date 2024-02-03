@@ -1,20 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_member.dart';
-import 'package:formapp/app/global/widgets/custom_person_card.dart';
-import 'package:formapp/app/global/widgets/message_modal.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/screens/edit_person.dart';
+import 'dart:ffi';
 
+import 'package:flutter/material.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-class EditPeopleView extends GetView<PeopleController> {
-  final List<FamilyMember> familyMembersList = [];
-
-  int editedFamilyMemberIndex = -1;
-
-  EditPeopleView({super.key});
+class EditPeopleView extends GetView<EditPeopleController> {
+  const EditPeopleView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +16,7 @@ class EditPeopleView extends GetView<PeopleController> {
         title: const Text('ALTERAR FAMILIAR'),
       ),
       body: Form(
-        key: controller.familyFormKey,
+        key: controller.peopleFormKey,
         child: ListView(
           padding: const EdgeInsets.all(12.0),
           children: [
@@ -57,7 +50,7 @@ class EditPeopleView extends GetView<PeopleController> {
                           CircleAvatar(
                             radius: 35,
                             backgroundImage: controller.photoUrl.isNotEmpty
-                                ? NetworkImage(photoUrl)
+                                ? NetworkImage(controller.photoUrl.value)
                                 : const AssetImage(
                                         'assets/images/default_avatar.jpg')
                                     as ImageProvider,
@@ -84,13 +77,13 @@ class EditPeopleView extends GetView<PeopleController> {
                             activeColor: Colors.orange.shade700,
                             inactiveThumbColor: Colors.orange.shade500,
                             inactiveTrackColor: Colors.orange.shade100,
-                            value: provedorCheckboxValue,
+                            value: controller.provedorCheckboxValue.value,
                             onChanged: (value) {
-                              setState(() {
-                                provedorCheckboxValue = value;
-                                familyMember.provedor =
-                                    provedorCheckboxValue ? 'Sim' : 'Não';
-                              });
+                              // setState(() {
+                              //   provedorCheckboxValue = value;
+                              //   familyMember.provedor =
+                              //       provedorCheckboxValue ? 'Sim' : 'Não';
+                              // });
                             },
                           ),
                         ],
@@ -99,15 +92,11 @@ class EditPeopleView extends GetView<PeopleController> {
                         height: 8,
                       ),
                       TextFormField(
-                        controller: nomeCompletoController,
+                        controller: controller.nomePessoaController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Nome Completo'),
-                        onChanged: (value) {
-                          setState(() {
-                            familyMember.nomeCompleto = value;
-                          });
-                        },
+                        onChanged: (value) {},
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor, digite o nome da rua';
@@ -120,12 +109,8 @@ class EditPeopleView extends GetView<PeopleController> {
                         children: [
                           Expanded(
                             child: DropdownButtonFormField<String>(
-                              value: sexo,
-                              onChanged: (value) {
-                                setState(() {
-                                  familyMember.sexo = value!;
-                                });
-                              },
+                              value: controller.sexo!.value,
+                              onChanged: (value) {},
                               items: [
                                 'Masculino',
                                 'Feminino'
@@ -143,12 +128,8 @@ class EditPeopleView extends GetView<PeopleController> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: DropdownButtonFormField<String>(
-                              value: civil,
-                              onChanged: (value) {
-                                setState(() {
-                                  familyMember.estadoCivil = value!;
-                                });
-                              },
+                              value: controller.civil.value,
+                              onChanged: (value) {},
                               items: [
                                 'Solteiro(a)',
                                 'Casado(a)',
@@ -172,17 +153,13 @@ class EditPeopleView extends GetView<PeopleController> {
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Data de Nascimento'),
-                        onChanged: (value) {
-                          familyMember.dataNascimento = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(), labelText: 'CPF'),
-                        onChanged: (value) {
-                          familyMember.cpf = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -193,9 +170,7 @@ class EditPeopleView extends GetView<PeopleController> {
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Título de Eleitor'),
-                              onChanged: (value) {
-                                familyMember.tituloEleitor = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -205,68 +180,54 @@ class EditPeopleView extends GetView<PeopleController> {
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Zona Eleitoral'),
-                              onChanged: (value) {
-                                familyMember.zonaEleitoral = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: trabalhoController,
+                        controller: controller.localTrabalhoPessoaController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Trabalho'),
-                        onChanged: (value) {
-                          familyMember.trabalho = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: cargoController,
+                        controller: controller.cargoPessoaController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(), labelText: 'Cargo'),
-                        onChanged: (value) {
-                          familyMember.cargo = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
                             child: TextFormField(
-                              controller: contatoController,
+                              controller: controller.celularPessoaController,
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Telefone'),
-                              onChanged: (value) {
-                                familyMember.contato = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: TextFormField(
-                              controller: redeSocialController,
+                              controller: controller.redeSocialPessoaController,
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Rede Social'),
-                              onChanged: (value) {
-                                familyMember.redeSocial = value;
-                              },
+                              onChanged: (value) {},
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
-                        value: religiao,
-                        onChanged: (value) {
-                          setState(() {
-                            familyMember.religiao = value!;
-                          });
-                        },
+                        value: controller.religiao.value,
+                        onChanged: (value) {},
                         items: ['Católica', 'Evangélica', 'Outra']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
@@ -280,22 +241,18 @@ class EditPeopleView extends GetView<PeopleController> {
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: igrejaController,
+                        controller: controller.igrejaPessoaController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(), labelText: 'Igreja'),
-                        onChanged: (value) {
-                          familyMember.igreja = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: funcIgrejaController,
+                        controller: controller.funcaoIgrejaPessoaController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Função/Igreja'),
-                        onChanged: (value) {
-                          familyMember.funcIgreja = value;
-                        },
+                        onChanged: (value) {},
                       ),
                       const SizedBox(height: 10)
                     ],

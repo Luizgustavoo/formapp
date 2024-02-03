@@ -34,11 +34,12 @@ class CustomFamilyCard extends StatelessWidget {
           children: [
             ListTile(
               leading: CircleAvatar(
-                  child: Text(
-                memberName[0].toString(),
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              )),
+                child: Text(
+                  memberName[0].toString(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
               title: Text(memberName,
                   style: CustomTextStyle.subtitleNegrit(context)),
               subtitle:
