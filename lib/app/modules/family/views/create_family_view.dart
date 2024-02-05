@@ -1,3 +1,4 @@
+import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
@@ -21,40 +22,65 @@ class CreateFamilyView extends GetView<FamilyController> {
           ),
           body: _buildFamilyForm(),
           floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: FloatingActionButton(
-                elevation: 5,
-                onPressed: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    isDismissible: false,
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: const AddPeopleFamilyView(),
-                    ),
-                  );
+            padding: const EdgeInsets.only(bottom: 5),
+            child: FloatingActionBubble(
+              // Menu items
+              items: [
+                // Floating action menu item
+                Bubble(
+                  title: "Morador",
+                  iconColor: Colors.white,
+                  bubbleColor: Colors.orange.shade500,
+                  icon: Icons.add_rounded,
+                  titleStyle: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontFamily: 'Poppinss'),
+                  onPress: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      isDismissible: false,
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: const AddPeopleFamilyView(),
+                      ),
+                    );
+                    controller.animationController!.reverse();
+                  },
+                ),
+                // Floating action menu item
+                Bubble(
+                  title: "Salvar",
+                  iconColor: Colors.white,
+                  bubbleColor: Colors.green,
+                  icon: Icons.save_rounded,
+                  titleStyle: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontFamily: 'Poppinss'),
+                  onPress: () {
+                    controller.animationController!.reverse();
+                  },
+                ),
+              ],
 
-                  // if (controller.tabController!.index == 0) {
-                  //   controller.addPessoa();
-                  //   print('Adicionar novo membro à Composição Familiar');
-                  // } else if (controller.tabController!.index == 1) {
-                  //   print('Salvar informações da Família');
-                  // }
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                backgroundColor: controller.tabController!.index == 1
-                    ? Colors.green.shade800
-                    : Colors.orange.shade700,
-                child: Icon(
-                  controller.tabController!.index == 1
-                      ? Icons.save_outlined
-                      : Icons.add,
-                  color: Colors.white,
-                ),
-              )),
+              // animation controller
+              animation: controller.animation!,
+
+              // On pressed change animation state
+              onPress: () => controller.animationController!.isCompleted
+                  ? controller.animationController!.reverse()
+                  : controller.animationController!.forward(),
+
+              // Floating Action button Icon color
+              iconColor: Colors.white,
+
+              // Flaoting Action button Icon
+              iconData: Icons.menu_rounded,
+              backGroundColor: Colors.orange.shade500,
+            ),
+          ),
         ),
       ),
     );
@@ -241,28 +267,106 @@ class CreateFamilyView extends GetView<FamilyController> {
                 ),
               ],
             ),
-            ExpansionTile(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              key: GlobalKey(),
-              initiallyExpanded: controller.familyInfo.value,
-              onExpansionChanged: (value) {
-                controller.familyInfo.value = value;
-              },
-              title: const Text(
-                'Informações da Família',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontFamily: 'Poppins',
-                  fontSize: 20,
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Composição Familiar',
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontFamily: 'Poppins',
+                    fontSize: 20,
+                  ),
                 ),
-              ),
-              subtitle: Divider(
+                Icon(Icons.keyboard_arrow_up)
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 40),
+              child: Divider(
                 height: 5,
                 thickness: 3,
                 color: Colors.orange.shade500,
               ),
-              children: const [],
+            ),
+            SizedBox(
+              height: controller.familyInfo.value
+                  ? Get.height * .5
+                  : Get.height * 1,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.composicaoFamiliar.length,
+                  itemBuilder: (context, index) {
+                    return ExpansionTile(
+                      leading: CircleAvatar(
+                        radius: 20,
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                          child: Image.network(
+                            height: 200,
+                            'https://s2-techtudo.glbimg.com/L9wb1xt7tjjL-Ocvos-Ju0tVmfc=/0x0:1200x800/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2023/q/l/TIdfl2SA6J16XZAy56Mw/canvaai.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        controller.composicaoFamiliar[index].nome!,
+                        style: CustomTextStyle.subtitleNegrit(context),
+                      ),
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              "CPF: ${controller.composicaoFamiliar[index].cpf!}",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                            Text(
+                              "CPF: 000.000.000-00",
+                              style: CustomTextStyle.form(context),
+                            ),
+                          ],
+                        )
+                      ],
+                    );
+                  }),
             )
           ],
         ),

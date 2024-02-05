@@ -40,6 +40,7 @@ dependencies:
   http: ^0.13.6
   get_storage: ^2.0.0
   easy_splash_screen: ^1.0.4
+  floating_action_bubble: ^1.1.4
 
 dev_dependencies:
   flutter_test:

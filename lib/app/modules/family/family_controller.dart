@@ -70,8 +70,20 @@ class FamilyController extends GetxController
 
   final repository = Get.find<FamilyRepository>();
 
+  Animation<double>? animation;
+  AnimationController? animationController;
+
   @override
   void onInit() {
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 260),
+    );
+
+    final curvedAnimation =
+        CurvedAnimation(curve: Curves.easeInOut, parent: animationController!);
+    animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+
     print("onInit chamado");
     tabController = TabController(length: 2, vsync: this);
     tabController!.addListener(() {
@@ -95,10 +107,12 @@ class FamilyController extends GetxController
     residenciaPropriaFamiliaController.text =
         selectedFamily!.residencia_propria.toString();
     statusFamiliaController.text = selectedFamily!.status.toString();
+
     listPessoas = selectedFamily!.pessoas;
   }
 
   void addPessoa() {
+    print('ADD PESSOAS');
     Pessoas pessoa = Pessoas(
       nome: nomePessoaController.text,
       cpf: cpfPessoaController.text,
