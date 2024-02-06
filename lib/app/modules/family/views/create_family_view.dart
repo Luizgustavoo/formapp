@@ -13,73 +13,65 @@ class CreateFamilyView extends GetView<FamilyController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => DefaultTabController(
-        initialIndex: controller.tabIndex.value,
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Controle de Família'),
-          ),
-          body: _buildFamilyForm(),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: FloatingActionBubble(
-              // Menu items
-              items: [
-                // Floating action menu item
-                Bubble(
-                  title: "Morador",
-                  iconColor: Colors.white,
-                  bubbleColor: Colors.orange.shade500,
-                  icon: Icons.add_rounded,
-                  titleStyle: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontFamily: 'Poppinss'),
-                  onPress: () {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      context: context,
-                      builder: (context) => Padding(
-                        padding: MediaQuery.of(context).viewInsets,
-                        child: const AddPeopleFamilyView(),
-                      ),
-                    );
-                    controller.animationController!.reverse();
-                  },
-                ),
-                // Floating action menu item
-                Bubble(
-                  title: "Salvar",
-                  iconColor: Colors.white,
-                  bubbleColor: Colors.green,
-                  icon: Icons.save_rounded,
-                  titleStyle: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontFamily: 'Poppinss'),
-                  onPress: () {
-                    controller.animationController!.reverse();
-                  },
-                ),
-              ],
+      () => Scaffold(
+        appBar: AppBar(
+          title: const Text('Controle de Família'),
+        ),
+        body: _buildFamilyForm(),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 5),
+          child: FloatingActionBubble(
+            // Menu items
+            items: [
+              // Floating action menu item
+              Bubble(
+                title: "Morador",
+                iconColor: Colors.white,
+                bubbleColor: Colors.orange.shade500,
+                icon: Icons.add_rounded,
+                titleStyle: const TextStyle(
+                    fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
+                onPress: () {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: const AddPeopleFamilyView(),
+                    ),
+                  );
+                  controller.animationController!.reverse();
+                },
+              ),
+              // Floating action menu item
+              Bubble(
+                title: "Salvar",
+                iconColor: Colors.white,
+                bubbleColor: Colors.green,
+                icon: Icons.save_rounded,
+                titleStyle: const TextStyle(
+                    fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
+                onPress: () {
+                  controller.animationController!.reverse();
+                },
+              ),
+            ],
 
-              // animation controller
-              animation: controller.animation!,
+            // animation controller
+            animation: controller.animation!,
 
-              // On pressed change animation state
-              onPress: () => controller.animationController!.isCompleted
-                  ? controller.animationController!.reverse()
-                  : controller.animationController!.forward(),
+            // On pressed change animation state
+            onPress: () => controller.animationController!.isCompleted
+                ? controller.animationController!.reverse()
+                : controller.animationController!.forward(),
 
-              // Floating Action button Icon color
-              iconColor: Colors.white,
+            // Floating Action button Icon color
+            iconColor: Colors.white,
 
-              // Flaoting Action button Icon
-              iconData: Icons.menu_rounded,
-              backGroundColor: Colors.orange.shade500,
-            ),
+            // Flaoting Action button Icon
+            iconData: Icons.menu_rounded,
+            backGroundColor: Colors.orange.shade500,
           ),
         ),
       ),
@@ -297,6 +289,7 @@ class CreateFamilyView extends GetView<FamilyController> {
                   shrinkWrap: true,
                   itemCount: controller.composicaoFamiliar.length,
                   itemBuilder: (context, index) {
+                    Pessoas pessoa = controller.composicaoFamiliar[index];
                     return ExpansionTile(
                       leading: CircleAvatar(
                         radius: 20,
@@ -318,52 +311,46 @@ class CreateFamilyView extends GetView<FamilyController> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              "CPF: ${controller.composicaoFamiliar[index].cpf!}",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
-                            Text(
-                              "CPF: 000.000.000-00",
-                              style: CustomTextStyle.form(context),
-                            ),
+                            CustomPersonCard(pessoa: pessoa),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: TextButton.icon(
+                                    icon: const Icon(Icons.edit_outlined,
+                                        size: 20, color: Colors.blue),
+                                    onPressed: () {
+                                      // Lógica para editar
+                                    },
+                                    label: const Text(
+                                      'Editar',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextButton.icon(
+                                    icon: const Icon(Icons.delete_outline_sharp,
+                                        size: 20, color: Colors.red),
+                                    onPressed: () {
+                                      // Lógica para apagar
+                                    },
+                                    label: const Text(
+                                      'Apagar',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                           ],
-                        )
+                        ),
                       ],
                     );
                   }),
@@ -373,45 +360,35 @@ class CreateFamilyView extends GetView<FamilyController> {
       ),
     );
   }
+}
 
-  Widget _familyComposition() {
-    return Form(
-      key: controller.individualFormKey,
-      child: ListView.builder(
-        itemCount: controller.composicaoFamiliar.length,
-        itemBuilder: (context, index) {
-          Pessoas pessoa = controller.composicaoFamiliar[index];
-          return Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-            child: Card(
-              elevation: 3,
-              color: index % 2 == 0
-                  ? const Color.fromRGBO(224, 224, 224, 1)
-                  : Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ExpansionTile(
-                    leading: const CircleAvatar(
-                      child: Text(
-                        "N",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                    ),
-                    title: Text(pessoa.nome!),
-                    subtitle: const Text('Nascimento: 10/05/1988'),
-                    children: const [
-                      Column(
-                        children: [Text("CPF: 081.360.536-87")],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+class CustomPersonCard extends StatelessWidget {
+  final Pessoas pessoa;
+
+  const CustomPersonCard({
+    Key? key,
+    required this.pessoa,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        buildText('CPF', pessoa.cpf, context),
+        buildText('Telefone', pessoa.telefone, context),
+        buildText('Endereço', pessoa.cpf, context),
+        // ... Adicione mais campos conforme necessário
+      ],
+    );
+  }
+
+  Widget buildText(String label, String? value, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+      child: Text(
+        '$label: ${value ?? ''}',
+        style: CustomTextStyle.form(context),
       ),
     );
   }
