@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
+import 'package:formapp/app/utils/format_validator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class FamilyController extends GetxController
     with SingleGetTickerProviderMixin {
-  /// CONTROLLERS PARA DADOS DA FAMÍLIA
   TextEditingController idFamiliaController = TextEditingController();
   TextEditingController nomeFamiliaController = TextEditingController();
   TextEditingController cepFamiliaController = TextEditingController();
-  TextEditingController enderecoFamiliaController = TextEditingController();
+  TextEditingController ruaFamiliaController = TextEditingController();
   TextEditingController numeroCasaFamiliaController = TextEditingController();
   TextEditingController bairroFamiliaController = TextEditingController();
   TextEditingController cidadeFamiliaController = TextEditingController();
@@ -21,7 +22,6 @@ class FamilyController extends GetxController
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
 
-  /// CONTROLLERS PARA A PESSOA
   TextEditingController idPessoaController = TextEditingController();
   TextEditingController nomePessoaController = TextEditingController();
   TextEditingController nascimentoPessoaController = TextEditingController();
@@ -39,8 +39,6 @@ class FamilyController extends GetxController
   TextEditingController usuarioId = TextEditingController();
   TextEditingController familiaId = TextEditingController();
   final TextEditingController searchController = TextEditingController();
-
-  /// fim CONTROLLERS PARA A PESSOA
 
   final box = GetStorage('credenciado');
   List<Family>? families;
@@ -61,6 +59,8 @@ class FamilyController extends GetxController
 
   RxString sexo = 'Masculino'.obs;
   RxString civil = 'Solteiro(a)'.obs;
+
+  RxString parentesco = 'Avô(ó)'.obs;
   RxString religiao = 'Católica'.obs;
   RxString photoUrl = ''.obs;
   RxBool residenceOwn = false.obs;
@@ -98,7 +98,7 @@ class FamilyController extends GetxController
     idFamiliaController.text = selectedFamily!.id.toString();
     nomeFamiliaController.text = selectedFamily!.nome.toString();
     cepFamiliaController.text = selectedFamily!.cep.toString();
-    enderecoFamiliaController.text = selectedFamily!.endereco.toString();
+    ruaFamiliaController.text = selectedFamily!.endereco.toString();
     numeroCasaFamiliaController.text = selectedFamily!.numero_casa.toString();
     bairroFamiliaController.text = selectedFamily!.bairro.toString();
     cidadeFamiliaController.text = selectedFamily!.cidade.toString();
@@ -125,5 +125,73 @@ class FamilyController extends GetxController
     final token = box.read('auth')['access_token'];
 
     listFamilies.value = await repository.getALl("Bearer " + token);
+  }
+
+  /*PARTE RESPONSAVEL PELO CEP */
+  void searchCEP() async {
+    final cep = cepFamiliaController.text;
+    final addressData = await ViaCEPService.getAddressFromCEP(cep);
+
+    if (addressData.containsKey('error')) {
+      Get.snackbar(
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+          'Erro',
+          'Erro ao obter dados do CEP: ${addressData['error']}');
+      limpaCEP();
+    } else {
+      ruaFamiliaController.text = addressData['logradouro'];
+      bairroFamiliaController.text = addressData['bairro'];
+      cidadeFamiliaController.text = addressData['localidade'];
+      ufFamiliaController.text = addressData['uf'];
+    }
+  }
+  /*FINAL PARTE RESPONSAVEL PELO CEP */
+
+  /*PARTE RESPONSAVEL PELA FORMATACAO*/
+  void onCPFChanged(String cpf) {
+    final formattedCPF = FormattersValidators.formatCPF(cpf);
+    cpfPessoaController.value = TextEditingValue(
+      text: formattedCPF.value,
+      selection: TextSelection.collapsed(offset: formattedCPF.value.length),
+    );
+  }
+
+  void onPhoneChanged(String phone) {
+    final formattedPhone = FormattersValidators.formatPhone(phone);
+    celularPessoaController.value = TextEditingValue(
+      text: formattedPhone.value,
+      selection: TextSelection.collapsed(offset: formattedPhone.value.length),
+    );
+  }
+
+  bool validateCPF() {
+    return FormattersValidators.validateCPF(cpfPessoaController.text);
+  }
+
+  bool validatePhone() {
+    return FormattersValidators.validatePhone(celularPessoaController.text);
+  }
+
+  void onCEPChanged(String cep) {
+    final formattedCEP = FormattersValidators.formatCEP(cep);
+    cepFamiliaController.value = TextEditingValue(
+      text: formattedCEP.value,
+      selection: TextSelection.collapsed(offset: formattedCEP.value.length),
+    );
+  }
+
+  bool validateCEP() {
+    return FormattersValidators.validateCEP(cepFamiliaController.text);
+  }
+
+  void limpaCEP() {
+    ruaFamiliaController.text = '';
+    cidadeFamiliaController.text = '';
+    bairroFamiliaController.text = '';
+    ufFamiliaController.text = '';
+    complementoFamiliaController.text = '';
+    numeroCasaFamiliaController.text = '';
   }
 }

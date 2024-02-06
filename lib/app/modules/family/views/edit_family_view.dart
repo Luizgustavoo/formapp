@@ -209,7 +209,7 @@ class Buildfamilyform extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           TextFormField(
-            controller: controller.enderecoFamiliaController,
+            controller: controller.ruaFamiliaController,
             decoration: const InputDecoration(
               labelText: 'Logradouro',
               border: OutlineInputBorder(),

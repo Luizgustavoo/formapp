@@ -121,7 +121,7 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                             'Solteiro(a)',
                             'Casado(a)',
                             'Divorciado(a)',
-                            'Emancipado(a)'
+                            'União Estável'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -136,19 +136,71 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  TextFormField(
-                    controller: controller.nascimentoPessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Data de Nascimento'),
-                    onChanged: (value) {},
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          controller: controller.nascimentoPessoaController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Data de Nascimento'),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: controller.parentesco.value,
+                          onChanged: (value) {},
+                          items: [
+                            'Avô(ó)',
+                            'Bisavô(ó)',
+                            'Companheiro(a)',
+                            'Cunhado(a)',
+                            'Irmã',
+                            'Irmão',
+                            'Madrasta',
+                            'Mãe',
+                            'Outro',
+                            'Padrasto',
+                            'Pai',
+                            'Resp. Legal',
+                            'Madrasta',
+                            'Sobrinho(a)',
+                            'Tio(a)',
+                            'Vodrasto',
+                            'Vodrasta',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Parentesco'),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: controller.cpfPessoaController,
+                    keyboardType: TextInputType.number,
+                    maxLength: 14,
+                    onChanged: (value) => controller.onCPFChanged(value),
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'CPF'),
-                    onChanged: (value) {},
+                        counterText: '',
+                        border: OutlineInputBorder(),
+                        labelText: 'CPF'),
+                    validator: (value) {
+                      if (!controller.validateCPF()) {
+                        return "Informe um CPF válido";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 8),
                   Row(
