@@ -375,9 +375,21 @@ class CustomPersonCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        buildText('CPF', pessoa.cpf, context),
-        buildText('Telefone', pessoa.telefone, context),
-        buildText('Endereço', pessoa.cpf, context),
+        buildText('PROVEDDOR: ', pessoa.provedor_casa, context),
+        buildText('PARENTESCO: ', pessoa.parentesco, context),
+        buildText('SEXO: ', pessoa.sexo, context),
+        buildText('ESTADO CIVIL: ', pessoa.estadocivil_id.toString(), context),
+        buildText('NASCIMENTO: ', pessoa.data_nascimento, context),
+        buildText('CPF: ', pessoa.cpf, context),
+        buildText('TITULO: ', pessoa.titulo_eleitor, context),
+        buildText('ZONA ELEITORAL: ', pessoa.zona_eleitoral, context),
+        buildText('LOCAL TRABALHO: ', pessoa.local_trabalho, context),
+        buildText('CARGO: ', pessoa.cargo_trabalho, context),
+        buildText('TELEFONE: ', pessoa.telefone, context),
+        buildText('REDE SOCIAL: ', pessoa.rede_social, context),
+        buildText('RELIGIÃO: ', pessoa.religiao_id.toString(), context),
+        buildText('IGREJA: ', pessoa.igreja_id.toString(), context),
+        buildText('FUNÇÃO IGREJA: ', pessoa.funcao_igreja, context),
         // ... Adicione mais campos conforme necessário
       ],
     );

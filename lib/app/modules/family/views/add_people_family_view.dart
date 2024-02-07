@@ -3,7 +3,6 @@ import 'package:formapp/app/modules/family/family_controller.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class AddPeopleFamilyView extends GetView<FamilyController> {
   const AddPeopleFamilyView({super.key});
