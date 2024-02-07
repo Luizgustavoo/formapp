@@ -1,7 +1,6 @@
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
@@ -38,7 +37,9 @@ class CreateFamilyView extends GetView<FamilyController> {
                     context: context,
                     builder: (context) => Padding(
                       padding: MediaQuery.of(context).viewInsets,
-                      child: const AddPeopleFamilyView(),
+                      child: AddPeopleFamilyView(
+                        familyController: controller,
+                      ),
                     ),
                   );
                   controller.animationController!.reverse();
@@ -121,27 +122,42 @@ class CreateFamilyView extends GetView<FamilyController> {
                   },
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                        splashRadius: 2,
-                        iconSize: 20,
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.search_rounded,
-                        )),
-                    labelText: 'CEP',
-                    border: const OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, digite o nome da rua';
+                Focus(
+                  onFocusChange: (hasFocus) {
+                    if (!hasFocus) {
+                      controller.searchCEP();
                     }
-                    return null;
                   },
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: controller.cepFamiliaController,
+                    onChanged: (value) => controller.onCEPChanged(value),
+                    maxLength: 9,
+                    decoration: InputDecoration(
+                      counterText: '',
+                      suffixIcon: IconButton(
+                          splashRadius: 2,
+                          iconSize: 20,
+                          onPressed: () {
+                            controller.searchCEP();
+                          },
+                          icon: const Icon(
+                            Icons.search_rounded,
+                          )),
+                      labelText: 'CEP',
+                      border: const OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (!controller.validateCEP()) {
+                        return 'CEP inválido';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
+                  controller: controller.ruaFamiliaController,
                   decoration: const InputDecoration(
                     labelText: 'Logradouro',
                     border: OutlineInputBorder(),
@@ -159,16 +175,11 @@ class CreateFamilyView extends GetView<FamilyController> {
                     Expanded(
                       flex: 3,
                       child: TextFormField(
+                        controller: controller.complementoFamiliaController,
                         decoration: const InputDecoration(
                           labelText: 'Complemento',
                           border: OutlineInputBorder(),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, digite o nome da rua';
-                          }
-                          return null;
-                        },
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -181,7 +192,7 @@ class CreateFamilyView extends GetView<FamilyController> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor, digite o número da rua';
+                            return 'Por favor, digite o número da casa';
                           }
                           return null;
                         },
@@ -191,13 +202,14 @@ class CreateFamilyView extends GetView<FamilyController> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
+                  controller: controller.bairroFamiliaController,
                   decoration: const InputDecoration(
                     labelText: 'Bairro',
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor, digite o número da rua';
+                      return 'Por favor, digite o número do bairro';
                     }
                     return null;
                   },
@@ -208,13 +220,14 @@ class CreateFamilyView extends GetView<FamilyController> {
                     Expanded(
                       flex: 3,
                       child: TextFormField(
+                        controller: controller.cidadeFamiliaController,
                         decoration: const InputDecoration(
                           labelText: 'Cidade',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Por favor, digite o nome da rua';
+                            return 'Por favor, digite o nome da cidade';
                           }
                           return null;
                         },
@@ -224,16 +237,11 @@ class CreateFamilyView extends GetView<FamilyController> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
+                        controller: controller.ufFamiliaController,
                         decoration: const InputDecoration(
                           labelText: 'UF',
                           border: OutlineInputBorder(),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, digite o número da rua';
-                          }
-                          return null;
-                        },
                       ),
                     ),
                   ],

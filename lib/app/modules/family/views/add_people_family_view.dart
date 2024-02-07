@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
-class AddPeopleFamilyView extends GetView<FamilyController> {
-  const AddPeopleFamilyView({super.key});
+class AddPeopleFamilyView extends GetView<EditPeopleController> {
+  const AddPeopleFamilyView({super.key, required this.familyController});
+
+  final FamilyController familyController;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
           Container(
             padding: const EdgeInsets.all(16),
             child: Form(
-              key: controller.formKey,
+              key: familyController.formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,11 +45,12 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                     children: [
                       CircleAvatar(
                         radius: 35,
-                        backgroundImage: controller.photoUrl.value.isNotEmpty
-                            ? NetworkImage(controller.photoUrl.value)
-                            : const AssetImage(
-                                    'assets/images/default_avatar.jpg')
-                                as ImageProvider,
+                        backgroundImage:
+                            familyController.photoUrl.value.isNotEmpty
+                                ? NetworkImage(familyController.photoUrl.value)
+                                : const AssetImage(
+                                        'assets/images/default_avatar.jpg')
+                                    as ImageProvider,
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -70,9 +74,9 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                         activeColor: Colors.orange.shade700,
                         inactiveThumbColor: Colors.orange.shade500,
                         inactiveTrackColor: Colors.orange.shade100,
-                        value: controller.provedorCheckboxValue.value,
+                        value: familyController.provedorCheckboxValue.value,
                         onChanged: (value) {
-                          controller.provedorCheckboxValue.value = value;
+                          familyController.provedorCheckboxValue.value = value;
                         },
                       ),
                     ],
@@ -81,7 +85,7 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                     height: 8,
                   ),
                   TextFormField(
-                    controller: controller.nomePessoaController,
+                    controller: familyController.nomePessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Nome Completo'),
@@ -98,7 +102,7 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                     children: [
                       Expanded(
                         child: DropdownButtonFormField<String>(
-                          value: controller.sexo.value,
+                          value: familyController.sexo.value,
                           onChanged: (value) {},
                           items: ['Masculino', 'Feminino']
                               .map<DropdownMenuItem<String>>((String value) {
@@ -113,14 +117,63 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
+                        child: Obx(() => DropdownButtonFormField<String>(
+                              value: familyController.civil.value,
+                              onChanged: (value) {},
+                              items: controller.listMaritalStatus
+                                  .map<DropdownMenuItem<String>>((item) {
+                                return DropdownMenuItem<String>(
+                                  value: item.id
+                                      .toString(), // Suponha que seus dados tenham um campo 'value'
+                                  child: Text(item
+                                      .descricao!), // Suponha que seus dados tenham um campo 'label'
+                                );
+                              }).toList(),
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Estado Civil'),
+                            )),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          controller:
+                              familyController.nascimentoPessoaController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Data de Nascimento'),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 2,
                         child: DropdownButtonFormField<String>(
-                          value: controller.civil.value,
+                          value: familyController.parentesco.value,
                           onChanged: (value) {},
                           items: [
-                            'Solteiro(a)',
-                            'Casado(a)',
-                            'Divorciado(a)',
-                            'Emancipado(a)'
+                            'Avô(ó)',
+                            'Bisavô(ó)',
+                            'Companheiro(a)',
+                            'Cunhado(a)',
+                            'Irmã',
+                            'Irmão',
+                            'Madrasta',
+                            'Mãe',
+                            'Outro',
+                            'Padrasto',
+                            'Pai',
+                            'Resp. Legal',
+                            'Madrasta',
+                            'Sobrinho(a)',
+                            'Tio(a)',
+                            'Vodrasto',
+                            'Vodrasta',
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -129,25 +182,27 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                           }).toList(),
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: 'Estado Civil'),
+                              labelText: 'Parentesco'),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: controller.nascimentoPessoaController,
+                    controller: familyController.cpfPessoaController,
+                    keyboardType: TextInputType.number,
+                    maxLength: 14,
+                    onChanged: (value) => familyController.onCPFChanged(value),
                     decoration: const InputDecoration(
+                        counterText: '',
                         border: OutlineInputBorder(),
-                        labelText: 'Data de Nascimento'),
-                    onChanged: (value) {},
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: controller.cpfPessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'CPF'),
-                    onChanged: (value) {},
+                        labelText: 'CPF'),
+                    validator: (value) {
+                      if (!familyController.validateCPF()) {
+                        return "Informe um CPF válido";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -156,7 +211,7 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                         flex: 3,
                         child: TextFormField(
                           controller:
-                              controller.tituloEleitoralPessoaController,
+                              familyController.tituloEleitoralPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Título de Eleitor'),
@@ -167,7 +222,8 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                       Expanded(
                         flex: 2,
                         child: TextFormField(
-                          controller: controller.zonaEleitoralPessoaController,
+                          controller:
+                              familyController.zonaEleitoralPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Zona Eleitoral'),
@@ -178,14 +234,14 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: controller.localTrabalhoPessoaController,
+                    controller: familyController.localTrabalhoPessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Trabalho'),
                     onChanged: (value) {},
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: controller.cargoPessoaController,
+                    controller: familyController.cargoPessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Cargo'),
                     onChanged: (value) {},
@@ -195,7 +251,7 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: controller.celularPessoaController,
+                          controller: familyController.celularPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Telefone'),
@@ -216,9 +272,9 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    value: controller.religiao.value,
+                    value: familyController.religiao.value,
                     onChanged: (value) {
-                      controller.religiao.value = value!;
+                      familyController.religiao.value = value!;
                     },
                     items: ['Católica', 'Evangélica', 'Outra']
                         .map<DropdownMenuItem<String>>((String value) {
@@ -238,7 +294,7 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: controller.funcaoIgrejaPessoaController,
+                    controller: familyController.funcaoIgrejaPessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Função/Igreja'),
@@ -260,9 +316,10 @@ class AddPeopleFamilyView extends GetView<FamilyController> {
                           )),
                       ElevatedButton(
                           onPressed: () {
-                            if (controller.formKey.currentState!.validate()) {
-                              controller.addPessoa();
-                              controller.familyInfo.value = false;
+                            if (familyController.formKey.currentState!
+                                .validate()) {
+                              familyController.addPessoa();
+                              familyController.familyInfo.value = false;
                               Get.back();
                             }
                           },
