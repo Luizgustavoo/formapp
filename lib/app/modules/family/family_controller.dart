@@ -57,6 +57,9 @@ class FamilyController extends GetxController
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> individualFormKey = GlobalKey<FormState>();
 
+  RxInt estadoCivilSelected = 1.obs;
+  RxInt religiaoSelected = 1.obs;
+
   RxString sexo = 'Masculino'.obs;
   RxString civil = 'Solteiro(a)'.obs;
 

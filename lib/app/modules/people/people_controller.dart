@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/estado_civil_model.dart';
+import 'package:formapp/app/data/models/religion_model.dart';
 import 'package:formapp/app/data/repository/marital_status_repository.dart';
+import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -37,19 +39,22 @@ class EditPeopleController extends GetxController {
   RxString religiao = 'Católica'.obs;
 
   final repository = Get.find<MaritalStatusRepository>();
+  final repositoryReligion = Get.find<ReligionRepository>();
+
   final box = GetStorage('credenciado');
 
   RxList<EstadoCivil> listMaritalStatus = <EstadoCivil>[].obs;
-
-  @override
-  void onInit() {
-    getMaritalStatus();
-    super.onInit();
-  }
+  RxList<Religiao> listReligion = <Religiao>[].obs;
 
   void getMaritalStatus() async {
+    listMaritalStatus.clear();
     final token = box.read('auth')['access_token'];
+    listMaritalStatus.value = await repository.getALl("Bearer $token");
+  }
 
-    listMaritalStatus.value = await repository.getALl("Bearer " + token);
+  void getReligion() async {
+    listReligion.clear();
+    final token = box.read('auth')['access_token'];
+    listReligion.value = await repositoryReligion.getALl("Bearer $token");
   }
 }

@@ -12,6 +12,8 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.getMaritalStatus();
+    controller.getReligion();
     return Container(
       margin: const EdgeInsets.only(top: 30),
       child: ListView(
@@ -104,7 +106,7 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                         child: DropdownButtonFormField<String>(
                           value: familyController.sexo.value,
                           onChanged: (value) {},
-                          items: ['Masculino', 'Feminino']
+                          items: ['Masculino', 'Feminino', 'Não informado']
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -116,23 +118,31 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(
-                        child: Obx(() => DropdownButtonFormField<String>(
-                              value: familyController.civil.value,
-                              onChanged: (value) {},
-                              items: controller.listMaritalStatus
-                                  .map<DropdownMenuItem<String>>((item) {
-                                return DropdownMenuItem<String>(
-                                  value: item.id
-                                      .toString(), // Suponha que seus dados tenham um campo 'value'
-                                  child: Text(item
-                                      .descricao!), // Suponha que seus dados tenham um campo 'label'
-                                );
-                              }).toList(),
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Estado Civil'),
-                            )),
+                      Obx(
+                        () => Expanded(
+                          child: DropdownButtonFormField<int>(
+                            value: familyController.estadoCivilSelected.value,
+                            onChanged: (value) {
+                              familyController.estadoCivilSelected.value =
+                                  value!;
+                            },
+                            items: controller.listMaritalStatus
+                                .map<DropdownMenuItem<int>>((item) {
+                                  print(item.id);
+                                  return DropdownMenuItem<int>(
+                                    value: item
+                                        .id, // Suponha que seus dados tenham um campo 'value'
+                                    child: Text(item.descricao ??
+                                        ''), // Suponha que seus dados tenham um campo 'label'
+                                  );
+                                })
+                                .toSet()
+                                .toList(),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Estado Civil'),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -271,20 +281,27 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    value: familyController.religiao.value,
-                    onChanged: (value) {
-                      familyController.religiao.value = value!;
-                    },
-                    items: ['Católica', 'Evangélica', 'Outra']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Religião'),
+                  Obx(
+                    () => DropdownButtonFormField<int>(
+                      value: familyController.religiaoSelected.value,
+                      onChanged: (value) {
+                        familyController.religiaoSelected.value = value!;
+                      },
+                      items: controller.listReligion
+                          .map<DropdownMenuItem<int>>((item) {
+                            print(item.id);
+                            return DropdownMenuItem<int>(
+                              value: item
+                                  .id, // Suponha que seus dados tenham um campo 'value'
+                              child: Text(item.descricao ??
+                                  ''), // Suponha que seus dados tenham um campo 'label'
+                            );
+                          })
+                          .toSet()
+                          .toList(),
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'Religião'),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(

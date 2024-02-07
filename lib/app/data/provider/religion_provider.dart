@@ -5,19 +5,21 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
-class MaritalStatusApiClient {
+class ReligionApiClient {
   final http.Client httpClient = http.Client();
 
   getAll(String token) async {
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/estadocivil/list');
+      var religionUrl = Uri.parse('$baseUrl/v1/religiao/list');
       var response = await httpClient.get(
-        familyUrl,
+        religionUrl,
         headers: {
           "Accept": "application/json",
           "Authorization": token,
         },
       );
+
+      print("CODIGO: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -33,8 +35,8 @@ class MaritalStatusApiClient {
         Get.offAllNamed('/login');
       } else {
         Get.defaultDialog(
-          title: "Errorrrrrr",
-          content: const Text('erro'),
+          title: "Errooooor",
+          content: Text(json.decode(response.body).toString()),
         );
       }
     } catch (err) {
