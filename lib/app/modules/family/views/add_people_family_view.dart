@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
@@ -16,6 +17,7 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
   Widget build(BuildContext context) {
     controller.getMaritalStatus();
     controller.getReligion();
+    controller.getChurch();
     return Container(
       margin: const EdgeInsets.only(top: 30),
       child: ListView(
@@ -309,27 +311,28 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                   SearchField(
                     suggestionDirection: SuggestionDirection.flex,
                     onSearchTextChanged: (query) {
-                      final filter = suggestions
+                      final filter = controller.suggestions
                           .where((element) => element
                               .toLowerCase()
                               .contains(query.toLowerCase()))
                           .toList();
                       return filter
                           .map((e) => SearchFieldListItem<String>(e,
-                              child: searchChild(e)))
+                              child: controller.searchChild(e)))
                           .toList();
                     },
                     onTap: () {},
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null ||
-                          !suggestions.contains(value.trim())) {
-                        return 'Enter a valid country name';
-                      }
-                      return null;
-                    },
+                    // autovalidateMode: AutovalidateMode.onUserInteraction,
+                    // validator: (value) {
+                    //   if (value == null ||
+                    //       controller.suggestions.contains(value.trim())) {
+                    //     return 'Enter a valid country name';
+                    //   }
+                    //   return null;
+                    // },
                     key: const Key('searchfield'),
-                    hint: 'Search by country name',
+                    hint: 'Selecione uma Igreja',
+
                     itemHeight: 50,
                     scrollbarDecoration: ScrollbarDecoration(),
                     //   thumbVisibility: true,
@@ -338,53 +341,33 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                     //   trackColor: Colors.blue,
                     //   trackRadius: const Radius.circular(10),
                     // ),
-                    onTapOutside: (x) {},
+                    onTapOutside: (x) {
+                      controller.focus.unfocus();
+                    },
                     suggestionStyle:
-                        const TextStyle(fontSize: 18, color: Colors.white),
+                        const TextStyle(fontSize: 18, color: Colors.black),
                     searchStyle:
                         const TextStyle(fontSize: 18, color: Colors.black),
-                    searchInputDecoration: InputDecoration(
-                      hintStyle:
-                          const TextStyle(fontSize: 18, color: Colors.grey),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: const BorderSide(
-                          width: 1,
-                          color: Colors.orange,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: const BorderSide(
-                          width: 1,
-                          color: Colors.black,
-                          style: BorderStyle.solid,
-                        ),
-                      ),
+                    searchInputDecoration: const InputDecoration(
+                      hintStyle: TextStyle(fontSize: 18, color: Colors.black),
                       fillColor: Colors.white,
                       filled: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
+                      border: OutlineInputBorder(),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                     suggestionsDecoration: SuggestionDecoration(
-                      color: Colors.red,
-                      border: Border.all(color: Colors.orange),
-                      borderRadius: BorderRadius.circular(24),
+                      color: Colors.grey.shade300,
+                      border: Border.all(color: Colors.grey),
                     ),
                     suggestions: controller.suggestions
-                        .map(
-                          (e) => SearchFieldListItem<String>(
-                            e,
-                            child: searchChild(e),
-                          ),
-                        )
+                        .map((e) => SearchFieldListItem<String>(e,
+                            child: controller.searchChild(e)))
                         .toList(),
-                    focusNode: focus,
+                    focusNode: controller.focus,
                     suggestionState: Suggestion.expand,
                     onSuggestionTap: (SearchFieldListItem<String> x) {
-                      focus.unfocus();
+                      controller.focus.unfocus();
                     },
                   ),
                   const SizedBox(height: 8),
