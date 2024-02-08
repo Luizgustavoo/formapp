@@ -1,9 +1,11 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:searchfield/searchfield.dart';
 
 class AddPeopleFamilyView extends GetView<EditPeopleController> {
   const AddPeopleFamilyView({super.key, required this.familyController});
@@ -304,10 +306,86 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Igreja'),
-                    onChanged: (value) {},
+                  SearchField(
+                    suggestionDirection: SuggestionDirection.flex,
+                    onSearchTextChanged: (query) {
+                      final filter = suggestions
+                          .where((element) => element
+                              .toLowerCase()
+                              .contains(query.toLowerCase()))
+                          .toList();
+                      return filter
+                          .map((e) => SearchFieldListItem<String>(e,
+                              child: searchChild(e)))
+                          .toList();
+                    },
+                    onTap: () {},
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value == null ||
+                          !suggestions.contains(value.trim())) {
+                        return 'Enter a valid country name';
+                      }
+                      return null;
+                    },
+                    key: const Key('searchfield'),
+                    hint: 'Search by country name',
+                    itemHeight: 50,
+                    scrollbarDecoration: ScrollbarDecoration(),
+                    //   thumbVisibility: true,
+                    //   thumbColor: Colors.red,
+                    //   fadeDuration: const Duration(milliseconds: 3000),
+                    //   trackColor: Colors.blue,
+                    //   trackRadius: const Radius.circular(10),
+                    // ),
+                    onTapOutside: (x) {},
+                    suggestionStyle:
+                        const TextStyle(fontSize: 18, color: Colors.white),
+                    searchStyle:
+                        const TextStyle(fontSize: 18, color: Colors.black),
+                    searchInputDecoration: InputDecoration(
+                      hintStyle:
+                          const TextStyle(fontSize: 18, color: Colors.grey),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: const BorderSide(
+                          width: 1,
+                          color: Colors.orange,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: const BorderSide(
+                          width: 1,
+                          color: Colors.black,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                    ),
+                    suggestionsDecoration: SuggestionDecoration(
+                      color: Colors.red,
+                      border: Border.all(color: Colors.orange),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    suggestions: controller.suggestions
+                        .map(
+                          (e) => SearchFieldListItem<String>(
+                            e,
+                            child: searchChild(e),
+                          ),
+                        )
+                        .toList(),
+                    focusNode: focus,
+                    suggestionState: Suggestion.expand,
+                    onSuggestionTap: (SearchFieldListItem<String> x) {
+                      focus.unfocus();
+                    },
                   ),
                   const SizedBox(height: 8),
                   TextFormField(

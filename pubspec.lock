@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dropdown_search:
+    dependency: "direct main"
+    description:
+      name: dropdown_search
+      sha256: "55106e8290acaa97ed15bea1fdad82c3cf0c248dd410e651f5a8ac6870f783ab"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.6"
   easy_splash_screen:
     dependency: "direct main"
     description:
@@ -235,6 +243,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  searchfield:
+    dependency: "direct main"
+    description:
+      name: searchfield
+      sha256: b3d6173f0aa6ca195f3ffa451ec4019df9cf699300a7288e08df5145b874b41e
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.2"
   sky_engine:
     dependency: transitive
     description: flutter

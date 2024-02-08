@@ -46,6 +46,18 @@ class EditPeopleController extends GetxController {
   RxList<EstadoCivil> listMaritalStatus = <EstadoCivil>[].obs;
   RxList<Religiao> listReligion = <Religiao>[].obs;
 
+  final suggestions = [
+    'United States',
+    'Germany',
+    'Washington',
+    'Paris',
+    'Jakarta',
+    'Australia',
+    'India',
+    'Czech Republic',
+    'Lorem Ipsum',
+  ];
+
   void getMaritalStatus() async {
     listMaritalStatus.clear();
     final token = box.read('auth')['access_token'];
