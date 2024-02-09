@@ -41,6 +41,8 @@ class EditPeopleController extends GetxController {
   RxString civil = 'Solteiro(a)'.obs;
   RxString religiao = 'Católica'.obs;
 
+  Rx<int> estadoCivilSelected = 1.obs;
+
   final repository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.find<ReligionRepository>();
   final repositoryChurch = Get.find<IgrejaRepository>();
@@ -62,30 +64,25 @@ class EditPeopleController extends GetxController {
             Text(x, style: const TextStyle(fontSize: 18, color: Colors.black)),
       );
 
-  @override
-  void onInit() {
+  Future<void> getMaritalStatus() async {
     final token = box.read('auth')['access_token'];
+    final updatedList = await repository.getALl("Bearer $token");
+    listMaritalStatus.assignAll(updatedList); // Atualiza a lista
+  }
 
-    getMaritalStatus(token); // Primeira chamada para carregar os dados iniciais
-
-    observeMaritalStatusChanges(token);
+  @override
+  void onInit() async {
+    await getMaritalStatus();
     getReligion();
     getChurch();
     super.onInit();
   }
 
-  void observeMaritalStatusChanges(String token) async {
-    ever(listMaritalStatus, (_) {
-      // Função que será executada sempre que a lista de status civil mudar
-      getMaritalStatus(
-          token); // Atualize a lista de status civil sempre que houver uma mudança
-    });
-  }
-
-  void getMaritalStatus(String token) async {
-    listMaritalStatus.clear();
-    listMaritalStatus.value = await repository.getALl("Bearer $token");
-  }
+  // void getMaritalStatus() async {
+  //   listMaritalStatus.clear();
+  //   final token = box.read('auth')['access_token'];
+  //   listMaritalStatus.value = await repository.getALl("Bearer $token");
+  // }
 
   void getReligion() async {
     listReligion.clear();

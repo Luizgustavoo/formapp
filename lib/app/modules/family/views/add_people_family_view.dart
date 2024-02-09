@@ -122,15 +122,16 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                           width:
                               150, // Defina uma largura específica para o DropdownButtonFormField
                           child: DropdownButtonFormField<int>(
-                            value: familyController.estadoCivilSelected.value,
-                            onChanged: (value) {
-                              familyController.estadoCivilSelected.value =
-                                  value!;
+                            onTap: () async {
+                              await controller
+                                  .getMaritalStatus(); // Chama o método ao abrir o dropdown
                             },
-                            items: controller.listMaritalStatus.map((item) {
-                              print("ID do Estado Civil: ${item.id}");
-                              print(
-                                  "Descrição do Estado Civil: ${item.descricao}");
+                            value: controller.estadoCivilSelected.value,
+                            onChanged: (value) {
+                              controller.estadoCivilSelected.value = value!;
+                            },
+                            items: controller.listMaritalStatus
+                                .map<DropdownMenuItem<int>>((item) {
                               return DropdownMenuItem<int>(
                                 value: item.id,
                                 child: Text(item.descricao ?? ''),
@@ -308,6 +309,9 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                   const SizedBox(height: 8),
                   Obx(
                     () => DropdownButtonFormField<int>(
+                      onTap: () async {
+                        controller.getReligion();
+                      },
                       value: familyController.religiaoSelected.value,
                       onChanged: (value) {
                         familyController.religiaoSelected.value = value!;
@@ -329,67 +333,72 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  SearchField(
-                    suggestionDirection: SuggestionDirection.flex,
-                    onSearchTextChanged: (query) {
-                      final filter = controller.suggestions
-                          .where((element) => element
-                              .toLowerCase()
-                              .contains(query.toLowerCase()))
-                          .toList();
-                      return filter
+                  GestureDetector(
+                    onTap: () async {
+                      controller.getChurch();
+                    },
+                    child: SearchField(
+                      suggestionDirection: SuggestionDirection.flex,
+                      onSearchTextChanged: (query) {
+                        final filter = controller.suggestions
+                            .where((element) => element
+                                .toLowerCase()
+                                .contains(query.toLowerCase()))
+                            .toList();
+                        return filter
+                            .map((e) => SearchFieldListItem<String>(e,
+                                child: controller.searchChild(e)))
+                            .toList();
+                      },
+                      onTap: () {},
+                      // autovalidateMode: AutovalidateMode.onUserInteraction,
+                      // validator: (value) {
+                      //   if (value == null ||
+                      //       controller.suggestions.contains(value.trim())) {
+                      //     return 'Enter a valid country name';
+                      //   }
+                      //   return null;
+                      // },
+                      key: const Key('searchfield'),
+                      hint: 'Selecione uma Igreja',
+
+                      itemHeight: 50,
+                      scrollbarDecoration: ScrollbarDecoration(),
+                      //   thumbVisibility: true,
+                      //   thumbColor: Colors.red,
+                      //   fadeDuration: const Duration(milliseconds: 3000),
+                      //   trackColor: Colors.blue,
+                      //   trackRadius: const Radius.circular(10),
+                      // ),
+                      onTapOutside: (x) {
+                        controller.focus.unfocus();
+                      },
+                      suggestionStyle:
+                          const TextStyle(fontSize: 18, color: Colors.black),
+                      searchStyle:
+                          const TextStyle(fontSize: 18, color: Colors.black),
+                      searchInputDecoration: const InputDecoration(
+                        hintStyle: TextStyle(fontSize: 18, color: Colors.black),
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                      suggestionsDecoration: SuggestionDecoration(
+                        color: Colors.grey.shade300,
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      suggestions: controller.suggestions
                           .map((e) => SearchFieldListItem<String>(e,
                               child: controller.searchChild(e)))
-                          .toList();
-                    },
-                    onTap: () {},
-                    // autovalidateMode: AutovalidateMode.onUserInteraction,
-                    // validator: (value) {
-                    //   if (value == null ||
-                    //       controller.suggestions.contains(value.trim())) {
-                    //     return 'Enter a valid country name';
-                    //   }
-                    //   return null;
-                    // },
-                    key: const Key('searchfield'),
-                    hint: 'Selecione uma Igreja',
-
-                    itemHeight: 50,
-                    scrollbarDecoration: ScrollbarDecoration(),
-                    //   thumbVisibility: true,
-                    //   thumbColor: Colors.red,
-                    //   fadeDuration: const Duration(milliseconds: 3000),
-                    //   trackColor: Colors.blue,
-                    //   trackRadius: const Radius.circular(10),
-                    // ),
-                    onTapOutside: (x) {
-                      controller.focus.unfocus();
-                    },
-                    suggestionStyle:
-                        const TextStyle(fontSize: 18, color: Colors.black),
-                    searchStyle:
-                        const TextStyle(fontSize: 18, color: Colors.black),
-                    searchInputDecoration: const InputDecoration(
-                      hintStyle: TextStyle(fontSize: 18, color: Colors.black),
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: OutlineInputBorder(),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          .toList(),
+                      focusNode: controller.focus,
+                      suggestionState: Suggestion.expand,
+                      onSuggestionTap: (SearchFieldListItem<String> x) {
+                        controller.focus.unfocus();
+                      },
                     ),
-                    suggestionsDecoration: SuggestionDecoration(
-                      color: Colors.grey.shade300,
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    suggestions: controller.suggestions
-                        .map((e) => SearchFieldListItem<String>(e,
-                            child: controller.searchChild(e)))
-                        .toList(),
-                    focusNode: controller.focus,
-                    suggestionState: Suggestion.expand,
-                    onSuggestionTap: (SearchFieldListItem<String> x) {
-                      controller.focus.unfocus();
-                    },
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
