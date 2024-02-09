@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
-class EditPeopleController extends GetxController {
+class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();
   TextEditingController nomePessoaController = TextEditingController();
   TextEditingController nascimentoPessoaController = TextEditingController();
@@ -32,32 +32,21 @@ class EditPeopleController extends GetxController {
 
   final GlobalKey<FormState> peopleFormKey = GlobalKey<FormState>();
   final formKey = GlobalKey<FormState>();
-
   var photoUrlPath = ''.obs;
   var isImagePicPathSet = false.obs;
-
   RxBool provedorCheckboxValue = false.obs;
-
   RxString? sexo = 'Masculino'.obs;
-
-  RxString civil = 'Solteiro(a)'.obs;
-  RxString religiao = 'Católica'.obs;
-
-  Rx<int> estadoCivilSelected = 1.obs;
-
+  RxInt estadoCivilSelected = 1.obs;
+  RxInt religiaoSelected = 1.obs;
   final repository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.find<ReligionRepository>();
-  final repositoryChurch = Get.find<IgrejaRepository>();
-
+  final repositoryChurch = Get.find<ChurchRepository>();
   final box = GetStorage('credenciado');
-
   RxList<EstadoCivil> listMaritalStatus = <EstadoCivil>[].obs;
   RxList<Religiao> listReligion = <Religiao>[].obs;
   RxList<Igreja> listChurch = <Igreja>[].obs;
-
   int suggestionsCount = 12;
   final focus = FocusNode();
-
   List<String> suggestions = [];
 
   Widget searchChild(x) => Padding(
@@ -78,6 +67,14 @@ class EditPeopleController extends GetxController {
     getReligion();
     getChurch();
     super.onInit();
+  }
+
+  @override
+  void onClose() async {
+    await getMaritalStatus();
+    getReligion();
+    getChurch();
+    super.onClose();
   }
 
   void getReligion() async {

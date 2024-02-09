@@ -26,7 +26,9 @@ class FamilyView extends GetView<FamilyController> {
         children: [
           SearchWidget(
               controller: controller.searchController,
-              onSearchPressed: (context, a, query) {}),
+              onSearchPressed: (context, a, query) {
+                controller.searchFamily(query);
+              }),
           Expanded(
             child: Obx(
               () => ListView.builder(
@@ -36,7 +38,6 @@ class FamilyView extends GetView<FamilyController> {
                 itemCount: controller.listFamilies.length,
                 itemBuilder: (context, index) {
                   Family family = controller.listFamilies[index];
-
                   String? provedorCasa = "";
 
                   for (var p in family.pessoas!) {
@@ -48,15 +49,8 @@ class FamilyView extends GetView<FamilyController> {
                     memberName: family.nome.toString(),
                     memberContact: "Provedor: $provedorCasa",
                     editMember: () {
-                      // controller.nomeFamiliaController.text =
-                      //     family.nome.toString();
-                      // controller.cepFamiliaController.text =
-                      //     family.cep.toString();
-
                       controller.selectedFamily = family;
-
-                      controller.popularCampos();
-
+                      controller.fillInFields();
                       Get.toNamed('/edit-family', arguments: family);
                     },
                     messageMember: () {

@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 
 class FamilyController extends GetxController
     with SingleGetTickerProviderMixin {
+  TextEditingController searchController = TextEditingController();
   TextEditingController idFamiliaController = TextEditingController();
   TextEditingController nomeFamiliaController = TextEditingController();
   TextEditingController cepFamiliaController = TextEditingController();
@@ -21,7 +22,6 @@ class FamilyController extends GetxController
   TextEditingController residenciaPropriaFamiliaController =
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
-
   TextEditingController idPessoaController = TextEditingController();
   TextEditingController nomePessoaController = TextEditingController();
   TextEditingController nascimentoPessoaController = TextEditingController();
@@ -38,40 +38,25 @@ class FamilyController extends GetxController
   TextEditingController statusPessoaController = TextEditingController();
   TextEditingController usuarioId = TextEditingController();
   TextEditingController familiaId = TextEditingController();
-  final TextEditingController searchController = TextEditingController();
 
   final box = GetStorage('credenciado');
-  List<Family>? families;
-
   Family? selectedFamily;
   List<Pessoas>? listPessoas = [];
-
   RxList<Pessoas> composicaoFamiliar = <Pessoas>[].obs;
-
   RxInt tabIndex = 0.obs;
-
   RxList<Family> listFamilies = <Family>[].obs;
-
   TabController? tabController;
-
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> individualFormKey = GlobalKey<FormState>();
-
   RxInt estadoCivilSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
-
   RxString sexo = 'Masculino'.obs;
-  RxString civil = 'Solteiro(a)'.obs;
-
   RxString parentesco = 'Avô(ó)'.obs;
-  RxString religiao = 'Católica'.obs;
   RxBool residenceOwn = false.obs;
   RxBool provedorCheckboxValue = false.obs;
   RxBool familyInfo = true.obs;
   final formKey = GlobalKey<FormState>();
-
   final repository = Get.find<FamilyRepository>();
-
   Animation<double>? animation;
   AnimationController? animationController;
 
@@ -95,7 +80,27 @@ class FamilyController extends GetxController
     super.onInit();
   }
 
-  void popularCampos() {
+  @override
+  void onClose() {
+    getFamilies();
+    super.onClose();
+  }
+
+  void searchFamily(String query) {
+    if (query.isEmpty) {
+      getFamilies();
+    } else {
+      listFamilies.assignAll(listFamilies
+          .where((family) =>
+              family.nome!.toLowerCase().contains(query.toLowerCase()) ||
+              family.pessoas![0].provedor_casa!
+                  .toLowerCase()
+                  .contains(query.toLowerCase()))
+          .toList());
+    }
+  }
+
+  void fillInFields() {
     idFamiliaController.text = selectedFamily!.id.toString();
     nomeFamiliaController.text = selectedFamily!.nome.toString();
     cepFamiliaController.text = selectedFamily!.cep.toString();
@@ -117,14 +122,12 @@ class FamilyController extends GetxController
       nome: nomePessoaController.text,
       cpf: cpfPessoaController.text,
     );
-
     composicaoFamiliar.add(pessoa);
   }
 
   void getFamilies() async {
     final token = box.read('auth')['access_token'];
-
-    listFamilies.value = await repository.getALl("Bearer " + token);
+    listFamilies.value = await repository.getAll("Bearer " + token);
   }
 
   /*PARTE RESPONSAVEL PELO CEP */
@@ -139,13 +142,22 @@ class FamilyController extends GetxController
           duration: const Duration(seconds: 2),
           'Erro',
           'Erro ao obter dados do CEP: ${addressData['error']}');
-      limpaCEP();
+      clearCEP();
     } else {
       ruaFamiliaController.text = addressData['logradouro'];
       bairroFamiliaController.text = addressData['bairro'];
       cidadeFamiliaController.text = addressData['localidade'];
       ufFamiliaController.text = addressData['uf'];
     }
+  }
+
+  void clearCEP() {
+    ruaFamiliaController.text = '';
+    cidadeFamiliaController.text = '';
+    bairroFamiliaController.text = '';
+    ufFamiliaController.text = '';
+    complementoFamiliaController.text = '';
+    numeroCasaFamiliaController.text = '';
   }
   /*FINAL PARTE RESPONSAVEL PELO CEP */
 
@@ -184,14 +196,5 @@ class FamilyController extends GetxController
 
   bool validateCEP() {
     return FormattersValidators.validateCEP(cepFamiliaController.text);
-  }
-
-  void limpaCEP() {
-    ruaFamiliaController.text = '';
-    cidadeFamiliaController.text = '';
-    bairroFamiliaController.text = '';
-    ufFamiliaController.text = '';
-    complementoFamiliaController.text = '';
-    numeroCasaFamiliaController.text = '';
   }
 }

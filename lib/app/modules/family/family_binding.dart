@@ -12,7 +12,7 @@ class FamilyBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<FamilyController>(() => FamilyController());
 
-    Get.lazyPut<EditPeopleController>(() => EditPeopleController());
+    Get.lazyPut<PeopleController>(() => PeopleController());
 
     Get.lazyPut<FamilyRepository>(
       () => FamilyRepository(),
@@ -26,8 +26,8 @@ class FamilyBinding implements Bindings {
       () => ReligionRepository(),
     );
 
-    Get.lazyPut<IgrejaRepository>(
-      () => IgrejaRepository(),
+    Get.lazyPut<ChurchRepository>(
+      () => ChurchRepository(),
     );
 
     Get.lazyPut<FamilyApiClient>(

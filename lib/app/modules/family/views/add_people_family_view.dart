@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/custom_bottomsheet_file.dart';
+import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:searchfield/searchfield.dart';
 
-class AddPeopleFamilyView extends GetView<EditPeopleController> {
+class AddPeopleFamilyView extends GetView<PeopleController> {
   AddPeopleFamilyView({super.key});
 
   final FamilyController familyController = Get.find();

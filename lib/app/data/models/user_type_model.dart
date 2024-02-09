@@ -2,22 +2,22 @@ class TipoUsuario {
   int? id;
   String? descricao;
   int? status;
-  String? cada_cadastro;
-  String? data_update;
+  String? dataCadastro;
+  String? dataUpdate;
 
   TipoUsuario(
       {this.id,
       this.descricao,
       this.status,
-      this.cada_cadastro,
-      this.data_update});
+      this.dataCadastro,
+      this.dataUpdate});
 
   TipoUsuario.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     descricao = json['descricao'];
     status = json['status'];
-    cada_cadastro = json['data_cadastro'];
-    data_update = json['data_update'];
+    dataCadastro = json['data_cadastro'];
+    dataUpdate = json['data_update'];
   }
 
   Map<String, dynamic> toJson() {
@@ -25,8 +25,8 @@ class TipoUsuario {
     data['id'] = id;
     data['descricao'] = descricao;
     data['status'] = status;
-    data['data_cadastro'] = cada_cadastro;
-    data['data_update'] = data_update;
+    data['data_cadastro'] = dataCadastro;
+    data['data_update'] = dataUpdate;
     return data;
   }
 }

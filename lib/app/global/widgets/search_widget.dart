@@ -18,12 +18,12 @@ class _SearchWidgetState extends State<SearchWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: TextField(
         controller: widget.controller,
-        onSubmitted: (query) {
+        onChanged: (query) {
           widget.onSearchPressed(context, 1, query);
         },
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          hintText: 'Pesquisar Família...',
+          hintText: 'Digite um nome...',
           hintStyle: TextStyle(
             fontFamily: 'Poppinss',
             fontSize: 14,

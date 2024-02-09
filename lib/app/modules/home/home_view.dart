@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:formapp/app/screens/family/home_page_family.dart';
 import 'package:get/get.dart';
-import 'package:formapp/app/screens/create_user.dart';
 
 import 'package:formapp/app/global/widgets/custom_card.dart';
 import 'package:formapp/app/global/widgets/custom_drawer.dart';
@@ -12,8 +11,6 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    // final auth = controller.box.read('auth');
-
     return Scaffold(
       appBar: AppBar(),
       drawer: const CustomDrawer(),
@@ -83,10 +80,7 @@ class CategoryItems extends StatelessWidget {
           CustomCard(
               title: 'Usuários',
               ontap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => const CreateUser())));
+                Get.toNamed('/list-user');
               },
               imageUrl: 'assets/images/user.png'),
           CustomCard(

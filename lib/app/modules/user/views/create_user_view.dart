@@ -3,8 +3,8 @@ import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
-class UserView extends GetView<UserController> {
-  const UserView({super.key});
+class CreateUserView extends GetView<UserController> {
+  const CreateUserView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CustomBottomSheet extends StatelessWidget {
-  final EditPeopleController controller = Get.find();
+  final PeopleController controller = Get.find();
   CustomBottomSheet({super.key});
 
   @override

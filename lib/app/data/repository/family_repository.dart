@@ -4,7 +4,7 @@ import 'package:formapp/app/data/provider/family_provider.dart';
 class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
 
-  getALl(String token) async {
+  getAll(String token) async {
     List<Family> list = <Family>[];
 
     var response = await apiClient.getAll(token);

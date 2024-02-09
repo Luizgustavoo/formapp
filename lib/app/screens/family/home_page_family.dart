@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/screens/edit_person.dart';
 import 'package:formapp/app/screens/family/widgets/custom_drawer_family.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
@@ -58,12 +57,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                     stripe: index % 2 == 0 ? true : false,
                     memberName: 'Luiz',
                     memberContact: '43 99928-9380',
-                    editMember: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => const EditPerson())));
-                    },
+                    editMember: () {},
                     messageMember: () {
                       showModalBottomSheet(
                         isScrollControlled: true,

@@ -4,7 +4,6 @@ import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/screens/create_family.dart';
 import 'package:get/get.dart';
 
 class FamilyView extends GetView<FamilyController> {
@@ -20,10 +19,7 @@ class FamilyView extends GetView<FamilyController> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => const CreateFamily())));
+                Get.toNamed('/create-family');
               },
               icon: const Icon(Icons.add_rounded))
         ],
@@ -53,14 +49,8 @@ class FamilyView extends GetView<FamilyController> {
                         memberName: family.nome.toString(),
                         memberContact: "Provedor: $provedorCasa",
                         editMember: () {
-                          // controller.nomeFamiliaController.text =
-                          //     family.nome.toString();
-                          // controller.cepFamiliaController.text =
-                          //     family.cep.toString();
-
                           controller.selectedFamily = family;
-
-                          controller.popularCampos();
+                          controller.fillInFields();
 
                           Get.toNamed('/edit-family', arguments: family);
                         },
