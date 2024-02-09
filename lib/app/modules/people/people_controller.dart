@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/church_model.dart';
 import 'package:formapp/app/data/models/estado_civil_model.dart';
@@ -7,10 +9,9 @@ import 'package:formapp/app/data/repository/marital_status_repository.dart';
 import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:searchfield/searchfield.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditPeopleController extends GetxController {
-  /// CONTROLLERS PARA A PESSOA
   TextEditingController idPessoaController = TextEditingController();
   TextEditingController nomePessoaController = TextEditingController();
   TextEditingController nascimentoPessoaController = TextEditingController();
@@ -32,7 +33,8 @@ class EditPeopleController extends GetxController {
   final GlobalKey<FormState> peopleFormKey = GlobalKey<FormState>();
   final formKey = GlobalKey<FormState>();
 
-  RxString photoUrl = ''.obs;
+  var photoUrlPath = ''.obs;
+  var isImagePicPathSet = false.obs;
 
   RxBool provedorCheckboxValue = false.obs;
 
@@ -67,7 +69,7 @@ class EditPeopleController extends GetxController {
   Future<void> getMaritalStatus() async {
     final token = box.read('auth')['access_token'];
     final updatedList = await repository.getALl("Bearer $token");
-    listMaritalStatus.assignAll(updatedList); // Atualiza a lista
+    listMaritalStatus.assignAll(updatedList);
   }
 
   @override
@@ -77,12 +79,6 @@ class EditPeopleController extends GetxController {
     getChurch();
     super.onInit();
   }
-
-  // void getMaritalStatus() async {
-  //   listMaritalStatus.clear();
-  //   final token = box.read('auth')['access_token'];
-  //   listMaritalStatus.value = await repository.getALl("Bearer $token");
-  // }
 
   void getReligion() async {
     listReligion.clear();
@@ -100,5 +96,21 @@ class EditPeopleController extends GetxController {
     for (var element in listChurch) {
       suggestions.add(element.descricao!);
     }
+  }
+
+  void setImagePeople(String path) {
+    photoUrlPath.value = path;
+    isImagePicPathSet.value = true;
+  }
+
+  Future<void> takePhoto(ImageSource source) async {
+    File? pickedFile;
+    ImagePicker imagePicker = ImagePicker();
+
+    final pickedImage =
+        await imagePicker.pickImage(source: source, imageQuality: 100);
+
+    pickedFile = File(pickedImage!.path);
+    setImagePeople(pickedFile.path);
   }
 }

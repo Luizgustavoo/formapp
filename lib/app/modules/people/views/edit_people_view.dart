@@ -1,10 +1,10 @@
-import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/utils/custom_bottomsheet_file.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class EditPeopleView extends GetView<EditPeopleController> {
   const EditPeopleView({super.key});
@@ -47,25 +47,32 @@ class EditPeopleView extends GetView<EditPeopleController> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircleAvatar(
-                            radius: 35,
-                            backgroundImage: controller.photoUrl.isNotEmpty
-                                ? NetworkImage(controller.photoUrl.value)
-                                : const AssetImage(
-                                        'assets/images/default_avatar.jpg')
-                                    as ImageProvider,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                backgroundBlendMode: BlendMode.multiply,
-                                color: Colors.grey[300],
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.camera_alt),
-                                onPressed: () {},
-                              ),
-                            ),
-                          ),
+                          Obx(() => CircleAvatar(
+                                radius: 35,
+                                backgroundImage: controller.isImagePicPathSet ==
+                                        true
+                                    ? FileImage(
+                                            File(controller.photoUrlPath.value))
+                                        as ImageProvider
+                                    : const AssetImage(
+                                        'assets/images/default_avatar.jpg'),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    backgroundBlendMode: BlendMode.multiply,
+                                    color: Colors.grey[300],
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.camera_alt),
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) =>
+                                              CustomBottomSheet());
+                                    },
+                                  ),
+                                ),
+                              )),
                           const SizedBox(
                             width: 15,
                           ),

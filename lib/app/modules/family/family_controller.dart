@@ -65,7 +65,6 @@ class FamilyController extends GetxController
 
   RxString parentesco = 'Avô(ó)'.obs;
   RxString religiao = 'Católica'.obs;
-  RxString photoUrl = ''.obs;
   RxBool residenceOwn = false.obs;
   RxBool provedorCheckboxValue = false.obs;
   RxBool familyInfo = true.obs;
@@ -87,7 +86,6 @@ class FamilyController extends GetxController
         CurvedAnimation(curve: Curves.easeInOut, parent: animationController!);
     animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
 
-    print("onInit chamado");
     tabController = TabController(length: 2, vsync: this);
     tabController!.addListener(() {
       tabIndex.value = tabController!.index;
@@ -115,7 +113,6 @@ class FamilyController extends GetxController
   }
 
   void addPessoa() {
-    print('ADD PESSOAS');
     Pessoas pessoa = Pessoas(
       nome: nomePessoaController.text,
       cpf: cpfPessoaController.text,

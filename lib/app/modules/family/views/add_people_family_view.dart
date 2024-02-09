@@ -1,16 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/utils/custom_bottomsheet_file.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:searchfield/searchfield.dart';
 
 class AddPeopleFamilyView extends GetView<EditPeopleController> {
-  const AddPeopleFamilyView({super.key, required this.familyController});
+  AddPeopleFamilyView({super.key});
 
-  final FamilyController familyController;
-
+  final FamilyController familyController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,26 +46,31 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 35,
-                        backgroundImage:
-                            familyController.photoUrl.value.isNotEmpty
-                                ? NetworkImage(familyController.photoUrl.value)
+                      Obx(() => CircleAvatar(
+                            radius: 35,
+                            backgroundImage: controller.isImagePicPathSet ==
+                                    true
+                                ? FileImage(File(controller.photoUrlPath.value))
+                                    as ImageProvider
                                 : const AssetImage(
-                                        'assets/images/default_avatar.jpg')
-                                    as ImageProvider,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            backgroundBlendMode: BlendMode.multiply,
-                            color: Colors.grey[300],
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.camera_alt),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
+                                    'assets/images/default_avatar.jpg'),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                backgroundBlendMode: BlendMode.multiply,
+                                color: Colors.grey[300],
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.camera_alt),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) =>
+                                          CustomBottomSheet());
+                                },
+                              ),
+                            ),
+                          )),
                       const SizedBox(
                         width: 15,
                       ),
@@ -144,32 +151,6 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                           ),
                         ),
                       )
-                      // Obx(
-                      //   () => Expanded(
-                      //     child: DropdownButtonFormField<int>(
-                      //       value: familyController.estadoCivilSelected.value,
-                      //       onChanged: (value) {
-                      //         familyController.estadoCivilSelected.value =
-                      //             value!;
-                      //       },
-                      //       items: controller.listMaritalStatus
-                      //           .map<DropdownMenuItem<int>>((item) {
-                      //             print(item.id);
-                      //             return DropdownMenuItem<int>(
-                      //               value: item
-                      //                   .id, // Suponha que seus dados tenham um campo 'value'
-                      //               child: Text(item.descricao ??
-                      //                   ''), // Suponha que seus dados tenham um campo 'label'
-                      //             );
-                      //           })
-                      //           .toSet()
-                      //           .toList(),
-                      //       decoration: const InputDecoration(
-                      //           border: OutlineInputBorder(),
-                      //           labelText: 'Estado Civil'),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -351,25 +332,10 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                             .toList();
                       },
                       onTap: () {},
-                      // autovalidateMode: AutovalidateMode.onUserInteraction,
-                      // validator: (value) {
-                      //   if (value == null ||
-                      //       controller.suggestions.contains(value.trim())) {
-                      //     return 'Enter a valid country name';
-                      //   }
-                      //   return null;
-                      // },
                       key: const Key('searchfield'),
                       hint: 'Selecione uma Igreja',
-
                       itemHeight: 50,
                       scrollbarDecoration: ScrollbarDecoration(),
-                      //   thumbVisibility: true,
-                      //   thumbColor: Colors.red,
-                      //   fadeDuration: const Duration(milliseconds: 3000),
-                      //   trackColor: Colors.blue,
-                      //   trackRadius: const Radius.circular(10),
-                      // ),
                       onTapOutside: (x) {
                         controller.focus.unfocus();
                       },

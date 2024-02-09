@@ -37,9 +37,7 @@ class CreateFamilyView extends GetView<FamilyController> {
                     context: context,
                     builder: (context) => Padding(
                       padding: MediaQuery.of(context).viewInsets,
-                      child: AddPeopleFamilyView(
-                        familyController: controller,
-                      ),
+                      child: AddPeopleFamilyView(),
                     ),
                   );
                   controller.animationController!.reverse();
