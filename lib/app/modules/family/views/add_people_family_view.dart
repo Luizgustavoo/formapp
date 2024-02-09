@@ -1,5 +1,3 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
@@ -15,9 +13,6 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.getMaritalStatus();
-    controller.getReligion();
-    controller.getChurch();
     return Container(
       margin: const EdgeInsets.only(top: 30),
       child: ListView(
@@ -123,31 +118,57 @@ class AddPeopleFamilyView extends GetView<EditPeopleController> {
                       ),
                       const SizedBox(width: 10),
                       Obx(
-                        () => Expanded(
+                        () => SizedBox(
+                          width:
+                              150, // Defina uma largura específica para o DropdownButtonFormField
                           child: DropdownButtonFormField<int>(
                             value: familyController.estadoCivilSelected.value,
                             onChanged: (value) {
                               familyController.estadoCivilSelected.value =
                                   value!;
                             },
-                            items: controller.listMaritalStatus
-                                .map<DropdownMenuItem<int>>((item) {
-                                  print(item.id);
-                                  return DropdownMenuItem<int>(
-                                    value: item
-                                        .id, // Suponha que seus dados tenham um campo 'value'
-                                    child: Text(item.descricao ??
-                                        ''), // Suponha que seus dados tenham um campo 'label'
-                                  );
-                                })
-                                .toSet()
-                                .toList(),
+                            items: controller.listMaritalStatus.map((item) {
+                              print("ID do Estado Civil: ${item.id}");
+                              print(
+                                  "Descrição do Estado Civil: ${item.descricao}");
+                              return DropdownMenuItem<int>(
+                                value: item.id,
+                                child: Text(item.descricao ?? ''),
+                              );
+                            }).toList(),
                             decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Estado Civil'),
+                              border: OutlineInputBorder(),
+                              labelText: 'Estado Civil',
+                            ),
                           ),
                         ),
-                      ),
+                      )
+                      // Obx(
+                      //   () => Expanded(
+                      //     child: DropdownButtonFormField<int>(
+                      //       value: familyController.estadoCivilSelected.value,
+                      //       onChanged: (value) {
+                      //         familyController.estadoCivilSelected.value =
+                      //             value!;
+                      //       },
+                      //       items: controller.listMaritalStatus
+                      //           .map<DropdownMenuItem<int>>((item) {
+                      //             print(item.id);
+                      //             return DropdownMenuItem<int>(
+                      //               value: item
+                      //                   .id, // Suponha que seus dados tenham um campo 'value'
+                      //               child: Text(item.descricao ??
+                      //                   ''), // Suponha que seus dados tenham um campo 'label'
+                      //             );
+                      //           })
+                      //           .toSet()
+                      //           .toList(),
+                      //       decoration: const InputDecoration(
+                      //           border: OutlineInputBorder(),
+                      //           labelText: 'Estado Civil'),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 8),

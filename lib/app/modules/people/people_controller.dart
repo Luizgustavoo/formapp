@@ -62,9 +62,28 @@ class EditPeopleController extends GetxController {
             Text(x, style: const TextStyle(fontSize: 18, color: Colors.black)),
       );
 
-  void getMaritalStatus() async {
-    listMaritalStatus.clear();
+  @override
+  void onInit() {
     final token = box.read('auth')['access_token'];
+
+    getMaritalStatus(token); // Primeira chamada para carregar os dados iniciais
+
+    observeMaritalStatusChanges(token);
+    getReligion();
+    getChurch();
+    super.onInit();
+  }
+
+  void observeMaritalStatusChanges(String token) async {
+    ever(listMaritalStatus, (_) {
+      // Função que será executada sempre que a lista de status civil mudar
+      getMaritalStatus(
+          token); // Atualize a lista de status civil sempre que houver uma mudança
+    });
+  }
+
+  void getMaritalStatus(String token) async {
+    listMaritalStatus.clear();
     listMaritalStatus.value = await repository.getALl("Bearer $token");
   }
 
