@@ -38,6 +38,7 @@ class FamilyController extends GetxController
   TextEditingController statusPessoaController = TextEditingController();
   TextEditingController usuarioId = TextEditingController();
   TextEditingController familiaId = TextEditingController();
+  TextEditingController igrejaPessoaController = TextEditingController();
 
   final box = GetStorage('credenciado');
   Family? selectedFamily;
@@ -121,8 +122,30 @@ class FamilyController extends GetxController
     Pessoas pessoa = Pessoas(
       nome: nomePessoaController.text,
       cpf: cpfPessoaController.text,
+      estadocivil_id: estadoCivilSelected.value,
+      parentesco: parentesco.value,
+      sexo: sexo.value,
+      data_nascimento: nascimentoPessoaController.text,
+      titulo_eleitor: tituloEleitoralPessoaController.text,
+      zona_eleitoral: zonaEleitoralPessoaController.text,
+      local_trabalho: localTrabalhoPessoaController.text,
+      cargo_trabalho: cargoPessoaController.text,
+      telefone: celularPessoaController.text,
+      rede_social: redeSocialPessoaController.text,
+      religiao_id: religiaoSelected.value,
+      igreja_id: igrejaPessoaController.text,
+      funcao_igreja: funcaoIgrejaPessoaController.text,
     );
     composicaoFamiliar.add(pessoa);
+    clearPeopleModal();
+  }
+
+  void removePeople(Pessoas pessoa) {
+    composicaoFamiliar.remove(pessoa);
+  }
+
+  void clearPeopleModal() {
+    formKey.currentState!.reset();
   }
 
   void getFamilies() async {
@@ -175,6 +198,15 @@ class FamilyController extends GetxController
     celularPessoaController.value = TextEditingValue(
       text: formattedPhone.value,
       selection: TextSelection.collapsed(offset: formattedPhone.value.length),
+    );
+  }
+
+  void onNascimentoChanged(String nascimento) {
+    final formattedNASCIMENTO = FormattersValidators.formatDate(nascimento);
+    nascimentoPessoaController.value = TextEditingValue(
+      text: formattedNASCIMENTO.value,
+      selection:
+          TextSelection.collapsed(offset: formattedNASCIMENTO.value.length),
     );
   }
 

@@ -14,6 +14,19 @@ class FormattersValidators {
     return RxString(cpf);
   }
 
+  static RxString formatDate(String cpf) {
+    final RegExp cpfRegex = RegExp(r'^(\d{2})(\d{2})(\d{4})$');
+
+    final matches = cpfRegex.allMatches(cpf);
+
+    if (matches.isNotEmpty) {
+      final match = matches.first;
+      return RxString('${match[1]}/${match[2]}/${match[3]}');
+    }
+
+    return RxString(cpf);
+  }
+
   static RxString formatPhone(String phone) {
     final RegExp phoneRegex = RegExp(r'^(\d{2})(\d{4,5})(\d{4})$');
 

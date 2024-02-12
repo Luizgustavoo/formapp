@@ -11,7 +11,7 @@ class Pessoas {
   String? telefone;
   String? rede_social;
   String? provedor_casa;
-  int? igreja_id;
+  dynamic igreja_id;
   String? local_trabalho;
   String? cargo_trabalho;
   int? religiao_id;
@@ -88,7 +88,7 @@ class Pessoas {
     data['telefone'] = telefone;
     data['rede_social'] = rede_social;
     data['provedor_casa'] = provedor_casa;
-    data['igreja_id'] = igreja_id;
+    data['igreja_id'] = igreja_id as String;
     data['local_trabalho'] = local_trabalho;
     data['cargo_trabalho'] = cargo_trabalho;
     data['religiao_id'] = religiao_id;

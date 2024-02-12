@@ -291,7 +291,7 @@ class CreateFamilyView extends GetView<FamilyController> {
               height: controller.familyInfo.value
                   ? Get.height * .5
                   : Get.height * 1,
-              child: ListView.builder(
+              child: Obx(() => ListView.builder(
                   shrinkWrap: true,
                   itemCount: controller.composicaoFamiliar.length,
                   itemBuilder: (context, index) {
@@ -343,6 +343,7 @@ class CreateFamilyView extends GetView<FamilyController> {
                                         size: 20, color: Colors.red),
                                     onPressed: () {
                                       // Lógica para apagar
+                                      controller.removePeople(pessoa);
                                     },
                                     label: const Text(
                                       'Apagar',
@@ -359,7 +360,7 @@ class CreateFamilyView extends GetView<FamilyController> {
                         ),
                       ],
                     );
-                  }),
+                  })),
             )
           ],
         ),

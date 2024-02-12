@@ -159,12 +159,15 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       Expanded(
                         flex: 2,
                         child: TextFormField(
+                          maxLength: 10,
                           controller:
                               familyController.nascimentoPessoaController,
                           decoration: const InputDecoration(
+                              counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Data de Nascimento'),
-                          onChanged: (value) {},
+                          onChanged: (value) =>
+                              familyController.onNascimentoChanged(value),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -214,12 +217,12 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         counterText: '',
                         border: OutlineInputBorder(),
                         labelText: 'CPF'),
-                    validator: (value) {
-                      if (!familyController.validateCPF()) {
-                        return "Informe um CPF válido";
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   if (!familyController.validateCPF()) {
+                    //     return "Informe um CPF válido";
+                    //   }
+                    //   return null;
+                    // },
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -268,17 +271,21 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          maxLength: 15,
                           controller: familyController.celularPessoaController,
                           decoration: const InputDecoration(
+                              counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Telefone'),
-                          onChanged: (value) {},
+                          onChanged: (value) =>
+                              familyController.onPhoneChanged(value),
                         ),
                       ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller: controller.redeSocialPessoaController,
+                          controller:
+                              familyController.redeSocialPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Rede Social'),
@@ -320,6 +327,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     },
                     child: SearchField(
                       suggestionDirection: SuggestionDirection.flex,
+                      controller: familyController.igrejaPessoaController,
                       onSearchTextChanged: (query) {
                         final filter = controller.suggestions
                             .where((element) => element
@@ -394,6 +402,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                                 .validate()) {
                               familyController.addPessoa();
                               familyController.familyInfo.value = false;
+
                               Get.back();
                             }
                           },
