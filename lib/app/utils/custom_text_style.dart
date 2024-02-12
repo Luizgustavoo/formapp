@@ -9,6 +9,14 @@ class CustomTextStyle {
     );
   }
 
+  static TextStyle? titleSplash(BuildContext context) {
+    return TextStyle(
+      fontSize: 20,
+      color: Colors.orange.shade800,
+      fontFamily: 'Poppins',
+    );
+  }
+
   static TextStyle? subtitle(BuildContext context) {
     return const TextStyle(
       fontSize: 16,

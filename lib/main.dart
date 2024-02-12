@@ -14,7 +14,7 @@ void main() async {
   ));
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'Flutter Demo',
+    title: 'Inclusão Familiar',
     theme: appThemeData,
     initialRoute: Routes.INITIAL,
     getPages: ApppPages.routes,

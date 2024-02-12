@@ -1,6 +1,7 @@
 import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/initial/initial_controller.dart';
+import 'package:formapp/app/utils/custom_text_style.dart';
 
 import 'package:get/get.dart';
 
@@ -10,18 +11,21 @@ class InitialView extends GetView<InitialController> {
   @override
   Widget build(BuildContext context) {
     return EasySplashScreen(
-      logo: Image.network(
-          'https://cdn4.iconfinder.com/data/icons/logos-brands-5/24/flutter-512.png'),
-      title: const Text(
-        "Title",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
+      logoWidth: 80,
+      loaderColor: Colors.black54,
+      logo: Image.asset(
+        'assets/images/logo_splash.png',
       ),
-      backgroundColor: Colors.grey.shade400,
+      title: Text(
+        "Inclusão Familiar",
+        style: CustomTextStyle.titleSplash(context),
+      ),
+      backgroundColor: Colors.white,
       showLoader: true,
-      loadingText: const Text("Loading..."),
+      loadingText: Text(
+        "Carregando...",
+        style: CustomTextStyle.subtitle(context),
+      ),
       navigator: controller.verifyAuth(),
       durationInSeconds: 3,
     );
