@@ -163,11 +163,18 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           controller:
                               familyController.nascimentoPessoaController,
                           decoration: const InputDecoration(
+                              errorMaxLines: 6,
                               counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Data de Nascimento'),
                           onChanged: (value) =>
                               familyController.onNascimentoChanged(value),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Data inválida';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       const SizedBox(width: 10),

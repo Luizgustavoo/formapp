@@ -52,7 +52,8 @@ class CreateFamilyView extends GetView<FamilyController> {
                 titleStyle: const TextStyle(
                     fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
                 onPress: () {
-                  controller.animationController!.reverse();
+                  controller.saveFamily();
+                  //controller.animationController!.reverse();
                 },
               ),
             ],
@@ -108,6 +109,7 @@ class CreateFamilyView extends GetView<FamilyController> {
               ),
               children: [
                 TextFormField(
+                  controller: controller.nomeFamiliaController,
                   decoration: const InputDecoration(
                     labelText: 'Nome da Família',
                     border: OutlineInputBorder(),

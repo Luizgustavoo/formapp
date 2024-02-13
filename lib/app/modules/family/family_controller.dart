@@ -140,6 +140,25 @@ class FamilyController extends GetxController
     clearPeopleModal();
   }
 
+  void saveFamily() {
+    if (familyFormKey.currentState!.validate()) {
+      Family family = Family(
+        nome: nomeFamiliaController.text,
+        cep: cepFamiliaController.text,
+        endereco: ruaFamiliaController.text,
+        complemento: complementoFamiliaController.text,
+        bairro: bairroFamiliaController.text,
+        numero_casa: numeroCasaFamiliaController.text,
+        cidade: cidadeFamiliaController.text,
+        uf: ufFamiliaController.text,
+        residencia_propria: 'sim',
+        status: 1,
+        pessoas: composicaoFamiliar,
+      );
+      print(family.endereco);
+    }
+  }
+
   void removePeople(Pessoas pessoa) {
     composicaoFamiliar.remove(pessoa);
   }
