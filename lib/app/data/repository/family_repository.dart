@@ -18,4 +18,10 @@ class FamilyRepository {
 
     return list;
   }
+
+  insert(String token, Family family) async {
+    var response = await apiClient.insert(token, family);
+
+    return response;
+  }
 }

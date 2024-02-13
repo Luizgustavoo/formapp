@@ -53,7 +53,7 @@ class CreateFamilyView extends GetView<FamilyController> {
                     fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
                 onPress: () {
                   controller.saveFamily();
-                  //controller.animationController!.reverse();
+                  controller.animationController!.reverse();
                 },
               ),
             ],

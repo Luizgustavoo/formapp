@@ -49,28 +49,16 @@ class FamilyApiClient {
 
   insert(String token, Family family) async {
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/familia/');
+      var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
       var response = await httpClient.post(
         familyUrl,
         headers: {
           "Accept": "application/json",
           "Authorization": token,
         },
-        body: {
-          "nome": family.nome,
-          "endereco": family.endereco,
-          "numero_casa": family.numero_casa,
-          "bairro": family.bairro,
-          "cidade": family.bairro,
-          "uf": family.uf,
-          "complemento": family.complemento,
-          "residencia_nova": family.residencia_propria,
-          "observacoes": family.obs,
-          "status": family.status,
-          "pessoa": json.encode(family.pessoas),
-        },
+        body: json.encode(family.toJson()),
       );
-
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -91,7 +79,7 @@ class FamilyApiClient {
       }
     } catch (err) {
       Get.defaultDialog(
-        title: "Error",
+        title: "Errorou",
         content: Text("$err"),
       );
     }

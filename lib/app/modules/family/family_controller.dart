@@ -140,7 +140,7 @@ class FamilyController extends GetxController
     clearPeopleModal();
   }
 
-  void saveFamily() {
+  void saveFamily() async {
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
         nome: nomeFamiliaController.text,
@@ -155,7 +155,8 @@ class FamilyController extends GetxController
         status: 1,
         pessoas: composicaoFamiliar,
       );
-      print(family.endereco);
+      final token = box.read('auth')['access_token'];
+      await repository.insert("Bearer " + token, family);
     }
   }
 
