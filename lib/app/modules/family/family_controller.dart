@@ -154,6 +154,7 @@ class FamilyController extends GetxController
         residencia_propria: 'sim',
         status: 1,
         pessoas: composicaoFamiliar,
+        usuario_id: box.read('auth')['user']['id'],
       );
       final token = box.read('auth')['access_token'];
       await repository.insert("Bearer " + token, family);
