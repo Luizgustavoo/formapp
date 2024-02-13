@@ -54,31 +54,28 @@ class FamilyApiClient {
 
       List<Map<String, dynamic>> pessoasData = [];
 
-      print(family.pessoas![0].nome);
-      return;
-
-      for (Pessoas pessoa in family.pessoas!) {
-        var pessoaMap = {
-          "nome": pessoa.nome,
-          "foto": pessoa.foto,
-          "sexo": pessoa.sexo,
-          "cpf": pessoa.cpf,
-          "data_nascimento": pessoa.data_nascimento,
-          "titulo_eleitor": pessoa.titulo_eleitor,
-          "zona_eleitoral": pessoa.zona_eleitoral,
-          "telefone": pessoa.telefone,
-          "rede_social": pessoa.rede_social,
-          "provedor_casa": pessoa.provedor_casa,
-          "igreja_id": pessoa.igreja_id,
-          "local_trabalho": pessoa.local_trabalho,
-          "cargo_trabalho": pessoa.cargo_trabalho,
-          "religiao_id": pessoa.religiao_id,
-          "funcao_igreja": pessoa.funcao_igreja,
-          "status": pessoa.status,
-          "estadocivil_id": pessoa.estadocivil_id
-        };
-        pessoasData.add(pessoaMap);
-      }
+      // for (Pessoas pessoa in family.pessoas!) {
+      //   var pessoaMap = {
+      //     "nome": pessoa.nome,
+      //     "foto": pessoa.foto,
+      //     "sexo": pessoa.sexo,
+      //     "cpf": pessoa.cpf,
+      //     "data_nascimento": pessoa.data_nascimento,
+      //     "titulo_eleitor": pessoa.titulo_eleitor,
+      //     "zona_eleitoral": pessoa.zona_eleitoral,
+      //     "telefone": pessoa.telefone,
+      //     "rede_social": pessoa.rede_social,
+      //     "provedor_casa": pessoa.provedor_casa,
+      //     "igreja_id": pessoa.igreja_id,
+      //     "local_trabalho": pessoa.local_trabalho,
+      //     "cargo_trabalho": pessoa.cargo_trabalho,
+      //     "religiao_id": pessoa.religiao_id.toString(),
+      //     "funcao_igreja": pessoa.funcao_igreja,
+      //     "status": pessoa.status.toString(),
+      //     "estadocivil_id": pessoa.estadocivil_id.toString()
+      //   };
+      //   pessoasData.add(pessoaMap);
+      // }
 
       var requestBody = {
         // Adicione aqui os campos necessários conforme esperado pela sua API
@@ -90,12 +87,34 @@ class FamilyApiClient {
         "uf": family.uf,
         "complemento": family.complemento,
         "residencia_propria": family.residencia_propria,
-        "observacoes": family.obs,
-        "status": family.status,
-        "usuario_id": family.usuario_id,
-        'pessoas': pessoasData,
+        "status": family.status.toString(),
+        "usuario_id": family.usuario_id.toString(),
+
         // Adicione os demais campos conforme necessário
       };
+
+      for (Pessoas pessoa in family.pessoas!) {
+        requestBody["pessoa[${pessoa.nome}]"] = pessoa.nome;
+        requestBody["pessoa[${pessoa.foto}]"] = pessoa.foto;
+        requestBody["pessoa[${pessoa.sexo}]"] = pessoa.sexo;
+        requestBody["pessoa[${pessoa.cpf}]"] = pessoa.cpf;
+        requestBody["pessoa[${pessoa.data_nascimento}]"] =
+            pessoa.data_nascimento;
+        requestBody["pessoa[${pessoa.titulo_eleitor}]"] = pessoa.titulo_eleitor;
+        requestBody["pessoa[${pessoa.zona_eleitoral}]"] = pessoa.zona_eleitoral;
+        requestBody["pessoa[${pessoa.telefone}]"] = pessoa.telefone;
+        requestBody["pessoa[${pessoa.rede_social}]"] = pessoa.rede_social;
+        requestBody["pessoa[${pessoa.provedor_casa}]"] = pessoa.provedor_casa;
+        requestBody["pessoa[${pessoa.igreja_id}]"] = pessoa.igreja_id;
+        requestBody["pessoa[${pessoa.local_trabalho}]"] = pessoa.local_trabalho;
+        requestBody["pessoa[${pessoa.cargo_trabalho}]"] = pessoa.cargo_trabalho;
+        requestBody["pessoa[${pessoa.religiao_id}]"] =
+            pessoa.religiao_id.toString();
+        requestBody["pessoa[${pessoa.funcao_igreja}]"] = pessoa.funcao_igreja;
+        requestBody["pessoa[${pessoa.status}]"] = pessoa.status.toString();
+        requestBody["pessoa[${pessoa.estadocivil_id}]"] =
+            pessoa.estadocivil_id.toString();
+      }
 
       var response = await httpClient.post(
         familyUrl,
@@ -105,9 +124,8 @@ class FamilyApiClient {
         },
         body: requestBody,
       );
-
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
-        print(json.decode(response.body));
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
           json.decode(response.body)['message'] == "Token has expired") {
