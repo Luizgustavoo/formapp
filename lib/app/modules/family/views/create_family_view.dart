@@ -51,7 +51,7 @@ class CreateFamilyView extends GetView<FamilyController> {
                 icon: Icons.save_rounded,
                 titleStyle: const TextStyle(
                     fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
-                onPress: () {
+                onPress: () async {
                   controller.saveFamily();
                   controller.animationController!.reverse();
                 },

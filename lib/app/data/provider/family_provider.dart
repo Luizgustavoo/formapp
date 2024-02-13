@@ -48,6 +48,9 @@ class FamilyApiClient {
   }
 
   insert(String token, Family family) async {
+    print(
+      json.encode(family.toJson()),
+    );
     try {
       var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
       var response = await httpClient.post(
@@ -58,8 +61,10 @@ class FamilyApiClient {
         },
         body: json.encode(family.toJson()),
       );
-      print(json.decode(response.body));
+
       if (response.statusCode == 200) {
+        print('status 200');
+        print(json.decode(response.body));
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
           json.decode(response.body)['message'] == "Token has expired") {
