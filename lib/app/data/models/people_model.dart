@@ -1,7 +1,7 @@
 class Pessoas {
   int? id;
   String? nome;
-  String? foto;
+  dynamic foto;
   String? sexo;
   String? cpf;
   String? data_nascimento;

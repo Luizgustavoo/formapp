@@ -45,7 +45,7 @@ class ApppPages {
     ),
     GetPage(
       name: Routes.CREATE_FAMILY,
-      page: () => const CreateFamilyView(),
+      page: () => CreateFamilyView(),
       binding: FamilyBinding(),
     ),
     GetPage(

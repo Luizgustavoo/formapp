@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
@@ -6,6 +8,7 @@ import 'package:formapp/app/data/repository/family_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FamilyController extends GetxController
     with SingleGetTickerProviderMixin {
@@ -42,6 +45,9 @@ class FamilyController extends GetxController
 
   final box = GetStorage('credenciado');
   Family? selectedFamily;
+
+  var photoUrlPath = ''.obs;
+  var isImagePicPathSet = false.obs;
   List<Pessoas>? listPessoas = [];
   RxList<Pessoas> composicaoFamiliar = <Pessoas>[].obs;
   RxInt tabIndex = 0.obs;
@@ -60,6 +66,10 @@ class FamilyController extends GetxController
   final repository = Get.find<FamilyRepository>();
   Animation<double>? animation;
   AnimationController? animationController;
+
+  final uploadList = <MultipartFile>[];
+
+  List<Map<String, FileImage>>? imageFileList = [];
 
   @override
   void onInit() {
@@ -85,6 +95,22 @@ class FamilyController extends GetxController
   void onClose() {
     getFamilies();
     super.onClose();
+  }
+
+  void setImagePeople(String path) {
+    photoUrlPath.value = path;
+    isImagePicPathSet.value = true;
+  }
+
+  Future<void> takePhoto(ImageSource source) async {
+    File? pickedFile;
+    ImagePicker imagePicker = ImagePicker();
+
+    final pickedImage =
+        await imagePicker.pickImage(source: source, imageQuality: 100);
+
+    pickedFile = File(pickedImage!.path);
+    setImagePeople(pickedFile.path);
   }
 
   void searchFamily(String query) {
@@ -118,12 +144,13 @@ class FamilyController extends GetxController
     listPessoas = selectedFamily!.pessoas;
   }
 
-  void addPessoa() {
+  void addPessoa(BuildContext context) {
     Pessoas pessoa = Pessoas(
       nome: nomePessoaController.text,
       cpf: cpfPessoaController.text,
       estadocivil_id: estadoCivilSelected.value,
       parentesco: parentesco.value,
+      provedor_casa: provedorCheckboxValue.value ? 'sim' : 'nao',
       sexo: sexo.value,
       data_nascimento: nascimentoPessoaController.text,
       titulo_eleitor: tituloEleitoralPessoaController.text,
@@ -137,32 +164,73 @@ class FamilyController extends GetxController
       funcao_igreja: funcaoIgrejaPessoaController.text,
       status: 1,
     );
-    composicaoFamiliar.add(pessoa);
-    clearPeopleModal();
+
+    bool pessoaExistente = composicaoFamiliar.any((p) =>
+        p.nome == pessoa.nome && p.data_nascimento == pessoa.data_nascimento);
+
+    if (!pessoaExistente) {
+      // Se a pessoa não existir, adicione-a à composição
+      composicaoFamiliar.add(pessoa);
+      Get.back();
+    } else {
+      Get.snackbar(
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(milliseconds: 1300),
+        'Falha',
+        'Pessoa já adicionada!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+
+      // Trate o caso em que a pessoa já existe na composição, por exemplo, exibindo uma mensagem para o usuário.
+    }
+
+    // composicaoFamiliar.add(pessoa);
+    // clearPeopleModal();
+
+    // final nome = nomePessoaController.text.replaceAll(' ', '').toLowerCase();
+    // final dataNascimento = nascimentoPessoaController.text.replaceAll('/', '');
+
+    // Map<String, FileImage> imagem = {
+    //   "${nome}_$dataNascimento": FileImage(File(photoUrlPath.value))
+    // };
+
+    // imageFileList!.add(imagem);
+
+    print(imageFileList);
   }
 
-  void saveFamily() async {
+  Future<String> saveFamily() async {
+    String retorno = "";
     if (familyFormKey.currentState!.validate()) {
-      Family family = Family(
-        nome: nomeFamiliaController.text,
-        cep: cepFamiliaController.text,
-        endereco: ruaFamiliaController.text,
-        complemento: complementoFamiliaController.text,
-        bairro: bairroFamiliaController.text,
-        numero_casa: numeroCasaFamiliaController.text,
-        cidade: cidadeFamiliaController.text,
-        uf: ufFamiliaController.text,
-        residencia_propria: 'sim',
-        status: 1,
-        pessoas: composicaoFamiliar,
-        usuario_id: box.read('auth')['user']['id'],
-      );
-      print('Dados da família: $family'); // Adicione este log
-      final token = box.read('auth')['access_token'];
-      print('Token de acesso: $token'); // Adicione este log
-      await repository.insert("Bearer " + token, family);
-      print('Família salva com sucesso!'); // Adicione este log
+      if (composicaoFamiliar.isEmpty) {
+        retorno = "Insira pelo menos um morador na casa!";
+      } else {
+        Family family = Family(
+          nome: nomeFamiliaController.text,
+          cep: cepFamiliaController.text,
+          endereco: ruaFamiliaController.text,
+          complemento: complementoFamiliaController.text,
+          bairro: bairroFamiliaController.text,
+          numero_casa: numeroCasaFamiliaController.text,
+          cidade: cidadeFamiliaController.text,
+          uf: ufFamiliaController.text,
+          residencia_propria: residenceOwn.value ? 'sim' : 'nao',
+          status: 1,
+          pessoas: composicaoFamiliar,
+          usuario_id: box.read('auth')['user']['id'],
+        );
+
+        final token = box.read('auth')['access_token'];
+
+        await repository.insert("Bearer " + token, family);
+        retorno = 'Família salva com sucesso!'; // Adicione este log
+        getFamilies();
+      }
+    } else {
+      retorno = "Preencha todos os campos da família!";
     }
+    return retorno;
   }
 
   void removePeople(Pessoas pessoa) {

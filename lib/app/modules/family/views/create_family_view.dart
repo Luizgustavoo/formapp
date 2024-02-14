@@ -1,14 +1,20 @@
+import 'dart:io';
+
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:searchfield/searchfield.dart';
 
 class CreateFamilyView extends GetView<FamilyController> {
-  const CreateFamilyView({super.key});
+  CreateFamilyView({super.key});
 
+  final PeopleController peopleController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -37,9 +43,12 @@ class CreateFamilyView extends GetView<FamilyController> {
                     context: context,
                     builder: (context) => Padding(
                       padding: MediaQuery.of(context).viewInsets,
-                      child: AddPeopleFamilyView(),
+                      child: AddPeopleFamily(
+                          controller: controller,
+                          peopleController: peopleController),
                     ),
                   );
+
                   controller.animationController!.reverse();
                 },
               ),
@@ -52,8 +61,13 @@ class CreateFamilyView extends GetView<FamilyController> {
                 titleStyle: const TextStyle(
                     fontSize: 16, color: Colors.white, fontFamily: 'Poppinss'),
                 onPress: () async {
-                  controller.saveFamily();
+                  final retorno = await controller.saveFamily();
+                  Get.defaultDialog(
+                    title: "Atenção",
+                    content: Text(retorno),
+                  );
                   controller.animationController!.reverse();
+                  Get.back();
                 },
               ),
             ],
@@ -82,6 +96,7 @@ class CreateFamilyView extends GetView<FamilyController> {
     return Form(
       key: controller.familyFormKey,
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -254,15 +269,15 @@ class CreateFamilyView extends GetView<FamilyController> {
                       'Residência Própria: ',
                       style: TextStyle(),
                     ),
-                    Switch(
-                      activeColor: Colors.orange.shade700,
-                      inactiveThumbColor: Colors.orange.shade500,
-                      inactiveTrackColor: Colors.orange.shade100,
-                      value: controller.residenceOwn.value,
-                      onChanged: (value) {
-                        controller.residenceOwn.value = value;
-                      },
-                    ),
+                    Obx(() => Switch(
+                          activeColor: Colors.orange.shade700,
+                          inactiveThumbColor: Colors.orange.shade500,
+                          inactiveTrackColor: Colors.orange.shade100,
+                          value: controller.residenceOwn.value,
+                          onChanged: (value) {
+                            controller.residenceOwn.value = value;
+                          },
+                        )),
                   ],
                 ),
               ],
@@ -289,10 +304,17 @@ class CreateFamilyView extends GetView<FamilyController> {
                 color: Colors.orange.shade500,
               ),
             ),
-            SizedBox(
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              width: Get.width * .5,
               height: controller.familyInfo.value
                   ? Get.height * .5
-                  : Get.height * 1,
+                  : Get.height * .7,
               child: Obx(() => ListView.builder(
                   shrinkWrap: true,
                   itemCount: controller.composicaoFamiliar.length,
@@ -366,6 +388,428 @@ class CreateFamilyView extends GetView<FamilyController> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class AddPeopleFamily extends StatelessWidget {
+  const AddPeopleFamily({
+    super.key,
+    required this.controller,
+    required this.peopleController,
+  });
+
+  final FamilyController controller;
+  final PeopleController peopleController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 30),
+      child: ListView(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: controller.formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Adicionar Pessoa',
+                    style: CustomTextStyle.title(context),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Divider(
+                      height: 5,
+                      thickness: 3,
+                      color: Colors.orange.shade500,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Obx(() => CircleAvatar(
+                            radius: 35,
+                            backgroundImage: controller.isImagePicPathSet ==
+                                    true
+                                ? FileImage(File(controller.photoUrlPath.value))
+                                    as ImageProvider
+                                : const AssetImage(
+                                    'assets/images/default_avatar.jpg'),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                backgroundBlendMode: BlendMode.multiply,
+                                color: Colors.grey[300],
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.camera_alt),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) =>
+                                          CustomBottomSheet());
+                                },
+                              ),
+                            ),
+                          )),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      const Text(
+                        'Provedor da casa: ',
+                        style: TextStyle(),
+                      ),
+                      Obx(() => Switch(
+                            activeColor: Colors.orange.shade700,
+                            inactiveThumbColor: Colors.orange.shade500,
+                            inactiveTrackColor: Colors.orange.shade100,
+                            value: controller.provedorCheckboxValue.value,
+                            onChanged: (value) {
+                              controller.provedorCheckboxValue.value = value;
+                            },
+                          )),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  TextFormField(
+                    controller: controller.nomePessoaController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Nome Completo'),
+                    onChanged: (value) {},
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, digite o nome do morador';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          value: controller.sexo.value,
+                          onChanged: (value) {},
+                          items: ['Masculino', 'Feminino', 'Não informado']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(), labelText: 'Sexo'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Obx(
+                        () => SizedBox(
+                          width:
+                              150, // Defina uma largura específica para o DropdownButtonFormField
+                          child: DropdownButtonFormField<int>(
+                            onTap: () async {
+                              await peopleController
+                                  .getMaritalStatus(); // Chama o método ao abrir o dropdown
+                            },
+                            value: controller.estadoCivilSelected.value,
+                            onChanged: (value) {
+                              controller.estadoCivilSelected.value = value!;
+                            },
+                            items: peopleController.listMaritalStatus
+                                .map<DropdownMenuItem<int>>((item) {
+                              return DropdownMenuItem<int>(
+                                value: item.id,
+                                child: Text(item.descricao ?? ''),
+                              );
+                            }).toList(),
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Estado Civil',
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          maxLength: 10,
+                          controller: controller.nascimentoPessoaController,
+                          decoration: const InputDecoration(
+                              errorMaxLines: 6,
+                              counterText: "",
+                              border: OutlineInputBorder(),
+                              labelText: 'Data de Nascimento'),
+                          onChanged: (value) =>
+                              controller.onNascimentoChanged(value),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Data inválida';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: controller.parentesco.value,
+                          onChanged: (value) {},
+                          items: [
+                            'Avô(ó)',
+                            'Bisavô(ó)',
+                            'Companheiro(a)',
+                            'Cunhado(a)',
+                            'Irmã',
+                            'Irmão',
+                            'Madrasta',
+                            'Mãe',
+                            'Outro',
+                            'Padrasto',
+                            'Pai',
+                            'Resp. Legal',
+                            'Madrasta',
+                            'Sobrinho(a)',
+                            'Tio(a)',
+                            'Vodrasto',
+                            'Vodrasta',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Parentesco'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: controller.cpfPessoaController,
+                    keyboardType: TextInputType.number,
+                    maxLength: 14,
+                    onChanged: (value) => controller.onCPFChanged(value),
+                    decoration: const InputDecoration(
+                        counterText: '',
+                        border: OutlineInputBorder(),
+                        labelText: 'CPF'),
+                    // validator: (value) {
+                    //   if (!controller.validateCPF()) {
+                    //     return "Informe um CPF válido";
+                    //   }
+                    //   return null;
+                    // },
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: TextFormField(
+                          controller:
+                              controller.tituloEleitoralPessoaController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Título de Eleitor'),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          controller: controller.zonaEleitoralPessoaController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Zona Eleitoral'),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: controller.localTrabalhoPessoaController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Trabalho'),
+                    onChanged: (value) {},
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: controller.cargoPessoaController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Cargo'),
+                    onChanged: (value) {},
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          maxLength: 15,
+                          controller: controller.celularPessoaController,
+                          decoration: const InputDecoration(
+                              counterText: "",
+                              border: OutlineInputBorder(),
+                              labelText: 'Telefone'),
+                          onChanged: (value) =>
+                              controller.onPhoneChanged(value),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: controller.redeSocialPessoaController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Rede Social'),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Obx(
+                    () => DropdownButtonFormField<int>(
+                      onTap: () async {
+                        peopleController.getReligion();
+                      },
+                      value: controller.religiaoSelected.value,
+                      onChanged: (value) {
+                        controller.religiaoSelected.value = value!;
+                      },
+                      items: peopleController.listReligion
+                          .map<DropdownMenuItem<int>>((item) {
+                            print(item.id);
+                            return DropdownMenuItem<int>(
+                              value: item
+                                  .id, // Suponha que seus dados tenham um campo 'value'
+                              child: Text(item.descricao ??
+                                  ''), // Suponha que seus dados tenham um campo 'label'
+                            );
+                          })
+                          .toSet()
+                          .toList(),
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'Religião'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () async {
+                      peopleController.getChurch();
+                    },
+                    child: SearchField(
+                      suggestionDirection: SuggestionDirection.flex,
+                      controller: controller.igrejaPessoaController,
+                      onSearchTextChanged: (query) {
+                        final filter = peopleController.suggestions
+                            .where((element) => element
+                                .toLowerCase()
+                                .contains(query.toLowerCase()))
+                            .toList();
+                        return filter
+                            .map((e) => SearchFieldListItem<String>(e,
+                                child: peopleController.searchChild(e)))
+                            .toList();
+                      },
+                      onTap: () {},
+                      key: const Key('searchfield'),
+                      hint: 'Selecione uma Igreja',
+                      itemHeight: 50,
+                      scrollbarDecoration: ScrollbarDecoration(),
+                      onTapOutside: (x) {
+                        peopleController.focus.unfocus();
+                      },
+                      suggestionStyle:
+                          const TextStyle(fontSize: 18, color: Colors.black),
+                      searchStyle:
+                          const TextStyle(fontSize: 18, color: Colors.black),
+                      searchInputDecoration: const InputDecoration(
+                        hintStyle: TextStyle(fontSize: 18, color: Colors.black),
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                      suggestionsDecoration: SuggestionDecoration(
+                        color: Colors.grey.shade300,
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      suggestions: peopleController.suggestions
+                          .map((e) => SearchFieldListItem<String>(e,
+                              child: peopleController.searchChild(e)))
+                          .toList(),
+                      focusNode: peopleController.focus,
+                      suggestionState: Suggestion.expand,
+                      onSuggestionTap: (SearchFieldListItem<String> x) {
+                        peopleController.focus.unfocus();
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: controller.funcaoIgrejaPessoaController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Função/Igreja'),
+                    onChanged: (value) {},
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            'CANCELAR',
+                            style: CustomTextStyle.button2(context),
+                          )),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (controller.formKey.currentState!.validate()) {
+                              controller.addPessoa(context);
+                              controller.familyInfo.value = false;
+
+                              //Get.back();
+                            }
+                          },
+                          child: Text(
+                            'ADICIONAR',
+                            style: CustomTextStyle.button(context),
+                          )),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

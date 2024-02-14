@@ -54,29 +54,6 @@ class FamilyApiClient {
 
       List<Map<String, dynamic>> pessoasData = [];
 
-      // for (Pessoas pessoa in family.pessoas!) {
-      //   var pessoaMap = {
-      //     "nome": pessoa.nome,
-      //     "foto": pessoa.foto,
-      //     "sexo": pessoa.sexo,
-      //     "cpf": pessoa.cpf,
-      //     "data_nascimento": pessoa.data_nascimento,
-      //     "titulo_eleitor": pessoa.titulo_eleitor,
-      //     "zona_eleitoral": pessoa.zona_eleitoral,
-      //     "telefone": pessoa.telefone,
-      //     "rede_social": pessoa.rede_social,
-      //     "provedor_casa": pessoa.provedor_casa,
-      //     "igreja_id": pessoa.igreja_id,
-      //     "local_trabalho": pessoa.local_trabalho,
-      //     "cargo_trabalho": pessoa.cargo_trabalho,
-      //     "religiao_id": pessoa.religiao_id.toString(),
-      //     "funcao_igreja": pessoa.funcao_igreja,
-      //     "status": pessoa.status.toString(),
-      //     "estadocivil_id": pessoa.estadocivil_id.toString()
-      //   };
-      //   pessoasData.add(pessoaMap);
-      // }
-
       var requestBody = {
         // Adicione aqui os campos necessários conforme esperado pela sua API
         "nome": family.nome,

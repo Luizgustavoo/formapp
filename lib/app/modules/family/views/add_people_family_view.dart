@@ -1,16 +1,19 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
-
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:searchfield/searchfield.dart';
 
+import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/utils/custom_text_style.dart';
+
 class AddPeopleFamilyView extends GetView<PeopleController> {
-  AddPeopleFamilyView({super.key});
+  AddPeopleFamilyView({
+    super.key,
+  });
 
   final FamilyController familyController = Get.find();
   @override
@@ -48,12 +51,12 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     children: [
                       Obx(() => CircleAvatar(
                             radius: 35,
-                            backgroundImage: controller.isImagePicPathSet ==
-                                    true
-                                ? FileImage(File(controller.photoUrlPath.value))
-                                    as ImageProvider
-                                : const AssetImage(
-                                    'assets/images/default_avatar.jpg'),
+                            backgroundImage:
+                                familyController.isImagePicPathSet == true
+                                    ? FileImage(File(familyController
+                                        .photoUrlPath.value)) as ImageProvider
+                                    : const AssetImage(
+                                        'assets/images/default_avatar.jpg'),
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -78,15 +81,16 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         'Provedor da casa: ',
                         style: TextStyle(),
                       ),
-                      Switch(
-                        activeColor: Colors.orange.shade700,
-                        inactiveThumbColor: Colors.orange.shade500,
-                        inactiveTrackColor: Colors.orange.shade100,
-                        value: familyController.provedorCheckboxValue.value,
-                        onChanged: (value) {
-                          familyController.provedorCheckboxValue.value = value;
-                        },
-                      ),
+                      Obx(() => Switch(
+                            activeColor: Colors.orange.shade700,
+                            inactiveThumbColor: Colors.orange.shade500,
+                            inactiveTrackColor: Colors.orange.shade100,
+                            value: familyController.provedorCheckboxValue.value,
+                            onChanged: (value) {
+                              familyController.provedorCheckboxValue.value =
+                                  value;
+                            },
+                          )),
                     ],
                   ),
                   const SizedBox(
@@ -407,10 +411,10 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           onPressed: () {
                             if (familyController.formKey.currentState!
                                 .validate()) {
-                              familyController.addPessoa();
+                              familyController.addPessoa(context);
                               familyController.familyInfo.value = false;
 
-                              Get.back();
+                              //Get.back();
                             }
                           },
                           child: Text(
