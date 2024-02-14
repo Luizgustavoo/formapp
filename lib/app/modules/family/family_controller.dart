@@ -135,6 +135,7 @@ class FamilyController extends GetxController
       religiao_id: religiaoSelected.value,
       igreja_id: igrejaPessoaController.text,
       funcao_igreja: funcaoIgrejaPessoaController.text,
+      status: 1,
     );
     composicaoFamiliar.add(pessoa);
     clearPeopleModal();
@@ -154,6 +155,7 @@ class FamilyController extends GetxController
         residencia_propria: 'sim',
         status: 1,
         pessoas: composicaoFamiliar,
+        usuario_id: box.read('auth')['user']['id'],
       );
       print('Dados da família: $family'); // Adicione este log
       final token = box.read('auth')['access_token'];
