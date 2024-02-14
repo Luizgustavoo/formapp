@@ -155,8 +155,11 @@ class FamilyController extends GetxController
         status: 1,
         pessoas: composicaoFamiliar,
       );
+      print('Dados da família: $family'); // Adicione este log
       final token = box.read('auth')['access_token'];
+      print('Token de acesso: $token'); // Adicione este log
       await repository.insert("Bearer " + token, family);
+      print('Família salva com sucesso!'); // Adicione este log
     }
   }
 
