@@ -135,6 +135,7 @@ class FamilyController extends GetxController
       religiao_id: religiaoSelected.value,
       igreja_id: igrejaPessoaController.text,
       funcao_igreja: funcaoIgrejaPessoaController.text,
+      status: 1,
     );
     composicaoFamiliar.add(pessoa);
     clearPeopleModal();

@@ -93,28 +93,34 @@ class FamilyApiClient {
         // Adicione os demais campos conforme necessário
       };
 
+      int x = 0;
       for (Pessoas pessoa in family.pessoas!) {
-        requestBody["pessoa[${pessoa.nome}]"] = pessoa.nome;
-        requestBody["pessoa[${pessoa.foto}]"] = pessoa.foto;
-        requestBody["pessoa[${pessoa.sexo}]"] = pessoa.sexo;
-        requestBody["pessoa[${pessoa.cpf}]"] = pessoa.cpf;
-        requestBody["pessoa[${pessoa.data_nascimento}]"] =
-            pessoa.data_nascimento;
-        requestBody["pessoa[${pessoa.titulo_eleitor}]"] = pessoa.titulo_eleitor;
-        requestBody["pessoa[${pessoa.zona_eleitoral}]"] = pessoa.zona_eleitoral;
-        requestBody["pessoa[${pessoa.telefone}]"] = pessoa.telefone;
-        requestBody["pessoa[${pessoa.rede_social}]"] = pessoa.rede_social;
-        requestBody["pessoa[${pessoa.provedor_casa}]"] = pessoa.provedor_casa;
-        requestBody["pessoa[${pessoa.igreja_id}]"] = pessoa.igreja_id;
-        requestBody["pessoa[${pessoa.local_trabalho}]"] = pessoa.local_trabalho;
-        requestBody["pessoa[${pessoa.cargo_trabalho}]"] = pessoa.cargo_trabalho;
-        requestBody["pessoa[${pessoa.religiao_id}]"] =
-            pessoa.religiao_id.toString();
-        requestBody["pessoa[${pessoa.funcao_igreja}]"] = pessoa.funcao_igreja;
-        requestBody["pessoa[${pessoa.status}]"] = pessoa.status.toString();
-        requestBody["pessoa[${pessoa.estadocivil_id}]"] =
-            pessoa.estadocivil_id.toString();
+        requestBody["pessoa[$x][nome]"] = pessoa.nome ?? "";
+        requestBody["pessoa[$x][foto]"] = pessoa.foto ?? "";
+        requestBody["pessoa[$x][sexo]"] = pessoa.sexo ?? "";
+        requestBody["pessoa[$x][cpf]"] = pessoa.cpf ?? "";
+        requestBody["pessoa[$x][data_nascimento]"] =
+            pessoa.data_nascimento ?? "";
+        requestBody["pessoa[$x][titulo_eleitor]"] = pessoa.titulo_eleitor ?? "";
+        requestBody["pessoa[$x][zona_eleitoral]"] = pessoa.zona_eleitoral ?? "";
+        requestBody["pessoa[$x][telefone]"] = pessoa.telefone ?? "";
+        requestBody["pessoa[$x][rede_social]"] = pessoa.rede_social ?? "";
+        requestBody["pessoa[$x][provedor_casa]"] = pessoa.provedor_casa ?? "";
+        requestBody["pessoa[$x][igreja_id]"] =
+            pessoa.igreja_id.toString() ?? "";
+        requestBody["pessoa[$x][local_trabalho]"] = pessoa.local_trabalho ?? "";
+        requestBody["pessoa[$x][cargo_trabalho]"] = pessoa.cargo_trabalho ?? "";
+        requestBody["pessoa[$x][religiao_id]"] =
+            pessoa.religiao_id.toString() ?? "";
+        requestBody["pessoa[$x][funcao_igreja]"] = pessoa.funcao_igreja ?? "";
+        requestBody["pessoa[$x][status]"] = pessoa.status.toString() ?? "";
+        requestBody["pessoa[$x][estadocivil_id]"] =
+            pessoa.estadocivil_id.toString() ?? "";
+        x++;
       }
+
+      // print(requestBody);
+      // return;
 
       var response = await httpClient.post(
         familyUrl,
