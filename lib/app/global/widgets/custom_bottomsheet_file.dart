@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CustomBottomSheet extends StatelessWidget {
-  final FamilyController controller = Get.find();
+  final PeopleController controller = Get.find();
   CustomBottomSheet({super.key});
 
   @override

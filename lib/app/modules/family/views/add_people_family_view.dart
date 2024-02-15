@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:searchfield/searchfield.dart';
 
 import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
@@ -15,11 +14,10 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
   const AddPeopleFamilyView({
     super.key,
     required this.family,
-    required this.familyController,
   });
 
   final Family family;
-  final FamilyController familyController;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,7 +27,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
           Container(
             padding: const EdgeInsets.all(16),
             child: Form(
-              key: familyController.formKey,
+              key: controller.peopleFormKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,12 +53,12 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     children: [
                       Obx(() => CircleAvatar(
                             radius: 35,
-                            backgroundImage:
-                                familyController.isImagePicPathSet == true
-                                    ? FileImage(File(familyController
-                                        .photoUrlPath.value)) as ImageProvider
-                                    : const AssetImage(
-                                        'assets/images/default_avatar.jpg'),
+                            backgroundImage: controller.isImagePicPathSet ==
+                                    true
+                                ? FileImage(File(controller.photoUrlPath.value))
+                                    as ImageProvider
+                                : const AssetImage(
+                                    'assets/images/default_avatar.jpg'),
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -100,7 +98,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     height: 8,
                   ),
                   TextFormField(
-                    controller: familyController.nomePessoaController,
+                    controller: controller.nomePessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Nome Completo'),
@@ -117,7 +115,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     children: [
                       Expanded(
                         child: DropdownButtonFormField<String>(
-                          value: familyController.sexo.value,
+                          value: controller.sexo.value,
                           onChanged: (value) {},
                           items: ['Masculino', 'Feminino', 'Não informado']
                               .map<DropdownMenuItem<String>>((String value) {
@@ -167,15 +165,14 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         flex: 2,
                         child: TextFormField(
                           maxLength: 10,
-                          controller:
-                              familyController.nascimentoPessoaController,
+                          controller: controller.nascimentoPessoaController,
                           decoration: const InputDecoration(
                               errorMaxLines: 6,
                               counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Data de Nascimento'),
                           onChanged: (value) =>
-                              familyController.onNascimentoChanged(value),
+                              controller.onNascimentoChanged(value),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Data inválida';
@@ -188,7 +185,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       Expanded(
                         flex: 2,
                         child: DropdownButtonFormField<String>(
-                          value: familyController.parentesco.value,
+                          value: controller.parentesco.value,
                           onChanged: (value) {},
                           items: [
                             'Avô(ó)',
@@ -226,7 +223,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     controller: controller.cpfPessoaController,
                     keyboardType: TextInputType.number,
                     maxLength: 14,
-                    onChanged: (value) => familyController.onCPFChanged(value),
+                    onChanged: (value) => controller.onCPFChanged(value),
                     decoration: const InputDecoration(
                         counterText: '',
                         border: OutlineInputBorder(),
@@ -245,7 +242,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         flex: 3,
                         child: TextFormField(
                           controller:
-                              familyController.tituloEleitoralPessoaController,
+                              controller.tituloEleitoralPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Título de Eleitor'),
@@ -256,8 +253,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       Expanded(
                         flex: 2,
                         child: TextFormField(
-                          controller:
-                              familyController.zonaEleitoralPessoaController,
+                          controller: controller.zonaEleitoralPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Zona Eleitoral'),
@@ -268,14 +264,14 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: familyController.localTrabalhoPessoaController,
+                    controller: controller.localTrabalhoPessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Trabalho'),
                     onChanged: (value) {},
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: familyController.cargoPessoaController,
+                    controller: controller.cargoPessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Cargo'),
                     onChanged: (value) {},
@@ -286,20 +282,19 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       Expanded(
                         child: TextFormField(
                           maxLength: 15,
-                          controller: familyController.celularPessoaController,
+                          controller: controller.celularPessoaController,
                           decoration: const InputDecoration(
                               counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Telefone'),
                           onChanged: (value) =>
-                              familyController.onPhoneChanged(value),
+                              controller.onPhoneChanged(value),
                         ),
                       ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
-                          controller:
-                              familyController.redeSocialPessoaController,
+                          controller: controller.redeSocialPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: 'Rede Social'),
@@ -390,7 +385,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: familyController.funcaoIgrejaPessoaController,
+                    controller: controller.funcaoIgrejaPessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Função/Igreja'),
@@ -411,12 +406,23 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                             style: CustomTextStyle.button2(context),
                           )),
                       ElevatedButton(
-                          onPressed: () {
-                            if (familyController.formKey.currentState!
-                                .validate()) {
-                              familyController.savePeople(family);
-                              //Get.back();
+                          onPressed: () async {
+                            Map<String, dynamic> retorno =
+                                await controller.savePeople(family);
+                            if (retorno['return'] == 0) {
+                              Get.back();
                             }
+                            Get.snackbar(
+                              snackPosition: SnackPosition.BOTTOM,
+                              duration: const Duration(milliseconds: 1500),
+                              retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                              retorno['message'],
+                              backgroundColor: retorno['return'] == 0
+                                  ? Colors.green
+                                  : Colors.red,
+                              colorText: Colors.white,
+                            );
+                            //Get.back();
                           },
                           child: Text(
                             'ADICIONAR',

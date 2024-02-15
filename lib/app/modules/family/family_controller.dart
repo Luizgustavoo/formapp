@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
-import 'package:formapp/app/data/repository/people_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:image_picker/image_picker.dart';
 
 class FamilyController extends GetxController
     with SingleGetTickerProviderMixin {
@@ -26,46 +22,20 @@ class FamilyController extends GetxController
   TextEditingController residenciaPropriaFamiliaController =
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
-  TextEditingController idPessoaController = TextEditingController();
-  TextEditingController nomePessoaController = TextEditingController();
-  TextEditingController nascimentoPessoaController = TextEditingController();
-  TextEditingController cpfPessoaController = TextEditingController();
-  TextEditingController tituloEleitoralPessoaController =
-      TextEditingController();
-  TextEditingController zonaEleitoralPessoaController = TextEditingController();
-  TextEditingController celularPessoaController = TextEditingController();
-  TextEditingController redeSocialPessoaController = TextEditingController();
-  TextEditingController localTrabalhoPessoaController = TextEditingController();
-  TextEditingController cargoPessoaController = TextEditingController();
-  TextEditingController funcaoIgrejaPessoaController = TextEditingController();
-  TextEditingController parentescoPessoaController = TextEditingController();
-  TextEditingController statusPessoaController = TextEditingController();
-  TextEditingController usuarioId = TextEditingController();
-  TextEditingController familiaId = TextEditingController();
-  TextEditingController igrejaPessoaController = TextEditingController();
 
   final box = GetStorage('credenciado');
   Family? selectedFamily;
-
-  var photoUrlPath = ''.obs;
-  var isImagePicPathSet = false.obs;
   List<Pessoas>? listPessoas = [];
-  RxList<Pessoas> composicaoFamiliar = <Pessoas>[].obs;
+
   RxInt tabIndex = 0.obs;
   RxList<Family> listFamilies = <Family>[].obs;
   TabController? tabController;
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> individualFormKey = GlobalKey<FormState>();
-  RxInt estadoCivilSelected = 1.obs;
-  RxInt religiaoSelected = 1.obs;
-  RxString sexo = 'Masculino'.obs;
-  RxString parentesco = 'Avô(ó)'.obs;
+
   RxBool residenceOwn = false.obs;
-  RxBool provedorCheckboxValue = false.obs;
   RxBool familyInfo = true.obs;
-  final formKey = GlobalKey<FormState>();
   final repository = Get.find<FamilyRepository>();
-  final peopleRepository = Get.find<PeopleRepository>();
+
   Animation<double>? animation;
   AnimationController? animationController;
 
@@ -99,22 +69,6 @@ class FamilyController extends GetxController
     super.onClose();
   }
 
-  void setImagePeople(String path) {
-    photoUrlPath.value = path;
-    isImagePicPathSet.value = true;
-  }
-
-  Future<void> takePhoto(ImageSource source) async {
-    File? pickedFile;
-    ImagePicker imagePicker = ImagePicker();
-
-    final pickedImage =
-        await imagePicker.pickImage(source: source, imageQuality: 100);
-
-    pickedFile = File(pickedImage!.path);
-    setImagePeople(pickedFile.path);
-  }
-
   void searchFamily(String query) {
     if (query.isEmpty) {
       getFamilies();
@@ -144,62 +98,6 @@ class FamilyController extends GetxController
     statusFamiliaController.text = selectedFamily!.status.toString();
 
     listPessoas = selectedFamily!.pessoas;
-  }
-
-  void addPessoa(BuildContext context) {
-    Pessoas pessoa = Pessoas(
-      nome: nomePessoaController.text,
-      cpf: cpfPessoaController.text,
-      estadocivil_id: estadoCivilSelected.value,
-      parentesco: parentesco.value,
-      provedor_casa: provedorCheckboxValue.value ? 'sim' : 'nao',
-      sexo: sexo.value,
-      data_nascimento: nascimentoPessoaController.text,
-      titulo_eleitor: tituloEleitoralPessoaController.text,
-      zona_eleitoral: zonaEleitoralPessoaController.text,
-      local_trabalho: localTrabalhoPessoaController.text,
-      cargo_trabalho: cargoPessoaController.text,
-      telefone: celularPessoaController.text,
-      rede_social: redeSocialPessoaController.text,
-      religiao_id: religiaoSelected.value,
-      igreja_id: igrejaPessoaController.text,
-      funcao_igreja: funcaoIgrejaPessoaController.text,
-      status: 1,
-    );
-
-    bool pessoaExistente = composicaoFamiliar.any((p) =>
-        p.nome == pessoa.nome && p.data_nascimento == pessoa.data_nascimento);
-
-    if (!pessoaExistente) {
-      // Se a pessoa não existir, adicione-a à composição
-      composicaoFamiliar.add(pessoa);
-      Get.back();
-    } else {
-      Get.snackbar(
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(milliseconds: 1300),
-        'Falha',
-        'Pessoa já adicionada!',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-
-      // Trate o caso em que a pessoa já existe na composição, por exemplo, exibindo uma mensagem para o usuário.
-    }
-
-    // composicaoFamiliar.add(pessoa);
-    // clearPeopleModal();
-
-    // final nome = nomePessoaController.text.replaceAll(' ', '').toLowerCase();
-    // final dataNascimento = nascimentoPessoaController.text.replaceAll('/', '');
-
-    // Map<String, FileImage> imagem = {
-    //   "${nome}_$dataNascimento": FileImage(File(photoUrlPath.value))
-    // };
-
-    // imageFileList!.add(imagem);
-
-    print(imageFileList);
   }
 
   Future<Map<String, dynamic>> saveFamily() async {
@@ -247,69 +145,6 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<Map<String, dynamic>> savePeople(Family family) async {
-    Map<String, dynamic> retorno = {"return": 1, "message": ""};
-
-    if (familyFormKey.currentState!.validate()) {
-      Pessoas pessoa = Pessoas(
-          nome: nomePessoaController.text,
-          cpf: cpfPessoaController.text,
-          estadocivil_id: estadoCivilSelected.value,
-          parentesco: parentesco.value,
-          provedor_casa: provedorCheckboxValue.value ? 'sim' : 'nao',
-          sexo: sexo.value,
-          data_nascimento: nascimentoPessoaController.text,
-          titulo_eleitor: tituloEleitoralPessoaController.text,
-          zona_eleitoral: zonaEleitoralPessoaController.text,
-          local_trabalho: localTrabalhoPessoaController.text,
-          cargo_trabalho: cargoPessoaController.text,
-          telefone: celularPessoaController.text,
-          rede_social: redeSocialPessoaController.text,
-          religiao_id: religiaoSelected.value,
-          igreja_id: igrejaPessoaController.text,
-          funcao_igreja: funcaoIgrejaPessoaController.text,
-          status: 1,
-          usuario_id: box.read('auth')['user']['id'],
-          familia_id: family.id);
-
-      final token = box.read('auth')['access_token'];
-
-      final mensagem = await peopleRepository.insertPeople(
-          "Bearer " + token, pessoa, File(photoUrlPath.value));
-
-      print(mensagem);
-
-      if (mensagem != null) {
-        if (mensagem['message'] == 'success') {
-          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-        } else if (mensagem['message'] == 'ja_existe') {
-          retorno = {
-            "return": 1,
-            "message": "Já existe uam família com esse nome!"
-          };
-        }
-      }
-
-      print(mensagem);
-
-      getFamilies();
-    } else {
-      retorno = {
-        "return": 1,
-        "message": "Preencha todos os campos da família!"
-      };
-    }
-    return retorno;
-  }
-
-  void removePeople(Pessoas pessoa) {
-    composicaoFamiliar.remove(pessoa);
-  }
-
-  void clearPeopleModal() {
-    formKey.currentState!.reset();
-  }
-
   void getFamilies() async {
     final token = box.read('auth')['access_token'];
     listFamilies.value = await repository.getAll("Bearer " + token);
@@ -347,38 +182,6 @@ class FamilyController extends GetxController
   /*FINAL PARTE RESPONSAVEL PELO CEP */
 
   /*PARTE RESPONSAVEL PELA FORMATACAO*/
-  void onCPFChanged(String cpf) {
-    final formattedCPF = FormattersValidators.formatCPF(cpf);
-    cpfPessoaController.value = TextEditingValue(
-      text: formattedCPF.value,
-      selection: TextSelection.collapsed(offset: formattedCPF.value.length),
-    );
-  }
-
-  void onPhoneChanged(String phone) {
-    final formattedPhone = FormattersValidators.formatPhone(phone);
-    celularPessoaController.value = TextEditingValue(
-      text: formattedPhone.value,
-      selection: TextSelection.collapsed(offset: formattedPhone.value.length),
-    );
-  }
-
-  void onNascimentoChanged(String nascimento) {
-    final formattedNASCIMENTO = FormattersValidators.formatDate(nascimento);
-    nascimentoPessoaController.value = TextEditingValue(
-      text: formattedNASCIMENTO.value,
-      selection:
-          TextSelection.collapsed(offset: formattedNASCIMENTO.value.length),
-    );
-  }
-
-  bool validateCPF() {
-    return FormattersValidators.validateCPF(cpfPessoaController.text);
-  }
-
-  bool validatePhone() {
-    return FormattersValidators.validatePhone(celularPessoaController.text);
-  }
 
   void onCEPChanged(String cep) {
     final formattedCEP = FormattersValidators.formatCEP(cep);
@@ -392,7 +195,7 @@ class FamilyController extends GetxController
     return FormattersValidators.validateCEP(cepFamiliaController.text);
   }
 
-  void clearAllTextFields() {
+  void clearAllFamilyTextFields() {
     // Lista de todos os TextEditingController
     final textControllers = [
       idFamiliaController,
@@ -406,22 +209,6 @@ class FamilyController extends GetxController
       complementoFamiliaController,
       residenciaPropriaFamiliaController,
       statusFamiliaController,
-      idPessoaController,
-      nomePessoaController,
-      nascimentoPessoaController,
-      cpfPessoaController,
-      tituloEleitoralPessoaController,
-      zonaEleitoralPessoaController,
-      celularPessoaController,
-      redeSocialPessoaController,
-      localTrabalhoPessoaController,
-      cargoPessoaController,
-      funcaoIgrejaPessoaController,
-      parentescoPessoaController,
-      statusPessoaController,
-      usuarioId,
-      familiaId,
-      igrejaPessoaController,
     ];
 
     // Itera sobre todos os TextEditingController e limpa cada um deles

@@ -1,5 +1,4 @@
 import 'package:formapp/app/modules/family/family_binding.dart';
-import 'package:formapp/app/modules/family/views/create_family_view.dart';
 import 'package:formapp/app/modules/family/views/edit_family_view.dart';
 import 'package:formapp/app/modules/family/views/list_family_view.dart';
 import 'package:formapp/app/modules/home/home_binding.dart';
@@ -43,14 +42,14 @@ class ApppPages {
       page: () => const EditFamilyView(),
       binding: FamilyBinding(),
     ),
-    GetPage(
-      name: Routes.CREATE_FAMILY,
-      page: () => CreateFamilyView(),
-      binding: FamilyBinding(),
-    ),
+    // GetPage(
+    //   name: Routes.CREATE_FAMILY,
+    //   page: () => CreateFamilyView(),
+    //   binding: FamilyBinding(),
+    // ),
     GetPage(
       name: Routes.EDIT_PEOPLE,
-      page: () => EditPeopleView(),
+      page: () => const EditPeopleView(),
       binding: PeopleBinding(),
     ),
     GetPage(

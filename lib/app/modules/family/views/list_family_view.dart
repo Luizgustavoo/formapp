@@ -1,19 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
 import 'package:get/get.dart';
-import 'package:searchfield/searchfield.dart';
-
 import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/family/views/create_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
@@ -30,7 +24,7 @@ class FamilyView extends GetView<FamilyController> {
         actions: [
           IconButton(
               onPressed: () {
-                controller.clearAllTextFields();
+                peopleController.clearAllPeopleTextFields();
                 showModalBottomSheet(
                   isScrollControlled: true,
                   isDismissible: false,
@@ -109,7 +103,6 @@ class FamilyView extends GetView<FamilyController> {
                           padding: MediaQuery.of(context).viewInsets,
                           child: AddPeopleFamilyView(
                             family: family,
-                            familyController: controller,
                           ),
                         ),
                       );

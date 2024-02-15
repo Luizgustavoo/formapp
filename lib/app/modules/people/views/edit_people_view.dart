@@ -1,16 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
 class EditPeopleView extends GetView<PeopleController> {
-  EditPeopleView({super.key});
-
-  final FamilyController familyController = Get.find();
+  const EditPeopleView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +21,7 @@ class EditPeopleView extends GetView<PeopleController> {
           padding: const EdgeInsets.all(12.0),
           children: [
             Form(
-              key: controller.formKey,
+              key: controller.peopleFormKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -119,7 +116,7 @@ class EditPeopleView extends GetView<PeopleController> {
                         children: [
                           Expanded(
                             child: DropdownButtonFormField<String>(
-                              value: controller.sexo!.value,
+                              value: controller.sexo.value,
                               onChanged: (value) {},
                               items: [
                                 'Masculino',
@@ -250,9 +247,9 @@ class EditPeopleView extends GetView<PeopleController> {
                           onTap: () async {
                             controller.getReligion();
                           },
-                          value: familyController.religiaoSelected.value,
+                          value: controller.religiaoSelected.value,
                           onChanged: (value) {
-                            familyController.religiaoSelected.value = value!;
+                            controller.religiaoSelected.value = value!;
                           },
                           items: controller.listReligion
                               .map<DropdownMenuItem<int>>((item) {

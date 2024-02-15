@@ -48,8 +48,7 @@ class PeopleApiClient {
     return null;
   }
 
-  Future<Response?> insertPeople(
-      String token, Pessoas pessoa, File imageFile) async {
+  insertPeople(String token, Pessoas pessoa, File imageFile) async {
     try {
       var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/create');
 
@@ -94,29 +93,35 @@ class PeopleApiClient {
 
       var response = await request.send();
 
-      // if (response.statusCode == 200) {
-      //    return ???;
-      // } else if (response.statusCode == 422 ||
-      //     json.decode(response.body)['message'] == "ja_existe") {
-      //   print(json.decode(response.body));
+      var responseStream = await response.stream.bytesToString();
+      var httpResponse = http.Response(responseStream, response.statusCode);
 
-      //   return json.decode(response.body);
-      // } else if (response.statusCode == 401 &&
-      //     json.decode(response.body)['message'] == "Token has expired") {
-      //   Get.defaultDialog(
-      //     title: "Expirou",
-      //     content: const Text(
-      //         'O token de autenticação expirou, faça login novamente.'),
-      //   );
-      //   var box = GetStorage('credenciado');
-      //   box.erase();
-      //   Get.offAllNamed('/login');
-      // } else {
-      //   Get.defaultDialog(
-      //     title: "Error",
-      //     content: const Text('erro'),
-      //   );
-      // }
+      // print(json.decode(httpResponse.body));
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        return json.decode(httpResponse.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(httpResponse.body)['message'] == "ja_existe") {
+        print(json.decode(httpResponse.body));
+
+        return json.decode(httpResponse.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(httpResponse.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
     } catch (err) {
       Get.defaultDialog(
         title: "Errorou",
