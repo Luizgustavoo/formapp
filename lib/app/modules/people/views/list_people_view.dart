@@ -47,7 +47,7 @@ class FamilyView extends GetView<FamilyController> {
                     return CustomFamilyCard(
                         stripe: index % 2 == 0 ? true : false,
                         memberName: family.nome.toString(),
-                        memberContact: "Provedor: $provedorCasa",
+                        provedor: "Provedor: $provedorCasa",
                         editMember: () {
                           controller.selectedFamily = family;
                           controller.fillInFields();

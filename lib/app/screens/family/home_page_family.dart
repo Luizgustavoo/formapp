@@ -56,7 +56,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                 return CustomFamilyCard(
                     stripe: index % 2 == 0 ? true : false,
                     memberName: 'Luiz',
-                    memberContact: '43 99928-9380',
+                    provedor: '43 99928-9380',
                     editMember: () {},
                     messageMember: () {
                       showModalBottomSheet(

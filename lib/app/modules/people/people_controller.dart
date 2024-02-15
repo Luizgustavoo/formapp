@@ -43,7 +43,7 @@ class PeopleController extends GetxController {
   RxString sexo = 'Masculino'.obs;
   RxInt estadoCivilSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
-  RxString parentesco = 'Avô(ó)'.obs;
+  RxString parentesco = 'Pai'.obs;
   final repository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.find<ReligionRepository>();
   final repositoryChurch = Get.find<ChurchRepository>();

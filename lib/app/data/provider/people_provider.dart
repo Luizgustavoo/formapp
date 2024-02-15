@@ -76,10 +76,12 @@ class PeopleApiClient {
         "parentesco": pessoa.parentesco!,
       });
 
-      request.files.add(await http.MultipartFile.fromPath(
-        'foto', // Nome do campo que a API espera para a imagem
-        imageFile.path, // Caminho do arquivo da imagem
-      ));
+      if (imageFile.path.isNotEmpty) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'foto', // Nome do campo que a API espera para a imagem
+          imageFile.path, // Caminho do arquivo da imagem
+        ));
+      }
 
       // print(requestBody);
       // return;

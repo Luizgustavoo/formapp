@@ -114,19 +114,25 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   Row(
                     children: [
                       Expanded(
-                        child: DropdownButtonFormField<String>(
-                          value: controller.sexo.value,
-                          onChanged: (value) {},
-                          items: ['Masculino', 'Feminino', 'Não informado']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(), labelText: 'Sexo'),
-                        ),
+                        child: Obx(() => DropdownButtonFormField<String>(
+                              value: controller.sexo.value,
+                              onChanged: (value) {
+                                controller.sexo.value = value!;
+                              },
+                              items: [
+                                'Masculino',
+                                'Feminino',
+                                'Não informado'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Sexo'),
+                            )),
                       ),
                       const SizedBox(width: 10),
                       Obx(
@@ -184,38 +190,42 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       const SizedBox(width: 10),
                       Expanded(
                         flex: 2,
-                        child: DropdownButtonFormField<String>(
-                          value: controller.parentesco.value,
-                          onChanged: (value) {},
-                          items: [
-                            'Avô(ó)',
-                            'Bisavô(ó)',
-                            'Companheiro(a)',
-                            'Cunhado(a)',
-                            'Irmã',
-                            'Irmão',
-                            'Madrasta',
-                            'Mãe',
-                            'Outro',
-                            'Padrasto',
-                            'Pai',
-                            'Resp. Legal',
-                            'Madrasta',
-                            'Sobrinho(a)',
-                            'Tio(a)',
-                            'Vodrasto',
-                            'Vodrasta',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Parentesco'),
+                        child: Obx(
+                          () => DropdownButtonFormField<String>(
+                            value: controller.parentesco.value,
+                            onChanged: (value) {
+                              controller.parentesco.value = value!;
+                            },
+                            items: <String>[
+                              'Avô(ó)',
+                              'Bisavô(ó)',
+                              'Companheiro(a)',
+                              'Cunhado(a)',
+                              'Irmã',
+                              'Irmão',
+                              'Madrasta',
+                              'Mãe',
+                              'Outro',
+                              'Padrasto',
+                              'Pai',
+                              'Resp. Legal',
+                              'Madrasta',
+                              'Sobrinho(a)',
+                              'Tio(a)',
+                              'Vodrasto',
+                              'Vodrasta',
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Parentesco'),
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                   const SizedBox(height: 8),

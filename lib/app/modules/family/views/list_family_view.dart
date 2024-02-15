@@ -1,20 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
 import 'package:get/get.dart';
+
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class FamilyView extends GetView<FamilyController> {
-  FamilyView({super.key});
-
-  final PeopleController peopleController = Get.find();
+  const FamilyView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +23,17 @@ class FamilyView extends GetView<FamilyController> {
         actions: [
           IconButton(
               onPressed: () {
-                peopleController.clearAllPeopleTextFields();
+                controller.clearAllFamilyTextFields();
                 showModalBottomSheet(
                   isScrollControlled: true,
                   isDismissible: false,
                   context: context,
                   builder: (context) => Padding(
                     padding: MediaQuery.of(context).viewInsets,
-                    child: CreateFamilyWidget(controller: controller),
+                    child: CreateFamilyWidget(
+                      controller: controller,
+                      titulo: "Cadastro de Família",
+                    ),
                   ),
                 );
               },
@@ -61,14 +63,29 @@ class FamilyView extends GetView<FamilyController> {
                   }
 
                   return CustomFamilyCard(
+                    moradores: family.pessoas!.length,
                     showAddMember: true,
                     stripe: index % 2 == 0 ? true : false,
                     memberName: family.nome.toString(),
-                    memberContact: "Provedor: $provedorCasa",
+                    provedor: "Provedor: $provedorCasa",
                     editMember: () {
                       controller.selectedFamily = family;
+
                       controller.fillInFields();
-                      Get.toNamed('/edit-family', arguments: family);
+
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        isDismissible: false,
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: MediaQuery.of(context).viewInsets,
+                          child: CreateFamilyWidget(
+                            controller: controller,
+                            titulo: 'Alteração da Família',
+                            family: family,
+                          ),
+                        ),
+                      );
                     },
                     messageMember: () {
                       showModalBottomSheet(
@@ -120,10 +137,16 @@ class FamilyView extends GetView<FamilyController> {
 }
 
 class CreateFamilyWidget extends StatelessWidget {
-  const CreateFamilyWidget({
-    super.key,
+  CreateFamilyWidget({
+    Key? key,
+    this.family,
     required this.controller,
-  });
+    required this.titulo,
+  }) : super(key: key);
+
+  Family? family;
+
+  String titulo = "";
 
   final FamilyController controller;
 
@@ -138,7 +161,7 @@ class CreateFamilyWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Informações da Família',
+              titulo,
               style: CustomTextStyle.title(context),
             ),
             Padding(

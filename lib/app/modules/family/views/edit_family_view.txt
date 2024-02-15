@@ -105,7 +105,7 @@ class BuildCompositionForm extends StatelessWidget {
                   showAddMember: false,
                   stripe: index % 2 == 0 ? true : false,
                   memberName: controller.listPessoas![index].nome!,
-                  memberContact: controller.listPessoas![index].telefone!,
+                  provedor: controller.listPessoas![index].telefone!,
                   editMember: () {
                     Get.toNamed('/edit-people');
                   },

@@ -6,7 +6,8 @@ import 'package:formapp/app/utils/custom_text_style.dart';
 class CustomFamilyCard extends StatelessWidget {
   bool stripe = false;
   String memberName;
-  String memberContact;
+  String provedor;
+  int moradores;
   VoidCallback editMember;
   VoidCallback messageMember;
   VoidCallback supportMember;
@@ -17,7 +18,8 @@ class CustomFamilyCard extends StatelessWidget {
   CustomFamilyCard(
       {Key? key,
       this.memberName = '',
-      this.memberContact = '',
+      this.provedor = '',
+      this.moradores = 0,
       required this.editMember,
       required this.messageMember,
       required this.supportMember,
@@ -46,8 +48,14 @@ class CustomFamilyCard extends StatelessWidget {
               ),
               title: Text(memberName,
                   style: CustomTextStyle.subtitleNegrit(context)),
-              subtitle:
-                  Text(memberContact, style: CustomTextStyle.subtitle(context)),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(provedor, style: CustomTextStyle.subtitle(context)),
+                  Text("$moradores Moradores Cadastrados",
+                      style: CustomTextStyle.subtitle(context)),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

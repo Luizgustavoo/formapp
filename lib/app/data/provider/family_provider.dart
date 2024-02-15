@@ -54,6 +54,7 @@ class FamilyApiClient {
       var requestBody = {
         // Adicione aqui os campos necessários conforme esperado pela sua API
         "nome": family.nome,
+        "cep": family.cep,
         "endereco": family.endereco,
         "numero_casa": family.numero_casa,
         "bairro": family.bairro,
@@ -78,6 +79,8 @@ class FamilyApiClient {
         },
         body: requestBody,
       );
+
+      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
