@@ -64,10 +64,10 @@ class CreateFamilyView extends GetView<FamilyController> {
                   final retorno = await controller.saveFamily();
                   Get.defaultDialog(
                     title: "Atenção",
-                    content: Text(retorno),
+                    content: const Text(""),
                   );
                   controller.animationController!.reverse();
-                  Get.back();
+                  //Get.back();
                 },
               ),
             ],

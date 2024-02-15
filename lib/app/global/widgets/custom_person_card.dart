@@ -11,17 +11,21 @@ class CustomFamilyCard extends StatelessWidget {
   VoidCallback messageMember;
   VoidCallback supportMember;
   VoidCallback deleteMember;
+  VoidCallback? addMember;
+  bool showAddMember = false;
 
-  CustomFamilyCard({
-    Key? key,
-    this.memberName = '',
-    this.memberContact = '',
-    required this.editMember,
-    required this.messageMember,
-    required this.supportMember,
-    required this.deleteMember,
-    required this.stripe,
-  }) : super(key: key);
+  CustomFamilyCard(
+      {Key? key,
+      this.memberName = '',
+      this.memberContact = '',
+      required this.editMember,
+      required this.messageMember,
+      required this.supportMember,
+      required this.deleteMember,
+      this.addMember,
+      required this.stripe,
+      this.showAddMember = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +72,11 @@ class CustomFamilyCard extends StatelessWidget {
                     iconSize: 22,
                     onPressed: supportMember,
                     icon: const Icon(Icons.support_agent_rounded)),
+                if (showAddMember)
+                  IconButton(
+                      iconSize: 22,
+                      onPressed: addMember,
+                      icon: const Icon(Icons.add_rounded)),
                 IconButton(
                     iconSize: 22,
                     onPressed: deleteMember,

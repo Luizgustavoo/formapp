@@ -102,37 +102,39 @@ class BuildCompositionForm extends StatelessWidget {
               itemCount: controller.listPessoas!.length,
               itemBuilder: (context, index) {
                 return CustomFamilyCard(
-                    stripe: index % 2 == 0 ? true : false,
-                    memberName: controller.listPessoas![index].nome!,
-                    memberContact: controller.listPessoas![index].telefone!,
-                    editMember: () {
-                      Get.toNamed('/edit-people');
-                    },
-                    messageMember: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context) => Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: MessageModal(
-                            showWidget: false,
-                          ),
+                  showAddMember: false,
+                  stripe: index % 2 == 0 ? true : false,
+                  memberName: controller.listPessoas![index].nome!,
+                  memberContact: controller.listPessoas![index].telefone!,
+                  editMember: () {
+                    Get.toNamed('/edit-people');
+                  },
+                  messageMember: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: MessageModal(
+                          showWidget: false,
                         ),
-                      );
-                    },
-                    supportMember: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context) => Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: MessageModal(
-                            showWidget: true,
-                          ),
+                      ),
+                    );
+                  },
+                  supportMember: () {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: MessageModal(
+                          showWidget: true,
                         ),
-                      );
-                    },
-                    deleteMember: () {});
+                      ),
+                    );
+                  },
+                  deleteMember: () {},
+                );
               },
             ),
           ),

@@ -48,11 +48,9 @@ class FamilyApiClient {
     return null;
   }
 
-  insert(String token, Family family) async {
+  insertFamily(String token, Family family) async {
     try {
       var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
-
-      List<Map<String, dynamic>> pessoasData = [];
 
       var requestBody = {
         // Adicione aqui os campos necessários conforme esperado pela sua API
@@ -70,32 +68,6 @@ class FamilyApiClient {
         // Adicione os demais campos conforme necessário
       };
 
-      int x = 0;
-      for (Pessoas pessoa in family.pessoas!) {
-        requestBody["pessoa[$x][nome]"] = pessoa.nome ?? "";
-        requestBody["pessoa[$x][foto]"] = pessoa.foto ?? "";
-        requestBody["pessoa[$x][sexo]"] = pessoa.sexo ?? "";
-        requestBody["pessoa[$x][cpf]"] = pessoa.cpf ?? "";
-        requestBody["pessoa[$x][data_nascimento]"] =
-            pessoa.data_nascimento ?? "";
-        requestBody["pessoa[$x][titulo_eleitor]"] = pessoa.titulo_eleitor ?? "";
-        requestBody["pessoa[$x][zona_eleitoral]"] = pessoa.zona_eleitoral ?? "";
-        requestBody["pessoa[$x][telefone]"] = pessoa.telefone ?? "";
-        requestBody["pessoa[$x][rede_social]"] = pessoa.rede_social ?? "";
-        requestBody["pessoa[$x][provedor_casa]"] = pessoa.provedor_casa ?? "";
-        requestBody["pessoa[$x][igreja_id]"] =
-            pessoa.igreja_id.toString() ?? "";
-        requestBody["pessoa[$x][local_trabalho]"] = pessoa.local_trabalho ?? "";
-        requestBody["pessoa[$x][cargo_trabalho]"] = pessoa.cargo_trabalho ?? "";
-        requestBody["pessoa[$x][religiao_id]"] =
-            pessoa.religiao_id.toString() ?? "";
-        requestBody["pessoa[$x][funcao_igreja]"] = pessoa.funcao_igreja ?? "";
-        requestBody["pessoa[$x][status]"] = pessoa.status.toString() ?? "";
-        requestBody["pessoa[$x][estadocivil_id]"] =
-            pessoa.estadocivil_id.toString() ?? "";
-        x++;
-      }
-
       // print(requestBody);
       // return;
 
@@ -107,8 +79,13 @@ class FamilyApiClient {
         },
         body: requestBody,
       );
-      print(json.decode(response.body));
+
       if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        print(json.decode(response.body));
+
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
           json.decode(response.body)['message'] == "Token has expired") {

@@ -19,10 +19,10 @@ class FamilyRepository {
     return list;
   }
 
-  insert(String token, Family family) async {
+  insertFamily(String token, Family family) async {
     try {
-      var response = await apiClient.insert(token, family);
-      print('Resposta da inserção: $response'); // Adicione este log
+      var response = await apiClient.insertFamily(token, family);
+      // print('Resposta da inserção: $response'); // Adicione este log
       return response;
     } catch (e) {
       print('Erro ao inserir a família: $e'); // Adicione este log

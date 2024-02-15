@@ -82,6 +82,18 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         ),
                       );
                     },
+                    addMember: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: MediaQuery.of(context).viewInsets,
+                          child: MessageModal(
+                            showWidget: true,
+                          ),
+                        ),
+                      );
+                    },
                     deleteMember: () {});
               },
             ),

@@ -5,6 +5,7 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
+import 'package:formapp/app/data/repository/people_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -64,6 +65,7 @@ class FamilyController extends GetxController
   RxBool familyInfo = true.obs;
   final formKey = GlobalKey<FormState>();
   final repository = Get.find<FamilyRepository>();
+  final peopleRepository = Get.find<PeopleRepository>();
   Animation<double>? animation;
   AnimationController? animationController;
 
@@ -200,35 +202,102 @@ class FamilyController extends GetxController
     print(imageFileList);
   }
 
-  Future<String> saveFamily() async {
-    String retorno = "";
+  Future<Map<String, dynamic>> saveFamily() async {
+    Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
     if (familyFormKey.currentState!.validate()) {
-      if (composicaoFamiliar.isEmpty) {
-        retorno = "Insira pelo menos um morador na casa!";
-      } else {
-        Family family = Family(
-          nome: nomeFamiliaController.text,
-          cep: cepFamiliaController.text,
-          endereco: ruaFamiliaController.text,
-          complemento: complementoFamiliaController.text,
-          bairro: bairroFamiliaController.text,
-          numero_casa: numeroCasaFamiliaController.text,
-          cidade: cidadeFamiliaController.text,
-          uf: ufFamiliaController.text,
-          residencia_propria: residenceOwn.value ? 'sim' : 'nao',
-          status: 1,
-          pessoas: composicaoFamiliar,
-          usuario_id: box.read('auth')['user']['id'],
-        );
+      Family family = Family(
+        nome: nomeFamiliaController.text,
+        cep: cepFamiliaController.text,
+        endereco: ruaFamiliaController.text,
+        complemento: complementoFamiliaController.text,
+        bairro: bairroFamiliaController.text,
+        numero_casa: numeroCasaFamiliaController.text,
+        cidade: cidadeFamiliaController.text,
+        uf: ufFamiliaController.text,
+        residencia_propria: residenceOwn.value ? 'sim' : 'nao',
+        status: 1,
+        usuario_id: box.read('auth')['user']['id'],
+      );
 
-        final token = box.read('auth')['access_token'];
+      final token = box.read('auth')['access_token'];
 
-        await repository.insert("Bearer " + token, family);
-        retorno = 'Família salva com sucesso!'; // Adicione este log
-        getFamilies();
+      final mensagem = await repository.insertFamily("Bearer " + token, family);
+
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe uam família com esse nome!"
+          };
+        }
       }
+
+      print(mensagem);
+
+      getFamilies();
     } else {
-      retorno = "Preencha todos os campos da família!";
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
+    }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> savePeople(Family family) async {
+    Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
+    if (familyFormKey.currentState!.validate()) {
+      Pessoas pessoa = Pessoas(
+          nome: nomePessoaController.text,
+          cpf: cpfPessoaController.text,
+          estadocivil_id: estadoCivilSelected.value,
+          parentesco: parentesco.value,
+          provedor_casa: provedorCheckboxValue.value ? 'sim' : 'nao',
+          sexo: sexo.value,
+          data_nascimento: nascimentoPessoaController.text,
+          titulo_eleitor: tituloEleitoralPessoaController.text,
+          zona_eleitoral: zonaEleitoralPessoaController.text,
+          local_trabalho: localTrabalhoPessoaController.text,
+          cargo_trabalho: cargoPessoaController.text,
+          telefone: celularPessoaController.text,
+          rede_social: redeSocialPessoaController.text,
+          religiao_id: religiaoSelected.value,
+          igreja_id: igrejaPessoaController.text,
+          funcao_igreja: funcaoIgrejaPessoaController.text,
+          status: 1,
+          usuario_id: box.read('auth')['user']['id'],
+          familia_id: family.id);
+
+      final token = box.read('auth')['access_token'];
+
+      final mensagem = await peopleRepository.insertPeople(
+          "Bearer " + token, pessoa, File(photoUrlPath.value));
+
+      print(mensagem);
+
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe uam família com esse nome!"
+          };
+        }
+      }
+
+      print(mensagem);
+
+      getFamilies();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
     }
     return retorno;
   }
@@ -321,5 +390,43 @@ class FamilyController extends GetxController
 
   bool validateCEP() {
     return FormattersValidators.validateCEP(cepFamiliaController.text);
+  }
+
+  void clearAllTextFields() {
+    // Lista de todos os TextEditingController
+    final textControllers = [
+      idFamiliaController,
+      nomeFamiliaController,
+      cepFamiliaController,
+      ruaFamiliaController,
+      numeroCasaFamiliaController,
+      bairroFamiliaController,
+      cidadeFamiliaController,
+      ufFamiliaController,
+      complementoFamiliaController,
+      residenciaPropriaFamiliaController,
+      statusFamiliaController,
+      idPessoaController,
+      nomePessoaController,
+      nascimentoPessoaController,
+      cpfPessoaController,
+      tituloEleitoralPessoaController,
+      zonaEleitoralPessoaController,
+      celularPessoaController,
+      redeSocialPessoaController,
+      localTrabalhoPessoaController,
+      cargoPessoaController,
+      funcaoIgrejaPessoaController,
+      parentescoPessoaController,
+      statusPessoaController,
+      usuarioId,
+      familiaId,
+      igrejaPessoaController,
+    ];
+
+    // Itera sobre todos os TextEditingController e limpa cada um deles
+    for (final controller in textControllers) {
+      controller.clear();
+    }
   }
 }

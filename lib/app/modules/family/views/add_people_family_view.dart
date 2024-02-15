@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/models/family_model.dart';
 import 'package:get/get.dart';
 import 'package:searchfield/searchfield.dart';
 
@@ -11,11 +12,14 @@ import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
-  AddPeopleFamilyView({
+  const AddPeopleFamilyView({
     super.key,
+    required this.family,
+    required this.familyController,
   });
 
-  final FamilyController familyController = Get.find();
+  final Family family;
+  final FamilyController familyController;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -85,10 +89,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                             activeColor: Colors.orange.shade700,
                             inactiveThumbColor: Colors.orange.shade500,
                             inactiveTrackColor: Colors.orange.shade100,
-                            value: familyController.provedorCheckboxValue.value,
+                            value: controller.provedorCheckboxValue.value,
                             onChanged: (value) {
-                              familyController.provedorCheckboxValue.value =
-                                  value;
+                              controller.provedorCheckboxValue.value = value;
                             },
                           )),
                     ],
@@ -220,7 +223,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    controller: familyController.cpfPessoaController,
+                    controller: controller.cpfPessoaController,
                     keyboardType: TextInputType.number,
                     maxLength: 14,
                     onChanged: (value) => familyController.onCPFChanged(value),
@@ -229,7 +232,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         border: OutlineInputBorder(),
                         labelText: 'CPF'),
                     // validator: (value) {
-                    //   if (!familyController.validateCPF()) {
+                    //   if (!controller.validateCPF()) {
                     //     return "Informe um CPF válido";
                     //   }
                     //   return null;
@@ -311,9 +314,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       onTap: () async {
                         controller.getReligion();
                       },
-                      value: familyController.religiaoSelected.value,
+                      value: controller.religiaoSelected.value,
                       onChanged: (value) {
-                        familyController.religiaoSelected.value = value!;
+                        controller.religiaoSelected.value = value!;
                       },
                       items: controller.listReligion
                           .map<DropdownMenuItem<int>>((item) {
@@ -338,7 +341,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     },
                     child: SearchField(
                       suggestionDirection: SuggestionDirection.flex,
-                      controller: familyController.igrejaPessoaController,
+                      controller: controller.igrejaPessoaController,
                       onSearchTextChanged: (query) {
                         final filter = controller.suggestions
                             .where((element) => element
@@ -411,9 +414,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           onPressed: () {
                             if (familyController.formKey.currentState!
                                 .validate()) {
-                              familyController.addPessoa(context);
-                              familyController.familyInfo.value = false;
-
+                              familyController.savePeople(family);
                               //Get.back();
                             }
                           },
