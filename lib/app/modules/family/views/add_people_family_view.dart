@@ -11,12 +11,9 @@ import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
-  const AddPeopleFamilyView({
-    super.key,
-    required this.family,
-  });
+  const AddPeopleFamilyView({super.key, this.family});
 
-  final Family family;
+  final Family? family;
 
   @override
   Widget build(BuildContext context) {
@@ -325,7 +322,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       },
                       items: controller.listReligion
                           .map<DropdownMenuItem<int>>((item) {
-                            print(item.id);
                             return DropdownMenuItem<int>(
                               value: item
                                   .id, // Suponha que seus dados tenham um campo 'value'
@@ -418,7 +414,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       ElevatedButton(
                           onPressed: () async {
                             Map<String, dynamic> retorno =
-                                await controller.savePeople(family);
+                                await controller.savePeople(family!);
                             if (retorno['return'] == 0) {
                               Get.back();
                             }

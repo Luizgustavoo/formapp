@@ -48,7 +48,7 @@ class PeopleApiClient {
     return null;
   }
 
-  insertPeople(String token, Pessoas pessoa, File imageFile) async {
+  insertPeople(String token, People pessoa, File imageFile) async {
     try {
       var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/create');
 
@@ -58,21 +58,21 @@ class PeopleApiClient {
         "nome": pessoa.nome!,
         "sexo": pessoa.sexo!,
         "cpf": pessoa.cpf!,
-        "data_nascimento": pessoa.data_nascimento!,
-        "estadocivil_id": pessoa.estadocivil_id.toString(),
-        "titulo_eleitor": pessoa.titulo_eleitor!,
-        "zona_eleitoral": pessoa.zona_eleitoral!,
+        "data_nascimento": pessoa.dataNascimento!,
+        "estadocivil_id": pessoa.estadoCivilId.toString(),
+        "titulo_eleitor": pessoa.tituloEleitor!,
+        "zona_eleitoral": pessoa.zonaEleitoral!,
         "telefone": pessoa.telefone!,
-        "rede_social": pessoa.rede_social!,
-        "provedor_casa": pessoa.provedor_casa!,
-        "igreja_id": pessoa.igreja_id.toString(),
-        "local_trabalho": pessoa.local_trabalho!,
-        "cargo_trabalho": pessoa.cargo_trabalho!,
-        "religiao_id": pessoa.religiao_id.toString(),
-        "funcao_igreja": pessoa.funcao_igreja!,
-        "usuario_id": pessoa.usuario_id.toString(),
+        "rede_social": pessoa.redeSocial!,
+        "provedor_casa": pessoa.provedorCasa!,
+        "igreja_id": pessoa.igrejaId.toString(),
+        "local_trabalho": pessoa.localTrabalho!,
+        "cargo_trabalho": pessoa.cargoTrabalho!,
+        "religiao_id": pessoa.religiaoId.toString(),
+        "funcao_igreja": pessoa.funcaoIgreja!,
+        "usuario_id": pessoa.usuarioId.toString(),
         "status": pessoa.status.toString(),
-        "familia_id": pessoa.familia_id.toString(),
+        "familia_id": pessoa.familiaId.toString(),
         "parentesco": pessoa.parentesco!,
       });
 

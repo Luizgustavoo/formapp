@@ -19,7 +19,7 @@ class PeopleRepository {
     return list;
   }
 
-  insertPeople(String token, Pessoas pessoa, File imageFile) async {
+  insertPeople(String token, People pessoa, File imageFile) async {
     try {
       var response = await apiClient.insertPeople(token, pessoa, imageFile);
 

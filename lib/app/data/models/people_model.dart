@@ -1,76 +1,76 @@
-class Pessoas {
+class People {
   int? id;
   String? nome;
   dynamic foto;
   String? sexo;
   String? cpf;
-  String? data_nascimento;
-  int? estadocivil_id;
-  String? titulo_eleitor;
-  String? zona_eleitoral;
+  String? dataNascimento;
+  int? estadoCivilId;
+  String? tituloEleitor;
+  String? zonaEleitoral;
   String? telefone;
-  String? rede_social;
-  String? provedor_casa;
-  dynamic igreja_id;
-  String? local_trabalho;
-  String? cargo_trabalho;
-  int? religiao_id;
-  String? funcao_igreja;
-  int? usuario_id;
+  String? redeSocial;
+  String? provedorCasa;
+  dynamic igrejaId;
+  String? localTrabalho;
+  String? cargoTrabalho;
+  int? religiaoId;
+  String? funcaoIgreja;
+  int? usuarioId;
   int? status;
-  String? data_cadastro;
-  String? data_update;
-  int? familia_id;
+  String? dataCadastro;
+  String? dataUpdate;
+  int? familiaId;
   String? parentesco;
 
-  Pessoas(
+  People(
       {this.id,
       this.nome,
       this.foto,
       this.sexo,
       this.cpf,
-      this.data_nascimento,
-      this.estadocivil_id,
-      this.titulo_eleitor,
-      this.zona_eleitoral,
+      this.dataNascimento,
+      this.estadoCivilId,
+      this.tituloEleitor,
+      this.zonaEleitoral,
       this.telefone,
-      this.rede_social,
-      this.provedor_casa,
-      this.igreja_id,
-      this.local_trabalho,
-      this.cargo_trabalho,
-      this.religiao_id,
-      this.funcao_igreja,
-      this.usuario_id,
+      this.redeSocial,
+      this.provedorCasa,
+      this.igrejaId,
+      this.localTrabalho,
+      this.cargoTrabalho,
+      this.religiaoId,
+      this.funcaoIgreja,
+      this.usuarioId,
       this.status,
-      this.data_cadastro,
-      this.data_update,
-      this.familia_id,
+      this.dataCadastro,
+      this.dataUpdate,
+      this.familiaId,
       this.parentesco});
 
-  Pessoas.fromJson(Map<String, dynamic> json) {
+  People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nome = json['nome'];
     foto = json['foto'];
     sexo = json['sexo'];
     cpf = json['cpf'];
-    data_nascimento = json['data_nascimento'];
-    estadocivil_id = json['estadocivil_id'];
-    titulo_eleitor = json['titulo_eleitor'];
-    zona_eleitoral = json['zona_eleitoral'];
+    dataNascimento = json['data_nascimento'];
+    estadoCivilId = json['estadocivil_id'];
+    tituloEleitor = json['titulo_eleitor'];
+    zonaEleitoral = json['zona_eleitoral'];
     telefone = json['telefone'];
-    rede_social = json['rede_social'];
-    provedor_casa = json['provedor_casa'];
-    igreja_id = json['igreja_id'];
-    local_trabalho = json['local_trabalho'];
-    cargo_trabalho = json['cargo_trabalho'];
-    religiao_id = json['religiao_id'];
-    funcao_igreja = json['funcao_igreja'];
-    usuario_id = json['usuario_id'];
+    redeSocial = json['rede_social'];
+    provedorCasa = json['provedor_casa'];
+    igrejaId = json['igreja_id'];
+    localTrabalho = json['local_trabalho'];
+    cargoTrabalho = json['cargo_trabalho'];
+    religiaoId = json['religiao_id'];
+    funcaoIgreja = json['funcao_igreja'];
+    usuarioId = json['usuario_id'];
     status = json['status'];
-    data_cadastro = json['data_cadastro'];
-    data_update = json['data_update'];
-    familia_id = json['familia_id'];
+    dataCadastro = json['data_cadastro'];
+    dataUpdate = json['data_update'];
+    familiaId = json['familia_id'];
     parentesco = json['parentesco'];
   }
 
@@ -81,23 +81,23 @@ class Pessoas {
     data['foto'] = foto;
     data['sexo'] = sexo;
     data['cpf'] = cpf;
-    data['data_nascimento'] = data_nascimento;
-    data['estadocivil_id'] = estadocivil_id;
-    data['titulo_eleitor'] = titulo_eleitor;
-    data['zona_eleitoral'] = zona_eleitoral;
+    data['data_nascimento'] = dataNascimento;
+    data['estadocivil_id'] = estadoCivilId;
+    data['titulo_eleitor'] = tituloEleitor;
+    data['zona_eleitoral'] = zonaEleitoral;
     data['telefone'] = telefone;
-    data['rede_social'] = rede_social;
-    data['provedor_casa'] = provedor_casa;
-    data['igreja_id'] = igreja_id as String;
-    data['local_trabalho'] = local_trabalho;
-    data['cargo_trabalho'] = cargo_trabalho;
-    data['religiao_id'] = religiao_id;
-    data['funcao_igreja'] = funcao_igreja;
-    data['usuario_id'] = usuario_id;
+    data['rede_social'] = redeSocial;
+    data['provedor_casa'] = provedorCasa;
+    data['igreja_id'] = igrejaId as String;
+    data['local_trabalho'] = localTrabalho;
+    data['cargo_trabalho'] = cargoTrabalho;
+    data['religiao_id'] = religiaoId;
+    data['funcao_igreja'] = funcaoIgreja;
+    data['usuario_id'] = usuarioId;
     data['status'] = status;
-    data['data_cadastro'] = data_cadastro;
-    data['data_update'] = data_update;
-    data['familia_id'] = familia_id;
+    data['data_cadastro'] = dataCadastro;
+    data['data_update'] = dataUpdate;
+    data['familia_id'] = familiaId;
     data['parentesco'] = parentesco;
     return data;
   }

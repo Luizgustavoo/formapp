@@ -25,7 +25,7 @@ class FamilyController extends GetxController
 
   final box = GetStorage('credenciado');
   Family? selectedFamily;
-  List<Pessoas>? listPessoas = [];
+  List<People>? listPessoas = [];
 
   RxInt tabIndex = 0.obs;
   RxList<Family> listFamilies = <Family>[].obs;
@@ -38,10 +38,6 @@ class FamilyController extends GetxController
 
   Animation<double>? animation;
   AnimationController? animationController;
-
-  final uploadList = <MultipartFile>[];
-
-  List<Map<String, FileImage>>? imageFileList = [];
 
   @override
   void onInit() {
@@ -76,7 +72,7 @@ class FamilyController extends GetxController
       listFamilies.assignAll(listFamilies
           .where((family) =>
               family.nome!.toLowerCase().contains(query.toLowerCase()) ||
-              family.pessoas![0].provedor_casa!
+              family.pessoas![0].provedorCasa!
                   .toLowerCase()
                   .contains(query.toLowerCase()))
           .toList());
@@ -96,8 +92,6 @@ class FamilyController extends GetxController
     residenciaPropriaFamiliaController.text =
         selectedFamily!.residencia_propria.toString();
     statusFamiliaController.text = selectedFamily!.status.toString();
-
-    listPessoas = selectedFamily!.pessoas;
   }
 
   Future<Map<String, dynamic>> saveFamily() async {
