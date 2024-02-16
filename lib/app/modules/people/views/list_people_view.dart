@@ -43,6 +43,7 @@ class FamilyView extends GetView<FamilyController> {
                     }
 
                     return CustomFamilyCard(
+                        family: family,
                         stripe: index % 2 == 0 ? true : false,
                         familyName: family.nome.toString(),
                         provedor: "Provedor: $provedorCasa",

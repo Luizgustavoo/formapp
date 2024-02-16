@@ -173,6 +173,9 @@ class PeopleController extends GetxController {
     usuarioId.text = selectedPeople!.usuarioId.toString();
     familiaId.text = selectedPeople!.familiaId.toString();
     igrejaPessoaController.text = selectedPeople!.igrejaId.toString();
+    estadoCivilSelected.value = selectedPeople!.estadoCivilId!;
+    parentesco.value = selectedPeople!.parentesco!;
+    sexo.value = selectedPeople!.sexo!;
   }
 
   void getChurch() async {

@@ -65,7 +65,7 @@ class FamilyView extends GetView<FamilyController> {
                   }
 
                   return CustomFamilyCard(
-                    moradores: family.pessoas!.length,
+                    family: family,
                     showAddMember: true,
                     stripe: index % 2 == 0 ? true : false,
                     familyName: family.nome.toString(),
@@ -129,26 +129,6 @@ class FamilyView extends GetView<FamilyController> {
                     deleteFamily: () {},
                     peopleNames:
                         family.pessoas!.map((person) => person.nome!).toList(),
-                    onDeletePerson: () {},
-                    onEditPerson: () {
-                      // Set the selected person in PeopleController
-                      People? selectedPerson = family
-                          .pessoas!.first; // Altere isso conforme necessário
-                      peopleController.selectedPeople = selectedPerson;
-
-                      peopleController.fillInFieldsForEditPerson();
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        isDismissible: false,
-                        context: context,
-                        builder: (context) => Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: AddPeopleFamilyView(
-                            family: family,
-                          ),
-                        ),
-                      );
-                    },
                   );
                 },
               ),

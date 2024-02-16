@@ -1,13 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
+
 import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:get/get.dart';
 
 // ignore: must_be_immutable
-class CustomFamilyCard extends StatefulWidget {
+class CustomFamilyCard extends StatelessWidget {
   bool stripe = false;
   String familyName;
   String provedor;
-  int moradores;
   VoidCallback editFamily;
   VoidCallback messageMember;
   VoidCallback supportFamily;
@@ -17,65 +22,60 @@ class CustomFamilyCard extends StatefulWidget {
   VoidCallback? onDeletePerson;
   bool showAddMember = false;
   List<String>? peopleNames;
+  FamilyController familyController = Get.find();
+  PeopleController peopleController = Get.find();
+  Family family;
 
   CustomFamilyCard(
       {Key? key,
       this.familyName = '',
       this.provedor = '',
-      this.moradores = 0,
       required this.editFamily,
       required this.messageMember,
       required this.supportFamily,
       required this.deleteFamily,
+      required this.family,
       this.addMember,
       required this.stripe,
       this.peopleNames,
-      this.onEditPerson,
-      this.onDeletePerson,
       this.showAddMember = false})
       : super(key: key);
 
   @override
-  State<CustomFamilyCard> createState() => _CustomFamilyCardState();
-}
-
-class _CustomFamilyCardState extends State<CustomFamilyCard> {
-  bool isExpanded = false;
-  @override
   Widget build(BuildContext context) {
+    RxBool isExpanded = false.obs;
+
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Card(
         elevation: 3,
-        color: widget.stripe ? Colors.grey.shade300 : Colors.white,
+        color: stripe ? Colors.grey.shade300 : Colors.white,
         child: Padding(
             padding: const EdgeInsets.only(right: 12),
             child: ExpansionTile(
               childrenPadding:
                   const EdgeInsets.only(left: 18, right: 18, bottom: 5),
               onExpansionChanged: (value) {
-                setState(() {
-                  isExpanded = value;
-                });
+                isExpanded.value = value;
               },
               title: Column(
                 children: [
                   ListTile(
                     leading: CircleAvatar(
                       child: Text(
-                        widget.familyName[0].toString(),
+                        family.nome![0].toUpperCase().toString(),
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                     ),
-                    title: Text(widget.familyName,
+                    title: Text(familyName,
                         style: CustomTextStyle.subtitleNegrit(context)),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.provedor,
+                        Text(provedor,
                             style: CustomTextStyle.subtitle(context)),
-                        Text("${widget.moradores} Moradores Cadastrados",
+                        Text("${family.pessoas!.length} Moradores Cadastrados",
                             style: CustomTextStyle.subtitle(context)),
                       ],
                     ),
@@ -85,73 +85,94 @@ class _CustomFamilyCardState extends State<CustomFamilyCard> {
                     thickness: 2,
                     color: Colors.orange.shade300,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      if (!isExpanded) ...[
-                        IconButton(
-                          iconSize: 22,
-                          onPressed: widget.editFamily,
-                          icon: const Icon(Icons.edit_outlined),
-                        ),
-                        IconButton(
-                          iconSize: 22,
-                          onPressed: widget.messageMember,
-                          icon: const Icon(Icons.email_outlined),
-                        ),
-                        IconButton(
-                          iconSize: 22,
-                          onPressed: widget.supportFamily,
-                          icon: const Icon(Icons.support_agent_rounded),
-                        ),
-                        if (widget.showAddMember)
-                          IconButton(
-                            iconSize: 22,
-                            onPressed: widget.addMember,
-                            icon: const Icon(Icons.add_rounded),
-                          ),
-                        IconButton(
-                          iconSize: 22,
-                          onPressed: widget.deleteFamily,
-                          icon: const Icon(Icons.delete_outlined),
-                        ),
-                      ]
-                    ],
-                  )
+                  Obx(() => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            if (!isExpanded.value) ...[
+                              IconButton(
+                                iconSize: 22,
+                                onPressed: editFamily,
+                                icon: const Icon(Icons.edit_outlined),
+                              ),
+                              IconButton(
+                                iconSize: 22,
+                                onPressed: messageMember,
+                                icon: const Icon(Icons.email_outlined),
+                              ),
+                              IconButton(
+                                iconSize: 22,
+                                onPressed: supportFamily,
+                                icon: const Icon(Icons.support_agent_rounded),
+                              ),
+                              if (showAddMember)
+                                IconButton(
+                                  iconSize: 22,
+                                  onPressed: addMember,
+                                  icon: const Icon(Icons.add_rounded),
+                                ),
+                              IconButton(
+                                iconSize: 22,
+                                onPressed: deleteFamily,
+                                icon: const Icon(Icons.delete_outlined),
+                              ),
+                            ]
+                          ]))
                 ],
               ),
               children: [
-                for (String name in widget.peopleNames!)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name,
-                        overflow: TextOverflow.clip,
-                        style: CustomTextStyle.subtitle(context),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: widget.onEditPerson,
-                            icon: const Icon(
-                              Icons.edit_outlined,
-                              size: 22,
-                              color: Colors.blue,
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: family.pessoas!.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          family.pessoas![index].nome!,
+                          overflow: TextOverflow.clip,
+                          style: CustomTextStyle.subtitle(context),
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                // Altere isso conforme necessário
+                                peopleController.selectedPeople =
+                                    family.pessoas![index];
+
+                                peopleController.fillInFieldsForEditPerson();
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  isDismissible: false,
+                                  context: context,
+                                  builder: (context) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: AddPeopleFamilyView(
+                                      family: family,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.edit_outlined,
+                                size: 22,
+                                color: Colors.blue,
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: widget.onDeletePerson,
-                            icon: const Icon(
-                              Icons.delete_outline,
-                              size: 22,
-                              color: Colors.red,
+                            IconButton(
+                              onPressed: onDeletePerson,
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                size: 22,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ],
             )),
       ),

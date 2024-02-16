@@ -36,6 +36,8 @@ class FamilyController extends GetxController
 
   RxBool residenceOwn = false.obs;
   RxBool familyInfo = true.obs;
+  RxBool isExpanded = false.obs;
+
   final repository = Get.find<FamilyRepository>();
 
   Animation<double>? animation;

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/screens/family/widgets/custom_drawer_family.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
+import 'package:get/get.dart';
 
 class HomePageFamily extends StatefulWidget {
   const HomePageFamily({super.key});
@@ -11,6 +14,7 @@ class HomePageFamily extends StatefulWidget {
 }
 
 class _HomePageFamilyState extends State<HomePageFamily> {
+  final FamilyController familyController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +58,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
               itemCount: 20,
               itemBuilder: (context, index) {
                 return CustomFamilyCard(
+                    family: Family(),
                     stripe: index % 2 == 0 ? true : false,
                     familyName: 'Luiz',
                     provedor: '43 99928-9380',
