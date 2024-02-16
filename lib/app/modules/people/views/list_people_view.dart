@@ -7,9 +7,7 @@ import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:get/get.dart';
 
 class FamilyView extends GetView<FamilyController> {
-  final TextEditingController _searchController = TextEditingController();
-
-  FamilyView({super.key});
+  const FamilyView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,7 @@ class FamilyView extends GetView<FamilyController> {
       body: Column(
         children: [
           SearchWidget(
-              controller: _searchController,
+              controller: controller.searchController,
               onSearchPressed: (context, a, query) {}),
           Expanded(
             child: Obx(() => ListView.builder(
@@ -41,14 +39,14 @@ class FamilyView extends GetView<FamilyController> {
                     String? provedorCasa = "";
 
                     for (var p in family.pessoas!) {
-                      provedorCasa = (p.provedor_casa == 'sim') ? p.nome : "";
+                      provedorCasa = (p.provedorCasa == 'sim') ? p.nome : "";
                     }
 
                     return CustomFamilyCard(
                         stripe: index % 2 == 0 ? true : false,
-                        memberName: family.nome.toString(),
+                        familyName: family.nome.toString(),
                         provedor: "Provedor: $provedorCasa",
-                        editMember: () {
+                        editFamily: () {
                           controller.selectedFamily = family;
                           controller.fillInFields();
 
@@ -66,7 +64,7 @@ class FamilyView extends GetView<FamilyController> {
                             ),
                           );
                         },
-                        supportMember: () {
+                        supportFamily: () {
                           showModalBottomSheet(
                             isScrollControlled: true,
                             context: context,
@@ -90,7 +88,7 @@ class FamilyView extends GetView<FamilyController> {
                             ),
                           );
                         },
-                        deleteMember: () {});
+                        deleteFamily: () {});
                   },
                 )),
           )

@@ -29,7 +29,6 @@ class PeopleController extends GetxController {
   TextEditingController localTrabalhoPessoaController = TextEditingController();
   TextEditingController cargoPessoaController = TextEditingController();
   TextEditingController funcaoIgrejaPessoaController = TextEditingController();
-  TextEditingController parentescoPessoaController = TextEditingController();
   TextEditingController statusPessoaController = TextEditingController();
   TextEditingController usuarioId = TextEditingController();
   TextEditingController familiaId = TextEditingController();
@@ -46,15 +45,19 @@ class PeopleController extends GetxController {
   RxString parentesco = 'Pai'.obs;
   final repository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.find<ReligionRepository>();
+
+  RxList<People> listPeoples = <People>[].obs;
   final repositoryChurch = Get.find<ChurchRepository>();
   final box = GetStorage('credenciado');
   RxList<EstadoCivil> listMaritalStatus = <EstadoCivil>[].obs;
   RxList<Religiao> listReligion = <Religiao>[].obs;
-  RxList<Pessoas> composicaoFamiliar = <Pessoas>[].obs;
+  RxList<People> composicaoFamiliar = <People>[].obs;
   RxList<Igreja> listChurch = <Igreja>[].obs;
   int suggestionsCount = 12;
   final focus = FocusNode();
   List<String> suggestions = [];
+
+  People? selectedPeople;
 
   final peopleRepository = Get.find<PeopleRepository>();
   final familyController = Get.find<FamilyController>();
@@ -91,26 +94,26 @@ class PeopleController extends GetxController {
     Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
     if (peopleFormKey.currentState!.validate()) {
-      Pessoas pessoa = Pessoas(
+      People pessoa = People(
           nome: nomePessoaController.text,
           cpf: cpfPessoaController.text,
-          estadocivil_id: estadoCivilSelected.value,
+          estadoCivilId: estadoCivilSelected.value,
           parentesco: parentesco.value,
-          provedor_casa: provedorCheckboxValue.value ? 'sim' : 'nao',
+          provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
           sexo: sexo.value,
-          data_nascimento: nascimentoPessoaController.text,
-          titulo_eleitor: tituloEleitoralPessoaController.text,
-          zona_eleitoral: zonaEleitoralPessoaController.text,
-          local_trabalho: localTrabalhoPessoaController.text,
-          cargo_trabalho: cargoPessoaController.text,
+          dataNascimento: nascimentoPessoaController.text,
+          tituloEleitor: tituloEleitoralPessoaController.text,
+          zonaEleitoral: zonaEleitoralPessoaController.text,
+          localTrabalho: localTrabalhoPessoaController.text,
+          cargoTrabalho: cargoPessoaController.text,
           telefone: celularPessoaController.text,
-          rede_social: redeSocialPessoaController.text,
-          religiao_id: religiaoSelected.value,
-          igreja_id: igrejaPessoaController.text,
-          funcao_igreja: funcaoIgrejaPessoaController.text,
+          redeSocial: redeSocialPessoaController.text,
+          religiaoId: religiaoSelected.value,
+          igrejaId: igrejaPessoaController.text,
+          funcaoIgreja: funcaoIgrejaPessoaController.text,
           status: 1,
-          usuario_id: box.read('auth')['user']['id'],
-          familia_id: family.id);
+          usuarioId: box.read('auth')['user']['id'],
+          familiaId: family.id);
 
       final token = box.read('auth')['access_token'];
 
@@ -138,7 +141,7 @@ class PeopleController extends GetxController {
     return retorno;
   }
 
-  void removePeople(Pessoas pessoa) {
+  void removePeople(People pessoa) {
     composicaoFamiliar.remove(pessoa);
   }
 
@@ -150,6 +153,26 @@ class PeopleController extends GetxController {
     listReligion.clear();
     final token = box.read('auth')['access_token'];
     listReligion.value = await repositoryReligion.getALl("Bearer $token");
+  }
+
+  void fillInFieldsForEditPerson() {
+    idPessoaController.text = selectedPeople!.id.toString();
+    nomePessoaController.text = selectedPeople!.nome.toString();
+    nascimentoPessoaController.text = selectedPeople!.dataNascimento.toString();
+    cpfPessoaController.text = selectedPeople!.cpf.toString();
+    tituloEleitoralPessoaController.text =
+        selectedPeople!.tituloEleitor.toString();
+    zonaEleitoralPessoaController.text =
+        selectedPeople!.zonaEleitoral.toString();
+    celularPessoaController.text = selectedPeople!.telefone.toString();
+    localTrabalhoPessoaController.text =
+        selectedPeople!.localTrabalho.toString();
+    cargoPessoaController.text = selectedPeople!.cargoTrabalho.toString();
+    funcaoIgrejaPessoaController.text = selectedPeople!.funcaoIgreja.toString();
+    statusPessoaController.text = selectedPeople!.status.toString();
+    usuarioId.text = selectedPeople!.usuarioId.toString();
+    familiaId.text = selectedPeople!.familiaId.toString();
+    igrejaPessoaController.text = selectedPeople!.igrejaId.toString();
   }
 
   void getChurch() async {
@@ -227,7 +250,6 @@ class PeopleController extends GetxController {
       localTrabalhoPessoaController,
       cargoPessoaController,
       funcaoIgrejaPessoaController,
-      parentescoPessoaController,
       statusPessoaController,
       usuarioId,
       familiaId,

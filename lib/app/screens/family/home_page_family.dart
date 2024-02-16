@@ -55,9 +55,9 @@ class _HomePageFamilyState extends State<HomePageFamily> {
               itemBuilder: (context, index) {
                 return CustomFamilyCard(
                     stripe: index % 2 == 0 ? true : false,
-                    memberName: 'Luiz',
+                    familyName: 'Luiz',
                     provedor: '43 99928-9380',
-                    editMember: () {},
+                    editFamily: () {},
                     messageMember: () {
                       showModalBottomSheet(
                         isScrollControlled: true,
@@ -70,7 +70,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         ),
                       );
                     },
-                    supportMember: () {
+                    supportFamily: () {
                       showModalBottomSheet(
                         isScrollControlled: true,
                         context: context,
@@ -94,7 +94,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         ),
                       );
                     },
-                    deleteMember: () {});
+                    deleteFamily: () {});
               },
             ),
           )

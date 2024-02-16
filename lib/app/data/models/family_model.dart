@@ -17,7 +17,7 @@ class Family {
   String? data_update;
   String? cep;
   User? user;
-  List<Pessoas>? pessoas;
+  List<People>? pessoas;
 
   Family(
       {this.id,
@@ -54,9 +54,9 @@ class Family {
     cep = json['cep'];
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     if (json['pessoas'] != null) {
-      pessoas = <Pessoas>[];
+      pessoas = <People>[];
       json['pessoas'].forEach((v) {
-        pessoas!.add(Pessoas.fromJson(v));
+        pessoas!.add(People.fromJson(v));
       });
     }
   }

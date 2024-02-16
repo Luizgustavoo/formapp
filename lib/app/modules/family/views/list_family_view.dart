@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:get/get.dart';
 
 import 'package:formapp/app/data/models/family_model.dart';
@@ -9,11 +9,12 @@ import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class FamilyView extends GetView<FamilyController> {
-  const FamilyView({super.key});
+  FamilyView({super.key});
+
+  final PeopleController peopleController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +61,16 @@ class FamilyView extends GetView<FamilyController> {
                   String? provedorCasa = "";
 
                   for (var p in family.pessoas!) {
-                    provedorCasa = (p.provedor_casa == 'sim') ? p.nome : "";
+                    provedorCasa = (p.provedorCasa == 'sim') ? p.nome : "";
                   }
 
                   return CustomFamilyCard(
                     moradores: family.pessoas!.length,
                     showAddMember: true,
                     stripe: index % 2 == 0 ? true : false,
-                    memberName: family.nome.toString(),
+                    familyName: family.nome.toString(),
                     provedor: "Provedor: $provedorCasa",
-                    editMember: () {
-                      controller.typeOperation.value = 2;
+                    editFamily: () {
                       controller.selectedFamily = family;
 
                       controller.fillInFields();
@@ -101,7 +101,7 @@ class FamilyView extends GetView<FamilyController> {
                         ),
                       );
                     },
-                    supportMember: () {
+                    supportFamily: () {
                       showModalBottomSheet(
                         isScrollControlled: true,
                         context: context,
@@ -126,7 +126,29 @@ class FamilyView extends GetView<FamilyController> {
                         ),
                       );
                     },
-                    deleteMember: () {},
+                    deleteFamily: () {},
+                    peopleNames:
+                        family.pessoas!.map((person) => person.nome!).toList(),
+                    onDeletePerson: () {},
+                    onEditPerson: () {
+                      // Set the selected person in PeopleController
+                      People? selectedPerson = family
+                          .pessoas!.first; // Altere isso conforme necessário
+                      peopleController.selectedPeople = selectedPerson;
+
+                      peopleController.fillInFieldsForEditPerson();
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        isDismissible: false,
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: MediaQuery.of(context).viewInsets,
+                          child: AddPeopleFamilyView(
+                            family: family,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -139,16 +161,16 @@ class FamilyView extends GetView<FamilyController> {
 }
 
 class CreateFamilyWidget extends StatelessWidget {
-  CreateFamilyWidget({
+  const CreateFamilyWidget({
     Key? key,
     this.family,
     required this.controller,
-    required this.titulo,
+    this.titulo,
   }) : super(key: key);
 
-  Family? family;
+  final Family? family;
 
-  String titulo = "";
+  final String? titulo;
 
   final FamilyController controller;
 
@@ -163,7 +185,7 @@ class CreateFamilyWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              titulo,
+              titulo!,
               style: CustomTextStyle.title(context),
             ),
             Padding(
