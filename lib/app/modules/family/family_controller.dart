@@ -23,6 +23,8 @@ class FamilyController extends GetxController
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
 
+  RxInt typeOperation = 1.obs; // 1 - Inserir | 2 - Atualizar
+
   final box = GetStorage('credenciado');
   Family? selectedFamily;
   List<Pessoas>? listPessoas = [];
@@ -122,6 +124,52 @@ class FamilyController extends GetxController
 
       final mensagem = await repository.insertFamily("Bearer " + token, family);
 
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe uam família com esse nome!"
+          };
+        }
+      }
+
+      print(mensagem);
+
+      getFamilies();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
+    }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> updateFamily(int id) async {
+    Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
+    if (familyFormKey.currentState!.validate()) {
+      Family family = Family(
+        id: id,
+        nome: nomeFamiliaController.text,
+        cep: cepFamiliaController.text,
+        endereco: ruaFamiliaController.text,
+        complemento: complementoFamiliaController.text,
+        bairro: bairroFamiliaController.text,
+        numero_casa: numeroCasaFamiliaController.text,
+        cidade: cidadeFamiliaController.text,
+        uf: ufFamiliaController.text,
+        residencia_propria: residenceOwn.value ? 'sim' : 'nao',
+        status: 1,
+        usuario_id: box.read('auth')['user']['id'],
+      );
+
+      final token = box.read('auth')['access_token'];
+
+      final mensagem = await repository.updateFamily("Bearer " + token, family);
+      print(mensagem);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};

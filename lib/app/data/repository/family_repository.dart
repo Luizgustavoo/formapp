@@ -29,4 +29,15 @@ class FamilyRepository {
       rethrow; // Adicione esta linha para relançar a exceção e tratá-la no controller
     }
   }
+
+  updateFamily(String token, Family family) async {
+    try {
+      var response = await apiClient.updateFamily(token, family);
+      // print('Resposta da inserção: $response'); // Adicione este log
+      return response;
+    } catch (e) {
+      print('Erro ao atualizar a família: $e'); // Adicione este log
+      rethrow; // Adicione esta linha para relançar a exceção e tratá-la no controller
+    }
+  }
 }

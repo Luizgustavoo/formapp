@@ -24,6 +24,7 @@ class FamilyView extends GetView<FamilyController> {
           IconButton(
               onPressed: () {
                 controller.clearAllFamilyTextFields();
+                controller.typeOperation.value = 1;
                 showModalBottomSheet(
                   isScrollControlled: true,
                   isDismissible: false,
@@ -69,6 +70,7 @@ class FamilyView extends GetView<FamilyController> {
                     memberName: family.nome.toString(),
                     provedor: "Provedor: $provedorCasa",
                     editMember: () {
+                      controller.typeOperation.value = 2;
                       controller.selectedFamily = family;
 
                       controller.fillInFields();
@@ -350,7 +352,10 @@ class CreateFamilyWidget extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () async {
                       Map<String, dynamic> retorno =
-                          await controller.saveFamily();
+                          controller.typeOperation.value == 1
+                              ? await controller.saveFamily()
+                              : await controller.updateFamily(family!.id!);
+
                       if (retorno['return'] == 0) {
                         Get.back();
                       }
