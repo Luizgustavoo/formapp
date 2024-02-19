@@ -177,8 +177,6 @@ class FamilyController extends GetxController
         }
       }
 
-      print(mensagem);
-
       getFamilies();
     } else {
       retorno = {

@@ -141,6 +141,57 @@ class PeopleController extends GetxController {
     return retorno;
   }
 
+  Future<Map<String, dynamic>> updatePeople() async {
+    Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
+    if (peopleFormKey.currentState!.validate()) {
+      People pessoa = People(
+          id: int.parse(idPessoaController.text),
+          nome: nomePessoaController.text,
+          cpf: cpfPessoaController.text,
+          estadoCivilId: estadoCivilSelected.value,
+          parentesco: parentesco.value,
+          provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
+          sexo: sexo.value,
+          dataNascimento: nascimentoPessoaController.text,
+          tituloEleitor: tituloEleitoralPessoaController.text,
+          zonaEleitoral: zonaEleitoralPessoaController.text,
+          localTrabalho: localTrabalhoPessoaController.text,
+          cargoTrabalho: cargoPessoaController.text,
+          telefone: celularPessoaController.text,
+          redeSocial: redeSocialPessoaController.text,
+          religiaoId: religiaoSelected.value,
+          igrejaId: igrejaPessoaController.text,
+          funcaoIgreja: funcaoIgrejaPessoaController.text,
+          status: 1,
+          usuarioId: box.read('auth')['user']['id']);
+
+      final token = box.read('auth')['access_token'];
+
+      final mensagem = await peopleRepository.updatePeople(
+          "Bearer " + token, pessoa, File(photoUrlPath.value));
+
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe uma pessoa com esse cpf!"
+          };
+        }
+      }
+
+      familyController.getFamilies();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
+    }
+    return retorno;
+  }
+
   void removePeople(People pessoa) {
     composicaoFamiliar.remove(pessoa);
   }
@@ -176,6 +227,7 @@ class PeopleController extends GetxController {
     estadoCivilSelected.value = selectedPeople!.estadoCivilId!;
     parentesco.value = selectedPeople!.parentesco!;
     sexo.value = selectedPeople!.sexo!;
+    religiaoSelected.value = selectedPeople!.religiaoId!;
   }
 
   void getChurch() async {

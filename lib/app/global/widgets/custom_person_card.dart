@@ -148,6 +148,7 @@ class CustomFamilyCard extends StatelessWidget {
                                   builder: (context) => Padding(
                                     padding: MediaQuery.of(context).viewInsets,
                                     child: AddPeopleFamilyView(
+                                      tipo_operacao: 1,
                                       family: family,
                                     ),
                                   ),

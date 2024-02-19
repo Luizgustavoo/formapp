@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:get/get.dart';
 
@@ -121,6 +120,7 @@ class FamilyView extends GetView<FamilyController> {
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
                           child: AddPeopleFamilyView(
+                            tipo_operacao: 0,
                             family: family,
                           ),
                         ),

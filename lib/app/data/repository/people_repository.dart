@@ -29,4 +29,15 @@ class PeopleRepository {
       rethrow;
     }
   }
+
+  updatePeople(String token, People pessoa, File imageFile) async {
+    try {
+      var response = await apiClient.updatePeople(token, pessoa, imageFile);
+
+      return response;
+    } catch (e) {
+      print('Erro ao inserir a família: $e');
+      rethrow;
+    }
+  }
 }
