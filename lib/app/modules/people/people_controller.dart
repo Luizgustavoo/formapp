@@ -315,5 +315,7 @@ class PeopleController extends GetxController {
     for (final controller in textControllers) {
       controller.clear();
     }
+
+    photoUrlPath.value = "";
   }
 }

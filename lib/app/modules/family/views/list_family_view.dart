@@ -113,6 +113,7 @@ class FamilyView extends GetView<FamilyController> {
                       );
                     },
                     addMember: () {
+                      peopleController.clearAllPeopleTextFields();
                       showModalBottomSheet(
                         isScrollControlled: true,
                         isDismissible: false,
