@@ -228,6 +228,7 @@ class PeopleController extends GetxController {
     parentesco.value = selectedPeople!.parentesco!;
     sexo.value = selectedPeople!.sexo!;
     religiaoSelected.value = selectedPeople!.religiaoId!;
+    photoUrlPath.value = selectedPeople!.foto!;
   }
 
   void getChurch() async {

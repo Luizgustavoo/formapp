@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:get/get.dart';
@@ -50,31 +51,35 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Obx(() => CircleAvatar(
-                            radius: 35,
-                            backgroundImage: controller.isImagePicPathSet ==
-                                    true
-                                ? FileImage(File(controller.photoUrlPath.value))
-                                    as ImageProvider
-                                : const AssetImage(
-                                    'assets/images/default_avatar.jpg'),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                backgroundBlendMode: BlendMode.multiply,
-                                color: Colors.grey[300],
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.camera_alt),
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) =>
-                                          CustomBottomSheet());
-                                },
-                              ),
+                      Obx(
+                        () => CircleAvatar(
+                          radius: 35,
+                          backgroundImage: controller.isImagePicPathSet == true
+                              ? FileImage(File(controller.photoUrlPath.value))
+                              : (controller.photoUrlPath.value.isNotEmpty
+                                  ? NetworkImage(
+                                          '$urlImagem/public/storage/${controller.photoUrlPath.value}')
+                                      as ImageProvider<Object>?
+                                  : const AssetImage(
+                                      'assets/images/default_avatar.jpg')),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              backgroundBlendMode: BlendMode.multiply,
+                              color: Colors.grey[300],
                             ),
-                          )),
+                            child: IconButton(
+                              icon: const Icon(Icons.camera_alt),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => CustomBottomSheet(),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(
                         width: 15,
                       ),

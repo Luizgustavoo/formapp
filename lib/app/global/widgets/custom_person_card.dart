@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
@@ -139,6 +140,8 @@ class CustomFamilyCard extends StatelessWidget {
                                 // Altere isso conforme necessário
                                 peopleController.selectedPeople =
                                     family.pessoas![index];
+
+                                print(peopleController.selectedPeople!.foto!);
 
                                 peopleController.fillInFieldsForEditPerson();
                                 showModalBottomSheet(
