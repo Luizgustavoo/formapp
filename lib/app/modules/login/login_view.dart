@@ -161,8 +161,6 @@ class LoginView extends GetView<LoginController> {
                                                     ? Icons.visibility_off
                                                     : Icons.visibility),
                                                 onPressed: () {
-                                                  print(controller
-                                                      .isPasswordVisible.value);
                                                   controller.isPasswordVisible
                                                           .value =
                                                       !controller

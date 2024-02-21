@@ -121,7 +121,10 @@ class PeopleController extends GetxController {
       final token = box.read('auth')['access_token'];
 
       final mensagem = await peopleRepository.insertPeople(
-          "Bearer " + token, pessoa, File(photoUrlPath.value));
+          // ignore: prefer_interpolation_to_compose_strings
+          "Bearer " + token,
+          pessoa,
+          File(photoUrlPath.value));
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {

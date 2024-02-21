@@ -25,6 +25,8 @@ class DatabaseHelper {
         usuario_id INTEGER,
         status INTEGER,
         cep TEXT
+        data_cadastro  DATETIME DEFAULT CURRENT_TIMESTAMP
+        data_update    DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     ''');
   }
@@ -33,6 +35,16 @@ class DatabaseHelper {
     final Database db = await getDatabase();
     await db.insert(tableName, familyData,
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> updateFamily(int id, Map<String, dynamic> familyData) async {
+    final Database db = await getDatabase();
+    await db.update(
+      tableName,
+      familyData,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getAllFamilies() async {

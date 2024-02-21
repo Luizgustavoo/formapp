@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
@@ -151,7 +149,7 @@ class CustomFamilyCard extends StatelessWidget {
                                   builder: (context) => Padding(
                                     padding: MediaQuery.of(context).viewInsets,
                                     child: AddPeopleFamilyView(
-                                      tipo_operacao: 1,
+                                      tipoOperacao: 1,
                                       family: family,
                                     ),
                                   ),

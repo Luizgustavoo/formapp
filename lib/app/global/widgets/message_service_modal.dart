@@ -10,7 +10,7 @@ class MessageServicePage extends StatelessWidget {
 
   final bool showWidget;
   final Family? family;
-  FamilyController controller = Get.find();
+  final FamilyController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {

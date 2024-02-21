@@ -38,6 +38,7 @@ class UserController extends GetxController {
   void getUsers() async {
     final token = box.read('auth')['access_token'];
 
+    // ignore: prefer_interpolation_to_compose_strings
     listUsers.value = await repository.getAll("Bearer " + token);
   }
 }

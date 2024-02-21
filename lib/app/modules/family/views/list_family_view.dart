@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
 
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_person_card.dart';
-import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
@@ -49,6 +49,36 @@ class FamilyView extends GetView<FamilyController> {
               onSearchPressed: (context, a, query) {
                 controller.searchFamily(query);
               }),
+          Expanded(
+              child: ListView(
+            children: const [
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+              ListTile(title: Text('AQUIIII')),
+            ],
+          )),
           Expanded(
             child: Obx(
               () => ListView.builder(
@@ -130,7 +160,7 @@ class FamilyView extends GetView<FamilyController> {
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
                           child: AddPeopleFamilyView(
-                            tipo_operacao: 0,
+                            tipoOperacao: 0,
                             family: family,
                           ),
                         ),
@@ -164,6 +194,8 @@ class CreateFamilyWidget extends StatelessWidget {
   final String? tipoOperacao;
 
   final FamilyController controller = Get.find();
+
+  final ConectionController conectionController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -364,22 +396,29 @@ class CreateFamilyWidget extends StatelessWidget {
                     )),
                 ElevatedButton(
                     onPressed: () async {
-                      Map<String, dynamic> retorno = tipoOperacao == 'inserir'
-                          ? await controller.saveFamily()
-                          : await controller.updateFamily(family!.id!);
+                      if (conectionController.estaConectado()) {
+                        Map<String, dynamic> retorno = tipoOperacao == 'inserir'
+                            ? await controller.saveFamily()
+                            : await controller.updateFamily(family!.id!);
 
-                      if (retorno['return'] == 0) {
+                        if (retorno['return'] == 0) {
+                          Get.back();
+                        }
+                        Get.snackbar(
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(milliseconds: 1500),
+                          retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                          retorno['message'],
+                          backgroundColor: retorno['return'] == 0
+                              ? Colors.green
+                              : Colors.red,
+                          colorText: Colors.white,
+                        );
+                      } else {
+                        controller.saveFamilyLocal();
+
                         Get.back();
                       }
-                      Get.snackbar(
-                        snackPosition: SnackPosition.BOTTOM,
-                        duration: const Duration(milliseconds: 1500),
-                        retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                        retorno['message'],
-                        backgroundColor:
-                            retorno['return'] == 0 ? Colors.green : Colors.red,
-                        colorText: Colors.white,
-                      );
                     },
                     child: Text(
                       'SALVAR',

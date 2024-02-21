@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
@@ -275,18 +274,15 @@ class FamilyController extends GetxController
   /*SALVAR DADOS OFFLINE DA FAMILIA */
   Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
     await localDatabase.insertFamily(familyData);
+    final resposta = await localDatabase.getAllFamilies();
+    print(resposta);
   }
 
   Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
     return await localDatabase.getAllFamilies();
   }
 
-  Future<bool> checkInternetConnectivity() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    return connectivityResult != ConnectivityResult.none;
-  }
-
-  Future<void> saveFamilyData() async {
+  Future<void> saveFamilyLocal() async {
     final familyData = {
       'nome': nomeFamiliaController.text,
       'endereco': ruaFamiliaController.text,
@@ -301,11 +297,7 @@ class FamilyController extends GetxController
       'cep': cepFamiliaController.text,
     };
 
-    if (await checkInternetConnectivity()) {
-      // Se houver conectividade, salva na API
-    } else {
-      // Se não houver conectividade, salva localmente
-      await saveFamilyLocally(familyData);
-    }
+    // Se não houver conectividade, salva localmente
+    await saveFamilyLocally(familyData);
   }
 }

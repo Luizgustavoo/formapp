@@ -12,10 +12,11 @@ import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
-  AddPeopleFamilyView({super.key, this.family, required this.tipo_operacao});
+  const AddPeopleFamilyView(
+      {super.key, this.family, required this.tipoOperacao});
 
   final Family? family;
-  int tipo_operacao;
+  final int tipoOperacao;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    tipo_operacao == 0 ? "Adicionar Membro" : "Alterar Membro",
+                    tipoOperacao == 0 ? "Adicionar Membro" : "Alterar Membro",
                     style: CustomTextStyle.title(context),
                   ),
                   Padding(
@@ -419,7 +420,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           )),
                       ElevatedButton(
                           onPressed: () async {
-                            Map<String, dynamic> retorno = tipo_operacao == 0
+                            Map<String, dynamic> retorno = tipoOperacao == 0
                                 ? await controller.savePeople(family!)
                                 : await controller.updatePeople();
                             if (retorno['return'] == 0) {
@@ -438,7 +439,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                             //Get.back();
                           },
                           child: Text(
-                            tipo_operacao == 0 ? "ADICIONAR" : "ALTERAR",
+                            tipoOperacao == 0 ? "ADICIONAR" : "ALTERAR",
                             style: CustomTextStyle.button(context),
                           )),
                     ],
