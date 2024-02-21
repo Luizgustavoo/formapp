@@ -23,6 +23,10 @@ class FamilyController extends GetxController
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
 
+  final TextEditingController subjectController = TextEditingController();
+  final TextEditingController messageController = TextEditingController();
+  final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
+
   RxInt typeOperation = 1.obs; // 1 - Inserir | 2 - Atualizar
 
   final box = GetStorage('credenciado');
@@ -220,6 +224,12 @@ class FamilyController extends GetxController
     ufFamiliaController.text = '';
     complementoFamiliaController.text = '';
     numeroCasaFamiliaController.text = '';
+  }
+
+  void clearModalMessageService() {
+    subjectController.value = TextEditingValue.empty;
+    messageController.value = TextEditingValue.empty;
+    selectedDate.value = null;
   }
   /*FINAL PARTE RESPONSAVEL PELO CEP */
 

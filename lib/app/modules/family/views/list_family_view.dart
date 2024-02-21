@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:get/get.dart';
 
@@ -91,24 +92,30 @@ class FamilyView extends GetView<FamilyController> {
                       );
                     },
                     messageMember: () {
+                      controller.clearModalMessageService();
                       showModalBottomSheet(
                         isScrollControlled: true,
+                        isDismissible: false,
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageModal(
+                          child: MessageServicePage(
+                            family: family,
                             showWidget: false,
                           ),
                         ),
                       );
                     },
                     supportFamily: () {
+                      controller.clearModalMessageService();
                       showModalBottomSheet(
                         isScrollControlled: true,
+                        isDismissible: false,
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageModal(
+                          child: MessageServicePage(
+                            family: family,
                             showWidget: true,
                           ),
                         ),
