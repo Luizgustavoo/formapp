@@ -8,6 +8,12 @@ class FamilyRepository {
     List<Family> list = <Family>[];
 
     var response = await apiClient.getAll(token);
+    var responseLocal = await apiClient.getAllFamiliesLocally();
+
+    for (var e in responseLocal) {
+      print(Family.fromJson(e).toJson());
+      list.add(Family.fromJson(e));
+    }
 
     response.forEach((e) {
       // print(Family.fromJson(e).toJson());
@@ -37,6 +43,17 @@ class FamilyRepository {
       return response;
     } catch (e) {
       print('Erro ao atualizar a família: $e'); // Adicione este log
+      rethrow; // Adicione esta linha para relançar a exceção e tratá-la no controller
+    }
+  }
+
+  saveFamilyLocal(Family family) async {
+    try {
+      var response = await apiClient.saveFamilyLocal(family);
+      // print('Resposta da inserção: $response'); // Adicione este log
+      return response;
+    } catch (e) {
+      print('Erro ao inserir a família: $e'); // Adicione este log
       rethrow; // Adicione esta linha para relançar a exceção e tratá-la no controller
     }
   }

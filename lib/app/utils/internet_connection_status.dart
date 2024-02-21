@@ -22,3 +22,10 @@ class ConectionController extends GetxController {
     return statusConexao.value != ConnectivityResult.none;
   }
 }
+
+abstract class ConnectionStatus {
+  static Future<bool> verificarConexao() async {
+    var conexaoResult = await Connectivity().checkConnectivity();
+    return conexaoResult != ConnectivityResult.none;
+  }
+}

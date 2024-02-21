@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:formapp/app/data/base_url.dart';
+import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class FamilyApiClient {
   final http.Client httpClient = http.Client();
+  final DatabaseHelper localDatabase = DatabaseHelper();
 
   getAll(String token) async {
     try {
@@ -178,5 +180,35 @@ class FamilyApiClient {
       );
     }
     return null;
+  }
+
+  /*SALVAR DADOS OFFLINE DA FAMILIA */
+  Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
+    await localDatabase.insertFamily(familyData);
+    final resposta = await localDatabase.getAllFamilies();
+    print(resposta);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
+    return await localDatabase.getAllFamilies();
+  }
+
+  Future<void> saveFamilyLocal(Family family) async {
+    final familyData = {
+      'nome': family.nome,
+      'endereco': family.endereco,
+      'numero_casa': family.numero_casa,
+      'bairro': family.bairro,
+      'cidade': family.cidade,
+      'uf': family.uf,
+      'complemento': family.complemento,
+      'residencia_propria': family.residencia_propria,
+      'usuario_id': family.usuario_id,
+      'status': family.status,
+      'cep': family.cep,
+    };
+
+    // Se não houver conectividade, salva localmente
+    await saveFamilyLocally(familyData);
   }
 }

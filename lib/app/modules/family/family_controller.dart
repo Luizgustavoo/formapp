@@ -5,6 +5,7 @@ import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
+import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -44,7 +45,6 @@ class FamilyController extends GetxController
   RxBool isExpanded = false.obs;
 
   final repository = Get.find<FamilyRepository>();
-  final DatabaseHelper localDatabase = DatabaseHelper();
 
   Animation<double>? animation;
   AnimationController? animationController;
@@ -123,18 +123,11 @@ class FamilyController extends GetxController
       );
 
       final token = box.read('auth')['access_token'];
-
-      final mensagem = await repository.insertFamily("Bearer " + token, family);
-
-      if (mensagem != null) {
-        if (mensagem['message'] == 'success') {
-          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-        } else if (mensagem['message'] == 'ja_existe') {
-          retorno = {
-            "return": 1,
-            "message": "Já existe uam família com esse nome!"
-          };
-        }
+      dynamic mensagem;
+      if (await ConnectionStatus.verificarConexao()) {
+        mensagem = await repository.insertFamily("Bearer " + token, family);
+      } else {
+        await repository.saveFamilyLocal(family);
       }
 
       print(mensagem);
@@ -269,35 +262,5 @@ class FamilyController extends GetxController
     for (final controller in textControllers) {
       controller.clear();
     }
-  }
-
-  /*SALVAR DADOS OFFLINE DA FAMILIA */
-  Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
-    await localDatabase.insertFamily(familyData);
-    final resposta = await localDatabase.getAllFamilies();
-    print(resposta);
-  }
-
-  Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
-    return await localDatabase.getAllFamilies();
-  }
-
-  Future<void> saveFamilyLocal() async {
-    final familyData = {
-      'nome': nomeFamiliaController.text,
-      'endereco': ruaFamiliaController.text,
-      'numero_casa': numeroCasaFamiliaController.text,
-      'bairro': bairroFamiliaController.text,
-      'cidade': cidadeFamiliaController.text,
-      'uf': ufFamiliaController.text,
-      'complemento': complementoFamiliaController.text,
-      'residencia_propria': residenceOwn.value ? 'sim' : 'nao',
-      'usuario_id': box.read('auth')['user']['id'],
-      'status': 1,
-      'cep': cepFamiliaController.text,
-    };
-
-    // Se não houver conectividade, salva localmente
-    await saveFamilyLocally(familyData);
   }
 }

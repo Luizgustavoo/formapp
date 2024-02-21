@@ -396,29 +396,22 @@ class CreateFamilyWidget extends StatelessWidget {
                     )),
                 ElevatedButton(
                     onPressed: () async {
-                      if (conectionController.estaConectado()) {
-                        Map<String, dynamic> retorno = tipoOperacao == 'inserir'
-                            ? await controller.saveFamily()
-                            : await controller.updateFamily(family!.id!);
+                      Map<String, dynamic> retorno = tipoOperacao == 'inserir'
+                          ? await controller.saveFamily()
+                          : await controller.updateFamily(family!.id!);
 
-                        if (retorno['return'] == 0) {
-                          Get.back();
-                        }
-                        Get.snackbar(
-                          snackPosition: SnackPosition.BOTTOM,
-                          duration: const Duration(milliseconds: 1500),
-                          retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                          retorno['message'],
-                          backgroundColor: retorno['return'] == 0
-                              ? Colors.green
-                              : Colors.red,
-                          colorText: Colors.white,
-                        );
-                      } else {
-                        controller.saveFamilyLocal();
-
+                      if (retorno['return'] == 0) {
                         Get.back();
                       }
+                      Get.snackbar(
+                        snackPosition: SnackPosition.BOTTOM,
+                        duration: const Duration(milliseconds: 1500),
+                        retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                        retorno['message'],
+                        backgroundColor:
+                            retorno['return'] == 0 ? Colors.green : Colors.red,
+                        colorText: Colors.white,
+                      );
                     },
                     child: Text(
                       'SALVAR',
