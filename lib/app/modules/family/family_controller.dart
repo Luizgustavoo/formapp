@@ -1,4 +1,6 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
@@ -43,6 +45,7 @@ class FamilyController extends GetxController
   RxBool isExpanded = false.obs;
 
   final repository = Get.find<FamilyRepository>();
+  final DatabaseHelper localDatabase = DatabaseHelper();
 
   Animation<double>? animation;
   AnimationController? animationController;
@@ -266,6 +269,43 @@ class FamilyController extends GetxController
     // Itera sobre todos os TextEditingController e limpa cada um deles
     for (final controller in textControllers) {
       controller.clear();
+    }
+  }
+
+  /*SALVAR DADOS OFFLINE DA FAMILIA */
+  Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
+    await localDatabase.insertFamily(familyData);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
+    return await localDatabase.getAllFamilies();
+  }
+
+  Future<bool> checkInternetConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+  Future<void> saveFamilyData() async {
+    final familyData = {
+      'nome': nomeFamiliaController.text,
+      'endereco': ruaFamiliaController.text,
+      'numero_casa': numeroCasaFamiliaController.text,
+      'bairro': bairroFamiliaController.text,
+      'cidade': cidadeFamiliaController.text,
+      'uf': ufFamiliaController.text,
+      'complemento': complementoFamiliaController.text,
+      'residencia_propria': residenceOwn.value ? 'sim' : 'nao',
+      'usuario_id': box.read('auth')['user']['id'],
+      'status': 1,
+      'cep': cepFamiliaController.text,
+    };
+
+    if (await checkInternetConnectivity()) {
+      // Se houver conectividade, salva na API
+    } else {
+      // Se não houver conectividade, salva localmente
+      await saveFamilyLocally(familyData);
     }
   }
 }
