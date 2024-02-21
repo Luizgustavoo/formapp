@@ -160,17 +160,27 @@ class CustomFamilyCard extends StatelessWidget {
                               icon: const Icon(
                                 Icons.edit_outlined,
                                 size: 22,
-                                color: Colors.blue,
                               ),
+                            ),
+                            // IconButton(
+                            //   onPressed: onDeletePerson,
+                            //   icon: const Icon(
+                            //     Icons.delete_outline,
+                            //     size: 22,
+                            //     color: Colors.red,
+                            //   ),
+                            // ),
+
+                            IconButton(
+                              iconSize: 22,
+                              onPressed: supportFamily,
+                              icon: const Icon(Icons.support_agent_rounded),
                             ),
                             IconButton(
-                              onPressed: onDeletePerson,
-                              icon: const Icon(
-                                Icons.delete_outline,
-                                size: 22,
-                                color: Colors.red,
-                              ),
-                            ),
+                              iconSize: 22,
+                              onPressed: messageMember,
+                              icon: const Icon(Icons.email_outlined),
+                            )
                           ],
                         ),
                       ],

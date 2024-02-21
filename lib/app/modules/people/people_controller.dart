@@ -43,6 +43,9 @@ class PeopleController extends GetxController {
   RxInt estadoCivilSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
   RxString parentesco = 'Pai'.obs;
+
+  RxString oldImagePath = ''.obs;
+
   final repository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.find<ReligionRepository>();
 
@@ -168,8 +171,8 @@ class PeopleController extends GetxController {
 
       final token = box.read('auth')['access_token'];
 
-      final mensagem = await peopleRepository.updatePeople(
-          "Bearer " + token, pessoa, File(photoUrlPath.value));
+      final mensagem = await peopleRepository.updatePeople("Bearer " + token,
+          pessoa, File(photoUrlPath.value), oldImagePath.value);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -229,6 +232,10 @@ class PeopleController extends GetxController {
     sexo.value = selectedPeople!.sexo!;
     religiaoSelected.value = selectedPeople!.religiaoId!;
     photoUrlPath.value = selectedPeople!.foto!;
+    oldImagePath.value = selectedPeople!.foto!;
+    isImagePicPathSet.value = false;
+    provedorCheckboxValue.value =
+        selectedPeople!.provedorCasa! == 'sim' ? true : false;
   }
 
   void getChurch() async {

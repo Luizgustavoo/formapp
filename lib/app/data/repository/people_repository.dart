@@ -30,9 +30,11 @@ class PeopleRepository {
     }
   }
 
-  updatePeople(String token, People pessoa, File imageFile) async {
+  updatePeople(
+      String token, People pessoa, File imageFile, String? oldImagePath) async {
     try {
-      var response = await apiClient.updatePeople(token, pessoa, imageFile);
+      var response =
+          await apiClient.updatePeople(token, pessoa, imageFile, oldImagePath);
 
       return response;
     } catch (e) {

@@ -129,7 +129,8 @@ class PeopleApiClient {
     return null;
   }
 
-  updatePeople(String token, People pessoa, File imageFile) async {
+  updatePeople(
+      String token, People pessoa, File imageFile, String? oldImagePath) async {
     print('$baseUrl/v1/pessoa/update/${pessoa.id}');
     try {
       var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/update/${pessoa.id}');
@@ -158,9 +159,7 @@ class PeopleApiClient {
         "parentesco": pessoa.parentesco!,
       });
 
-      //print(request.fields);
-
-      if (imageFile.path.isNotEmpty) {
+      if (imageFile.path.isNotEmpty && imageFile.path != oldImagePath) {
         request.files.add(await http.MultipartFile.fromPath(
           'foto', // Nome do campo que a API espera para a imagem
           imageFile.path, // Caminho do arquivo da imagem

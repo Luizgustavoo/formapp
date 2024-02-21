@@ -32,7 +32,7 @@ class FamilyView extends GetView<FamilyController> {
                   builder: (context) => Padding(
                     padding: MediaQuery.of(context).viewInsets,
                     child: CreateFamilyWidget(
-                      controller: controller,
+                      tipoOperacao: 'inserir',
                       titulo: "Cadastro de Família",
                     ),
                   ),
@@ -57,10 +57,12 @@ class FamilyView extends GetView<FamilyController> {
                 itemCount: controller.listFamilies.length,
                 itemBuilder: (context, index) {
                   Family family = controller.listFamilies[index];
-                  String? provedorCasa = "";
+                  String provedorCasa = "";
 
                   for (var p in family.pessoas!) {
-                    provedorCasa = (p.provedorCasa == 'sim') ? p.nome : "";
+                    if (p.provedorCasa == 'sim') {
+                      provedorCasa += p.nome!;
+                    }
                   }
 
                   return CustomFamilyCard(
@@ -81,7 +83,7 @@ class FamilyView extends GetView<FamilyController> {
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
                           child: CreateFamilyWidget(
-                            controller: controller,
+                            tipoOperacao: 'update',
                             titulo: 'Alteração da Família',
                             family: family,
                           ),
@@ -142,18 +144,19 @@ class FamilyView extends GetView<FamilyController> {
 }
 
 class CreateFamilyWidget extends StatelessWidget {
-  const CreateFamilyWidget({
+  CreateFamilyWidget({
     Key? key,
     this.family,
-    required this.controller,
-    this.titulo,
+    required this.titulo,
+    required this.tipoOperacao,
   }) : super(key: key);
 
   final Family? family;
 
   final String? titulo;
+  final String? tipoOperacao;
 
-  final FamilyController controller;
+  final FamilyController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -354,10 +357,9 @@ class CreateFamilyWidget extends StatelessWidget {
                     )),
                 ElevatedButton(
                     onPressed: () async {
-                      Map<String, dynamic> retorno =
-                          controller.typeOperation.value == 1
-                              ? await controller.saveFamily()
-                              : await controller.updateFamily(family!.id!);
+                      Map<String, dynamic> retorno = tipoOperacao == 'inserir'
+                          ? await controller.saveFamily()
+                          : await controller.updateFamily(family!.id!);
 
                       if (retorno['return'] == 0) {
                         Get.back();
