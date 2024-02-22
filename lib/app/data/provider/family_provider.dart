@@ -184,11 +184,11 @@ class FamilyApiClient {
 
   /*SALVAR DADOS OFFLINE DA FAMILIA */
   Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
-    await localDatabase.insertFamily(familyData);
+    await localDatabase.insert(familyData, 'family_table');
   }
 
   Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
-    return await localDatabase.getAllFamilies();
+    return await localDatabase.getAllDataLocal('family_table');
   }
 
   Future<void> saveFamilyLocal(Family family) async {
