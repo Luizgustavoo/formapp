@@ -23,7 +23,7 @@ class FamilyRepository {
         // print(Family.fromJson(e).toJson());
         Family f = Family.fromJson(e);
         f.familyLocal = false;
-        list.add(Family.fromJson(e));
+        list.add(f);
       });
     }
 
