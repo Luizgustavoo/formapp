@@ -9,10 +9,12 @@ class ReligionRepository {
 
     var response = await apiClient.getAll(token);
 
-    response.forEach((e) {
-      // print(Family.fromJson(e).toJson());
-      list.add(Religiao.fromJson(e));
-    });
+    if (response != null) {
+      response.forEach((e) {
+        // print(Family.fromJson(e).toJson());
+        list.add(Religiao.fromJson(e));
+      });
+    }
 
     //print("Usuário: ${list[0].pessoas?[0].nome}");
 

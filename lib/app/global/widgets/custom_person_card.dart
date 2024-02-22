@@ -20,6 +20,7 @@ class CustomFamilyCard extends StatelessWidget {
   VoidCallback? onEditPerson;
   VoidCallback? onDeletePerson;
   bool showAddMember = false;
+  bool local = false;
   List<String>? peopleNames;
   FamilyController familyController = Get.find();
   PeopleController peopleController = Get.find();
@@ -37,6 +38,7 @@ class CustomFamilyCard extends StatelessWidget {
       this.addMember,
       required this.stripe,
       this.peopleNames,
+      this.local = false,
       this.showAddMember = false})
       : super(key: key);
 
@@ -48,7 +50,9 @@ class CustomFamilyCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Card(
         elevation: 3,
-        color: stripe ? Colors.grey.shade300 : Colors.white,
+        color: local
+            ? Colors.red.shade300
+            : (stripe ? Colors.grey.shade300 : Colors.white),
         child: Padding(
             padding: const EdgeInsets.only(right: 12),
             child: ExpansionTile(
@@ -74,7 +78,8 @@ class CustomFamilyCard extends StatelessWidget {
                       children: [
                         Text(provedor,
                             style: CustomTextStyle.subtitle(context)),
-                        Text("${family.pessoas!.length} Moradores Cadastrados",
+                        Text(
+                            "${family.pessoas != null ? family.pessoas!.length : 0} Moradores Cadastrados",
                             style: CustomTextStyle.subtitle(context)),
                       ],
                     ),
@@ -121,7 +126,8 @@ class CustomFamilyCard extends StatelessWidget {
               children: [
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: family.pessoas!.length,
+                  itemCount:
+                      family.pessoas != null ? family.pessoas!.length : 0,
                   itemBuilder: (context, index) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

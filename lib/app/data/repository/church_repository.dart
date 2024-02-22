@@ -9,9 +9,11 @@ class ChurchRepository {
 
     var response = await apiClient.getAll(token);
 
-    response.forEach((e) {
-      list.add(Igreja.fromJson(e));
-    });
+    if (response != null) {
+      response.forEach((e) {
+        list.add(Igreja.fromJson(e));
+      });
+    }
 
     return list;
   }

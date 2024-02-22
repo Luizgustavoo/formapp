@@ -185,8 +185,6 @@ class FamilyApiClient {
   /*SALVAR DADOS OFFLINE DA FAMILIA */
   Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
     await localDatabase.insertFamily(familyData);
-    final resposta = await localDatabase.getAllFamilies();
-    print(resposta);
   }
 
   Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
@@ -206,6 +204,8 @@ class FamilyApiClient {
       'usuario_id': family.usuario_id,
       'status': family.status,
       'cep': family.cep,
+      'data_cadastro': '2024-02-22',
+      'data_update': '2024-02-23',
     };
 
     // Se não houver conectividade, salva localmente

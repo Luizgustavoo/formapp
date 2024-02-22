@@ -124,6 +124,7 @@ class FamilyController extends GetxController
 
       final token = box.read('auth')['access_token'];
       dynamic mensagem;
+
       if (await ConnectionStatus.verificarConexao()) {
         mensagem = await repository.insertFamily("Bearer " + token, family);
       } else {

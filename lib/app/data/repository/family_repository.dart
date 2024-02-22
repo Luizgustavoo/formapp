@@ -1,5 +1,6 @@
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/provider/family_provider.dart';
+import 'package:formapp/app/utils/internet_connection_status.dart';
 
 class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
@@ -7,18 +8,28 @@ class FamilyRepository {
   getAll(String token) async {
     List<Family> list = <Family>[];
 
-    var response = await apiClient.getAll(token);
     var responseLocal = await apiClient.getAllFamiliesLocally();
 
-    for (var e in responseLocal) {
-      print(Family.fromJson(e).toJson());
-      list.add(Family.fromJson(e));
+    for (var familyLocal in responseLocal) {
+      Family f = Family.fromJson(familyLocal);
+      f.familyLocal = true;
+      list.add(f);
+      print(f.familyLocal);
     }
 
-    response.forEach((e) {
-      // print(Family.fromJson(e).toJson());
-      list.add(Family.fromJson(e));
-    });
+    if (await ConnectionStatus.verificarConexao()) {
+      var response = await apiClient.getAll(token);
+      response.forEach((e) {
+        // print(Family.fromJson(e).toJson());
+        Family f = Family.fromJson(e);
+        f.familyLocal = false;
+        list.add(Family.fromJson(e));
+      });
+    }
+
+    for (Family family in list) {
+      print(family.nome);
+    }
 
     //print("Usuário: ${list[0].pessoas?[0].nome}");
 

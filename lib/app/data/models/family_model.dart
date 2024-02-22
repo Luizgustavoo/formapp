@@ -18,6 +18,7 @@ class Family {
   String? cep;
   User? user;
   List<People>? pessoas;
+  bool? familyLocal;
 
   Family(
       {this.id,

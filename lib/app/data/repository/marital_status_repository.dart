@@ -9,10 +9,12 @@ class MaritalStatusRepository {
 
     var response = await apiClient.getAll(token);
 
-    response.forEach((e) {
-      // print(Family.fromJson(e).toJson());
-      list.add(EstadoCivil.fromJson(e));
-    });
+    if (response != null) {
+      response.forEach((e) {
+        // print(Family.fromJson(e).toJson());
+        list.add(EstadoCivil.fromJson(e));
+      });
+    }
 
     //print("Usuário: ${list[0].pessoas?[0].nome}");
 

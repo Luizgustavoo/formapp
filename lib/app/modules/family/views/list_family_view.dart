@@ -50,36 +50,6 @@ class FamilyView extends GetView<FamilyController> {
                 controller.searchFamily(query);
               }),
           Expanded(
-              child: ListView(
-            children: const [
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-              ListTile(title: Text('AQUIIII')),
-            ],
-          )),
-          Expanded(
             child: Obx(
               () => ListView.builder(
                 shrinkWrap: true,
@@ -90,18 +60,22 @@ class FamilyView extends GetView<FamilyController> {
                   Family family = controller.listFamilies[index];
                   String provedorCasa = "";
 
-                  for (var p in family.pessoas!) {
-                    if (p.provedorCasa == 'sim') {
-                      provedorCasa += p.nome!;
+                  if (family.pessoas != null && family.pessoas!.isNotEmpty) {
+                    for (var p in family.pessoas!) {
+                      if (p.provedorCasa == 'sim') {
+                        provedorCasa += p.nome!;
+                      }
                     }
                   }
 
                   return CustomFamilyCard(
+                    local: family.familyLocal!,
                     family: family,
                     showAddMember: true,
                     stripe: index % 2 == 0 ? true : false,
                     familyName: family.nome.toString(),
-                    provedor: "Provedor: $provedorCasa",
+                    provedor:
+                        "Provedor: $provedorCasa${family.familyLocal! ? 'local' : 'nao local'}",
                     editFamily: () {
                       controller.selectedFamily = family;
 
@@ -167,8 +141,9 @@ class FamilyView extends GetView<FamilyController> {
                       );
                     },
                     deleteFamily: () {},
-                    peopleNames:
-                        family.pessoas!.map((person) => person.nome!).toList(),
+                    peopleNames: family.pessoas != null
+                        ? family.pessoas!.map((person) => person.nome!).toList()
+                        : null,
                   );
                 },
               ),

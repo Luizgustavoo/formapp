@@ -24,9 +24,9 @@ class DatabaseHelper {
         residencia_propria TEXT,
         usuario_id INTEGER,
         status INTEGER,
-        cep TEXT
-        data_cadastro  DATETIME DEFAULT CURRENT_TIMESTAMP
-        data_update    DATETIME DEFAULT CURRENT_TIMESTAMP
+        cep TEXT,
+        data_cadastro  TEXT,
+        data_update    TEXT
       )
     ''');
   }
