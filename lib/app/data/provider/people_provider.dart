@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:formapp/app/data/base_url.dart';
+import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 
 class PeopleApiClient {
   final http.Client httpClient = http.Client();
+  final DatabaseHelper localDatabase = DatabaseHelper();
 
   getAll(String token) async {
     try {
@@ -210,5 +212,43 @@ class PeopleApiClient {
       );
     }
     return null;
+  }
+
+  /*SALVAR DADOS OFFLINE DA PESSOA */
+  Future<void> savePeopleLocally(Map<String, dynamic> peopleData) async {
+    await localDatabase.insert(peopleData, 'people_table');
+  }
+
+  Future<List<Map<String, dynamic>>> getAllPeopleLocally() async {
+    return await localDatabase.getAllDataLocal('people_table');
+  }
+
+  Future<void> savePeopleLocal(People people) async {
+    final peopleData = {
+      'nome': people.nome,
+      'foto': people.foto,
+      'sexo': people.sexo,
+      'cpf': people.cpf,
+      'data_nascimento': people.dataNascimento,
+      'estadocivil_id': people.estadoCivilId,
+      'titulo_eleitor': people.tituloEleitor,
+      'zona_eleitoral': people.zonaEleitoral,
+      'telefone': people.telefone,
+      'rede_social': people.redeSocial,
+      'provedor_casa': people.provedorCasa,
+      'igreja_id': people.igrejaId,
+      'local_trabalho': people.localTrabalho,
+      'cargo_trabalho': people.cargoTrabalho,
+      'religiao_id': people.religiaoId,
+      'funcao_igreja': people.funcaoIgreja,
+      'usuario_id': people.usuarioId,
+      'status': people.status,
+      'data_cadastro': people.dataCadastro,
+      'data_update': people.dataUpdate,
+      'familia_id': people.familiaId,
+      'parentesco': people.parentesco,
+    };
+
+    await savePeopleLocally(peopleData);
   }
 }

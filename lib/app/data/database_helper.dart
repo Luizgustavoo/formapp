@@ -29,25 +29,49 @@ class DatabaseHelper {
         data_update    TEXT
       );
 
-      CREATE TABLE people_table(
+      CREATE TABLE people_table (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
-        endereco TEXT,
-        numero_casa TEXT,
-        bairro TEXT,
-        cidade TEXT,
-        uf TEXT,
-        complemento TEXT,
-        residencia_propria TEXT,
-        usuario_id INTEGER,
+        cpf TEXT,
+        estadoCivilId INTEGER,
+        parentesco TEXT,
+        provedorCasa TEXT,
+        sexo TEXT,
+        dataNascimento TEXT,
+        tituloEleitor TEXT,
+        zonaEleitoral TEXT,
+        celular TEXT,
+        redeSocial TEXT,
+        localTrabalho TEXT,
+        cargoTrabalho TEXT,
+        funcaoIgreja TEXT,
         status INTEGER,
-        cep TEXT,
-        data_cadastro  TEXT,
-        data_update    TEXT
+        usuarioId INTEGER,
+        familiaId INTEGER,
+        igrejaId TEXT,
+        foto TEXT
       );
 
+      CREATE TABLE family_service_table (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        data_atendimento TEXT,
+        assunto TEXT,
+        descricao TEXT,
+        usuario_id INTEGER,
+        data_cadastro TEXT,
+        data_update TEXT,
+        pessoa_id INTEGER
+      );
 
-
+       CREATE TABLE message_table (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        data TEXT,
+        titulo TEXT,
+        descricao TEXT,
+        usuario_id INTEGER,
+        data_cadastro TEXT,
+        data_update TEXT
+      )
     ''');
   }
 

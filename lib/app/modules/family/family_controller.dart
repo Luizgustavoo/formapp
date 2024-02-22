@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
@@ -130,8 +129,6 @@ class FamilyController extends GetxController
       } else {
         await repository.saveFamilyLocal(family);
       }
-
-      print(mensagem);
 
       getFamilies();
     } else {

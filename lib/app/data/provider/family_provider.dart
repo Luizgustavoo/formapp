@@ -135,9 +135,6 @@ class FamilyApiClient {
         // Adicione os demais campos conforme necessário
       };
 
-      // print(requestBody);
-      // return;
-
       var response = await httpClient.put(
         familyUrl,
         headers: {
@@ -154,8 +151,6 @@ class FamilyApiClient {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||
           json.decode(response.body)['message'] == "ja_existe") {
-        print(json.decode(response.body));
-
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
           json.decode(response.body)['message'] == "Token has expired") {
