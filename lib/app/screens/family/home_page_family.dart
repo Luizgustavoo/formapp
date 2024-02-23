@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/global/widgets/custom_family_card.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/screens/family/widgets/custom_drawer_family.dart';
-import 'package:formapp/app/global/widgets/custom_person_card.dart';
+
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:get/get.dart';
 

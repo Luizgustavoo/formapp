@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
 
@@ -140,7 +141,9 @@ class FamilyView extends GetView<FamilyController> {
                         ),
                       );
                     },
-                    deleteFamily: () {},
+                    deleteFamily: () {
+                      Get.to(const ListPeopleView());
+                    },
                     peopleNames: family.pessoas != null
                         ? family.pessoas!.map((person) => person.nome!).toList()
                         : null,

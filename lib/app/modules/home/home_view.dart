@@ -85,7 +85,9 @@ class CategoryItems extends StatelessWidget {
               imageUrl: 'assets/images/user.png'),
           CustomCard(
               title: 'Atendimentos',
-              ontap: () {},
+              ontap: () {
+                Get.toNamed('/list-people');
+              },
               imageUrl: 'assets/images/atendimento.png'),
           CustomCard(
               title: 'Mensagens',

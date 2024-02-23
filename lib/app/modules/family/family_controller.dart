@@ -276,6 +276,17 @@ class FamilyController extends GetxController
       await repositoryService.saveFamilyServiceLocal(familyService);
     }
 
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe uam família com esse nome!"
+        };
+      }
+    }
+
     getFamilies();
 
     return retorno;

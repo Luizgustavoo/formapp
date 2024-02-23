@@ -8,12 +8,12 @@ class PeopleRepository {
   final PeopleApiClient apiClient = PeopleApiClient();
 
   getALl(String token) async {
-    List<Family> list = <Family>[];
+    List<People> list = <People>[];
 
     var response = await apiClient.getAll(token);
 
     response.forEach((e) {
-      list.add(Family.fromJson(e));
+      list.add(People.fromJson(e));
     });
 
     return list;

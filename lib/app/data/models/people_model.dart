@@ -1,3 +1,6 @@
+import 'package:formapp/app/data/models/family_service_model.dart';
+import 'package:formapp/app/data/models/user_model.dart';
+
 class People {
   int? id;
   String? nome;
@@ -22,31 +25,36 @@ class People {
   String? dataUpdate;
   int? familiaId;
   String? parentesco;
+  List<FamilyService>? atendimentos;
+  User? user;
 
-  People(
-      {this.id,
-      this.nome,
-      this.foto,
-      this.sexo,
-      this.cpf,
-      this.dataNascimento,
-      this.estadoCivilId,
-      this.tituloEleitor,
-      this.zonaEleitoral,
-      this.telefone,
-      this.redeSocial,
-      this.provedorCasa,
-      this.igrejaId,
-      this.localTrabalho,
-      this.cargoTrabalho,
-      this.religiaoId,
-      this.funcaoIgreja,
-      this.usuarioId,
-      this.status,
-      this.dataCadastro,
-      this.dataUpdate,
-      this.familiaId,
-      this.parentesco});
+  People({
+    this.id,
+    this.nome,
+    this.foto,
+    this.sexo,
+    this.cpf,
+    this.dataNascimento,
+    this.estadoCivilId,
+    this.tituloEleitor,
+    this.zonaEleitoral,
+    this.telefone,
+    this.redeSocial,
+    this.provedorCasa,
+    this.igrejaId,
+    this.localTrabalho,
+    this.cargoTrabalho,
+    this.religiaoId,
+    this.funcaoIgreja,
+    this.usuarioId,
+    this.status,
+    this.dataCadastro,
+    this.dataUpdate,
+    this.familiaId,
+    this.parentesco,
+    this.atendimentos,
+    this.user,
+  });
 
   People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -72,6 +80,13 @@ class People {
     dataUpdate = json['data_update'];
     familiaId = json['familia_id'];
     parentesco = json['parentesco'];
+    user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
+    if (json['atendimentos'] != null) {
+      atendimentos = <FamilyService>[];
+      json['atendimentos'].forEach((v) {
+        atendimentos!.add(FamilyService.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +114,9 @@ class People {
     data['data_update'] = dataUpdate;
     data['familia_id'] = familiaId;
     data['parentesco'] = parentesco;
+    if (atendimentos != null) {
+      data['atendimentos'] = atendimentos!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

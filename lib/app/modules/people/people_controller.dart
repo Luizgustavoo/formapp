@@ -34,6 +34,8 @@ class PeopleController extends GetxController {
   TextEditingController familiaId = TextEditingController();
   TextEditingController igrejaPessoaController = TextEditingController();
 
+  TextEditingController searchController = TextEditingController();
+
   var photoUrlPath = ''.obs;
   var isImagePicPathSet = false.obs;
 
@@ -79,7 +81,8 @@ class PeopleController extends GetxController {
 
   @override
   void onInit() async {
-    await getMaritalStatus();
+    //await getMaritalStatus();
+    getPeoples();
     getReligion();
     getChurch();
     super.onInit();
@@ -87,10 +90,16 @@ class PeopleController extends GetxController {
 
   @override
   void onClose() async {
-    await getMaritalStatus();
+    //await getMaritalStatus();
     getReligion();
+    getPeoples();
     getChurch();
     super.onClose();
+  }
+
+  void getPeoples() async {
+    final token = box.read('auth')['access_token'];
+    listPeoples.value = await peopleRepository.getALl("Bearer " + token);
   }
 
   Future<Map<String, dynamic>> savePeople(Family family) async {

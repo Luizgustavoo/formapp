@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/global/widgets/custom_person_card.dart';
+import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/global/widgets/custom_family_card.dart';
+import 'package:formapp/app/global/widgets/custom_people_card.dart';
+
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:get/get.dart';
 
-class FamilyView extends GetView<FamilyController> {
-  const FamilyView({super.key});
+class ListPeopleView extends GetView<PeopleController> {
+  const ListPeopleView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Famílias Cadastradas'),
+        title: const Text('Pessoas Cadastradas'),
         actions: [
           IconButton(
               onPressed: () {
@@ -32,50 +36,18 @@ class FamilyView extends GetView<FamilyController> {
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: controller.listFamilies.length,
+                  itemCount: controller.listPeoples.length,
                   itemBuilder: (context, index) {
-                    Family family = controller.listFamilies[index];
+                    People people = controller.listPeoples[index];
 
-                    String? provedorCasa = "";
-
-                    for (var p in family.pessoas!) {
-                      provedorCasa = (p.provedorCasa == 'sim') ? p.nome : "";
-                    }
-
-                    return CustomFamilyCard(
-                        family: family,
+                    return CustomPeopleCard(
+                        people: people,
                         stripe: index % 2 == 0 ? true : false,
-                        familyName: family.nome.toString(),
-                        provedor: "Provedor: $provedorCasa",
                         editFamily: () {
-                          controller.selectedFamily = family;
-                          controller.fillInFields();
+                          // controller.selectedFamily = family;
+                          // controller.fillInFields();
 
-                          Get.toNamed('/edit-family', arguments: family);
-                        },
-                        messageMember: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) => Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: MessageModal(
-                                showWidget: false,
-                              ),
-                            ),
-                          );
-                        },
-                        supportFamily: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) => Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: MessageModal(
-                                showWidget: true,
-                              ),
-                            ),
-                          );
+                          // Get.toNamed('/edit-family', arguments: family);
                         },
                         addMember: () {
                           showModalBottomSheet(

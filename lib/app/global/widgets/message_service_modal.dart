@@ -151,9 +151,8 @@ class MessageServicePage extends StatelessWidget {
                     //salvar a familia
                   }
 
-                  if (retorno['return'] == 0) {
-                    Get.back();
-                  }
+                  Get.back();
+
                   Get.snackbar(
                     snackPosition: SnackPosition.BOTTOM,
                     duration: const Duration(milliseconds: 1500),
@@ -163,7 +162,6 @@ class MessageServicePage extends StatelessWidget {
                         retorno['return'] == 0 ? Colors.green : Colors.red,
                     colorText: Colors.white,
                   );
-                  Get.back();
                 },
                 child: Text(
                   'Enviar',
