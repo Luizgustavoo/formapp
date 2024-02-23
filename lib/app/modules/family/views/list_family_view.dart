@@ -5,7 +5,7 @@ import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
 
 import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/global/widgets/custom_person_card.dart';
+import 'package:formapp/app/global/widgets/custom_family_card.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';

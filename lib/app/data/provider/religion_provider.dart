@@ -19,8 +19,6 @@ class ReligionApiClient {
         },
       );
 
-      print("CODIGO: ${response.statusCode}");
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&

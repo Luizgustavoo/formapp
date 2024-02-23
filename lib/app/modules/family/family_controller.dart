@@ -1,8 +1,12 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
+import 'package:formapp/app/data/repository/family_service_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
@@ -26,6 +30,9 @@ class FamilyController extends GetxController
 
   final TextEditingController subjectController = TextEditingController();
   final TextEditingController messageController = TextEditingController();
+
+  int? idPeopleSelected;
+  int? idFamilySelected;
   final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
 
   RxInt typeOperation = 1.obs; // 1 - Inserir | 2 - Atualizar
@@ -44,26 +51,13 @@ class FamilyController extends GetxController
   RxBool isExpanded = false.obs;
 
   final repository = Get.find<FamilyRepository>();
+  final repositoryService = Get.find<FamilyServiceRepository>();
 
   Animation<double>? animation;
   AnimationController? animationController;
 
   @override
   void onInit() {
-    animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 260),
-    );
-
-    final curvedAnimation =
-        CurvedAnimation(curve: Curves.easeInOut, parent: animationController!);
-    animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
-
-    tabController = TabController(length: 2, vsync: this);
-    tabController!.addListener(() {
-      tabIndex.value = tabController!.index;
-    });
-
     getFamilies();
     super.onInit();
   }
@@ -80,10 +74,7 @@ class FamilyController extends GetxController
     } else {
       listFamilies.assignAll(listFamilies
           .where((family) =>
-              family.nome!.toLowerCase().contains(query.toLowerCase()) ||
-              family.pessoas![0].provedorCasa!
-                  .toLowerCase()
-                  .contains(query.toLowerCase()))
+              family.nome!.toLowerCase().contains(query.toLowerCase()))
           .toList());
     }
   }
@@ -162,7 +153,7 @@ class FamilyController extends GetxController
       final token = box.read('auth')['access_token'];
 
       final mensagem = await repository.updateFamily("Bearer " + token, family);
-      print(mensagem);
+
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
@@ -187,6 +178,28 @@ class FamilyController extends GetxController
   void getFamilies() async {
     final token = box.read('auth')['access_token'];
     listFamilies.value = await repository.getAll("Bearer " + token);
+  }
+
+  void clearAllFamilyTextFields() {
+    // Lista de todos os TextEditingController
+    final textControllers = [
+      idFamiliaController,
+      nomeFamiliaController,
+      cepFamiliaController,
+      ruaFamiliaController,
+      numeroCasaFamiliaController,
+      bairroFamiliaController,
+      cidadeFamiliaController,
+      ufFamiliaController,
+      complementoFamiliaController,
+      residenciaPropriaFamiliaController,
+      statusFamiliaController,
+    ];
+
+    // Itera sobre todos os TextEditingController e limpa cada um deles
+    for (final controller in textControllers) {
+      controller.clear();
+    }
   }
 
   /*PARTE RESPONSAVEL PELO CEP */
@@ -223,11 +236,12 @@ class FamilyController extends GetxController
     subjectController.value = TextEditingValue.empty;
     messageController.value = TextEditingValue.empty;
     selectedDate.value = null;
+    idFamilySelected = null;
+    idPeopleSelected = null;
   }
   /*FINAL PARTE RESPONSAVEL PELO CEP */
 
   /*PARTE RESPONSAVEL PELA FORMATACAO*/
-
   void onCEPChanged(String cep) {
     final formattedCEP = FormattersValidators.formatCEP(cep);
     cepFamiliaController.value = TextEditingValue(
@@ -240,25 +254,30 @@ class FamilyController extends GetxController
     return FormattersValidators.validateCEP(cepFamiliaController.text);
   }
 
-  void clearAllFamilyTextFields() {
-    // Lista de todos os TextEditingController
-    final textControllers = [
-      idFamiliaController,
-      nomeFamiliaController,
-      cepFamiliaController,
-      ruaFamiliaController,
-      numeroCasaFamiliaController,
-      bairroFamiliaController,
-      cidadeFamiliaController,
-      ufFamiliaController,
-      complementoFamiliaController,
-      residenciaPropriaFamiliaController,
-      statusFamiliaController,
-    ];
+  //*MÉTODOS RESPONSAVEIS PELO ATENDIMENTO*/
+  Future<Map<String, dynamic>> saveService() async {
+    Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
-    // Itera sobre todos os TextEditingController e limpa cada um deles
-    for (final controller in textControllers) {
-      controller.clear();
+    FamilyService familyService = FamilyService(
+      descricao: messageController.text,
+      assunto: subjectController.text,
+      dataAtendimento: selectedDate.value.toString(),
+      pessoaId: idPeopleSelected,
+      usuarioId: box.read('auth')['user']['id'],
+    );
+
+    final token = box.read('auth')['access_token'];
+    dynamic mensagem;
+
+    if (await ConnectionStatus.verificarConexao()) {
+      mensagem = await repositoryService.insertService(
+          "Bearer " + token, familyService);
+    } else {
+      await repositoryService.saveFamilyServiceLocal(familyService);
     }
+
+    getFamilies();
+
+    return retorno;
   }
 }

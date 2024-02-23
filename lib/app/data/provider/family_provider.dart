@@ -54,7 +54,6 @@ class FamilyApiClient {
       var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
 
       var requestBody = {
-        // Adicione aqui os campos necessários conforme esperado pela sua API
         "nome": family.nome,
         "cep": family.cep,
         "endereco": family.endereco,
@@ -66,12 +65,7 @@ class FamilyApiClient {
         "residencia_propria": family.residencia_propria,
         "status": family.status.toString(),
         "usuario_id": family.usuario_id.toString(),
-
-        // Adicione os demais campos conforme necessário
       };
-
-      // print(requestBody);
-      // return;
 
       var response = await httpClient.post(
         familyUrl,
@@ -86,8 +80,6 @@ class FamilyApiClient {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||
           json.decode(response.body)['message'] == "ja_existe") {
-        print(json.decode(response.body));
-
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
           json.decode(response.body)['message'] == "Token has expired") {
@@ -119,7 +111,6 @@ class FamilyApiClient {
       var familyUrl = Uri.parse('$baseUrl/v1/familia/update/${family.id}');
 
       var requestBody = {
-        // Adicione aqui os campos necessários conforme esperado pela sua API
         "nome": family.nome,
         "cep": family.cep,
         "endereco": family.endereco,
@@ -131,8 +122,6 @@ class FamilyApiClient {
         "residencia_propria": family.residencia_propria,
         "status": family.status.toString(),
         "usuario_id": family.usuario_id.toString(),
-
-        // Adicione os demais campos conforme necessário
       };
 
       var response = await httpClient.put(
@@ -143,9 +132,6 @@ class FamilyApiClient {
         },
         body: requestBody,
       );
-      print('response body: ');
-      print(json.decode(response.body));
-      print('-----FIMMMM-----');
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -177,7 +163,6 @@ class FamilyApiClient {
     return null;
   }
 
-  /*SALVAR DADOS OFFLINE DA FAMILIA */
   Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
     await localDatabase.insert(familyData, 'family_table');
   }
@@ -203,7 +188,6 @@ class FamilyApiClient {
       'data_update': '2024-02-23',
     };
 
-    // Se não houver conectividade, salva localmente
     await saveFamilyLocally(familyData);
   }
 }

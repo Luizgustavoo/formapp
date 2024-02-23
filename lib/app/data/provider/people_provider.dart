@@ -96,15 +96,10 @@ class PeopleApiClient {
       var responseStream = await response.stream.bytesToString();
       var httpResponse = http.Response(responseStream, response.statusCode);
 
-      // print(json.decode(httpResponse.body));
-      print(response.statusCode);
-
       if (response.statusCode == 200) {
         return json.decode(httpResponse.body);
       } else if (response.statusCode == 422 ||
           json.decode(httpResponse.body)['message'] == "ja_existe") {
-        print(json.decode(httpResponse.body));
-
         return json.decode(httpResponse.body);
       } else if (response.statusCode == 401 &&
           json.decode(httpResponse.body)['message'] == "Token has expired") {
@@ -133,7 +128,6 @@ class PeopleApiClient {
 
   updatePeople(
       String token, People pessoa, File imageFile, String? oldImagePath) async {
-    print('$baseUrl/v1/pessoa/update/${pessoa.id}');
     try {
       var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/update/${pessoa.id}');
 
@@ -180,14 +174,10 @@ class PeopleApiClient {
       var responseStream = await response.stream.bytesToString();
       var httpResponse = http.Response(responseStream, response.statusCode);
 
-      print(json.decode(httpResponse.body));
-
       if (response.statusCode == 200) {
         return json.decode(httpResponse.body);
       } else if (response.statusCode == 422 ||
           json.decode(httpResponse.body)['message'] == "ja_existe") {
-        print(json.decode(httpResponse.body));
-
         return json.decode(httpResponse.body);
       } else if (response.statusCode == 401 &&
           json.decode(httpResponse.body)['message'] == "Token has expired") {

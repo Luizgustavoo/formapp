@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
 class MessageServicePage extends StatelessWidget {
-  MessageServicePage({Key? key, required this.showWidget, this.family})
+  MessageServicePage(
+      {Key? key, required this.showWidget, this.family, this.people})
       : super(key: key);
 
   final bool showWidget;
   final Family? family;
   final FamilyController controller = Get.find();
+  final People? people;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +102,7 @@ class MessageServicePage extends StatelessWidget {
           Text('Mensagem:', style: CustomTextStyle.subtitle(context)),
           TextField(
             controller: controller.messageController,
-            maxLines: 3,
+            maxLines: 4,
             decoration: const InputDecoration(
               hintText: 'Digite a mensagem',
             ),
@@ -116,7 +119,7 @@ class MessageServicePage extends StatelessWidget {
                     Text('Cancelar', style: CustomTextStyle.button2(context)),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   String subject = controller.subjectController.text;
                   String message = controller.messageController.text;
 
@@ -134,11 +137,32 @@ class MessageServicePage extends StatelessWidget {
                     String data = "$ano-$mes-$dia";
                     print('Dataaa: $data');
                   }
+                  if (family != null) {
+                    controller.idFamilySelected = family!.id!;
+                  }
+                  if (people != null) {
+                    controller.idPeopleSelected = people!.id!;
+                  }
+                  Map<String, dynamic> retorno = <String, dynamic>{};
 
-                  print('Assunto: $subject');
-                  print('Mensagem: $message');
+                  if (controller.idPeopleSelected != null) {
+                    retorno = await controller.saveService();
+                  } else {
+                    //salvar a familia
+                  }
 
-                  print(family!.nome!); // Fechar o modal
+                  if (retorno['return'] == 0) {
+                    Get.back();
+                  }
+                  Get.snackbar(
+                    snackPosition: SnackPosition.BOTTOM,
+                    duration: const Duration(milliseconds: 1500),
+                    retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                    retorno['message'],
+                    backgroundColor:
+                        retorno['return'] == 0 ? Colors.green : Colors.red,
+                    colorText: Colors.white,
+                  );
                   Get.back();
                 },
                 child: Text(

@@ -43,25 +43,6 @@ class CustomDrawer extends GetView<HomeController> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     Material(
-                        //       color: Colors.white,
-                        //       elevation: 3,
-                        //       borderRadius:
-                        //           const BorderRadius.all(Radius.circular(60)),
-                        //       child: Padding(
-                        //         padding: const EdgeInsets.all(5),
-                        //         child: CircleAvatar(
-                        //           radius: size.width * .15,
-                        //           backgroundImage: const AssetImage(
-                        //               'assets/images/familia.png'),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: Row(
@@ -86,8 +67,6 @@ class CustomDrawer extends GetView<HomeController> {
                 ),
               ),
               CustomListTile(Icons.home_rounded, 'HOME', () {}, true),
-              CustomListTile(
-                  Icons.settings_rounded, 'CONFIGURAÇÕES', () {}, true),
               CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {
                 controller.clear();
               }, true),

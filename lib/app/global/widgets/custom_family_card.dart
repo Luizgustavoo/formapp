@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
@@ -51,7 +52,7 @@ class CustomFamilyCard extends StatelessWidget {
       child: Card(
         elevation: 3,
         color: local
-            ? Colors.red.shade300
+            ? Colors.red.shade400
             : (stripe ? Colors.grey.shade300 : Colors.white),
         child: Padding(
             padding: const EdgeInsets.only(right: 12),
@@ -64,13 +65,21 @@ class CustomFamilyCard extends StatelessWidget {
               title: Column(
                 children: [
                   ListTile(
-                    leading: CircleAvatar(
-                      child: Text(
-                        family.nome![0].toUpperCase().toString(),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
-                    ),
+                    leading: local
+                        ? IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.refresh_rounded,
+                              size: 32,
+                              color: Colors.white,
+                            ))
+                        : CircleAvatar(
+                            child: Text(
+                              family.nome![0].toUpperCase().toString(),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ),
                     title: Text(familyName,
                         style: CustomTextStyle.subtitleNegrit(context)),
                     subtitle: Column(
@@ -141,11 +150,8 @@ class CustomFamilyCard extends StatelessWidget {
                           children: [
                             IconButton(
                               onPressed: () {
-                                // Altere isso conforme necessário
                                 peopleController.selectedPeople =
                                     family.pessoas![index];
-
-                                print(peopleController.selectedPeople!.foto!);
 
                                 peopleController.fillInFieldsForEditPerson();
                                 showModalBottomSheet(
@@ -177,7 +183,21 @@ class CustomFamilyCard extends StatelessWidget {
 
                             IconButton(
                               iconSize: 22,
-                              onPressed: supportFamily,
+                              onPressed: () {
+                                familyController.clearModalMessageService();
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  isDismissible: false,
+                                  context: context,
+                                  builder: (context) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: MessageServicePage(
+                                      people: family.pessoas![index],
+                                      showWidget: true,
+                                    ),
+                                  ),
+                                );
+                              },
                               icon: const Icon(Icons.support_agent_rounded),
                             ),
                             IconButton(

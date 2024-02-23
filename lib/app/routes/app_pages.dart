@@ -34,21 +34,6 @@ class ApppPages {
       page: () => FamilyView(),
       binding: FamilyBinding(),
     ),
-    // GetPage(
-    //   name: Routes.EDIT_FAMILY,
-    //   page: () => const EditFamilyView(),
-    //   binding: FamilyBinding(),
-    // ),
-    // GetPage(
-    //   name: Routes.CREATE_FAMILY,
-    //   page: () => CreateFamilyView(),
-    //   binding: FamilyBinding(),
-    // ),
-    // GetPage(
-    //   name: Routes.EDIT_PEOPLE,
-    //   page: () => const EditPeopleView(),
-    //   binding: PeopleBinding(),
-    // ),
     GetPage(
       name: Routes.LIST_USER,
       page: () => const ListUserView(),
