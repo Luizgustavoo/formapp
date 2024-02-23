@@ -57,14 +57,14 @@ class FamilyApiClient {
         "nome": family.nome,
         "cep": family.cep,
         "endereco": family.endereco,
-        "numero_casa": family.numero_casa,
+        "numero_casa": family.numeroCasa,
         "bairro": family.bairro,
         "cidade": family.cidade,
         "uf": family.uf,
         "complemento": family.complemento,
-        "residencia_propria": family.residencia_propria,
+        "residencia_propria": family.residenciaPropria,
         "status": family.status.toString(),
-        "usuario_id": family.usuario_id.toString(),
+        "usuario_id": family.usuarioId.toString(),
       };
 
       var response = await httpClient.post(
@@ -114,14 +114,14 @@ class FamilyApiClient {
         "nome": family.nome,
         "cep": family.cep,
         "endereco": family.endereco,
-        "numero_casa": family.numero_casa,
+        "numero_casa": family.numeroCasa,
         "bairro": family.bairro,
         "cidade": family.cidade,
         "uf": family.uf,
         "complemento": family.complemento,
-        "residencia_propria": family.residencia_propria,
+        "residencia_propria": family.residenciaPropria,
         "status": family.status.toString(),
-        "usuario_id": family.usuario_id.toString(),
+        "usuario_id": family.usuarioId.toString(),
       };
 
       var response = await httpClient.put(
@@ -175,13 +175,13 @@ class FamilyApiClient {
     final familyData = {
       'nome': family.nome,
       'endereco': family.endereco,
-      'numero_casa': family.numero_casa,
+      'numero_casa': family.numeroCasa,
       'bairro': family.bairro,
       'cidade': family.cidade,
       'uf': family.uf,
       'complemento': family.complemento,
-      'residencia_propria': family.residencia_propria,
-      'usuario_id': family.usuario_id,
+      'residencia_propria': family.residenciaPropria,
+      'usuario_id': family.usuarioId,
       'status': family.status,
       'cep': family.cep,
       'data_cadastro': '2024-02-22',

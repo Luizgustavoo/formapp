@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, unrelated_type_equality_checks
 import 'dart:io';
 
 import 'package:flutter/material.dart';

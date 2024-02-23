@@ -13,7 +13,6 @@ class PeopleApiClient {
   final DatabaseHelper localDatabase = DatabaseHelper();
 
   getAll(String token) async {
-    print('cheguei aqui get all people');
     try {
       var peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list');
       var response = await httpClient.get(

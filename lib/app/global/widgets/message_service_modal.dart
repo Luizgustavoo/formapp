@@ -49,8 +49,8 @@ class MessageServicePage extends StatelessWidget {
                     DateTime? pickedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
+                      firstDate: DateTime(2023),
+                      lastDate: DateTime.now(),
                     );
 
                     if (pickedDate != null &&
@@ -120,9 +120,6 @@ class MessageServicePage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  String subject = controller.subjectController.text;
-                  String message = controller.messageController.text;
-
                   if (controller.selectedDate.value != null) {
                     String dia = controller.selectedDate.value!.day
                         .toString()

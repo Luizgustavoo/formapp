@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/global/widgets/message_service_modal.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
@@ -9,8 +11,7 @@ import 'package:get/get.dart';
 // ignore: must_be_immutable
 class CustomPeopleCard extends StatelessWidget {
   bool stripe = false;
-  VoidCallback editFamily;
-  VoidCallback deleteFamily;
+
   VoidCallback? addMember;
   VoidCallback? onEditPerson;
   VoidCallback? onDeletePerson;
@@ -20,12 +21,12 @@ class CustomPeopleCard extends StatelessWidget {
 
   CustomPeopleCard({
     Key? key,
-    required this.editFamily,
-    required this.deleteFamily,
     required this.people,
     this.addMember,
     required this.stripe,
   }) : super(key: key);
+
+  final PeopleController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class CustomPeopleCard extends StatelessWidget {
         key: UniqueKey(),
         direction: DismissDirection.startToEnd,
         confirmDismiss: (DismissDirection direction) async {
-          print('arrastei');
+          openFamilySelectionDialog();
           return false; // Retorna false para não remover o item
         },
         background: Container(
@@ -66,6 +67,8 @@ class CustomPeopleCard extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.only(right: 12),
               child: ExpansionTile(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
                 childrenPadding:
                     const EdgeInsets.only(left: 18, right: 18, bottom: 5),
                 onExpansionChanged: (value) {
@@ -75,11 +78,6 @@ class CustomPeopleCard extends StatelessWidget {
                   children: [
                     ListTile(
                       leading: CircleAvatar(
-                        // child: Text(
-                        //   "P",
-                        //   style: TextStyle(
-                        //       fontWeight: FontWeight.bold, fontSize: 20),
-                        // ),
                         backgroundImage: people.foto.toString().isEmpty
                             ? const AssetImage(
                                 'assets/images/default_avatar.jpg')
@@ -133,36 +131,30 @@ class CustomPeopleCard extends StatelessWidget {
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    // peopleController.selectedPeople =
-                                    //     family.pessoas![index];
+                                    controller.selectedService = atendimento;
+                                    controller.fillInFieldsServicePerson();
 
-                                    // peopleController.fillInFieldsForEditPerson();
-                                    // showModalBottomSheet(
-                                    //   isScrollControlled: true,
-                                    //   isDismissible: false,
-                                    //   context: context,
-                                    //   builder: (context) => Padding(
-                                    //     padding: MediaQuery.of(context).viewInsets,
-                                    //     child: AddPeopleFamilyView(
-                                    //       tipoOperacao: 1,
-                                    //       family: family,
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      isDismissible: false,
+                                      context: context,
+                                      builder: (context) => Padding(
+                                        padding:
+                                            MediaQuery.of(context).viewInsets,
+                                        child: MessageServicePage(
+                                          showWidget: true,
+                                          // tipoOperacao: 'update',
+                                          // titulo: 'Alteração do Atendimento',
+                                          people: people,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   icon: const Icon(
                                     Icons.edit_outlined,
                                     size: 22,
                                   ),
                                 ),
-                                // IconButton(
-                                //   onPressed: onDeletePerson,
-                                //   icon: const Icon(
-                                //     Icons.delete_outline,
-                                //     size: 22,
-                                //     color: Colors.red,
-                                //   ),
-                                // ),
                               ],
                             ),
                           ],
@@ -176,4 +168,35 @@ class CustomPeopleCard extends StatelessWidget {
       ),
     );
   }
+}
+
+void openFamilySelectionDialog() {
+  final FamilyController controller = Get.find();
+  Get.dialog(
+    AlertDialog(
+      title: const Text('Selecionar Família'),
+      content: SingleChildScrollView(
+        child: Column(
+          children: controller.listFamilies.map((family) {
+            return CheckboxListTile(
+              title: Text(family.nome!),
+              value: controller.isSelected(family),
+              onChanged: (bool? value) {
+                controller.toggleFamilySelection(family);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            controller.confirmFamilySelection();
+            Get.back();
+          },
+          child: const Text('Confirmar'),
+        ),
+      ],
+    ),
+  );
 }

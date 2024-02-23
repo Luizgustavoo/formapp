@@ -5,16 +5,16 @@ class Family {
   int? id;
   String? nome;
   String? endereco;
-  String? numero_casa;
+  String? numeroCasa;
   String? bairro;
   String? cidade;
   String? uf;
   String? complemento;
-  String? residencia_propria;
-  int? usuario_id;
+  String? residenciaPropria;
+  int? usuarioId;
   int? status;
-  String? data_cadastro;
-  String? data_update;
+  String? dataCadastro;
+  String? dataUpdate;
   String? cep;
   User? user;
   List<People>? pessoas;
@@ -24,16 +24,16 @@ class Family {
       {this.id,
       this.nome,
       this.endereco,
-      this.numero_casa,
+      this.numeroCasa,
       this.bairro,
       this.cidade,
       this.uf,
       this.complemento,
-      this.residencia_propria,
-      this.usuario_id,
+      this.residenciaPropria,
+      this.usuarioId,
       this.status,
-      this.data_cadastro,
-      this.data_update,
+      this.dataCadastro,
+      this.dataUpdate,
       this.cep,
       this.user,
       this.pessoas});
@@ -42,16 +42,16 @@ class Family {
     id = json['id'] as int;
     nome = json['nome'];
     endereco = json['endereco'];
-    numero_casa = json['numero_casa'];
+    numeroCasa = json['numero_casa'];
     bairro = json['bairro'];
     cidade = json['cidade'];
     uf = json['uf'];
     complemento = json['complemento'];
-    residencia_propria = json['residencia_propria'];
-    usuario_id = json['usuario_id'] as int;
+    residenciaPropria = json['residencia_propria'];
+    usuarioId = json['usuario_id'] as int;
     status = json['status'] as int;
-    data_cadastro = json['data_cadastro'];
-    data_update = json['data_update'];
+    dataCadastro = json['data_cadastro'];
+    dataUpdate = json['data_update'];
     cep = json['cep'];
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     if (json['pessoas'] != null) {
@@ -67,16 +67,16 @@ class Family {
     data['id'] = id;
     data['nome'] = nome;
     data['endereco'] = endereco;
-    data['numero_casa'] = numero_casa;
+    data['numero_casa'] = numeroCasa;
     data['bairro'] = bairro;
     data['cidade'] = cidade;
     data['uf'] = uf;
     data['complemento'] = complemento;
-    data['residencia_propria'] = residencia_propria;
-    data['usuario_id'] = usuario_id;
+    data['residencia_propria'] = residenciaPropria;
+    data['usuario_id'] = usuarioId;
     data['status'] = status;
-    data['data_cadastro'] = data_cadastro;
-    data['data_update'] = data_update;
+    data['data_cadastro'] = dataCadastro;
+    data['data_update'] = dataUpdate;
     data['cep'] = cep;
     if (user != null) {
       data['usuario'] = user!.toJson();

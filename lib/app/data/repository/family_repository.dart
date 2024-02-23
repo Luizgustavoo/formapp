@@ -24,9 +24,9 @@ class FamilyRepository {
         list.add(f);
       });
     }
-    for (Family family in list) {
-      print(family.nome);
-    }
+    // for (Family family in list) {
+    //   print(family.nome);
+    // }
     return list;
   }
 

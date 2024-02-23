@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/church_model.dart';
 import 'package:formapp/app/data/models/estado_civil_model.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/models/religion_model.dart';
 import 'package:formapp/app/data/repository/church_repository.dart';
@@ -63,6 +66,7 @@ class PeopleController extends GetxController {
   List<String> suggestions = [];
 
   People? selectedPeople;
+  FamilyService? selectedService;
 
   final peopleRepository = Get.find<PeopleRepository>();
   final familyController = Get.find<FamilyController>();
@@ -141,10 +145,7 @@ class PeopleController extends GetxController {
       final token = box.read('auth')['access_token'];
 
       final mensagem = await peopleRepository.insertPeople(
-          // ignore: prefer_interpolation_to_compose_strings
-          "Bearer " + token,
-          pessoa,
-          File(photoUrlPath.value));
+          "Bearer " + token, pessoa, File(photoUrlPath.value));
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -348,5 +349,14 @@ class PeopleController extends GetxController {
     }
 
     photoUrlPath.value = "";
+  }
+
+  void fillInFieldsServicePerson() {
+    familyController.subjectController.text =
+        selectedService!.assunto.toString();
+    familyController.messageController.text =
+        selectedService!.descricao.toString();
+    familyController.selectedDate.value =
+        DateTime.parse(selectedService!.dataCadastro.toString());
   }
 }

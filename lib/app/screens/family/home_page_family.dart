@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_family_card.dart';
+import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/screens/family/widgets/custom_drawer_family.dart';
-
-import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:get/get.dart';
 
 class HomePageFamily extends StatefulWidget {
@@ -70,7 +69,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageModal(
+                          child: MessageServicePage(
                             showWidget: false,
                           ),
                         ),
@@ -82,7 +81,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageModal(
+                          child: MessageServicePage(
                             showWidget: true,
                           ),
                         ),
@@ -94,7 +93,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageModal(
+                          child: MessageServicePage(
                             showWidget: true,
                           ),
                         ),

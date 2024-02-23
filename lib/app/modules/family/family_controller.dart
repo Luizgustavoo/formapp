@@ -28,8 +28,8 @@ class FamilyController extends GetxController
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
 
-  final TextEditingController subjectController = TextEditingController();
-  final TextEditingController messageController = TextEditingController();
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
 
   int? idPeopleSelected;
   int? idFamilySelected;
@@ -55,6 +55,7 @@ class FamilyController extends GetxController
 
   Animation<double>? animation;
   AnimationController? animationController;
+  dynamic mensagem;
 
   @override
   void onInit() {
@@ -84,13 +85,13 @@ class FamilyController extends GetxController
     nomeFamiliaController.text = selectedFamily!.nome.toString();
     cepFamiliaController.text = selectedFamily!.cep.toString();
     ruaFamiliaController.text = selectedFamily!.endereco.toString();
-    numeroCasaFamiliaController.text = selectedFamily!.numero_casa.toString();
+    numeroCasaFamiliaController.text = selectedFamily!.numeroCasa.toString();
     bairroFamiliaController.text = selectedFamily!.bairro.toString();
     cidadeFamiliaController.text = selectedFamily!.cidade.toString();
     ufFamiliaController.text = selectedFamily!.uf.toString();
     complementoFamiliaController.text = selectedFamily!.complemento.toString();
     residenciaPropriaFamiliaController.text =
-        selectedFamily!.residencia_propria.toString();
+        selectedFamily!.residenciaPropria.toString();
     statusFamiliaController.text = selectedFamily!.status.toString();
   }
 
@@ -104,16 +105,15 @@ class FamilyController extends GetxController
         endereco: ruaFamiliaController.text,
         complemento: complementoFamiliaController.text,
         bairro: bairroFamiliaController.text,
-        numero_casa: numeroCasaFamiliaController.text,
+        numeroCasa: numeroCasaFamiliaController.text,
         cidade: cidadeFamiliaController.text,
         uf: ufFamiliaController.text,
-        residencia_propria: residenceOwn.value ? 'sim' : 'nao',
+        residenciaPropria: residenceOwn.value ? 'sim' : 'nao',
         status: 1,
-        usuario_id: box.read('auth')['user']['id'],
+        usuarioId: box.read('auth')['user']['id'],
       );
 
       final token = box.read('auth')['access_token'];
-      dynamic mensagem;
 
       if (await ConnectionStatus.verificarConexao()) {
         mensagem = await repository.insertFamily("Bearer " + token, family);
@@ -142,12 +142,12 @@ class FamilyController extends GetxController
         endereco: ruaFamiliaController.text,
         complemento: complementoFamiliaController.text,
         bairro: bairroFamiliaController.text,
-        numero_casa: numeroCasaFamiliaController.text,
+        numeroCasa: numeroCasaFamiliaController.text,
         cidade: cidadeFamiliaController.text,
         uf: ufFamiliaController.text,
-        residencia_propria: residenceOwn.value ? 'sim' : 'nao',
+        residenciaPropria: residenceOwn.value ? 'sim' : 'nao',
         status: 1,
-        usuario_id: box.read('auth')['user']['id'],
+        usuarioId: box.read('auth')['user']['id'],
       );
 
       final token = box.read('auth')['access_token'];
@@ -290,5 +290,30 @@ class FamilyController extends GetxController
     getFamilies();
 
     return retorno;
+  }
+
+  /// TESTE
+  List<Family> selectedFamilies = <Family>[].obs;
+
+  bool isSelected(Family family) {
+    return selectedFamilies.contains(family);
+  }
+
+// Método para alternar a seleção de uma família
+  void toggleFamilySelection(Family family) {
+    if (isSelected(family)) {
+      selectedFamilies.remove(family);
+    } else {
+      selectedFamilies.add(family);
+    }
+  }
+
+  void confirmFamilySelection() {
+    print('Famílias selecionadas:');
+    for (Family family in selectedFamilies) {
+      print(family.nome);
+    }
+
+    selectedFamilies.clear();
   }
 }
