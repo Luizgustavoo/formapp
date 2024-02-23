@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/global/widgets/custom_family_card.dart';
 import 'package:formapp/app/global/widgets/custom_people_card.dart';
-
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:get/get.dart';
 
@@ -30,7 +26,9 @@ class ListPeopleView extends GetView<PeopleController> {
         children: [
           SearchWidget(
               controller: controller.searchController,
-              onSearchPressed: (context, a, query) {}),
+              onSearchPressed: (context, a, query) {
+                controller.searchPeople(query);
+              }),
           Expanded(
             child: Obx(() => ListView.builder(
                   shrinkWrap: true,
