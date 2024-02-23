@@ -41,7 +41,10 @@ class CustomPeopleCard extends StatelessWidget {
           return false; // Retorna false para não remover o item
         },
         background: Container(
-          color: Colors.orange.shade300,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.orange.shade300,
+          ),
           child: const Align(
             alignment: Alignment.centerLeft,
             child: Padding(

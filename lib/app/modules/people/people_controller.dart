@@ -97,6 +97,17 @@ class PeopleController extends GetxController {
     super.onClose();
   }
 
+  void searchPeople(String query) {
+    if (query.isEmpty) {
+      getPeoples();
+    } else {
+      listPeoples.assignAll(listPeoples
+          .where((people) =>
+              people.nome!.toLowerCase().contains(query.toLowerCase()))
+          .toList());
+    }
+  }
+
   void getPeoples() async {
     final token = box.read('auth')['access_token'];
     listPeoples.value = await peopleRepository.getALl("Bearer " + token);
