@@ -14,22 +14,17 @@ class FamilyBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut<FamilyController>(() => FamilyController());
+    Get.lazyPut<FamilyRepository>(() => FamilyRepository());
+    Get.lazyPut<FamilyApiClient>(() => FamilyApiClient());
 
     Get.lazyPut<PeopleController>(() => PeopleController());
     Get.lazyPut<PeopleRepository>(() => PeopleRepository());
 
-    Get.lazyPut<FamilyRepository>(() => FamilyRepository());
-
     Get.lazyPut<MaritalStatusRepository>(() => MaritalStatusRepository());
-
     Get.lazyPut<ReligionRepository>(() => ReligionRepository());
-
     Get.lazyPut<ChurchRepository>(() => ChurchRepository());
 
-    Get.lazyPut<FamilyApiClient>(() => FamilyApiClient());
-
     Get.lazyPut<ConectionController>(() => ConectionController());
-
     Get.lazyPut<FamilyServiceRepository>(() => FamilyServiceRepository());
   }
 }

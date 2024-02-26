@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,11 +8,13 @@ import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/models/religion_model.dart';
 import 'package:formapp/app/data/repository/church_repository.dart';
+import 'package:formapp/app/data/repository/family_service_repository.dart';
 import 'package:formapp/app/data/repository/marital_status_repository.dart';
 import 'package:formapp/app/data/repository/people_repository.dart';
 import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/format_validator.dart';
+import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,9 +48,10 @@ class PeopleController extends GetxController {
   RxInt estadoCivilSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
   RxString parentesco = 'Pai'.obs;
-
   RxString oldImagePath = ''.obs;
 
+  int? idPeopleSelected;
+  int? idFamilySelected;
   final repository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.find<ReligionRepository>();
 
@@ -65,11 +66,19 @@ class PeopleController extends GetxController {
   final focus = FocusNode();
   List<String> suggestions = [];
 
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
+  final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
+
   People? selectedPeople;
   FamilyService? selectedService;
 
   final peopleRepository = Get.find<PeopleRepository>();
   final familyController = Get.find<FamilyController>();
+
+  final repositoryService = Get.find<FamilyServiceRepository>();
+
+  Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
   Widget searchChild(x) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
@@ -85,7 +94,6 @@ class PeopleController extends GetxController {
 
   @override
   void onInit() async {
-    //await getMaritalStatus();
     getPeoples();
     getReligion();
     getChurch();
@@ -94,7 +102,6 @@ class PeopleController extends GetxController {
 
   @override
   void onClose() async {
-    //await getMaritalStatus();
     getReligion();
     getPeoples();
     getChurch();
@@ -114,12 +121,10 @@ class PeopleController extends GetxController {
 
   void getPeoples() async {
     final token = box.read('auth')['access_token'];
-    listPeoples.value = await peopleRepository.getALl("Bearer " + token);
+    listPeoples.value = await peopleRepository.getALl("Bearer $token");
   }
 
   Future<Map<String, dynamic>> savePeople(Family family) async {
-    Map<String, dynamic> retorno = {"return": 1, "message": ""};
-
     if (peopleFormKey.currentState!.validate()) {
       People pessoa = People(
           nome: nomePessoaController.text,
@@ -145,7 +150,7 @@ class PeopleController extends GetxController {
       final token = box.read('auth')['access_token'];
 
       final mensagem = await peopleRepository.insertPeople(
-          "Bearer " + token, pessoa, File(photoUrlPath.value));
+          "Bearer $token", pessoa, File(photoUrlPath.value));
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -169,8 +174,6 @@ class PeopleController extends GetxController {
   }
 
   Future<Map<String, dynamic>> updatePeople() async {
-    Map<String, dynamic> retorno = {"return": 1, "message": ""};
-
     if (peopleFormKey.currentState!.validate()) {
       People pessoa = People(
           id: int.parse(idPessoaController.text),
@@ -195,7 +198,7 @@ class PeopleController extends GetxController {
 
       final token = box.read('auth')['access_token'];
 
-      final mensagem = await peopleRepository.updatePeople("Bearer " + token,
+      final mensagem = await peopleRepository.updatePeople("Bearer $token",
           pessoa, File(photoUrlPath.value), oldImagePath.value);
 
       if (mensagem != null) {
@@ -351,12 +354,87 @@ class PeopleController extends GetxController {
     photoUrlPath.value = "";
   }
 
+  //*MÉTODOS RESPONSAVEIS PELO ATENDIMENTO*/
+  Future<Map<String, dynamic>> saveService() async {
+    FamilyService familyService = FamilyService(
+      descricao: messageController.text,
+      assunto: subjectController.text,
+      dataAtendimento: selectedDate.value.toString(),
+      pessoaId: idPeopleSelected,
+      usuarioId: box.read('auth')['user']['id'],
+    );
+
+    final token = box.read('auth')['access_token'];
+    dynamic mensagem;
+
+    if (await ConnectionStatus.verificarConexao()) {
+      mensagem =
+          await repositoryService.insertService("Bearer $token", familyService);
+    } else {
+      await repositoryService.saveFamilyServiceLocal(familyService);
+    }
+
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe uam família com esse nome!"
+        };
+      }
+    }
+    getPeoples();
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> updateService(int id) async {
+    FamilyService familyService = FamilyService(
+      descricao: messageController.text,
+      assunto: subjectController.text,
+      dataAtendimento: selectedDate.value.toString(),
+      pessoaId: idPeopleSelected,
+      usuarioId: box.read('auth')['user']['id'],
+      id: id,
+    );
+
+    final token = box.read('auth')['access_token'];
+
+    final mensagem =
+        await repositoryService.updateService("Bearer $token", familyService);
+
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe uam família com esse nome!"
+        };
+      }
+    }
+
+    getPeoples();
+
+    return retorno;
+  }
+
+  void clearModalMessageService() {
+    subjectController.value = TextEditingValue.empty;
+    messageController.value = TextEditingValue.empty;
+    selectedDate.value = null;
+    idFamilySelected = null;
+    idPeopleSelected = null;
+  }
+
   void fillInFieldsServicePerson() {
-    familyController.subjectController.text =
-        selectedService!.assunto.toString();
-    familyController.messageController.text =
-        selectedService!.descricao.toString();
-    familyController.selectedDate.value =
-        DateTime.parse(selectedService!.dataCadastro.toString());
+    subjectController.text = selectedService!.assunto.toString();
+    messageController.text = selectedService!.descricao.toString();
+
+    if (selectedService!.dataCadastro != null) {
+      selectedDate.value = DateTime.parse(selectedService!.dataAtendimento!);
+    } else {
+      selectedDate.value = DateTime.now();
+    }
   }
 }

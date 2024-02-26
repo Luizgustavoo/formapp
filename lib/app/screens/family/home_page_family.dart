@@ -71,6 +71,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                           padding: MediaQuery.of(context).viewInsets,
                           child: MessageServicePage(
                             showWidget: false,
+                            titulo: '',
                           ),
                         ),
                       );
@@ -83,6 +84,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                           padding: MediaQuery.of(context).viewInsets,
                           child: MessageServicePage(
                             showWidget: true,
+                            titulo: '',
                           ),
                         ),
                       );
@@ -95,6 +97,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                           padding: MediaQuery.of(context).viewInsets,
                           child: MessageServicePage(
                             showWidget: true,
+                            titulo: '',
                           ),
                         ),
                       );

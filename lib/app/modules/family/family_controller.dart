@@ -1,12 +1,11 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
-import 'package:formapp/app/data/repository/family_service_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
@@ -28,22 +27,13 @@ class FamilyController extends GetxController
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
 
-  TextEditingController subjectController = TextEditingController();
-  TextEditingController messageController = TextEditingController();
-
-  int? idPeopleSelected;
-  int? idFamilySelected;
-  final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
-
   RxInt typeOperation = 1.obs; // 1 - Inserir | 2 - Atualizar
 
   final box = GetStorage('credenciado');
   Family? selectedFamily;
   List<People>? listPessoas = [];
 
-  RxInt tabIndex = 0.obs;
   RxList<Family> listFamilies = <Family>[].obs;
-  TabController? tabController;
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
 
   RxBool residenceOwn = false.obs;
@@ -51,11 +41,15 @@ class FamilyController extends GetxController
   RxBool isExpanded = false.obs;
 
   final repository = Get.find<FamilyRepository>();
-  final repositoryService = Get.find<FamilyServiceRepository>();
+
+  // final peopleController = Get.find<PeopleController>();
 
   Animation<double>? animation;
   AnimationController? animationController;
   dynamic mensagem;
+
+  final DatabaseHelper localDatabase = DatabaseHelper();
+  Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
   @override
   void onInit() {
@@ -96,8 +90,6 @@ class FamilyController extends GetxController
   }
 
   Future<Map<String, dynamic>> saveFamily() async {
-    Map<String, dynamic> retorno = {"return": 1, "message": ""};
-
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
         nome: nomeFamiliaController.text,
@@ -132,8 +124,6 @@ class FamilyController extends GetxController
   }
 
   Future<Map<String, dynamic>> updateFamily(int id) async {
-    Map<String, dynamic> retorno = {"return": 1, "message": ""};
-
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
         id: id,
@@ -172,6 +162,42 @@ class FamilyController extends GetxController
         "message": "Preencha todos os campos da família!"
       };
     }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> sendFamilyToAPIOffline(Family family) async {
+    try {
+      if (await ConnectionStatus.verificarConexao()) {
+        final token = box.read('auth')['access_token'];
+
+        // Envia os dados da família para a API
+        var mensagem = await repository.insertFamily("Bearer " + token, family);
+
+        await localDatabase.delete(family.id!, 'family_table');
+
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            retorno = {
+              "return": 0,
+              "message": "Operação realizada com sucesso!"
+            };
+          } else if (mensagem['message'] == 'ja_existe') {
+            retorno = {
+              "return": 1,
+              "message": "Já existe uam família com esse nome!"
+            };
+          }
+        }
+      }
+      getFamilies();
+    } catch (e) {
+      print('Erro ao enviar dados da família para a API: $e');
+    }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> sendFamilyToAPI(Family family) async {
+    await sendFamilyToAPIOffline(family);
     return retorno;
   }
 
@@ -231,14 +257,6 @@ class FamilyController extends GetxController
     complementoFamiliaController.text = '';
     numeroCasaFamiliaController.text = '';
   }
-
-  void clearModalMessageService() {
-    subjectController.value = TextEditingValue.empty;
-    messageController.value = TextEditingValue.empty;
-    selectedDate.value = null;
-    idFamilySelected = null;
-    idPeopleSelected = null;
-  }
   /*FINAL PARTE RESPONSAVEL PELO CEP */
 
   /*PARTE RESPONSAVEL PELA FORMATACAO*/
@@ -252,68 +270,5 @@ class FamilyController extends GetxController
 
   bool validateCEP() {
     return FormattersValidators.validateCEP(cepFamiliaController.text);
-  }
-
-  //*MÉTODOS RESPONSAVEIS PELO ATENDIMENTO*/
-  Future<Map<String, dynamic>> saveService() async {
-    Map<String, dynamic> retorno = {"return": 1, "message": ""};
-
-    FamilyService familyService = FamilyService(
-      descricao: messageController.text,
-      assunto: subjectController.text,
-      dataAtendimento: selectedDate.value.toString(),
-      pessoaId: idPeopleSelected,
-      usuarioId: box.read('auth')['user']['id'],
-    );
-
-    final token = box.read('auth')['access_token'];
-    dynamic mensagem;
-
-    if (await ConnectionStatus.verificarConexao()) {
-      mensagem = await repositoryService.insertService(
-          "Bearer " + token, familyService);
-    } else {
-      await repositoryService.saveFamilyServiceLocal(familyService);
-    }
-
-    if (mensagem != null) {
-      if (mensagem['message'] == 'success') {
-        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-      } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uam família com esse nome!"
-        };
-      }
-    }
-
-    getFamilies();
-
-    return retorno;
-  }
-
-  /// TESTE
-  List<Family> selectedFamilies = <Family>[].obs;
-
-  bool isSelected(Family family) {
-    return selectedFamilies.contains(family);
-  }
-
-// Método para alternar a seleção de uma família
-  void toggleFamilySelection(Family family) {
-    if (isSelected(family)) {
-      selectedFamilies.remove(family);
-    } else {
-      selectedFamilies.add(family);
-    }
-  }
-
-  void confirmFamilySelection() {
-    print('Famílias selecionadas:');
-    for (Family family in selectedFamilies) {
-      print(family.nome);
-    }
-
-    selectedFamilies.clear();
   }
 }

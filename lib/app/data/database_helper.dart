@@ -81,7 +81,7 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<void> updateFamily(
+  Future<void> update(
       int id, Map<String, dynamic> data, String tableName) async {
     final Database db = await getDatabase();
     await db.update(
@@ -95,6 +95,15 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getAllDataLocal(String tableName) async {
     final Database db = await getDatabase();
     return await db.query(tableName);
+  }
+
+  Future<void> delete(int id, String? tableName) async {
+    final Database db = await getDatabase();
+    await db.delete(
+      tableName!,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   // Adicione outros métodos conforme necessário

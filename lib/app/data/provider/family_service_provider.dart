@@ -62,6 +62,58 @@ class FamilyServiceApiClient {
     return null;
   }
 
+  updateService(String token, FamilyService familyService) async {
+    try {
+      var serviceUrlUpdate =
+          Uri.parse('$baseUrl/v1/atendimento/update/${familyService.id}');
+
+      var requestBody = {
+        "data_atendimento": familyService.dataAtendimento,
+        "assunto": familyService.assunto,
+        "descricao": familyService.descricao,
+        "usuario_id": familyService.usuarioId.toString(),
+        "pessoa_id": familyService.pessoaId.toString()
+      };
+
+      var response = await httpClient.put(
+        serviceUrlUpdate,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      Get.defaultDialog(
+        title: "Erro",
+        content: Text("$err"),
+      );
+    }
+    return null;
+  }
+
   /*SALVAR DADOS OFFLINE DO ATENDIMENTO */
   Future<void> saveFamilyServiceLocally(
       Map<String, dynamic> familyServiceData) async {

@@ -67,7 +67,24 @@ class CustomFamilyCard extends StatelessWidget {
                   ListTile(
                     leading: local
                         ? IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              Map<String, dynamic> retorno =
+                                  await familyController
+                                      .sendFamilyToAPI(family);
+
+                              Get.back();
+
+                              Get.snackbar(
+                                snackPosition: SnackPosition.BOTTOM,
+                                duration: const Duration(milliseconds: 1500),
+                                retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                                retorno['message'],
+                                backgroundColor: retorno['return'] == 0
+                                    ? Colors.green
+                                    : Colors.red,
+                                colorText: Colors.white,
+                              );
+                            },
                             icon: const Icon(
                               Icons.refresh_rounded,
                               size: 32,
@@ -172,19 +189,10 @@ class CustomFamilyCard extends StatelessWidget {
                                 size: 22,
                               ),
                             ),
-                            // IconButton(
-                            //   onPressed: onDeletePerson,
-                            //   icon: const Icon(
-                            //     Icons.delete_outline,
-                            //     size: 22,
-                            //     color: Colors.red,
-                            //   ),
-                            // ),
-
                             IconButton(
                               iconSize: 22,
                               onPressed: () {
-                                familyController.clearModalMessageService();
+                                peopleController.clearModalMessageService();
                                 showModalBottomSheet(
                                   isScrollControlled: true,
                                   isDismissible: false,
@@ -194,6 +202,7 @@ class CustomFamilyCard extends StatelessWidget {
                                     child: MessageServicePage(
                                       people: family.pessoas![index],
                                       showWidget: true,
+                                      titulo: '',
                                     ),
                                   ),
                                 );

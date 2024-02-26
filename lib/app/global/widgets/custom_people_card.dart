@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/global/widgets/family_list_modal.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
@@ -38,24 +38,32 @@ class CustomPeopleCard extends StatelessWidget {
         key: UniqueKey(),
         direction: DismissDirection.startToEnd,
         confirmDismiss: (DismissDirection direction) async {
-          openFamilySelectionDialog();
-          return false; // Retorna false para não remover o item
+          if (direction == DismissDirection.startToEnd) {
+            await showModalBottomSheet(
+              context: context,
+              builder: (context) => FamilyListModal(),
+            );
+          }
+          return false;
         },
         background: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: Colors.orange.shade300,
           ),
-          child: const Align(
+          child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'Alterar Família',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Text(
+                    'Alterar Família',
+                    style: CustomTextStyle.button(context),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(Icons.list_rounded, color: Colors.white)
+                ],
               ),
             ),
           ),
@@ -142,9 +150,10 @@ class CustomPeopleCard extends StatelessWidget {
                                         padding:
                                             MediaQuery.of(context).viewInsets,
                                         child: MessageServicePage(
+                                          familyService: atendimento,
                                           showWidget: true,
-                                          // tipoOperacao: 'update',
-                                          // titulo: 'Alteração do Atendimento',
+                                          tipoOperacao: 'update',
+                                          titulo: 'Alteração do Atendimento',
                                           people: people,
                                         ),
                                       ),
@@ -168,35 +177,4 @@ class CustomPeopleCard extends StatelessWidget {
       ),
     );
   }
-}
-
-void openFamilySelectionDialog() {
-  final FamilyController controller = Get.find();
-  Get.dialog(
-    AlertDialog(
-      title: const Text('Selecionar Família'),
-      content: SingleChildScrollView(
-        child: Column(
-          children: controller.listFamilies.map((family) {
-            return CheckboxListTile(
-              title: Text(family.nome!),
-              value: controller.isSelected(family),
-              onChanged: (bool? value) {
-                controller.toggleFamilySelection(family);
-              },
-            );
-          }).toList(),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            controller.confirmFamilySelection();
-            Get.back();
-          },
-          child: const Text('Confirmar'),
-        ),
-      ],
-    ),
-  );
 }

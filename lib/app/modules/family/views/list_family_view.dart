@@ -97,7 +97,7 @@ class FamilyView extends GetView<FamilyController> {
                       );
                     },
                     messageMember: () {
-                      controller.clearModalMessageService();
+                      peopleController.clearModalMessageService();
                       showModalBottomSheet(
                         isScrollControlled: true,
                         isDismissible: false,
@@ -107,12 +107,13 @@ class FamilyView extends GetView<FamilyController> {
                           child: MessageServicePage(
                             family: family,
                             showWidget: false,
+                            titulo: '',
                           ),
                         ),
                       );
                     },
                     supportFamily: () {
-                      controller.clearModalMessageService();
+                      peopleController.clearModalMessageService();
                       showModalBottomSheet(
                         isScrollControlled: true,
                         isDismissible: false,
@@ -122,6 +123,7 @@ class FamilyView extends GetView<FamilyController> {
                           child: MessageServicePage(
                             family: family,
                             showWidget: true,
+                            titulo: '',
                           ),
                         ),
                       );

@@ -15,6 +15,17 @@ class FamilyServiceRepository {
     }
   }
 
+  updateService(String token, FamilyService familyService) async {
+    try {
+      var response = await apiClient.updateService(token, familyService);
+
+      return response;
+    } catch (e) {
+      print('Erro ao atualizar a família: $e');
+      rethrow;
+    }
+  }
+
   saveFamilyServiceLocal(FamilyService familyService) async {
     try {
       var response = await apiClient.saveFamilyServiceLocal(familyService);

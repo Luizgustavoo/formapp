@@ -13,13 +13,14 @@ class PeopleBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut<PeopleController>(() => PeopleController());
-    Get.lazyPut<PeopleController>(() => PeopleController());
     Get.lazyPut<PeopleApiClient>(() => PeopleApiClient());
     Get.lazyPut<PeopleRepository>(() => PeopleRepository());
 
     Get.lazyPut<FamilyController>(() => FamilyController());
     Get.lazyPut<FamilyRepository>(() => FamilyRepository());
+
     Get.lazyPut<FamilyServiceRepository>(() => FamilyServiceRepository());
+
     Get.lazyPut<MaritalStatusRepository>(() => MaritalStatusRepository());
     Get.lazyPut<ReligionRepository>(() => ReligionRepository());
     Get.lazyPut<ChurchRepository>(() => ChurchRepository());

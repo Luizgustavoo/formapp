@@ -156,7 +156,7 @@ class FamilyApiClient {
       }
     } catch (err) {
       Get.defaultDialog(
-        title: "Errorou",
+        title: "Erro",
         content: Text("$err"),
       );
     }
@@ -189,5 +189,19 @@ class FamilyApiClient {
     };
 
     await saveFamilyLocally(familyData);
+  }
+
+  Future<void> deleteFamilyLocally(Family family) async {
+    try {
+      if (family.id != null) {
+        await localDatabase.delete(family.id!, 'family_table');
+        print('Família excluída localmente com sucesso');
+      } else {
+        print('ID da família é nulo. Não é possível excluir.');
+      }
+    } catch (e) {
+      print('Erro ao excluir família localmente: $e');
+      rethrow;
+    }
   }
 }

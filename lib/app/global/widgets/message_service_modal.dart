@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
 class MessageServicePage extends StatelessWidget {
   MessageServicePage(
-      {Key? key, required this.showWidget, this.family, this.people})
+      {Key? key,
+      required this.showWidget,
+      this.family,
+      this.people,
+      this.tipoOperacao = 'insert',
+      required this.titulo,
+      this.familyService})
       : super(key: key);
 
   final bool showWidget;
   final Family? family;
   final FamilyController controller = Get.find();
+  final PeopleController peopleController = Get.find();
   final People? people;
+  final String tipoOperacao;
+  final FamilyService? familyService;
+  final String? titulo;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +37,11 @@ class MessageServicePage extends StatelessWidget {
         children: [
           showWidget
               ? Text(
-                  'Atendimento',
+                  titulo!,
                   style: CustomTextStyle.title(context),
                 )
               : Text(
-                  'Mensagem',
+                  titulo!,
                   style: CustomTextStyle.title(context),
                 ),
           Padding(
@@ -54,8 +66,8 @@ class MessageServicePage extends StatelessWidget {
                     );
 
                     if (pickedDate != null &&
-                        pickedDate != controller.selectedDate.value) {
-                      controller.selectedDate.value = pickedDate;
+                        pickedDate != peopleController.selectedDate.value) {
+                      peopleController.selectedDate.value = pickedDate;
                     }
                   },
                   child: Container(
@@ -73,9 +85,9 @@ class MessageServicePage extends StatelessWidget {
                           color: Colors.orange.shade700,
                         ),
                         Obx(() {
-                          if (controller.selectedDate.value != null) {
+                          if (peopleController.selectedDate.value != null) {
                             return Text(
-                              '${controller.selectedDate.value!.day}/${controller.selectedDate.value!.month}/${controller.selectedDate.value!.year}',
+                              '${peopleController.selectedDate.value!.day}/${peopleController.selectedDate.value!.month}/${peopleController.selectedDate.value!.year}',
                               style: CustomTextStyle.button2(context),
                             );
                           } else {
@@ -93,7 +105,7 @@ class MessageServicePage extends StatelessWidget {
           const SizedBox(height: 10),
           Text('Assunto:', style: CustomTextStyle.subtitle(context)),
           TextField(
-            controller: controller.subjectController,
+            controller: peopleController.subjectController,
             decoration: const InputDecoration(
               hintText: 'Digite o assunto',
             ),
@@ -101,7 +113,7 @@ class MessageServicePage extends StatelessWidget {
           const SizedBox(height: 10),
           Text('Mensagem:', style: CustomTextStyle.subtitle(context)),
           TextField(
-            controller: controller.messageController,
+            controller: peopleController.messageController,
             maxLines: 4,
             decoration: const InputDecoration(
               hintText: 'Digite a mensagem',
@@ -120,32 +132,28 @@ class MessageServicePage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  if (controller.selectedDate.value != null) {
-                    String dia = controller.selectedDate.value!.day
-                        .toString()
-                        .padLeft(2, '0');
-                    String mes = controller.selectedDate.value!.month
-                        .toString()
-                        .padLeft(2, '0');
-                    String ano = controller.selectedDate.value!.year
-                        .toString()
-                        .padLeft(4, '0');
-
-                    String data = "$ano-$mes-$dia";
+                  if (peopleController.selectedDate.value != null) {
+                    String data =
+                        "${peopleController.selectedDate.value!.year.toString().padLeft(4, '0')}-"
+                        "${peopleController.selectedDate.value!.month.toString().padLeft(2, '0')}-"
+                        "${peopleController.selectedDate.value!.day.toString().padLeft(2, '0')}";
                     print('Dataaa: $data');
                   }
                   if (family != null) {
-                    controller.idFamilySelected = family!.id!;
+                    peopleController.idFamilySelected = family!.id!;
                   }
                   if (people != null) {
-                    controller.idPeopleSelected = people!.id!;
+                    peopleController.idPeopleSelected = people!.id!;
                   }
                   Map<String, dynamic> retorno = <String, dynamic>{};
 
-                  if (controller.idPeopleSelected != null) {
-                    retorno = await controller.saveService();
+                  if (peopleController.idPeopleSelected != null) {
+                    retorno = tipoOperacao == 'insert'
+                        ? await peopleController.saveService()
+                        : await peopleController
+                            .updateService(familyService!.id!);
                   } else {
-                    //salvar a familia
+                    //salvar atendimento familia
                   }
 
                   Get.back();

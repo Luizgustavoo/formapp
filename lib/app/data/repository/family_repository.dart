@@ -1,9 +1,11 @@
+import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/provider/family_provider.dart';
 import 'package:formapp/app/utils/internet_connection_status.dart';
 
 class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
+  final DatabaseHelper localDatabase = DatabaseHelper();
 
   getAll(String token) async {
     List<Family> list = <Family>[];
