@@ -29,12 +29,12 @@ class LoginView extends GetView<LoginController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(18),
                     child: Card(
                       color: Colors.white.withAlpha(190),
                       child: Container(
                         padding:
-                            const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                            const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
                         constraints: BoxConstraints(maxWidth: size.width),
                         child: Form(
                           key: controller.formKey,
@@ -45,14 +45,13 @@ class LoginView extends GetView<LoginController> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text("Acessar conta",
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 25,
-                                      )),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(
+                                    "Acessar conta",
+                                    style: CustomTextStyle.login(context),
+                                  ),
                                 ),
                                 const SizedBox(height: 5),
                                 Row(
@@ -87,16 +86,7 @@ class LoginView extends GetView<LoginController> {
                                 TextFormField(
                                   controller: controller.usernameCtrl,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor digite seu usuário';
-                                    }
-                                    bool emailValid = RegExp(
-                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                        .hasMatch(value);
-                                    if (!emailValid) {
-                                      return 'Digite um e-mail válido';
-                                    }
-                                    return null;
+                                    return controller.validateUsername(value);
                                   },
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.all(10),
@@ -113,7 +103,8 @@ class LoginView extends GetView<LoginController> {
                                         color: Colors.grey.shade500,
                                         fontFamily: 'Poppins',
                                         fontSize: 12),
-                                    suffixIcon: const Icon(Icons.email_rounded),
+                                    suffixIcon: const Icon(Icons.email_rounded,
+                                        color: Colors.black54),
                                     border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                         borderRadius:
@@ -124,14 +115,8 @@ class LoginView extends GetView<LoginController> {
                                 Obx(() => TextFormField(
                                       controller: controller.passwordCtrl,
                                       validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Por favor digite sua senha';
-                                        }
-
-                                        if (value.length < 4) {
-                                          return 'A senha deve conter 4 caracteres';
-                                        }
-                                        return null;
+                                        return controller
+                                            .validatePassword(value);
                                       },
                                       obscureText:
                                           !controller.isPasswordVisible.value,
@@ -156,10 +141,12 @@ class LoginView extends GetView<LoginController> {
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                           suffixIcon: Obx(() => IconButton(
-                                                icon: Icon(controller
-                                                        .isPasswordVisible.value
-                                                    ? Icons.visibility_off
-                                                    : Icons.visibility),
+                                                icon: Icon(
+                                                    controller.isPasswordVisible
+                                                            .value
+                                                        ? Icons.visibility_off
+                                                        : Icons.visibility,
+                                                    color: Colors.black54),
                                                 onPressed: () {
                                                   controller.isPasswordVisible
                                                           .value =
@@ -170,22 +157,9 @@ class LoginView extends GetView<LoginController> {
                                               ))),
                                     )),
                                 _gap(),
-                                Obx(() => CheckboxListTile(
-                                      value: controller.rememberMe.value,
-                                      onChanged: (value) {
-                                        if (value == null) return;
-                                        controller.rememberMe.value = value;
-                                      },
-                                      title: Text(
-                                        'Salvar senha',
-                                        style: CustomTextStyle.button2(context),
-                                      ),
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                      dense: true,
-                                      contentPadding: const EdgeInsets.all(0),
-                                    )),
-                                _gap(),
+                                const SizedBox(
+                                  height: 10,
+                                ),
                                 SizedBox(
                                   width: double.infinity,
                                   child: Obx(
@@ -235,22 +209,6 @@ class LoginView extends GetView<LoginController> {
                                     ),
                                   ),
                                 ),
-                                Obx(() {
-                                  if (controller.showErrorSnackbar.value) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      Get.snackbar(
-                                        'Erro de Autenticação',
-                                        'Usuário ou senha inválidos',
-                                        backgroundColor: Colors.red,
-                                        colorText: Colors.white,
-                                      );
-                                      controller.showErrorSnackbar.value =
-                                          false;
-                                    });
-                                  }
-                                  return const SizedBox.shrink();
-                                }),
                               ],
                             ),
                           ),

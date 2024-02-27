@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/global/widgets/login_modal.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:formapp/app/screens/family/home_page_family.dart';
 import 'package:get/get.dart';
 
 import 'package:formapp/app/global/widgets/custom_card.dart';
@@ -78,21 +78,26 @@ class CategoryItems extends StatelessWidget {
               },
               imageUrl: 'assets/images/users.png'),
           CustomCard(
+              title: 'Pessoas',
+              ontap: () {
+                Get.toNamed('/list-people');
+              },
+              imageUrl: 'assets/images/atendimento.png'),
+          CustomCard(
               title: 'Usuários',
               ontap: () {
                 Get.toNamed('/list-user');
               },
               imageUrl: 'assets/images/user.png'),
           CustomCard(
-              title: 'Atendimentos',
-              ontap: () {
-                Get.toNamed('/list-people');
-              },
-              imageUrl: 'assets/images/atendimento.png'),
-          CustomCard(
               title: 'Mensagens',
               ontap: () {
-                Get.to(() => const HomePageFamily());
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return LoginModal();
+                  },
+                );
               },
               imageUrl: 'assets/images/mensage.png'),
         ],

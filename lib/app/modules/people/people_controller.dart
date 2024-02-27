@@ -367,7 +367,7 @@ class PeopleController extends GetxController {
     final token = box.read('auth')['access_token'];
     dynamic mensagem;
 
-    if (await ConnectionStatus.verificarConexao()) {
+    if (await ConnectionStatus.verifyConnection()) {
       mensagem =
           await repositoryService.insertService("Bearer $token", familyService);
     } else {

@@ -175,10 +175,9 @@ class CreateFamilyWidget extends StatelessWidget {
 
   final FamilyController controller = Get.find();
 
-  final ConectionController conectionController = Get.find();
-
   @override
   Widget build(BuildContext context) {
+    ConnectionStatus.verifyConnection();
     return Form(
       key: controller.familyFormKey,
       child: SingleChildScrollView(

@@ -93,7 +93,7 @@ class CustomPeopleCard extends StatelessWidget {
                                     '$urlImagem/public/storage/${people.foto}')
                                 as ImageProvider,
                       ),
-                      title: Text(people.nome!,
+                      title: Text(people.nome!.toUpperCase(),
                           style: CustomTextStyle.subtitleNegrit(context)),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

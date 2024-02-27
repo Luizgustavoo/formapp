@@ -42,8 +42,6 @@ class FamilyController extends GetxController
 
   final repository = Get.find<FamilyRepository>();
 
-  // final peopleController = Get.find<PeopleController>();
-
   Animation<double>? animation;
   AnimationController? animationController;
   dynamic mensagem;
@@ -107,7 +105,7 @@ class FamilyController extends GetxController
 
       final token = box.read('auth')['access_token'];
 
-      if (await ConnectionStatus.verificarConexao()) {
+      if (await ConnectionStatus.verifyConnection()) {
         mensagem = await repository.insertFamily("Bearer " + token, family);
       } else {
         await repository.saveFamilyLocal(family);
@@ -167,7 +165,7 @@ class FamilyController extends GetxController
 
   Future<Map<String, dynamic>> sendFamilyToAPIOffline(Family family) async {
     try {
-      if (await ConnectionStatus.verificarConexao()) {
+      if (await ConnectionStatus.verifyConnection()) {
         final token = box.read('auth')['access_token'];
 
         // Envia os dados da família para a API

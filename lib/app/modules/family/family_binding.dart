@@ -7,7 +7,6 @@ import 'package:formapp/app/data/repository/people_repository.dart';
 import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
 
 class FamilyBinding implements Bindings {
@@ -24,7 +23,6 @@ class FamilyBinding implements Bindings {
     Get.lazyPut<ReligionRepository>(() => ReligionRepository());
     Get.lazyPut<ChurchRepository>(() => ChurchRepository());
 
-    Get.lazyPut<ConectionController>(() => ConectionController());
     Get.lazyPut<FamilyServiceRepository>(() => FamilyServiceRepository());
   }
 }

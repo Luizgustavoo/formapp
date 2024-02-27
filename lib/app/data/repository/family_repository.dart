@@ -18,7 +18,7 @@ class FamilyRepository {
       list.add(f);
     }
 
-    if (await ConnectionStatus.verificarConexao()) {
+    if (await ConnectionStatus.verifyConnection()) {
       var response = await apiClient.getAll(token);
       response.forEach((e) {
         Family f = Family.fromJson(e);

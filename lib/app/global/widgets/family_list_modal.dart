@@ -20,9 +20,7 @@ class FamilyListModal extends StatelessWidget {
           return ListTile(
             title: Text(family.nome!),
             subtitle: Text('Endereço: ${family.endereco}, ${family.cidade}'),
-            onTap: () {
-              // Faça algo ao selecionar uma família, se necessário
-            },
+            onTap: () {},
           );
         },
       ),
