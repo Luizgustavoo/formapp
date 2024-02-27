@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/global/widgets/login_modal.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
+import 'package:formapp/app/utils/verify_token.dart';
 import 'package:get/get.dart';
 
 import 'package:formapp/app/global/widgets/custom_card.dart';
@@ -74,7 +75,9 @@ class CategoryItems extends StatelessWidget {
           CustomCard(
               title: 'Famílias',
               ontap: () {
-                Get.toNamed("/list-family");
+                if (!VerifyToken.isTokenExpired(context)) {
+                  Get.toNamed("/list-family");
+                }
               },
               imageUrl: 'assets/images/users.png'),
           CustomCard(
