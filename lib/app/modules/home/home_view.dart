@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/global/widgets/login_modal.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:formapp/app/utils/verify_token.dart';
 import 'package:get/get.dart';
 
 import 'package:formapp/app/global/widgets/custom_card.dart';
@@ -75,9 +73,7 @@ class CategoryItems extends StatelessWidget {
           CustomCard(
               title: 'Famílias',
               ontap: () {
-                if (!VerifyToken.isTokenExpired(context)) {
-                  Get.toNamed("/list-family");
-                }
+                Get.toNamed("/list-family");
               },
               imageUrl: 'assets/images/users.png'),
           CustomCard(
@@ -94,14 +90,7 @@ class CategoryItems extends StatelessWidget {
               imageUrl: 'assets/images/user.png'),
           CustomCard(
               title: 'Mensagens',
-              ontap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return LoginModal();
-                  },
-                );
-              },
+              ontap: () {},
               imageUrl: 'assets/images/mensage.png'),
         ],
       ),

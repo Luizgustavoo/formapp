@@ -40,4 +40,15 @@ class PeopleRepository {
       rethrow;
     }
   }
+
+  changePeopleFamily(String token, People pessoa) async {
+    try {
+      var response = await apiClient.changePeopleFamily(token, pessoa);
+
+      return response;
+    } catch (e) {
+      print('Erro ao inserir a família: $e');
+      rethrow;
+    }
+  }
 }

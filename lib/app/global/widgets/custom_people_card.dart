@@ -41,7 +41,9 @@ class CustomPeopleCard extends StatelessWidget {
           if (direction == DismissDirection.startToEnd) {
             await showModalBottomSheet(
               context: context,
-              builder: (context) => FamilyListModal(),
+              builder: (context) => FamilyListModal(
+                people: people,
+              ),
             );
           }
           return false;

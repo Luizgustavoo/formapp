@@ -222,6 +222,31 @@ class PeopleController extends GetxController {
     return retorno;
   }
 
+  Future<Map<String, dynamic>> changePeopleFamily(int familyId, int id) async {
+    People pessoa = People(familiaId: familyId, id: id);
+    final token = box.read('auth')['access_token'];
+
+    final mensagem =
+        await peopleRepository.changePeopleFamily("Bearer $token", pessoa);
+
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe uma pessoa com esse cpf!"
+        };
+      }
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
+    }
+    return retorno;
+  }
+
   void removePeople(People pessoa) {
     composicaoFamiliar.remove(pessoa);
   }

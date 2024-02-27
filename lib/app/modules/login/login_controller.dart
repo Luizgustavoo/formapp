@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/auth_model.dart';
 import 'package:formapp/app/data/repository/auth_repository.dart';
-import 'package:formapp/app/global/widgets/login_modal.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -29,9 +28,7 @@ class LoginController extends GetxController {
       auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
 
       if (auth != null) {
-        final atualHour = DateTime.now();
         box.write('auth', auth?.toJson());
-        box.write('dataLogin', atualHour);
         Get.offAllNamed('/home');
       } else {
         showErrorSnackbar.value = true;
@@ -83,28 +80,5 @@ class LoginController extends GetxController {
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
-  }
-
-  //*TOKEN EXPIROU*/
-  void verificarTokenExpirado() {
-    if (tokenExpirou()) {
-      exibirModalLogin();
-    }
-  }
-
-  bool tokenExpirou() {
-    final authData = box.read('auth');
-    if (authData != null) {
-      final expiresIn = authData['expires_in'] as String?;
-      if (expiresIn != null) {
-        final expirationDate = DateTime.parse(expiresIn);
-        return DateTime.now().isAfter(expirationDate);
-      }
-    }
-    return true;
-  }
-
-  void exibirModalLogin() {
-    Get.dialog(LoginModal());
   }
 }

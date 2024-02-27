@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:formapp/app/modules/family/family_binding.dart';
+import 'package:formapp/app/modules/initial/initial_binding.dart';
 import 'package:formapp/app/routes/app_pages.dart';
 import 'package:formapp/app/routes/app_routes.dart';
 import 'package:formapp/app/theme/app_theme.dart';
@@ -18,6 +18,6 @@ void main() async {
     theme: appThemeData,
     initialRoute: Routes.INITIAL,
     getPages: ApppPages.routes,
-    initialBinding: FamilyBinding(),
+    initialBinding: InitialBinding(),
   ));
 }

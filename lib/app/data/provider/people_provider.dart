@@ -204,6 +204,53 @@ class PeopleApiClient {
     return null;
   }
 
+  changePeopleFamily(String token, People people) async {
+    try {
+      var familyUrl = Uri.parse('$baseUrl/v1/pessoa/change/${people.id}');
+
+      var requestBody = {
+        "familia_id": people.familiaId.toString(),
+      };
+
+      var response = await httpClient.put(
+        familyUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      Get.defaultDialog(
+        title: "Erro",
+        content: Text("$err"),
+      );
+    }
+    return null;
+  }
+
   /*SALVAR DADOS OFFLINE DA PESSOA */
   Future<void> savePeopleLocally(Map<String, dynamic> peopleData) async {
     await localDatabase.insert(peopleData, 'people_table');
