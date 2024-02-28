@@ -8,41 +8,34 @@ class CreateUserView extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
+    return Form(
+        key: controller.userFormKey,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(
-                height: 20,
+              Text(
+                "Controle de Usuário",
+                style: CustomTextStyle.title(context),
               ),
-              const SizedBox(
-                child: Text(
-                  'Informações do Usuário',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: 'Poppins',
-                    fontSize: 20,
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Divider(
+                  height: 5,
+                  thickness: 3,
+                  color: Colors.orange.shade500,
                 ),
               ),
-              Divider(
-                height: 5,
-                thickness: 3,
-                color: Colors.orange.shade500,
+              const SizedBox(
+                height: 15,
               ),
-            ],
-          ),
-        ),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.only(left: 12, right: 12, top: 5),
-          child: Column(
-            children: [
               TextFormField(
+                validator: (value) {
+                  return controller.validateName(value);
+                },
+                controller: controller.nameController,
                 decoration: const InputDecoration(
                     suffixIcon: Icon(Icons.person),
                     labelText: 'Nome Completo',
@@ -52,6 +45,10 @@ class CreateUserView extends GetView<UserController> {
                 height: 8,
               ),
               TextFormField(
+                validator: (value) {
+                  return controller.validateLogin(value);
+                },
+                controller: controller.loginController,
                 decoration: const InputDecoration(
                     suffixIcon: Icon(Icons.person),
                     labelText: 'Login',
@@ -60,26 +57,45 @@ class CreateUserView extends GetView<UserController> {
               const SizedBox(
                 height: 8,
               ),
-              TextFormField(
-                decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.lock),
-                    labelText: 'Senha',
-                    border: OutlineInputBorder()),
-              ),
+              Obx(() => TextFormField(
+                    validator: (value) {
+                      return controller.validatePassword(value);
+                    },
+                    controller: controller.passwordController,
+                    obscureText: !controller.isPasswordVisible.value,
+                    decoration: InputDecoration(
+                        suffixIcon: Obx(() => IconButton(
+                              icon: Icon(
+                                  controller.isPasswordVisible.value
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.black54),
+                              onPressed: () {
+                                controller.isPasswordVisible.value =
+                                    !controller.isPasswordVisible.value;
+                              },
+                            )),
+                        labelText: 'Senha',
+                        border: const OutlineInputBorder()),
+                  )),
               const SizedBox(
-                height: 8,
+                height: 16,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                      },
                       child: Text(
                         'CANCELAR',
                         style: CustomTextStyle.button2(context),
                       )),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.saveUser();
+                      },
                       child: Text(
                         'SALVAR',
                         style: CustomTextStyle.button(context),
@@ -88,8 +104,6 @@ class CreateUserView extends GetView<UserController> {
               )
             ],
           ),
-        ))
-      ],
-    );
+        ));
   }
 }

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
@@ -109,7 +107,7 @@ class FamilyController extends GetxController
       final token = box.read('auth')['access_token'];
 
       if (await ConnectionStatus.verifyConnection()) {
-        mensagem = await repository.insertFamily("Bearer " + token, family);
+        mensagem = await repository.insertFamily("Bearer $token", family);
       } else {
         mensagem = await repository.saveFamilyLocal(family);
         if (int.parse(mensagem.toString()) > 0) {
@@ -146,7 +144,7 @@ class FamilyController extends GetxController
 
       final token = box.read('auth')['access_token'];
 
-      final mensagem = await repository.updateFamily("Bearer " + token, family);
+      final mensagem = await repository.updateFamily("Bearer $token", family);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -173,7 +171,7 @@ class FamilyController extends GetxController
     try {
       if (await ConnectionStatus.verifyConnection()) {
         final token = box.read('auth')['access_token'];
-        var mensagem = await repository.insertFamily("Bearer " + token, family);
+        var mensagem = await repository.insertFamily("Bearer $token", family);
 
         await localDatabase.delete(family.id!, 'family_table');
 
@@ -205,7 +203,7 @@ class FamilyController extends GetxController
 
   void getFamilies() async {
     final token = box.read('auth')['access_token'];
-    listFamilies.value = await repository.getAll("Bearer " + token);
+    listFamilies.value = await repository.getAll("Bearer $token");
   }
 
   void clearAllFamilyTextFields() {
@@ -230,7 +228,7 @@ class FamilyController extends GetxController
     }
   }
 
-  /*PARTE RESPONSAVEL PELO CEP */
+  //?PARTE RESPONSAVEL PELO CEP */
   void searchCEP() async {
     final cep = cepFamiliaController.text;
     final addressData = await ViaCEPService.getAddressFromCEP(cep);
@@ -259,7 +257,7 @@ class FamilyController extends GetxController
     complementoFamiliaController.text = '';
     numeroCasaFamiliaController.text = '';
   }
-  /*FINAL PARTE RESPONSAVEL PELO CEP */
+  //?FINAL DA PARTE RESPONSAVEL PELO CEP */
 
   /*PARTE RESPONSAVEL PELA FORMATACAO*/
   void onCEPChanged(String cep) {
