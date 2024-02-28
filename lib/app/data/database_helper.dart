@@ -75,10 +75,12 @@ class DatabaseHelper {
     ''');
   }
 
-  Future<void> insert(Map<String, dynamic> data, String tableName) async {
+  Future<dynamic> insert(Map<String, dynamic> data, String tableName) async {
     final Database db = await getDatabase();
-    await db.insert(tableName, data,
+    var response = await db.insert(tableName, data,
         conflictAlgorithm: ConflictAlgorithm.replace);
+
+    return response;
   }
 
   Future<void> update(
@@ -105,6 +107,4 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
-
-  // Adicione outros métodos conforme necessário
 }

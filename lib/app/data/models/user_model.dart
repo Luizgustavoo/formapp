@@ -6,7 +6,7 @@ class User {
   int? status;
   String? dataCadastro;
   String? dataUpdate;
-  String? rememberToken;
+  String? password;
 
   User(
       {this.id,
@@ -16,7 +16,7 @@ class User {
       this.status,
       this.dataCadastro,
       this.dataUpdate,
-      this.rememberToken});
+      this.password});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -26,7 +26,7 @@ class User {
     status = json['status'];
     dataCadastro = json['data_cadastro'];
     dataUpdate = json['data_update'];
-    rememberToken = json['remember_token'];
+    password = json['password'];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,7 +38,7 @@ class User {
     data['status'] = status;
     data['data_cadastro'] = dataCadastro;
     data['data_update'] = dataUpdate;
-    data['remember_token'] = rememberToken;
+    data['password'] = password;
     return data;
   }
 }

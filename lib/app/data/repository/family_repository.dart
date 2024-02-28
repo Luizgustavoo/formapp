@@ -1,7 +1,7 @@
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/provider/family_provider.dart';
-import 'package:formapp/app/utils/internet_connection_status.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 
 class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
@@ -26,9 +26,6 @@ class FamilyRepository {
         list.add(f);
       });
     }
-    // for (Family family in list) {
-    //   print(family.nome);
-    // }
     return list;
   }
 

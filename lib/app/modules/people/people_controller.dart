@@ -7,6 +7,7 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/models/religion_model.dart';
+import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/data/repository/church_repository.dart';
 import 'package:formapp/app/data/repository/family_service_repository.dart';
 import 'package:formapp/app/data/repository/marital_status_repository.dart';
@@ -14,7 +15,6 @@ import 'package:formapp/app/data/repository/people_repository.dart';
 import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/format_validator.dart';
-import 'package:formapp/app/utils/internet_connection_status.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -79,6 +79,8 @@ class PeopleController extends GetxController {
   final repositoryService = Get.find<FamilyServiceRepository>();
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
+  final status = Get.find<InternetStatusProvider>().status;
 
   Widget searchChild(x) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
@@ -352,7 +354,6 @@ class PeopleController extends GetxController {
   }
 
   void clearAllPeopleTextFields() {
-    // Lista de todos os TextEditingController
     final textControllers = [
       idPessoaController,
       nomePessoaController,
@@ -392,11 +393,11 @@ class PeopleController extends GetxController {
     final token = box.read('auth')['access_token'];
     dynamic mensagem;
 
-    if (await ConnectionStatus.verifyConnection()) {
+    if (status == InternetStatus.disconnected) {
+      await repositoryService.saveFamilyServiceLocal(familyService);
+    } else {
       mensagem =
           await repositoryService.insertService("Bearer $token", familyService);
-    } else {
-      await repositoryService.saveFamilyServiceLocal(familyService);
     }
 
     if (mensagem != null) {

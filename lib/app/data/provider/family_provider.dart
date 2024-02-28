@@ -163,15 +163,16 @@ class FamilyApiClient {
     return null;
   }
 
-  Future<void> saveFamilyLocally(Map<String, dynamic> familyData) async {
-    await localDatabase.insert(familyData, 'family_table');
+  Future<dynamic> saveFamilyLocally(Map<String, dynamic> familyData) async {
+    var retorno = await localDatabase.insert(familyData, 'family_table');
+    return retorno;
   }
 
   Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
     return await localDatabase.getAllDataLocal('family_table');
   }
 
-  Future<void> saveFamilyLocal(Family family) async {
+  Future<dynamic> saveFamilyLocal(Family family) async {
     final familyData = {
       'nome': family.nome,
       'endereco': family.endereco,
@@ -188,7 +189,7 @@ class FamilyApiClient {
       'data_update': '2024-02-23',
     };
 
-    await saveFamilyLocally(familyData);
+    return await saveFamilyLocally(familyData);
   }
 
   Future<void> deleteFamilyLocally(Family family) async {

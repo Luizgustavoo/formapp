@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
-import 'package:formapp/app/utils/internet_connection_status.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -27,7 +28,7 @@ class FamilyController extends GetxController
       TextEditingController();
   TextEditingController statusFamiliaController = TextEditingController();
 
-  RxInt typeOperation = 1.obs; // 1 - Inserir | 2 - Atualizar
+  RxInt typeOperation = 1.obs;
 
   final box = GetStorage('credenciado');
   Family? selectedFamily;
@@ -48,6 +49,8 @@ class FamilyController extends GetxController
 
   final DatabaseHelper localDatabase = DatabaseHelper();
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
+  final status = Get.find<InternetStatusProvider>().status;
 
   @override
   void onInit() {
@@ -108,7 +111,10 @@ class FamilyController extends GetxController
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await repository.insertFamily("Bearer " + token, family);
       } else {
-        await repository.saveFamilyLocal(family);
+        mensagem = await repository.saveFamilyLocal(family);
+        if (int.parse(mensagem.toString()) > 0) {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        }
       }
 
       getFamilies();
@@ -167,8 +173,6 @@ class FamilyController extends GetxController
     try {
       if (await ConnectionStatus.verifyConnection()) {
         final token = box.read('auth')['access_token'];
-
-        // Envia os dados da família para a API
         var mensagem = await repository.insertFamily("Bearer " + token, family);
 
         await localDatabase.delete(family.id!, 'family_table');

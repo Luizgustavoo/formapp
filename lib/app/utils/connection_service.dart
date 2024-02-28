@@ -6,3 +6,8 @@ abstract class ConnectionStatus {
     return conexaoResult != ConnectivityResult.none;
   }
 }
+
+class ConnectivityService {
+  Stream<ConnectivityResult> get connectivityStream =>
+      Connectivity().onConnectivityChanged;
+}

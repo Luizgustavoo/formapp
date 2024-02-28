@@ -15,7 +15,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
       child: TextField(
         controller: widget.controller,
         onChanged: (query) {
