@@ -10,7 +10,7 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_family_card.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
+import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 
 import '../../../global/shimmer/shimmer_custom_family_card.dart';
 
@@ -35,8 +35,8 @@ class FamilyView extends GetView<FamilyController> {
                   context: context,
                   builder: (context) => Padding(
                     padding: MediaQuery.of(context).viewInsets,
-                    child: CreateFamilyWidget(
-                      tipoOperacao: 'inserir',
+                    child: CreateFamilyModal(
+                      tipoOperacao: 'insert',
                       titulo: "Cadastro de Família",
                     ),
                   ),
@@ -97,7 +97,7 @@ class FamilyView extends GetView<FamilyController> {
                           context: context,
                           builder: (context) => Padding(
                             padding: MediaQuery.of(context).viewInsets,
-                            child: CreateFamilyWidget(
+                            child: CreateFamilyModal(
                               tipoOperacao: 'update',
                               titulo: 'Alteração da Família',
                               family: family,

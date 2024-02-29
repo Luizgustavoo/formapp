@@ -4,8 +4,8 @@ import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
-class CreateFamilyWidget extends StatelessWidget {
-  CreateFamilyWidget({
+class CreateFamilyModal extends StatelessWidget {
+  CreateFamilyModal({
     Key? key,
     this.family,
     required this.titulo,
@@ -218,7 +218,7 @@ class CreateFamilyWidget extends StatelessWidget {
                     )),
                 ElevatedButton(
                     onPressed: () async {
-                      Map<String, dynamic> retorno = tipoOperacao == 'inserir'
+                      Map<String, dynamic> retorno = tipoOperacao == 'insert'
                           ? await controller.saveFamily()
                           : await controller.updateFamily(family!.id!);
 

@@ -11,5 +11,4 @@ abstract class Routes {
   static const LIST_PEOPLE = '/list-people';
 
   static const LIST_USER = '/list-user';
-  static const CREATE_USER = '/create-user';
 }

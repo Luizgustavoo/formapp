@@ -11,10 +11,12 @@ import 'package:http/http.dart' as http;
 class PeopleApiClient {
   final http.Client httpClient = http.Client();
   final DatabaseHelper localDatabase = DatabaseHelper();
+  final box = GetStorage('credenciado');
 
   getAll(String token) async {
+    final id = box.read('auth')['user']['id'];
     try {
-      var peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list');
+      var peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list/id/$id');
       var response = await httpClient.get(
         peopleUrl,
         headers: {

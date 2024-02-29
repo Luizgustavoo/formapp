@@ -26,4 +26,15 @@ class UserRepository {
       rethrow;
     }
   }
+
+  updateUser(String token, User user) async {
+    try {
+      var response = await apiClient.updateUser(token, user);
+
+      return response;
+    } catch (e) {
+      print('Erro ao atualizar a família: $e');
+      rethrow;
+    }
+  }
 }

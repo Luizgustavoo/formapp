@@ -10,10 +10,12 @@ import 'package:http/http.dart' as http;
 class FamilyApiClient {
   final http.Client httpClient = http.Client();
   final DatabaseHelper localDatabase = DatabaseHelper();
+  final box = GetStorage('credenciado');
 
   getAll(String token) async {
+    final id = box.read('auth')['user']['id'];
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/familia/list');
+      var familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
       var response = await httpClient.get(
         familyUrl,
         headers: {

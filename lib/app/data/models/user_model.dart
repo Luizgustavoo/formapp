@@ -7,6 +7,8 @@ class User {
   String? dataCadastro;
   String? dataUpdate;
   String? password;
+  int? usuarioId;
+  User? user;
 
   User(
       {this.id,
@@ -16,6 +18,8 @@ class User {
       this.status,
       this.dataCadastro,
       this.dataUpdate,
+      this.user,
+      this.usuarioId,
       this.password});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,8 @@ class User {
     dataCadastro = json['data_cadastro'];
     dataUpdate = json['data_update'];
     password = json['password'];
+    usuarioId = json['usuario_id'] as int;
+    user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +45,10 @@ class User {
     data['data_cadastro'] = dataCadastro;
     data['data_update'] = dataUpdate;
     data['password'] = password;
+    data['usuario_id'] = usuarioId;
+    if (user != null) {
+      data['usuario'] = user!.toJson();
+    }
     return data;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/data/repository/user_repository.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -10,6 +11,8 @@ class UserController extends GetxController {
 
   final box = GetStorage('credenciado');
   final repository = Get.find<UserRepository>();
+
+  User? selectedUser;
 
   final GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
 
@@ -56,8 +59,7 @@ class UserController extends GetxController {
   void getUsers() async {
     final token = box.read('auth')['access_token'];
 
-    // ignore: prefer_interpolation_to_compose_strings
-    listUsers.value = await repository.getAll("Bearer " + token);
+    listUsers.value = await repository.getAll("Bearer $token");
   }
 
   //*VALIDAÇÕES*/
@@ -104,11 +106,65 @@ class UserController extends GetxController {
         username: usernameController.text,
         password: passwordController.text,
         tipousuarioId: 3,
+        status: 1,
+        usuarioId: box.read('auth')['user']['id'],
       );
 
       final token = box.read('auth')['access_token'];
 
-      mensagem = await userRepository.insertUser("Bearer $token", user);
+      if (await ConnectionStatus.verifyConnection()) {
+        mensagem = await userRepository.insertUser("Bearer $token", user);
+        print(mensagem);
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            retorno = {
+              "return": 0,
+              "message": "Operação realizada com sucesso!"
+            };
+          } else if (mensagem['message'] == 'ja_existe') {
+            retorno = {
+              "return": 1,
+              "message": "Já existe um usuário com esse e-mail!"
+            };
+          }
+        }
+      }
+
+      getUsers();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos do usuário!"
+      };
+    }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> updateUser(int id) async {
+    if (userFormKey.currentState!.validate()) {
+      User user = User(
+        nome: nameController.text,
+        username: usernameController.text,
+        password: passwordController.text,
+        tipousuarioId: 3,
+        status: 1,
+        usuarioId: box.read('auth')['user']['id'],
+      );
+
+      final token = box.read('auth')['access_token'];
+
+      final mensagem = await repository.updateUser("Bearer $token", user);
+
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe uam família com esse nome!"
+          };
+        }
+      }
 
       getUsers();
     } else {
@@ -118,5 +174,22 @@ class UserController extends GetxController {
       };
     }
     return retorno;
+  }
+
+  void fillInUserFields() {
+    nameController.text = selectedUser!.nome.toString();
+    usernameController.text = selectedUser!.username.toString();
+    passwordController.text = selectedUser!.password.toString();
+  }
+
+  void clearAllUserTextFields() {
+    final textControllers = [
+      nameController,
+      usernameController,
+      passwordController
+    ];
+    for (final controller in textControllers) {
+      controller.clear();
+    }
   }
 }

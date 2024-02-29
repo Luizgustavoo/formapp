@@ -73,21 +73,6 @@ class FamilyController extends GetxController
     }
   }
 
-  void fillInFields() {
-    idFamiliaController.text = selectedFamily!.id.toString();
-    nomeFamiliaController.text = selectedFamily!.nome.toString();
-    cepFamiliaController.text = selectedFamily!.cep.toString();
-    ruaFamiliaController.text = selectedFamily!.endereco.toString();
-    numeroCasaFamiliaController.text = selectedFamily!.numeroCasa.toString();
-    bairroFamiliaController.text = selectedFamily!.bairro.toString();
-    cidadeFamiliaController.text = selectedFamily!.cidade.toString();
-    ufFamiliaController.text = selectedFamily!.uf.toString();
-    complementoFamiliaController.text = selectedFamily!.complemento.toString();
-    residenciaPropriaFamiliaController.text =
-        selectedFamily!.residenciaPropria.toString();
-    statusFamiliaController.text = selectedFamily!.status.toString();
-  }
-
   Future<Map<String, dynamic>> saveFamily() async {
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
@@ -152,7 +137,7 @@ class FamilyController extends GetxController
         } else if (mensagem['message'] == 'ja_existe') {
           retorno = {
             "return": 1,
-            "message": "Já existe uam família com esse nome!"
+            "message": "Já existe uma família com esse nome!"
           };
         }
       }
@@ -226,6 +211,21 @@ class FamilyController extends GetxController
     for (final controller in textControllers) {
       controller.clear();
     }
+  }
+
+  void fillInFields() {
+    idFamiliaController.text = selectedFamily!.id.toString();
+    nomeFamiliaController.text = selectedFamily!.nome.toString();
+    cepFamiliaController.text = selectedFamily!.cep.toString();
+    ruaFamiliaController.text = selectedFamily!.endereco.toString();
+    numeroCasaFamiliaController.text = selectedFamily!.numeroCasa.toString();
+    bairroFamiliaController.text = selectedFamily!.bairro.toString();
+    cidadeFamiliaController.text = selectedFamily!.cidade.toString();
+    ufFamiliaController.text = selectedFamily!.uf.toString();
+    complementoFamiliaController.text = selectedFamily!.complemento.toString();
+    residenciaPropriaFamiliaController.text =
+        selectedFamily!.residenciaPropria.toString();
+    statusFamiliaController.text = selectedFamily!.status.toString();
   }
 
   //?PARTE RESPONSAVEL PELO CEP */

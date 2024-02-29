@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/family/views/add_people_family_view.dart';
+import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
@@ -158,10 +158,12 @@ class CustomFamilyCard extends StatelessWidget {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          family.pessoas![index].nome!,
-                          overflow: TextOverflow.clip,
-                          style: CustomTextStyle.subtitle(context),
+                        Flexible(
+                          child: Text(
+                            family.pessoas![index].nome!,
+                            overflow: TextOverflow.clip,
+                            style: CustomTextStyle.subtitle(context),
+                          ),
                         ),
                         Row(
                           children: [

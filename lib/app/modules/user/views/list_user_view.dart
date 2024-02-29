@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/modules/user/views/create_user_view.dart';
+import 'package:formapp/app/global/widgets/create_user_modal.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
@@ -17,13 +17,17 @@ class ListUserView extends GetView<UserController> {
         actions: [
           IconButton(
               onPressed: () {
+                controller.clearAllUserTextFields();
                 showModalBottomSheet(
                   isScrollControlled: true,
                   isDismissible: false,
                   context: context,
                   builder: (context) => Padding(
                     padding: MediaQuery.of(context).viewInsets,
-                    child: const CreateUserView(),
+                    child: CreateUserModal(
+                      tipoOperacao: 'insert',
+                      titulo: 'Cadastro de Usuário',
+                    ),
                   ),
                 );
               },
@@ -45,7 +49,23 @@ class ListUserView extends GetView<UserController> {
                       return Card(
                         child: ListTile(
                           leading: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                controller.selectedUser = user;
+                                controller.fillInUserFields();
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  isDismissible: false,
+                                  context: context,
+                                  builder: (context) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: CreateUserModal(
+                                      tipoOperacao: 'update',
+                                      titulo: 'Alteração de Usuário',
+                                      user: user,
+                                    ),
+                                  ),
+                                );
+                              },
                               icon: const Icon(Icons.edit_outlined,
                                   color: Colors.blue, size: 25)),
                           trailing: IconButton(

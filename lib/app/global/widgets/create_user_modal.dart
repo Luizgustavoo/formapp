@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
-class CreateUserView extends GetView<UserController> {
-  const CreateUserView({super.key});
+class CreateUserModal extends StatelessWidget {
+  CreateUserModal(
+      {super.key, this.user, required this.titulo, this.tipoOperacao});
+
+  final controller = Get.find<UserController>();
+
+  final User? user;
+  final String? titulo;
+  final String? tipoOperacao;
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +24,12 @@ class CreateUserView extends GetView<UserController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                "Controle de Usuário",
-                style: CustomTextStyle.title(context),
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                child: Text(
+                  titulo!,
+                  style: CustomTextStyle.title(context),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 5),
@@ -93,8 +104,24 @@ class CreateUserView extends GetView<UserController> {
                         style: CustomTextStyle.button2(context),
                       )),
                   ElevatedButton(
-                      onPressed: () {
-                        controller.saveUser();
+                      onPressed: () async {
+                        Map<String, dynamic> retorno = tipoOperacao == 'insert'
+                            ? await controller.saveUser()
+                            : await controller.updateUser(user!.id!);
+
+                        if (retorno['return'] == 0) {
+                          Get.back();
+                        }
+                        Get.snackbar(
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(milliseconds: 1500),
+                          retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                          retorno['message'],
+                          backgroundColor: retorno['return'] == 0
+                              ? Colors.green
+                              : Colors.red,
+                          colorText: Colors.white,
+                        );
                       },
                       child: Text(
                         'SALVAR',

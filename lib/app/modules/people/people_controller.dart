@@ -89,14 +89,9 @@ class PeopleController extends GetxController {
             Text(x, style: const TextStyle(fontSize: 18, color: Colors.black)),
       );
 
-  Future<void> getMaritalStatus() async {
-    final token = box.read('auth')['access_token'];
-    final updatedList = await repository.getALl("Bearer $token");
-    listMaritalStatus.assignAll(updatedList);
-  }
-
   @override
   void onInit() async {
+    await getMaritalStatus();
     getPeoples();
     getReligion();
     getChurch();
@@ -105,6 +100,7 @@ class PeopleController extends GetxController {
 
   @override
   void onClose() async {
+    await getMaritalStatus();
     getReligion();
     getPeoples();
     getChurch();
@@ -125,6 +121,12 @@ class PeopleController extends GetxController {
   void getPeoples() async {
     final token = box.read('auth')['access_token'];
     listPeoples.value = await peopleRepository.getALl("Bearer $token");
+  }
+
+  Future<void> getMaritalStatus() async {
+    final token = box.read('auth')['access_token'];
+    final updatedList = await repository.getALl("Bearer $token");
+    listMaritalStatus.assignAll(updatedList);
   }
 
   Future<Map<String, dynamic>> savePeople(Family family) async {
@@ -395,10 +397,10 @@ class PeopleController extends GetxController {
     dynamic mensagem;
 
     if (await ConnectionStatus.verifyConnection()) {
-      await repositoryService.saveFamilyServiceLocal(familyService);
-    } else {
       mensagem =
           await repositoryService.insertService("Bearer $token", familyService);
+    } else {
+      await repositoryService.saveFamilyServiceLocal(familyService);
     }
 
     if (mensagem != null) {

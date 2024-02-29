@@ -141,12 +141,10 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       const SizedBox(width: 10),
                       Obx(
                         () => SizedBox(
-                          width:
-                              150, // Defina uma largura específica para o DropdownButtonFormField
+                          width: 150,
                           child: DropdownButtonFormField<int>(
                             onTap: () async {
-                              await controller
-                                  .getMaritalStatus(); // Chama o método ao abrir o dropdown
+                              await controller.getMaritalStatus();
                             },
                             value: controller.estadoCivilSelected.value,
                             onChanged: (value) {
@@ -242,12 +240,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         counterText: '',
                         border: OutlineInputBorder(),
                         labelText: 'CPF'),
-                    // validator: (value) {
-                    //   if (!controller.validateCPF()) {
-                    //     return "Informe um CPF válido";
-                    //   }
-                    //   return null;
-                    // },
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -436,7 +428,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                                   : Colors.red,
                               colorText: Colors.white,
                             );
-                            //Get.back();
                           },
                           child: Text(
                             tipoOperacao == 0 ? "ADICIONAR" : "ALTERAR",

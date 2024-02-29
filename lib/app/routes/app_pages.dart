@@ -9,7 +9,6 @@ import 'package:formapp/app/modules/login/login_view.dart';
 import 'package:formapp/app/modules/people/people_binding.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:formapp/app/modules/user/user_binding.dart';
-import 'package:formapp/app/modules/user/views/create_user_view.dart';
 import 'package:formapp/app/modules/user/views/list_user_view.dart';
 import 'package:formapp/app/routes/app_routes.dart';
 import 'package:get/get.dart';
@@ -39,11 +38,6 @@ class ApppPages {
     GetPage(
       name: Routes.LIST_USER,
       page: () => const ListUserView(),
-      binding: UserBinding(),
-    ),
-    GetPage(
-      name: Routes.CREATE_USER,
-      page: () => const CreateUserView(),
       binding: UserBinding(),
     ),
     GetPage(

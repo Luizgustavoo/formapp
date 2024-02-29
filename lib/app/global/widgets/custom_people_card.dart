@@ -102,6 +102,8 @@ class CustomPeopleCard extends StatelessWidget {
                         children: [
                           Text("Nascimento: ${people.dataNascimento!}",
                               style: CustomTextStyle.subtitle(context)),
+                          Text("Família: ",
+                              style: CustomTextStyle.subtitle(context))
                         ],
                       ),
                     ),
