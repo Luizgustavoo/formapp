@@ -56,6 +56,7 @@ class CreateUserModal extends StatelessWidget {
                 height: 8,
               ),
               TextFormField(
+                enabled: tipoOperacao == 'update' ? false : true,
                 validator: (value) {
                   return controller.validateLogin(value);
                 },

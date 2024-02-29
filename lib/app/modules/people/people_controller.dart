@@ -53,8 +53,6 @@ class PeopleController extends GetxController {
 
   int? idPeopleSelected;
   int? idFamilySelected;
-  final repository = Get.find<MaritalStatusRepository>();
-  final repositoryReligion = Get.find<ReligionRepository>();
 
   RxList<People> listPeoples = <People>[].obs;
   final repositoryChurch = Get.find<ChurchRepository>();
@@ -74,12 +72,15 @@ class PeopleController extends GetxController {
   People? selectedPeople;
   FamilyService? selectedService;
 
-  final peopleRepository = Get.find<PeopleRepository>();
+  final repository = Get.find<PeopleRepository>();
   final familyController = Get.find<FamilyController>();
-
   final repositoryService = Get.find<FamilyServiceRepository>();
+  final maritalRepository = Get.find<MaritalStatusRepository>();
+  final repositoryReligion = Get.find<ReligionRepository>();
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
+  dynamic mensagem;
 
   final status = Get.find<InternetStatusProvider>().status;
 
@@ -120,12 +121,12 @@ class PeopleController extends GetxController {
 
   void getPeoples() async {
     final token = box.read('auth')['access_token'];
-    listPeoples.value = await peopleRepository.getALl("Bearer $token");
+    listPeoples.value = await repository.getALl("Bearer $token");
   }
 
   Future<void> getMaritalStatus() async {
     final token = box.read('auth')['access_token'];
-    final updatedList = await repository.getALl("Bearer $token");
+    final updatedList = await maritalRepository.getALl("Bearer $token");
     listMaritalStatus.assignAll(updatedList);
   }
 
@@ -154,21 +155,29 @@ class PeopleController extends GetxController {
 
       final token = box.read('auth')['access_token'];
 
-      final mensagem = await peopleRepository.insertPeople(
-          "Bearer $token", pessoa, File(photoUrlPath.value));
-
-      if (mensagem != null) {
-        if (mensagem['message'] == 'success') {
-          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      if (await ConnectionStatus.verifyConnection()) {
+        mensagem = await repository.insertPeople(
+            "Bearer $token", pessoa, File(photoUrlPath.value));
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            retorno = {
+              "return": 0,
+              "message": "Operação realizada com sucesso!"
+            };
+            getPeoples();
+          }
         } else if (mensagem['message'] == 'ja_existe') {
           retorno = {
             "return": 1,
-            "message": "Já existe uam família com esse nome!"
+            "message": "Já existe um usuário com esse e-mail!"
           };
         }
+      } else {
+        mensagem = await repository.savePeopleLocal(pessoa);
+        if (int.parse(mensagem.toString()) > 0) {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        }
       }
-
-      familyController.getFamilies();
     } else {
       retorno = {
         "return": 1,
@@ -203,8 +212,8 @@ class PeopleController extends GetxController {
 
       final token = box.read('auth')['access_token'];
 
-      final mensagem = await peopleRepository.updatePeople("Bearer $token",
-          pessoa, File(photoUrlPath.value), oldImagePath.value);
+      final mensagem = await repository.updatePeople("Bearer $token", pessoa,
+          File(photoUrlPath.value), oldImagePath.value);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -232,11 +241,12 @@ class PeopleController extends GetxController {
     final token = box.read('auth')['access_token'];
 
     final mensagem =
-        await peopleRepository.changePeopleFamily("Bearer $token", pessoa);
+        await repository.changePeopleFamily("Bearer $token", pessoa);
 
     if (mensagem != null) {
       if (mensagem['message'] == 'success') {
         retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        getPeoples();
       } else if (mensagem['message'] == 'ja_existe') {
         retorno = {
           "return": 1,

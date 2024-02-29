@@ -254,8 +254,9 @@ class PeopleApiClient {
   }
 
   /*SALVAR DADOS OFFLINE DA PESSOA */
-  Future<void> savePeopleLocally(Map<String, dynamic> peopleData) async {
-    await localDatabase.insert(peopleData, 'people_table');
+  Future<dynamic> savePeopleLocally(Map<String, dynamic> familyData) async {
+    var retorno = await localDatabase.insert(familyData, 'family_table');
+    return retorno;
   }
 
   Future<List<Map<String, dynamic>>> getAllPeopleLocally() async {
@@ -288,6 +289,20 @@ class PeopleApiClient {
       'parentesco': people.parentesco,
     };
 
-    await savePeopleLocally(peopleData);
+    return await savePeopleLocally(peopleData);
+  }
+
+  Future<void> deletePeopleLocally(People people) async {
+    try {
+      if (people.id != null) {
+        await localDatabase.delete(people.id!, 'family_table');
+        print('Família excluída localmente com sucesso');
+      } else {
+        print('ID da família é nulo. Não é possível excluir.');
+      }
+    } catch (e) {
+      print('Erro ao excluir família localmente: $e');
+      rethrow;
+    }
   }
 }

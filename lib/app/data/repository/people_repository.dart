@@ -41,6 +41,16 @@ class PeopleRepository {
     }
   }
 
+  savePeopleLocal(People people) async {
+    try {
+      var response = await apiClient.savePeopleLocal(people);
+      return response;
+    } catch (e) {
+      print('Erro ao inserir a família: $e');
+      rethrow;
+    }
+  }
+
   changePeopleFamily(String token, People pessoa) async {
     try {
       var response = await apiClient.changePeopleFamily(token, pessoa);

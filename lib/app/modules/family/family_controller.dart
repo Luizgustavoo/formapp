@@ -52,6 +52,14 @@ class FamilyController extends GetxController
 
   @override
   void onInit() {
+    final internetStatusProvider = Get.find<InternetStatusProvider>();
+    final statusStream = internetStatusProvider.statusStream;
+    statusStream.listen((status) {
+      if (status == InternetStatus.connected) {
+        getFamilies();
+      }
+    });
+
     getFamilies();
     super.onInit();
   }
@@ -93,14 +101,27 @@ class FamilyController extends GetxController
 
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await repository.insertFamily("Bearer $token", family);
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            retorno = {
+              "return": 0,
+              "message": "Operação realizada com sucesso!"
+            };
+            getFamilies();
+          }
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe uma família com esse nome!"
+          };
+        }
       } else {
         mensagem = await repository.saveFamilyLocal(family);
         if (int.parse(mensagem.toString()) > 0) {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+          getFamilies();
         }
       }
-
-      getFamilies();
     } else {
       retorno = {
         "return": 1,

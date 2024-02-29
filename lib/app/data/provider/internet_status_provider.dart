@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/utils/connection_service.dart';
@@ -7,8 +8,11 @@ enum InternetStatus { connected, disconnected }
 
 class InternetStatusProvider extends GetxController {
   final Rx<InternetStatus> _status = InternetStatus.connected.obs;
+  final StreamController<InternetStatus> _statusController =
+      StreamController.broadcast();
 
   InternetStatus get status => _status.value;
+  Stream<InternetStatus> get statusStream => _statusController.stream;
 
   @override
   void onInit() {
@@ -18,6 +22,7 @@ class InternetStatusProvider extends GetxController {
 
   void setStatus(InternetStatus status) {
     _status.value = status;
+    _statusController.add(status); // Transmitir o novo status
   }
 
   void updateStatus(ConnectivityResult result) {
@@ -49,5 +54,11 @@ class InternetStatusProvider extends GetxController {
         ),
       ),
     );
+  }
+
+  @override
+  void onClose() {
+    _statusController.close(); // Fechar o StreamController
+    super.onClose();
   }
 }

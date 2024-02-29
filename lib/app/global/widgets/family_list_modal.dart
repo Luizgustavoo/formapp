@@ -27,21 +27,44 @@ class FamilyListModal extends StatelessWidget {
                 controller.searchFamily(query);
               }),
           Expanded(
-            child: ListView.builder(
+              child: Obx(
+            () => ListView.builder(
               itemCount: controller.listFamilies.length,
               itemBuilder: (context, index) {
                 final family = controller.listFamilies[index];
-                return ListTile(
-                  title: Text(family.nome!),
-                  subtitle:
-                      Text('Endereço: ${family.endereco}, ${family.cidade}'),
-                  onTap: () async {
-                    showDialog(context, family);
-                  },
+                return Card(
+                  color: family.id == people!.familiaId
+                      ? Colors.amber
+                      : Colors.white,
+                  child: ListTile(
+                    title: Text(family.nome!),
+                    subtitle:
+                        Text('Endereço: ${family.endereco}, ${family.cidade}'),
+                    onTap: () async {
+                      if (family.id == people!.familiaId) {
+                        Get.defaultDialog(
+                          titlePadding: const EdgeInsets.all(16),
+                          contentPadding: const EdgeInsets.all(16),
+                          title: "Atenção",
+                          titleStyle: CustomTextStyle.titleSplash(context),
+                          content: Text(
+                            textAlign: TextAlign.center,
+                            "${people!.nome} já pertence à ${family.nome}!",
+                            style: const TextStyle(
+                              fontFamily: 'Poppinss',
+                              fontSize: 18,
+                            ),
+                          ),
+                        );
+                      } else {
+                        showDialog(context, family);
+                      }
+                    },
+                  ),
                 );
               },
             ),
-          ),
+          )),
         ],
       ),
     );
