@@ -104,7 +104,7 @@ class UserApiClient {
 
   updateUser(String token, User user) async {
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/familia/update/${user.id}');
+      var userUrl = Uri.parse('$baseUrl/v1/usuario/update/${user.id}');
 
       var requestBody = {
         "nome": user.nome,
@@ -116,7 +116,7 @@ class UserApiClient {
       };
 
       var response = await httpClient.put(
-        familyUrl,
+        userUrl,
         headers: {
           "Accept": "application/json",
           "Authorization": token,

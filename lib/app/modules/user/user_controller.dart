@@ -143,6 +143,7 @@ class UserController extends GetxController {
   Future<Map<String, dynamic>> updateUser(int id) async {
     if (userFormKey.currentState!.validate()) {
       User user = User(
+        id: id,
         nome: nameController.text,
         username: usernameController.text,
         password: passwordController.text,
