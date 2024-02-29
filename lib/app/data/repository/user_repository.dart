@@ -15,4 +15,15 @@ class UserRepository {
 
     return list;
   }
+
+  insertUser(String token, User user) async {
+    try {
+      var response = await apiClient.insertUser(token, user);
+
+      return response;
+    } catch (e) {
+      print('Erro ao inserir a usuário: $e');
+      rethrow;
+    }
+  }
 }

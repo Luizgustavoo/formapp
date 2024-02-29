@@ -14,6 +14,7 @@ import 'package:formapp/app/data/repository/marital_status_repository.dart';
 import 'package:formapp/app/data/repository/people_repository.dart';
 import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -393,7 +394,7 @@ class PeopleController extends GetxController {
     final token = box.read('auth')['access_token'];
     dynamic mensagem;
 
-    if (status == InternetStatus.disconnected) {
+    if (await ConnectionStatus.verifyConnection()) {
       await repositoryService.saveFamilyServiceLocal(familyService);
     } else {
       mensagem =

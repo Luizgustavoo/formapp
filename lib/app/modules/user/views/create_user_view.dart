@@ -48,7 +48,7 @@ class CreateUserView extends GetView<UserController> {
                 validator: (value) {
                   return controller.validateLogin(value);
                 },
-                controller: controller.loginController,
+                controller: controller.usernameController,
                 decoration: const InputDecoration(
                     suffixIcon: Icon(Icons.person),
                     labelText: 'Login',

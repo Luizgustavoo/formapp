@@ -14,10 +14,16 @@ class UserController extends GetxController {
   final GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
-  TextEditingController loginController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   RxBool isPasswordVisible = false.obs;
+
+  Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
+  dynamic mensagem;
+
+  final userRepository = Get.find<UserRepository>();
 
   @override
   void onInit() {
@@ -91,10 +97,26 @@ class UserController extends GetxController {
   }
   //*FIM VALIDAÇÕES*/
 
-  saveUser() {
+  Future<Map<String, dynamic>> saveUser() async {
     if (userFormKey.currentState!.validate()) {
-      // Implemente aqui a lógica para salvar o usuário
-      // Pode usar os valores dos controladores nomeController, loginController e senhaController
+      User user = User(
+        nome: nameController.text,
+        username: usernameController.text,
+        password: passwordController.text,
+        tipousuarioId: 3,
+      );
+
+      final token = box.read('auth')['access_token'];
+
+      mensagem = await userRepository.insertUser("Bearer $token", user);
+
+      getUsers();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
     }
+    return retorno;
   }
 }
