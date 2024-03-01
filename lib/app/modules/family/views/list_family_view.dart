@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/global/widgets/create_family_modal.dart';
+import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
@@ -113,9 +114,8 @@ class FamilyView extends GetView<FamilyController> {
                           context: context,
                           builder: (context) => Padding(
                             padding: MediaQuery.of(context).viewInsets,
-                            child: MessageServicePage(
+                            child: MessageModal(
                               family: family,
-                              showWidget: false,
                               titulo: '',
                             ),
                           ),
@@ -129,9 +129,10 @@ class FamilyView extends GetView<FamilyController> {
                           context: context,
                           builder: (context) => Padding(
                             padding: MediaQuery.of(context).viewInsets,
-                            child: MessageServicePage(
+                            child: MessageServiceModal(
                               family: family,
                               showWidget: true,
+                              tipoOperacao: 'insert',
                               titulo: '',
                             ),
                           ),

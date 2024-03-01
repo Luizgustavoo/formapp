@@ -34,12 +34,15 @@ class FamilyListModal extends StatelessWidget {
                 final family = controller.listFamilies[index];
                 return Card(
                   color: family.id == people!.familiaId
-                      ? Colors.amber
+                      ? Colors.orange
                       : Colors.white,
                   child: ListTile(
-                    title: Text(family.nome!),
-                    subtitle:
-                        Text('Endereço: ${family.endereco}, ${family.cidade}'),
+                    title: Text(family.nome!,
+                        style: CustomTextStyle.subtitleNegrit(context)),
+                    subtitle: Text(
+                      'Endereço: ${family.endereco}, ${family.cidade}',
+                      style: CustomTextStyle.button2(context),
+                    ),
                     onTap: () async {
                       if (family.id == people!.familiaId) {
                         Get.defaultDialog(

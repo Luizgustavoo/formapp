@@ -7,8 +7,8 @@ import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
-class MessageServicePage extends StatelessWidget {
-  MessageServicePage(
+class MessageServiceModal extends StatelessWidget {
+  MessageServiceModal(
       {Key? key,
       required this.showWidget,
       this.family,

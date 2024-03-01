@@ -177,6 +177,30 @@ class UserController extends GetxController {
     return retorno;
   }
 
+  Future<Map<String, dynamic>> deleteUser(int id, int status) async {
+    User user = User(
+      id: id,
+      status: status,
+    );
+
+    final token = box.read('auth')['access_token'];
+
+    final mensagem = await repository.deleteUser("Bearer $token", user);
+
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      }
+      getUsers();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
+    }
+    return retorno;
+  }
+
   void fillInUserFields() {
     nameController.text = selectedUser!.nome.toString();
     usernameController.text = selectedUser!.username.toString();

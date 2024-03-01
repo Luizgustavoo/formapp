@@ -201,7 +201,7 @@ class CustomFamilyCard extends StatelessWidget {
                                   context: context,
                                   builder: (context) => Padding(
                                     padding: MediaQuery.of(context).viewInsets,
-                                    child: MessageServicePage(
+                                    child: MessageServiceModal(
                                       people: family.pessoas![index],
                                       showWidget: true,
                                       titulo: '',

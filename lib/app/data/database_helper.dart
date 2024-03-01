@@ -63,7 +63,7 @@ class DatabaseHelper {
         pessoa_id INTEGER
       );
 
-       CREATE TABLE message_table (
+      CREATE TABLE message_table (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         data TEXT,
         titulo TEXT,
@@ -71,7 +71,7 @@ class DatabaseHelper {
         usuario_id INTEGER,
         data_cadastro TEXT,
         data_update TEXT
-      )
+      );
     ''');
   }
 

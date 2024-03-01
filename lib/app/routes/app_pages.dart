@@ -6,6 +6,8 @@ import 'package:formapp/app/modules/initial/initial_binding.dart';
 import 'package:formapp/app/modules/initial/initial_view.dart';
 import 'package:formapp/app/modules/login/login_binding.dart';
 import 'package:formapp/app/modules/login/login_view.dart';
+import 'package:formapp/app/modules/message/message_binding.dart';
+import 'package:formapp/app/modules/message/message_view.dart';
 import 'package:formapp/app/modules/people/people_binding.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:formapp/app/modules/user/user_binding.dart';
@@ -37,13 +39,18 @@ class ApppPages {
     ),
     GetPage(
       name: Routes.LIST_USER,
-      page: () => const ListUserView(),
+      page: () => ListUserView(),
       binding: UserBinding(),
     ),
     GetPage(
       name: Routes.LIST_PEOPLE,
       page: () => const ListPeopleView(),
       binding: PeopleBinding(),
+    ),
+    GetPage(
+      name: Routes.LIST_MESSAGE,
+      page: () => const MessageView(),
+      binding: MessageBinding(),
     ),
   ];
 }

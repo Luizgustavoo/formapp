@@ -1,6 +1,6 @@
 import 'package:formapp/app/data/models/user_model.dart';
 
-class EstadoCivil {
+class MaritalStatus {
   int? id;
   String? descricao;
   int? usuarioId;
@@ -9,7 +9,7 @@ class EstadoCivil {
   String? dataUpdate;
   User? user;
 
-  EstadoCivil(
+  MaritalStatus(
       {this.id,
       this.descricao,
       this.usuarioId,
@@ -18,7 +18,7 @@ class EstadoCivil {
       this.dataUpdate,
       this.user});
 
-  EstadoCivil.fromJson(Map<String, dynamic> json) {
+  MaritalStatus.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     descricao = json['descricao'];
     usuarioId = json['usuario_id'];

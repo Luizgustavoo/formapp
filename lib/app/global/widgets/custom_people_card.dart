@@ -154,7 +154,7 @@ class CustomPeopleCard extends StatelessWidget {
                                       builder: (context) => Padding(
                                         padding:
                                             MediaQuery.of(context).viewInsets,
-                                        child: MessageServicePage(
+                                        child: MessageServiceModal(
                                           familyService: atendimento,
                                           showWidget: true,
                                           tipoOperacao: 'update',

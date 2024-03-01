@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/church_model.dart';
-import 'package:formapp/app/data/models/estado_civil_model.dart';
+import 'package:formapp/app/data/models/marital_status_model.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
@@ -57,7 +57,7 @@ class PeopleController extends GetxController {
   RxList<People> listPeoples = <People>[].obs;
   final repositoryChurch = Get.find<ChurchRepository>();
   final box = GetStorage('credenciado');
-  RxList<EstadoCivil> listMaritalStatus = <EstadoCivil>[].obs;
+  RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
   RxList<Religiao> listReligion = <Religiao>[].obs;
   RxList<People> composicaoFamiliar = <People>[].obs;
   RxList<Igreja> listChurch = <Igreja>[].obs;
@@ -126,7 +126,7 @@ class PeopleController extends GetxController {
 
   Future<void> getMaritalStatus() async {
     final token = box.read('auth')['access_token'];
-    final updatedList = await maritalRepository.getALl("Bearer $token");
+    final updatedList = await maritalRepository.getAll("Bearer $token");
     listMaritalStatus.assignAll(updatedList);
   }
 

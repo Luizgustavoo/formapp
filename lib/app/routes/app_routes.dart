@@ -11,4 +11,6 @@ abstract class Routes {
   static const LIST_PEOPLE = '/list-people';
 
   static const LIST_USER = '/list-user';
+
+  static const LIST_MESSAGE = '/list-message';
 }

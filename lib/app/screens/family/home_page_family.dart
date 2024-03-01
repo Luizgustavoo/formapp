@@ -69,7 +69,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageServicePage(
+                          child: MessageServiceModal(
                             showWidget: false,
                             titulo: '',
                           ),
@@ -82,7 +82,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageServicePage(
+                          child: MessageServiceModal(
                             showWidget: true,
                             titulo: '',
                           ),
@@ -95,7 +95,7 @@ class _HomePageFamilyState extends State<HomePageFamily> {
                         context: context,
                         builder: (context) => Padding(
                           padding: MediaQuery.of(context).viewInsets,
-                          child: MessageServicePage(
+                          child: MessageServiceModal(
                             showWidget: true,
                             titulo: '',
                           ),

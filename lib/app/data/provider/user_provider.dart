@@ -152,4 +152,41 @@ class UserApiClient {
     }
     return null;
   }
+
+  deleteUser(String token, User user) async {
+    try {
+      var userUrl = Uri.parse('$baseUrl/v1/usuario/delete/${user.id}');
+
+      var response = await httpClient.delete(userUrl, headers: {
+        "Accept": "application/json",
+        "Authorization": token,
+      }, body: {
+        "status": user.status.toString(),
+      });
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      Get.defaultDialog(
+        title: "Erro",
+        content: Text("$err"),
+      );
+    }
+    return null;
+  }
 }

@@ -90,7 +90,9 @@ class CategoryItems extends StatelessWidget {
               imageUrl: 'assets/images/user.png'),
           CustomCard(
               title: 'Mensagens',
-              ontap: () {},
+              ontap: () {
+                Get.toNamed('/list-message');
+              },
               imageUrl: 'assets/images/mensage.png'),
         ],
       ),
