@@ -9,7 +9,7 @@ import 'package:get_storage/get_storage.dart';
 class MessageController extends GetxController {
   TextEditingController subjectController = TextEditingController();
   TextEditingController messageController = TextEditingController();
-  final repository = Get.find<MessageRepository>();
+  final repository = Get.put(MessageRepository());
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
   dynamic mensagem;

@@ -19,12 +19,18 @@ class MessageApiClient {
     try {
       var messageUrl = Uri.parse('$baseUrl/v1/mensagem/create');
 
+      //final List<Map<String, dynamic>> pessoasJson =
+      // family.pessoas!.map((pessoa) => pessoa.toJson()).toList();
+
+      final List<Map<String, dynamic>> pessoasJson =
+          family.pessoas!.map((pessoa) => pessoa.toJson()).toList();
+
       var requestBody = {
         "data": message.data.toString(),
         "titulo": message.titulo,
         "descricao": message.descricao,
-        "usuario_id": id,
-        "pessoas": json.encode(family.pessoas),
+        "usuario_id": id.toString(),
+        "pessoas": jsonEncode(pessoasJson),
       };
 
       var response = await httpClient.post(
@@ -35,6 +41,8 @@ class MessageApiClient {
         },
         body: requestBody,
       );
+
+      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

@@ -17,7 +17,7 @@ class MessageModal extends StatelessWidget {
   }) : super(key: key);
 
   final Family? family;
-  final controller = Get.find<MessageController>();
+  final MessageController controller = Get.put(MessageController());
   final PeopleController peopleController = Get.find();
   // final People? people;
   // final String tipoOperacao;
