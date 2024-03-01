@@ -19,7 +19,6 @@ class MessageController extends GetxController {
     Message message = Message(
       titulo: subjectController.text,
       descricao: messageController.text,
-      data: '2024-03-01',
     );
 
     final token = box.read('auth')['access_token'];

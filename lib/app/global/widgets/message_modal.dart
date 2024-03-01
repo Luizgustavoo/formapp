@@ -18,7 +18,7 @@ class MessageModal extends StatelessWidget {
 
   final Family? family;
   final MessageController controller = Get.put(MessageController());
-  final PeopleController peopleController = Get.find();
+
   // final People? people;
   // final String tipoOperacao;
 
@@ -47,7 +47,7 @@ class MessageModal extends StatelessWidget {
           const SizedBox(height: 10),
           Text('Assunto:', style: CustomTextStyle.subtitle(context)),
           TextField(
-            controller: peopleController.subjectController,
+            controller: controller.subjectController,
             decoration: const InputDecoration(
               hintText: 'Digite o assunto',
             ),
@@ -55,7 +55,7 @@ class MessageModal extends StatelessWidget {
           const SizedBox(height: 10),
           Text('Mensagem:', style: CustomTextStyle.subtitle(context)),
           TextField(
-            controller: peopleController.messageController,
+            controller: controller.messageController,
             maxLines: 4,
             decoration: const InputDecoration(
               hintText: 'Digite a mensagem',
@@ -67,7 +67,7 @@ class MessageModal extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
-                  print(json.encode(family!.pessoas));
+                  Get.back();
                 },
                 child:
                     Text('Cancelar', style: CustomTextStyle.button2(context)),

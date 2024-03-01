@@ -26,7 +26,6 @@ class MessageApiClient {
           family.pessoas!.map((pessoa) => pessoa.toJson()).toList();
 
       var requestBody = {
-        "data": message.data.toString(),
         "titulo": message.titulo,
         "descricao": message.descricao,
         "usuario_id": id.toString(),
