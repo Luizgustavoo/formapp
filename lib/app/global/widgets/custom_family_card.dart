@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 
@@ -26,6 +29,7 @@ class CustomFamilyCard extends StatelessWidget {
   FamilyController familyController = Get.find();
   PeopleController peopleController = Get.find();
   Family family;
+  final messageController = Get.find<MessageController>();
 
   CustomFamilyCard(
       {Key? key,
@@ -57,6 +61,8 @@ class CustomFamilyCard extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(right: 12),
             child: ExpansionTile(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               childrenPadding:
                   const EdgeInsets.only(left: 18, right: 18, bottom: 5),
               onExpansionChanged: (value) {
@@ -213,7 +219,27 @@ class CustomFamilyCard extends StatelessWidget {
                             ),
                             IconButton(
                               iconSize: 22,
-                              onPressed: messageMember,
+                              onPressed: () {
+                                List<People> listPeople = [];
+                                listPeople.add(family.pessoas![index]);
+                                final family2 = Family(
+                                  pessoas: listPeople,
+                                );
+                                messageController.clearModalMessage();
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  isDismissible: false,
+                                  context: context,
+                                  builder: (context) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: MessageModal(
+                                      family: family2,
+                                      titulo:
+                                          'Mensagem para a Pessoa ${family.pessoas![index].nome}',
+                                    ),
+                                  ),
+                                );
+                              },
                               icon: const Icon(Icons.email_outlined),
                             )
                           ],

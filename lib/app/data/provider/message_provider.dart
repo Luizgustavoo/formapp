@@ -31,7 +31,6 @@ class MessageApiClient {
         "usuario_id": id.toString(),
         "pessoas": jsonEncode(pessoasJson),
       };
-
       var response = await httpClient.post(
         messageUrl,
         headers: {
@@ -40,8 +39,6 @@ class MessageApiClient {
         },
         body: requestBody,
       );
-
-      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

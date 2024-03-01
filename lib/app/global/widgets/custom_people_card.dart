@@ -38,7 +38,6 @@ class CustomPeopleCard extends StatelessWidget {
         key: UniqueKey(),
         direction: DismissDirection.startToEnd,
         confirmDismiss: (DismissDirection direction) async {
-          print(people.familiaId);
           if (direction == DismissDirection.startToEnd) {
             await showModalBottomSheet(
               context: context,

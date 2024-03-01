@@ -11,7 +11,7 @@ class MessageRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
+      print('Erro ao enviar mensagem para a família: $e');
       rethrow;
     }
   }

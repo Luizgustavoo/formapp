@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
@@ -11,17 +8,11 @@ class MessageModal extends StatelessWidget {
   MessageModal({
     Key? key,
     this.family,
-    // this.people,
-    // this.tipoOperacao = 'insert',
     required this.titulo,
   }) : super(key: key);
 
   final Family? family;
-  final MessageController controller = Get.put(MessageController());
-
-  // final People? people;
-  // final String tipoOperacao;
-
+  final controller = Get.put(MessageController());
   final String? titulo;
 
   @override
@@ -32,9 +23,12 @@ class MessageModal extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            titulo!,
-            style: CustomTextStyle.title(context),
+          Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: Text(
+              titulo!,
+              style: CustomTextStyle.title(context),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 5),
@@ -74,7 +68,21 @@ class MessageModal extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await controller.saveMessage(family!);
+                  Map<String, dynamic> retorno =
+                      await controller.saveMessage(family!);
+
+                  if (retorno['return'] == 0) {
+                    Get.back();
+                  }
+                  Get.snackbar(
+                    snackPosition: SnackPosition.BOTTOM,
+                    duration: const Duration(milliseconds: 1500),
+                    retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                    retorno['message'],
+                    backgroundColor:
+                        retorno['return'] == 0 ? Colors.green : Colors.red,
+                    colorText: Colors.white,
+                  );
                 },
                 child: Text(
                   'Enviar',

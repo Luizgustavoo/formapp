@@ -20,12 +20,11 @@ class MessageController extends GetxController {
       titulo: subjectController.text,
       descricao: messageController.text,
     );
-
     final token = box.read('auth')['access_token'];
-
     if (await ConnectionStatus.verifyConnection()) {
       mensagem =
           await repository.insertMessage("Bearer $token", family, message);
+      print(mensagem);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
@@ -37,7 +36,11 @@ class MessageController extends GetxController {
         };
       }
     }
-
     return retorno;
+  }
+
+  void clearModalMessage() {
+    subjectController.value = TextEditingValue.empty;
+    messageController.value = TextEditingValue.empty;
   }
 }

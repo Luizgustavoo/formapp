@@ -23,7 +23,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
+      print('Erro ao inserir a pessoa: $e');
       rethrow;
     }
   }
@@ -36,7 +36,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
+      print('Erro ao editar a pessoa: $e');
       rethrow;
     }
   }
@@ -46,7 +46,7 @@ class PeopleRepository {
       var response = await apiClient.savePeopleLocal(people);
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
+      print('Erro ao salvar a pessoa local: $e');
       rethrow;
     }
   }

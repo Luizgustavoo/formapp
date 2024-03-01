@@ -3,6 +3,7 @@ import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/global/widgets/create_family_modal.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
+import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ class FamilyView extends GetView<FamilyController> {
   FamilyView({super.key});
 
   final PeopleController peopleController = Get.find();
+  final messageController = Get.put(MessageController());
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +109,7 @@ class FamilyView extends GetView<FamilyController> {
                         );
                       },
                       messageMember: () {
-                        peopleController.clearModalMessageService();
+                        messageController.clearModalMessage();
                         showModalBottomSheet(
                           isScrollControlled: true,
                           isDismissible: false,
@@ -116,7 +118,7 @@ class FamilyView extends GetView<FamilyController> {
                             padding: MediaQuery.of(context).viewInsets,
                             child: MessageModal(
                               family: family,
-                              titulo: '',
+                              titulo: 'Mensagem para a Família',
                             ),
                           ),
                         );

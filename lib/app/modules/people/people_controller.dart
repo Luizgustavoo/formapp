@@ -94,7 +94,7 @@ class PeopleController extends GetxController {
   void onInit() async {
     await getMaritalStatus();
     getPeoples();
-    getReligion();
+    await getReligion();
     getChurch();
     super.onInit();
   }
@@ -102,7 +102,7 @@ class PeopleController extends GetxController {
   @override
   void onClose() async {
     await getMaritalStatus();
-    getReligion();
+    await getReligion();
     getPeoples();
     getChurch();
     super.onClose();
@@ -122,12 +122,6 @@ class PeopleController extends GetxController {
   void getPeoples() async {
     final token = box.read('auth')['access_token'];
     listPeoples.value = await repository.getALl("Bearer $token");
-  }
-
-  Future<void> getMaritalStatus() async {
-    final token = box.read('auth')['access_token'];
-    final updatedList = await maritalRepository.getAll("Bearer $token");
-    listMaritalStatus.assignAll(updatedList);
   }
 
   Future<Map<String, dynamic>> savePeople(Family family) async {
@@ -270,10 +264,29 @@ class PeopleController extends GetxController {
     peopleFormKey.currentState!.reset();
   }
 
-  void getReligion() async {
+  Future<void> getMaritalStatus() async {
+    final token = box.read('auth')['access_token'];
+    final updatedList = await maritalRepository.getAll("Bearer $token");
+    listMaritalStatus.assignAll(updatedList);
+  }
+
+  Future<void> getReligion() async {
     listReligion.clear();
     final token = box.read('auth')['access_token'];
-    listReligion.value = await repositoryReligion.getALl("Bearer $token");
+    final updatedList = await repositoryReligion.getAll("Bearer $token");
+    listReligion.assignAll(updatedList);
+  }
+
+  void getChurch() async {
+    listChurch.clear();
+    final token = box.read('auth')['access_token'];
+    listChurch.value = await repositoryChurch.getAll("Bearer $token");
+
+    suggestions.clear();
+
+    for (var element in listChurch) {
+      suggestions.add(element.descricao!);
+    }
   }
 
   void fillInFieldsForEditPerson() {
@@ -303,18 +316,6 @@ class PeopleController extends GetxController {
     isImagePicPathSet.value = false;
     provedorCheckboxValue.value =
         selectedPeople!.provedorCasa! == 'sim' ? true : false;
-  }
-
-  void getChurch() async {
-    listChurch.clear();
-    final token = box.read('auth')['access_token'];
-    listChurch.value = await repositoryChurch.getALl("Bearer $token");
-
-    suggestions.clear();
-
-    for (var element in listChurch) {
-      suggestions.add(element.descricao!);
-    }
   }
 
   void setImagePeople(String path) {

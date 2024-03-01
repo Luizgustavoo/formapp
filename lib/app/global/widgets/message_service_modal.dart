@@ -156,7 +156,9 @@ class MessageServiceModal extends StatelessWidget {
                     //salvar atendimento familia
                   }
 
-                  Get.back();
+                  if (retorno['return'] == 0) {
+                    Get.back();
+                  }
 
                   Get.snackbar(
                     snackPosition: SnackPosition.BOTTOM,
