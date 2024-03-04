@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/user_model.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
@@ -9,6 +11,7 @@ class CreateUserModal extends StatelessWidget {
       {super.key, this.user, required this.titulo, this.tipoOperacao});
 
   final controller = Get.find<UserController>();
+  final familyController = Get.put(FamilyController());
 
   final User? user;
   final String? titulo;
@@ -90,6 +93,28 @@ class CreateUserModal extends StatelessWidget {
                         labelText: 'Senha',
                         border: const OutlineInputBorder()),
                   )),
+              const SizedBox(
+                height: 8,
+              ),
+              Obx(
+                () => DropdownButtonFormField<Family>(
+                  isDense: true,
+                  menuMaxHeight: Get.size.height / 2,
+                  value: familyController.selectedFamily,
+                  onChanged: (Family? value) {
+                    familyController.selectedFamily = value;
+                  },
+                  items: familyController.listFamilies
+                      .map<DropdownMenuItem<Family>>((Family family) {
+                    return DropdownMenuItem<Family>(
+                      value: family,
+                      child: Text(family.nome!),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), labelText: 'Família'),
+                ),
+              ),
               const SizedBox(
                 height: 16,
               ),

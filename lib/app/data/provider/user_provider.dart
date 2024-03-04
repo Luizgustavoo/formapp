@@ -58,9 +58,10 @@ class UserApiClient {
         "nome": user.nome,
         "tipousuario_id": user.tipousuarioId.toString(),
         "username": user.username,
-        "password": user.password,
+        "senha": user.senha,
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
+        "familia_id": user.familiaId.toString()
       };
 
       var response = await httpClient.post(
@@ -71,6 +72,7 @@ class UserApiClient {
         },
         body: requestBody,
       );
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||
@@ -109,7 +111,7 @@ class UserApiClient {
         "nome": user.nome,
         "tipousuario_id": user.tipousuarioId.toString(),
         "username": user.username,
-        "password": user.password,
+        "password": user.senha,
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
       };

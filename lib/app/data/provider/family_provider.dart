@@ -14,8 +14,16 @@ class FamilyApiClient {
 
   getAll(String token) async {
     final id = box.read('auth')['user']['id'];
+    final familiaId = box.read('auth')['user']['familia_id'];
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
+      Uri familyUrl;
+      if (familiaId != null) {
+        familyUrl =
+            Uri.parse('$baseUrl/v1/familia/list-familiar/id/$familiaId');
+      } else {
+        familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
+      }
+
       var response = await httpClient.get(
         familyUrl,
         headers: {

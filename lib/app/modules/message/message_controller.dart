@@ -24,7 +24,6 @@ class MessageController extends GetxController {
     if (await ConnectionStatus.verifyConnection()) {
       mensagem =
           await repository.insertMessage("Bearer $token", family, message);
-      print(mensagem);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};

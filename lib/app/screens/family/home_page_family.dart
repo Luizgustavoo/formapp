@@ -14,7 +14,7 @@ class HomePageFamily extends StatefulWidget {
 }
 
 class _HomePageFamilyState extends State<HomePageFamily> {
-  final FamilyController familyController = Get.find();
+  final FamilyController familyController = Get.put(FamilyController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

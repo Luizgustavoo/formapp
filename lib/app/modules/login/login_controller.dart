@@ -29,6 +29,7 @@ class LoginController extends GetxController {
 
       if (auth != null) {
         box.write('auth', auth?.toJson());
+
         Get.offAllNamed('/home');
       } else {
         showErrorSnackbar.value = true;

@@ -15,8 +15,15 @@ class PeopleApiClient {
 
   getAll(String token) async {
     final id = box.read('auth')['user']['id'];
+    final familiaId = box.read('auth')['user']['familia_id'];
     try {
-      var peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list/id/$id');
+      Uri peopleUrl;
+      if (familiaId != null) {
+        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list-familiar/id/$familiaId');
+      } else {
+        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list/id/$id');
+      }
+
       var response = await httpClient.get(
         peopleUrl,
         headers: {

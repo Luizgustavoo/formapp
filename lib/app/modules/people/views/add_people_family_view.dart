@@ -194,6 +194,8 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         flex: 2,
                         child: Obx(
                           () => DropdownButtonFormField<String>(
+                            isDense: true,
+                            menuMaxHeight: Get.size.height / 2,
                             value: controller.parentesco.value,
                             onChanged: (value) {
                               controller.parentesco.value = value!;

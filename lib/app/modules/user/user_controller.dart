@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/data/repository/user_repository.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -27,6 +28,7 @@ class UserController extends GetxController {
   dynamic mensagem;
 
   final userRepository = Get.find<UserRepository>();
+  final familyController = Get.put(FamilyController());
 
   @override
   void onInit() {
@@ -102,19 +104,18 @@ class UserController extends GetxController {
   Future<Map<String, dynamic>> saveUser() async {
     if (userFormKey.currentState!.validate()) {
       User user = User(
-        nome: nameController.text,
-        username: usernameController.text,
-        password: passwordController.text,
-        tipousuarioId: 3,
-        status: 1,
-        usuarioId: box.read('auth')['user']['id'],
-      );
+          nome: nameController.text,
+          username: usernameController.text,
+          senha: passwordController.text,
+          tipousuarioId: 3,
+          status: 1,
+          usuarioId: box.read('auth')['user']['id'],
+          familiaId: familyController.selectedFamily!.id);
 
       final token = box.read('auth')['access_token'];
 
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await userRepository.insertUser("Bearer $token", user);
-        print(mensagem);
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
             retorno = {
@@ -146,7 +147,7 @@ class UserController extends GetxController {
         id: id,
         nome: nameController.text,
         username: usernameController.text,
-        password: passwordController.text,
+        senha: passwordController.text,
         tipousuarioId: 3,
         status: 1,
         usuarioId: box.read('auth')['user']['id'],
@@ -204,7 +205,7 @@ class UserController extends GetxController {
   void fillInUserFields() {
     nameController.text = selectedUser!.nome.toString();
     usernameController.text = selectedUser!.username.toString();
-    passwordController.text = selectedUser!.password.toString();
+    passwordController.text = selectedUser!.senha.toString();
   }
 
   void clearAllUserTextFields() {

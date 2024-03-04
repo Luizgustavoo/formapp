@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/login/login_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
@@ -53,36 +52,7 @@ class LoginView extends GetView<LoginController> {
                                     style: CustomTextStyle.login(context),
                                   ),
                                 ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ToggleSwitch(
-                                      initialLabelIndex: 0,
-                                      minWidth: 130,
-                                      minHeight: 30.0,
-                                      cornerRadius: 5.0,
-                                      onToggle: (index) =>
-                                          controller.onToggle.value = index!,
-                                      labels: const ['CREDENCIADO', 'FAMILIAR'],
-                                      activeBgColor: [Colors.orange.shade500],
-                                      inactiveBgColor: Colors.transparent,
-                                      customTextStyles: const [
-                                        TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14.0,
-                                            fontFamily: 'Poppinss',
-                                            fontWeight: FontWeight.w900),
-                                        TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14.0,
-                                            fontFamily: 'Poppinss',
-                                            fontWeight: FontWeight.w900)
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 25),
                                 TextFormField(
                                   controller: controller.usernameCtrl,
                                   validator: (value) {

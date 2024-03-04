@@ -39,7 +39,7 @@ class FamilyController extends GetxController
   RxBool familyInfo = true.obs;
   RxBool isExpanded = false.obs;
 
-  final repository = Get.find<FamilyRepository>();
+  final repository = Get.put(FamilyRepository());
 
   Animation<double>? animation;
   AnimationController? animationController;
