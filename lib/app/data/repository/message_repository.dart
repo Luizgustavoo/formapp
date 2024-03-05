@@ -1,13 +1,28 @@
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/message_model.dart';
+import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/data/provider/message_provider.dart';
 
 class MessageRepository {
   final MessageApiClient apiClient = MessageApiClient();
 
-  insertMessage(String token, Family family, Message message) async {
+  getAll(String token) async {
+    List<Message> list = <Message>[];
+
+    var response = await apiClient.getAll(token);
+
+    response.forEach((e) {
+      list.add(Message.fromJson(e));
+    });
+
+    return list;
+  }
+
+  insertMessage(
+      String token, Family? family, Message message, User? user) async {
     try {
-      var response = await apiClient.insertMessage(token, family, message);
+      var response =
+          await apiClient.insertMessage(token, family, message, user);
 
       return response;
     } catch (e) {

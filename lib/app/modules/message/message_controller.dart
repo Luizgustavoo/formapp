@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/message_model.dart';
+import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/data/repository/message_repository.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
@@ -9,21 +10,39 @@ import 'package:get_storage/get_storage.dart';
 class MessageController extends GetxController {
   TextEditingController subjectController = TextEditingController();
   TextEditingController messageController = TextEditingController();
+  RxList<Message> listMessages = <Message>[].obs;
   final repository = Get.put(MessageRepository());
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
   dynamic mensagem;
   final box = GetStorage('credenciado');
 
-  Future<Map<String, dynamic>> saveMessage(Family family) async {
+  @override
+  void onInit() {
+    getMessages();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    getMessages();
+    super.onClose();
+  }
+
+  void getMessages() async {
+    final token = box.read('auth')['access_token'];
+    listMessages.value = await repository.getAll("Bearer $token");
+  }
+
+  Future<Map<String, dynamic>> saveMessage({Family? family, User? user}) async {
     Message message = Message(
       titulo: subjectController.text,
       descricao: messageController.text,
     );
     final token = box.read('auth')['access_token'];
     if (await ConnectionStatus.verifyConnection()) {
-      mensagem =
-          await repository.insertMessage("Bearer $token", family, message);
+      mensagem = await repository.insertMessage(
+          "Bearer $token", family, message, user);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};

@@ -53,7 +53,9 @@ class CustomDrawer extends GetView<HomeController> {
                                 child: Obx(() => Text(
                                       controller.username.value.isNotEmpty
                                           ? controller.username.value
+                                              .toUpperCase()
                                           : "",
+                                      textAlign: TextAlign.center,
                                       style: const TextStyle(
                                           fontSize: 16, fontFamily: 'Poppins'),
                                     )),
@@ -68,7 +70,7 @@ class CustomDrawer extends GetView<HomeController> {
               ),
               CustomListTile(Icons.home_rounded, 'HOME', () {}, true),
               CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {
-                controller.clear();
+                controller.exit();
               }, true),
             ],
           ),

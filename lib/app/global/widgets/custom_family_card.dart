@@ -50,7 +50,7 @@ class CustomFamilyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RxBool isExpanded = false.obs;
-
+    final familiaId = familyController.box.read('auth')['user']['familia_id'];
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Card(
@@ -130,27 +130,45 @@ class CustomFamilyCard extends StatelessWidget {
                                 onPressed: editFamily,
                                 icon: const Icon(Icons.edit_outlined),
                               ),
-                              IconButton(
-                                iconSize: 22,
-                                onPressed: messageMember,
-                                icon: const Icon(Icons.email_outlined),
-                              ),
-                              IconButton(
-                                iconSize: 22,
-                                onPressed: supportFamily,
-                                icon: const Icon(Icons.support_agent_rounded),
-                              ),
-                              if (showAddMember)
+                              if (familiaId == null) ...[
                                 IconButton(
                                   iconSize: 22,
-                                  onPressed: addMember,
-                                  icon: const Icon(Icons.add_rounded),
+                                  onPressed: messageMember,
+                                  icon: const Icon(Icons.email_outlined),
                                 ),
-                              IconButton(
-                                iconSize: 22,
-                                onPressed: deleteFamily,
-                                icon: const Icon(Icons.delete_outlined),
-                              ),
+                                IconButton(
+                                  iconSize: 22,
+                                  onPressed: () async {
+                                    peopleController.clearModalMessageService();
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      isDismissible: false,
+                                      context: context,
+                                      builder: (context) => Padding(
+                                        padding:
+                                            MediaQuery.of(context).viewInsets,
+                                        child: MessageServiceModal(
+                                          family: family,
+                                          showWidget: true,
+                                          titulo: 'Atendimento ${family.nome}',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.support_agent_rounded),
+                                ),
+                                if (showAddMember)
+                                  IconButton(
+                                    iconSize: 22,
+                                    onPressed: addMember,
+                                    icon: const Icon(Icons.add_rounded),
+                                  ),
+                                IconButton(
+                                  iconSize: 22,
+                                  onPressed: deleteFamily,
+                                  icon: const Icon(Icons.delete_outlined),
+                                ),
+                              ]
                             ]
                           ]))
                 ],
@@ -197,51 +215,56 @@ class CustomFamilyCard extends StatelessWidget {
                                 size: 22,
                               ),
                             ),
-                            IconButton(
-                              iconSize: 22,
-                              onPressed: () {
-                                peopleController.clearModalMessageService();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: MessageServiceModal(
-                                      people: family.pessoas![index],
-                                      showWidget: true,
-                                      titulo: '',
+                            if (familiaId == null) ...[
+                              IconButton(
+                                iconSize: 22,
+                                onPressed: () {
+                                  peopleController.clearModalMessageService();
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    isDismissible: false,
+                                    context: context,
+                                    builder: (context) => Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: MessageServiceModal(
+                                        people: family.pessoas![index],
+                                        showWidget: true,
+                                        titulo:
+                                            'Atendimento ${peopleNames![index]}',
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.support_agent_rounded),
-                            ),
-                            IconButton(
-                              iconSize: 22,
-                              onPressed: () {
-                                List<People> listPeople = [];
-                                listPeople.add(family.pessoas![index]);
-                                final family2 = Family(
-                                  pessoas: listPeople,
-                                );
-                                messageController.clearModalMessage();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: MessageModal(
-                                      family: family2,
-                                      titulo:
-                                          'Mensagem para a Pessoa ${family.pessoas![index].nome}',
+                                  );
+                                },
+                                icon: const Icon(Icons.support_agent_rounded),
+                              ),
+                              IconButton(
+                                iconSize: 22,
+                                onPressed: () {
+                                  List<People> listPeople = [];
+                                  listPeople.add(family.pessoas![index]);
+                                  final family2 = Family(
+                                    pessoas: listPeople,
+                                  );
+                                  messageController.clearModalMessage();
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    isDismissible: false,
+                                    context: context,
+                                    builder: (context) => Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: MessageModal(
+                                        family: family2,
+                                        titulo:
+                                            'Mensagem para a Pessoa ${family.pessoas![index].nome}',
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.email_outlined),
-                            )
+                                  );
+                                },
+                                icon: const Icon(Icons.email_outlined),
+                              )
+                            ]
                           ],
                         ),
                       ],

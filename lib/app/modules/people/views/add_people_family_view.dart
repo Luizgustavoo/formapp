@@ -251,7 +251,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         child: TextFormField(
                           controller:
                               controller.tituloEleitoralPessoaController,
+                          maxLength: 12,
                           decoration: const InputDecoration(
+                              counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Título de Eleitor'),
                           onChanged: (value) {},
@@ -262,10 +264,11 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         flex: 2,
                         child: TextFormField(
                           controller: controller.zonaEleitoralPessoaController,
+                          maxLength: 3,
                           decoration: const InputDecoration(
+                              counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Zona Eleitoral'),
-                          onChanged: (value) {},
                         ),
                       ),
                     ],
@@ -274,15 +277,14 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   TextFormField(
                     controller: controller.localTrabalhoPessoaController,
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Trabalho'),
-                    onChanged: (value) {},
+                        border: OutlineInputBorder(),
+                        labelText: 'Local de Trabalho'),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: controller.cargoPessoaController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Cargo'),
-                    onChanged: (value) {},
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -305,7 +307,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           controller: controller.redeSocialPessoaController,
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: 'Rede Social'),
+                              labelText: 'Rede Social @'),
                           onChanged: (value) {},
                         ),
                       ),
@@ -324,10 +326,8 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       items: controller.listReligion
                           .map<DropdownMenuItem<int>>((item) {
                             return DropdownMenuItem<int>(
-                              value: item
-                                  .id, // Suponha que seus dados tenham um campo 'value'
-                              child: Text(item.descricao ??
-                                  ''), // Suponha que seus dados tenham um campo 'label'
+                              value: item.id,
+                              child: Text(item.descricao ?? ''),
                             );
                           })
                           .toSet()

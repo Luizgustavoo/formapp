@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ class CreateUserModal extends StatelessWidget {
 
   final controller = Get.find<UserController>();
   final familyController = Get.put(FamilyController());
+  final homeController = Get.put(HomeController());
 
   final User? user;
   final String? titulo;
@@ -19,6 +21,7 @@ class CreateUserModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final familiaId = familyController.box.read('auth')['user']['familia_id'];
     return Form(
         key: controller.userFormKey,
         child: SingleChildScrollView(
@@ -96,25 +99,27 @@ class CreateUserModal extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              Obx(
-                () => DropdownButtonFormField<Family>(
-                  isDense: true,
-                  menuMaxHeight: Get.size.height / 2,
-                  value: familyController.selectedFamily,
-                  onChanged: (Family? value) {
-                    familyController.selectedFamily = value;
-                  },
-                  items: familyController.listFamilies
-                      .map<DropdownMenuItem<Family>>((Family family) {
-                    return DropdownMenuItem<Family>(
-                      value: family,
-                      child: Text(family.nome!),
-                    );
-                  }).toList(),
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Família'),
+              if (familiaId == null) ...[
+                Obx(
+                  () => DropdownButtonFormField<Family>(
+                    isDense: true,
+                    menuMaxHeight: Get.size.height / 2,
+                    value: familyController.selectedFamily,
+                    onChanged: (Family? value) {
+                      familyController.selectedFamily = value;
+                    },
+                    items: familyController.listFamilies
+                        .map<DropdownMenuItem<Family>>((Family family) {
+                      return DropdownMenuItem<Family>(
+                        value: family,
+                        child: Text(family.nome!),
+                      );
+                    }).toList(),
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Família'),
+                  ),
                 ),
-              ),
+              ],
               const SizedBox(
                 height: 16,
               ),
@@ -135,7 +140,12 @@ class CreateUserModal extends StatelessWidget {
                             ? await controller.saveUser()
                             : await controller.updateUser(user!.id!);
 
-                        if (retorno['return'] == 0) {
+                        if (tipoOperacao == 'update' &&
+                            retorno['return'] == 0) {
+                          homeController.exit();
+                        }
+                        if (tipoOperacao == 'insert' &&
+                            retorno['return'] == 0) {
                           Get.back();
                         }
                         Get.snackbar(
@@ -150,7 +160,7 @@ class CreateUserModal extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        'SALVAR',
+                        tipoOperacao == 'insert' ? 'SALVAR' : 'ALTERAR',
                         style: CustomTextStyle.button(context),
                       )),
                 ],

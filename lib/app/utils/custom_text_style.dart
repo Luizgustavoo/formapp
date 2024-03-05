@@ -9,6 +9,14 @@ class CustomTextStyle {
     );
   }
 
+  static TextStyle? date(BuildContext context) {
+    return TextStyle(
+      fontSize: 16,
+      color: Colors.orange.shade900,
+      fontFamily: 'Poppins',
+    );
+  }
+
   static TextStyle? login(BuildContext context) {
     return const TextStyle(
       fontSize: 25,
@@ -63,5 +71,13 @@ class CustomTextStyle {
       color: Colors.black87,
       fontFamily: 'Poppinss',
     );
+  }
+
+  static TextStyle? desc(BuildContext context) {
+    return const TextStyle(
+        fontSize: 16,
+        color: Colors.black87,
+        fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
   }
 }

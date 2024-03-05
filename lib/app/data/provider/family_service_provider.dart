@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
+import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -13,14 +14,17 @@ class FamilyServiceApiClient {
   final DatabaseHelper localDatabase = DatabaseHelper();
   var serviceUrl = Uri.parse('$baseUrl/v1/atendimento/create');
 
-  insertService(String token, FamilyService familyService) async {
+  insertService(
+      String token, FamilyService familyService, Family family) async {
+    List<Map<String, dynamic>> pessoasJson = <Map<String, dynamic>>[];
+    pessoasJson = family.pessoas!.map((pessoa) => pessoa.toJson()).toList();
     try {
       var requestBody = {
         "data_atendimento": familyService.dataAtendimento,
         "assunto": familyService.assunto,
         "descricao": familyService.descricao,
         "usuario_id": familyService.usuarioId.toString(),
-        "pessoa_id": familyService.pessoaId.toString()
+        "pessoas": json.encode(pessoasJson),
       };
 
       var response = await httpClient.post(

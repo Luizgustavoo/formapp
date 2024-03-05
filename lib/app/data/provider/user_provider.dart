@@ -13,6 +13,7 @@ class UserApiClient {
 
   getAll(String token) async {
     final id = box.read('auth')['user']['id'];
+
     try {
       var userUrl = Uri.parse('$baseUrl/v1/usuario/list/id/$id');
       var response = await httpClient.get(

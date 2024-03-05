@@ -14,7 +14,7 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-  void clear() {
+  void exit() {
     box.erase();
     Get.offAllNamed('/login');
   }

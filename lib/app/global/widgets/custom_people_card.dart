@@ -14,7 +14,6 @@ class CustomPeopleCard extends StatelessWidget {
 
   VoidCallback? addMember;
   VoidCallback? onEditPerson;
-  VoidCallback? onDeletePerson;
   bool showAddMember = false;
 
   People people;
@@ -166,10 +165,15 @@ class CustomPeopleCard extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                  icon: const Icon(
-                                    Icons.edit_outlined,
-                                    size: 22,
-                                  ),
+                                  icon: familiaId != null
+                                      ? const Icon(
+                                          Icons.search_outlined,
+                                          size: 22,
+                                        )
+                                      : const Icon(
+                                          Icons.edit_outlined,
+                                          size: 22,
+                                        ),
                                 ),
                               ],
                             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
@@ -8,12 +9,14 @@ class MessageModal extends StatelessWidget {
   MessageModal({
     Key? key,
     this.family,
+    this.user,
     required this.titulo,
   }) : super(key: key);
 
   final Family? family;
   final controller = Get.put(MessageController());
   final String? titulo;
+  final User? user;
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +71,13 @@ class MessageModal extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  Map<String, dynamic> retorno =
-                      await controller.saveMessage(family!);
+                  Map<String, dynamic> retorno = <String, dynamic>{};
+                  if (user != null) {
+                    retorno = await controller.saveMessage(user: user);
+                  }
+                  if (family != null) {
+                    retorno = await controller.saveMessage(family: family);
+                  }
 
                   if (retorno['return'] == 0) {
                     Get.back();

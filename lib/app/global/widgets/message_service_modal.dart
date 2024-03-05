@@ -29,6 +29,7 @@ class MessageServiceModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final familiaId = controller.box.read('auth')['user']['familia_id'];
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -45,7 +46,7 @@ class MessageServiceModal extends StatelessWidget {
                   style: CustomTextStyle.title(context),
                 ),
           Padding(
-            padding: const EdgeInsets.only(right: 5),
+            padding: const EdgeInsets.only(right: 5, bottom: 10),
             child: Divider(
               height: 5,
               thickness: 3,
@@ -57,19 +58,22 @@ class MessageServiceModal extends StatelessWidget {
               : const SizedBox(),
           showWidget
               ? GestureDetector(
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2023),
-                      lastDate: DateTime.now(),
-                    );
+                  onTap: familiaId == null
+                      ? () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2023),
+                            lastDate: DateTime.now(),
+                          );
 
-                    if (pickedDate != null &&
-                        pickedDate != peopleController.selectedDate.value) {
-                      peopleController.selectedDate.value = pickedDate;
-                    }
-                  },
+                          if (pickedDate != null &&
+                              pickedDate !=
+                                  peopleController.selectedDate.value) {
+                            peopleController.selectedDate.value = pickedDate;
+                          }
+                        }
+                      : null,
                   child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -106,6 +110,7 @@ class MessageServiceModal extends StatelessWidget {
           Text('Assunto:', style: CustomTextStyle.subtitle(context)),
           TextField(
             controller: peopleController.subjectController,
+            enabled: familiaId == null,
             decoration: const InputDecoration(
               hintText: 'Digite o assunto',
             ),
@@ -113,6 +118,7 @@ class MessageServiceModal extends StatelessWidget {
           const SizedBox(height: 10),
           Text('Mensagem:', style: CustomTextStyle.subtitle(context)),
           TextField(
+            enabled: familiaId == null,
             controller: peopleController.messageController,
             maxLines: 4,
             decoration: const InputDecoration(
@@ -130,51 +136,50 @@ class MessageServiceModal extends StatelessWidget {
                 child:
                     Text('Cancelar', style: CustomTextStyle.button2(context)),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (peopleController.selectedDate.value != null) {
-                    String data =
-                        "${peopleController.selectedDate.value!.year.toString().padLeft(4, '0')}-"
-                        "${peopleController.selectedDate.value!.month.toString().padLeft(2, '0')}-"
-                        "${peopleController.selectedDate.value!.day.toString().padLeft(2, '0')}";
-                    print('Dataaa: $data');
-                  }
-                  if (family != null) {
-                    peopleController.idFamilySelected = family!.id!;
-                  }
-                  if (people != null) {
-                    peopleController.idPeopleSelected = people!.id!;
-                  }
-                  Map<String, dynamic> retorno = <String, dynamic>{};
+              if (familiaId == null) ...[
+                ElevatedButton(
+                  onPressed: () async {
+                    // if (peopleController.selectedDate.value != null) {
+                    //   String data =
+                    //       "${peopleController.selectedDate.value!.year.toString().padLeft(4, '0')}-"
+                    //       "${peopleController.selectedDate.value!.month.toString().padLeft(2, '0')}-"
+                    //       "${peopleController.selectedDate.value!.day.toString().padLeft(2, '0')}";
+                    //   print('Dataaa: $data');
+                    // }
+                    List<People> pessoas = [];
+                    Family? family2;
+                    if (family == null) {
+                      pessoas.add(people!);
+                      family2 = Family(pessoas: pessoas);
+                    }
 
-                  if (peopleController.idPeopleSelected != null) {
-                    retorno = tipoOperacao == 'insert'
-                        ? await peopleController.saveService()
+                    Map<String, dynamic> retorno = tipoOperacao == 'insert'
+                        ? family != null
+                            ? await peopleController.saveService(family!)
+                            : await peopleController.saveService(family2!)
                         : await peopleController
                             .updateService(familyService!.id!);
-                  } else {
-                    //salvar atendimento familia
-                  }
 
-                  if (retorno['return'] == 0) {
-                    Get.back();
-                  }
+                    if (retorno['return'] == 0) {
+                      Get.back();
+                    }
 
-                  Get.snackbar(
-                    snackPosition: SnackPosition.BOTTOM,
-                    duration: const Duration(milliseconds: 1500),
-                    retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                    retorno['message'],
-                    backgroundColor:
-                        retorno['return'] == 0 ? Colors.green : Colors.red,
-                    colorText: Colors.white,
-                  );
-                },
-                child: Text(
-                  'Enviar',
-                  style: CustomTextStyle.button(context),
+                    Get.snackbar(
+                      snackPosition: SnackPosition.BOTTOM,
+                      duration: const Duration(milliseconds: 1500),
+                      retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                      retorno['message'],
+                      backgroundColor:
+                          retorno['return'] == 0 ? Colors.green : Colors.red,
+                      colorText: Colors.white,
+                    );
+                  },
+                  child: Text(
+                    'Enviar',
+                    style: CustomTextStyle.button(context),
+                  ),
                 ),
-              ),
+              ]
             ],
           ),
         ],

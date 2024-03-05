@@ -122,6 +122,7 @@ class CreateFamilyModal extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: controller.numeroCasaFamiliaController,
                     decoration: const InputDecoration(
                       labelText: 'Nº',
@@ -173,11 +174,50 @@ class CreateFamilyModal extends StatelessWidget {
                 const SizedBox(width: 5),
                 Expanded(
                   flex: 1,
-                  child: TextFormField(
-                    controller: controller.ufFamiliaController,
-                    decoration: const InputDecoration(
-                      labelText: 'UF',
-                      border: OutlineInputBorder(),
+                  child: Obx(
+                    () => DropdownButtonFormField<String>(
+                      isDense: true,
+                      menuMaxHeight: Get.size.height / 2,
+                      value: controller.uf.value,
+                      onChanged: (value) {
+                        controller.uf.value = value!;
+                      },
+                      items: <String>[
+                        'AC',
+                        'AL',
+                        'AP',
+                        'AM',
+                        'BA',
+                        'CE',
+                        'DF',
+                        'ES',
+                        'GO',
+                        'MA',
+                        'MT',
+                        'MS',
+                        'MG',
+                        'PA',
+                        'PB',
+                        'PR',
+                        'PE',
+                        'PI',
+                        'RJ',
+                        'RN',
+                        'RS',
+                        'RO',
+                        'RR',
+                        'SC',
+                        'SP',
+                        'SE',
+                        'TO',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(), labelText: 'UF'),
                     ),
                   ),
                 ),

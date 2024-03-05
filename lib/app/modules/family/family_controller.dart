@@ -20,7 +20,6 @@ class FamilyController extends GetxController
   TextEditingController numeroCasaFamiliaController = TextEditingController();
   TextEditingController bairroFamiliaController = TextEditingController();
   TextEditingController cidadeFamiliaController = TextEditingController();
-  TextEditingController ufFamiliaController = TextEditingController();
   TextEditingController complementoFamiliaController = TextEditingController();
   TextEditingController residenciaPropriaFamiliaController =
       TextEditingController();
@@ -38,6 +37,8 @@ class FamilyController extends GetxController
   RxBool residenceOwn = false.obs;
   RxBool familyInfo = true.obs;
   RxBool isExpanded = false.obs;
+
+  RxString uf = 'AC'.obs;
 
   final repository = Get.put(FamilyRepository());
 
@@ -91,7 +92,7 @@ class FamilyController extends GetxController
         bairro: bairroFamiliaController.text,
         numeroCasa: numeroCasaFamiliaController.text,
         cidade: cidadeFamiliaController.text,
-        uf: ufFamiliaController.text,
+        uf: uf.value,
         residenciaPropria: residenceOwn.value ? 'sim' : 'nao',
         status: 1,
         usuarioId: box.read('auth')['user']['id'],
@@ -142,7 +143,7 @@ class FamilyController extends GetxController
         bairro: bairroFamiliaController.text,
         numeroCasa: numeroCasaFamiliaController.text,
         cidade: cidadeFamiliaController.text,
-        uf: ufFamiliaController.text,
+        uf: uf.value,
         residenciaPropria: residenceOwn.value ? 'sim' : 'nao',
         status: 1,
         usuarioId: box.read('auth')['user']['id'],
@@ -222,7 +223,6 @@ class FamilyController extends GetxController
       numeroCasaFamiliaController,
       bairroFamiliaController,
       cidadeFamiliaController,
-      ufFamiliaController,
       complementoFamiliaController,
       residenciaPropriaFamiliaController,
       statusFamiliaController,
@@ -242,7 +242,7 @@ class FamilyController extends GetxController
     numeroCasaFamiliaController.text = selectedFamily!.numeroCasa.toString();
     bairroFamiliaController.text = selectedFamily!.bairro.toString();
     cidadeFamiliaController.text = selectedFamily!.cidade.toString();
-    ufFamiliaController.text = selectedFamily!.uf.toString();
+    uf.value = selectedFamily!.uf.toString();
     complementoFamiliaController.text = selectedFamily!.complemento.toString();
     residenciaPropriaFamiliaController.text =
         selectedFamily!.residenciaPropria.toString();
@@ -266,7 +266,7 @@ class FamilyController extends GetxController
       ruaFamiliaController.text = addressData['logradouro'];
       bairroFamiliaController.text = addressData['bairro'];
       cidadeFamiliaController.text = addressData['localidade'];
-      ufFamiliaController.text = addressData['uf'];
+      uf.value = addressData['uf'];
     }
   }
 
@@ -274,7 +274,7 @@ class FamilyController extends GetxController
     ruaFamiliaController.text = '';
     cidadeFamiliaController.text = '';
     bairroFamiliaController.text = '';
-    ufFamiliaController.text = '';
+    uf.value = '';
     complementoFamiliaController.text = '';
     numeroCasaFamiliaController.text = '';
   }

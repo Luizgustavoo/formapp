@@ -7,7 +7,7 @@ import 'package:formapp/app/modules/initial/initial_view.dart';
 import 'package:formapp/app/modules/login/login_binding.dart';
 import 'package:formapp/app/modules/login/login_view.dart';
 import 'package:formapp/app/modules/message/message_binding.dart';
-import 'package:formapp/app/modules/message/message_view.dart';
+import 'package:formapp/app/modules/message/views/list_message_view.dart';
 import 'package:formapp/app/modules/people/people_binding.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:formapp/app/modules/user/user_binding.dart';

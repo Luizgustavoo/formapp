@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
+import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
+import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/global/widgets/create_user_modal.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
@@ -12,30 +14,35 @@ class ListUserView extends GetView<UserController> {
 
   final box = GetStorage('credenciado');
 
+  final messageController = Get.put(MessageController());
+
   @override
   Widget build(BuildContext context) {
     var idUserLogged = box.read('auth')['user']['id'];
+    final familiaId = controller.box.read('auth')['user']['familia_id'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Listagem de Usuários'),
         actions: [
-          IconButton(
-              onPressed: () {
-                controller.clearAllUserTextFields();
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  isDismissible: false,
-                  context: context,
-                  builder: (context) => Padding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    child: CreateUserModal(
-                      tipoOperacao: 'insert',
-                      titulo: 'Cadastro de Usuário',
+          if (familiaId == null) ...[
+            IconButton(
+                onPressed: () {
+                  controller.clearAllUserTextFields();
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: CreateUserModal(
+                        tipoOperacao: 'insert',
+                        titulo: 'Cadastro de Usuário',
+                      ),
                     ),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.add_rounded))
+                  );
+                },
+                icon: const Icon(Icons.add_rounded))
+          ]
         ],
       ),
       body: Column(
@@ -55,7 +62,9 @@ class ListUserView extends GetView<UserController> {
                             const EdgeInsets.only(left: 5, right: 5, bottom: 5),
                         child: Dismissible(
                           key: UniqueKey(),
-                          direction: DismissDirection.endToStart,
+                          direction: familiaId != null
+                              ? DismissDirection.none
+                              : DismissDirection.endToStart,
                           confirmDismiss: (DismissDirection direction) async {
                             if (direction == DismissDirection.endToStart) {
                               showDialog(context, user);
@@ -94,7 +103,9 @@ class ListUserView extends GetView<UserController> {
                           ),
                           child: Card(
                             child: ListTile(
-                              leading: user.status == 1
+                              leading: user.status == 1 &&
+                                      familiaId != null &&
+                                      idUserLogged == user.id
                                   ? IconButton(
                                       onPressed: () {
                                         controller.selectedUser = user;
@@ -116,17 +127,57 @@ class ListUserView extends GetView<UserController> {
                                       },
                                       icon: const Icon(Icons.edit_outlined,
                                           color: Colors.blue, size: 25))
-                                  : const SizedBox(
-                                      width: 50,
-                                      height: 50,
-                                    ),
+                                  : user.status == 1 && familiaId == null
+                                      ? IconButton(
+                                          onPressed: () {
+                                            controller.selectedUser = user;
+                                            controller.fillInUserFields();
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              isDismissible: false,
+                                              context: context,
+                                              builder: (context) => Padding(
+                                                padding: MediaQuery.of(context)
+                                                    .viewInsets,
+                                                child: CreateUserModal(
+                                                  tipoOperacao: 'update',
+                                                  titulo:
+                                                      'Alteração de Usuário',
+                                                  user: user,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(Icons.edit_outlined,
+                                              color: Colors.blue, size: 25))
+                                      : const CircleAvatar(
+                                          radius: 25,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/default_avatar.jpg'),
+                                        ),
                               trailing: idUserLogged == user.id
                                   ? const SizedBox(
                                       width: 50,
                                       height: 50,
                                     )
                                   : IconButton(
-                                      onPressed: () async {},
+                                      onPressed: () async {
+                                        messageController.clearModalMessage();
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          isDismissible: false,
+                                          context: context,
+                                          builder: (context) => Padding(
+                                            padding: MediaQuery.of(context)
+                                                .viewInsets,
+                                            child: MessageModal(
+                                              user: user,
+                                              titulo:
+                                                  'Mensagem para ${user.nome}',
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       icon: const Icon(
                                         Icons.message_outlined,
                                         size: 25,

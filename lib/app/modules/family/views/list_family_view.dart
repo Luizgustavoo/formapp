@@ -24,28 +24,31 @@ class FamilyView extends GetView<FamilyController> {
 
   @override
   Widget build(BuildContext context) {
+    final familiaId = peopleController.box.read('auth')['user']['familia_id'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Famílias Cadastradas'),
         actions: [
-          IconButton(
-              onPressed: () {
-                controller.clearAllFamilyTextFields();
-                controller.typeOperation.value = 1;
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  isDismissible: false,
-                  context: context,
-                  builder: (context) => Padding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    child: CreateFamilyModal(
-                      tipoOperacao: 'insert',
-                      titulo: "Cadastro de Família",
+          if (familiaId == null) ...[
+            IconButton(
+                onPressed: () {
+                  controller.clearAllFamilyTextFields();
+                  controller.typeOperation.value = 1;
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: CreateFamilyModal(
+                        tipoOperacao: 'insert',
+                        titulo: "Cadastro de Família",
+                      ),
                     ),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.add_rounded))
+                  );
+                },
+                icon: const Icon(Icons.add_rounded))
+          ]
         ],
       ),
       body: Column(
@@ -135,7 +138,7 @@ class FamilyView extends GetView<FamilyController> {
                               family: family,
                               showWidget: true,
                               tipoOperacao: 'insert',
-                              titulo: '',
+                              titulo: 'Atendimento ${family.nome}',
                             ),
                           ),
                         );

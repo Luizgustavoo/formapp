@@ -395,12 +395,11 @@ class PeopleController extends GetxController {
   }
 
   //*MÉTODOS RESPONSAVEIS PELO ATENDIMENTO*/
-  Future<Map<String, dynamic>> saveService() async {
+  Future<Map<String, dynamic>> saveService(Family family) async {
     FamilyService familyService = FamilyService(
       descricao: messageController.text,
       assunto: subjectController.text,
       dataAtendimento: selectedDate.value.toString(),
-      pessoaId: idPeopleSelected,
       usuarioId: box.read('auth')['user']['id'],
     );
 
@@ -408,8 +407,8 @@ class PeopleController extends GetxController {
     dynamic mensagem;
 
     if (await ConnectionStatus.verifyConnection()) {
-      mensagem =
-          await repositoryService.insertService("Bearer $token", familyService);
+      mensagem = await repositoryService.insertService(
+          "Bearer $token", familyService, family);
     } else {
       await repositoryService.saveFamilyServiceLocal(familyService);
     }
