@@ -30,13 +30,16 @@ class CustomPeopleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final familiaId = controller.box.read('auth')['user']['familia_id'];
     RxBool isExpanded = false.obs;
 
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Dismissible(
         key: UniqueKey(),
-        direction: DismissDirection.startToEnd,
+        direction: familiaId != null
+            ? DismissDirection.none
+            : DismissDirection.startToEnd,
         confirmDismiss: (DismissDirection direction) async {
           if (direction == DismissDirection.startToEnd) {
             await showModalBottomSheet(

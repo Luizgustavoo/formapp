@@ -50,54 +50,97 @@ class ListUserView extends GetView<UserController> {
                     itemCount: controller.listUsers.length,
                     itemBuilder: (context, index) {
                       User user = controller.listUsers[index];
-                      return Card(
-                        child: ListTile(
-                          leading: user.status == 1
-                              ? IconButton(
-                                  onPressed: () {
-                                    controller.selectedUser = user;
-                                    controller.fillInUserFields();
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      isDismissible: false,
-                                      context: context,
-                                      builder: (context) => Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: CreateUserModal(
-                                          tipoOperacao: 'update',
-                                          titulo: 'Alteração de Usuário',
-                                          user: user,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.edit_outlined,
-                                      color: Colors.blue, size: 25))
-                              : const SizedBox(
-                                  width: 50,
-                                  height: 50,
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+                        child: Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          confirmDismiss: (DismissDirection direction) async {
+                            if (direction == DismissDirection.endToStart) {
+                              showDialog(context, user);
+                            }
+                            return false;
+                          },
+                          background: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: user.status == 1
+                                  ? Colors.red.shade500
+                                  : Colors.green,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      user.status == 1
+                                          ? const Icon(Icons.delete_outline,
+                                              color: Colors.white, size: 25)
+                                          : const Icon(
+                                              Icons.check_rounded,
+                                              size: 25,
+                                              color: Colors.white,
+                                            ),
+                                    ],
+                                  ),
                                 ),
-                          trailing: idUserLogged == user.id
-                              ? const SizedBox(
-                                  width: 50,
-                                  height: 50,
-                                )
-                              : IconButton(
-                                  onPressed: () async {
-                                    showDialog(context, user);
-                                  },
-                                  icon: user.status == 1
-                                      ? const Icon(Icons.delete_outline,
-                                          color: Colors.red, size: 25)
-                                      : const Icon(Icons.check_rounded)),
-                          title: Text(
-                            user.nome!,
-                            style: CustomTextStyle.subtitleNegrit(context),
+                              ),
+                            ),
                           ),
-                          subtitle: Text(
-                            user.username!,
-                            style: CustomTextStyle.form(context),
+                          child: Card(
+                            child: ListTile(
+                              leading: user.status == 1
+                                  ? IconButton(
+                                      onPressed: () {
+                                        controller.selectedUser = user;
+                                        controller.fillInUserFields();
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          isDismissible: false,
+                                          context: context,
+                                          builder: (context) => Padding(
+                                            padding: MediaQuery.of(context)
+                                                .viewInsets,
+                                            child: CreateUserModal(
+                                              tipoOperacao: 'update',
+                                              titulo: 'Alteração de Usuário',
+                                              user: user,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(Icons.edit_outlined,
+                                          color: Colors.blue, size: 25))
+                                  : const SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                              trailing: idUserLogged == user.id
+                                  ? const SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                    )
+                                  : IconButton(
+                                      onPressed: () async {},
+                                      icon: const Icon(
+                                        Icons.message_outlined,
+                                        size: 25,
+                                        color: Colors.grey,
+                                      )),
+                              title: Text(
+                                user.nome!,
+                                style: CustomTextStyle.subtitleNegrit(context),
+                              ),
+                              subtitle: Text(
+                                user.username!,
+                                style: CustomTextStyle.form(context),
+                              ),
+                            ),
                           ),
                         ),
                       );
