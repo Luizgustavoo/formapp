@@ -44,6 +44,13 @@ class LoginView extends GetView<LoginController> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                // const SizedBox(
+                                //   width: 140,
+                                //   height: 140,
+                                //   child: Image(
+                                //       image: AssetImage(
+                                //           'assets/images/logo_azul.png')),
+                                // ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),

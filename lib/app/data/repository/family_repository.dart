@@ -51,6 +51,17 @@ class FamilyRepository {
     }
   }
 
+  deleteFamily(String token, Family family) async {
+    try {
+      var response = await apiClient.deleteFamily(token, family);
+
+      return response;
+    } catch (e) {
+      print('Erro ao atualizar a família: $e');
+      rethrow;
+    }
+  }
+
   saveFamilyLocal(Family family) async {
     try {
       var response = await apiClient.saveFamilyLocal(family);

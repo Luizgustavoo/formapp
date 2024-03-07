@@ -5,7 +5,7 @@ import 'package:formapp/app/data/provider/people_provider.dart';
 class PeopleRepository {
   final PeopleApiClient apiClient = PeopleApiClient();
 
-  getALl(String token) async {
+  getAll(String token) async {
     List<People> list = <People>[];
 
     var response = await apiClient.getAll(token);

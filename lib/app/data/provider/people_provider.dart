@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/people_model.dart';
@@ -51,9 +51,24 @@ class PeopleApiClient {
         );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Error",
-        content: Text("$err"),
+      Get.snackbar(
+        'Sem Conexão',
+        'Você está sem conexão com a internet.',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        animationDuration: const Duration(milliseconds: 1500),
+        isDismissible: true,
+        overlayBlur: 0,
+        mainButton: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text(
+            'Fechar',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       );
     }
     return null;
@@ -261,8 +276,8 @@ class PeopleApiClient {
   }
 
   /*SALVAR DADOS OFFLINE DA PESSOA */
-  Future<dynamic> savePeopleLocally(Map<String, dynamic> familyData) async {
-    var retorno = await localDatabase.insert(familyData, 'family_table');
+  Future<dynamic> savePeopleLocally(Map<String, dynamic> peopleData) async {
+    var retorno = await localDatabase.insert(peopleData, 'people_table');
     return retorno;
   }
 

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
@@ -51,9 +51,24 @@ class FamilyApiClient {
         );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Error",
-        content: Text("$err"),
+      Get.snackbar(
+        'Sem Conexão',
+        'Você está sem conexão com a internet.',
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.red,
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        animationDuration: const Duration(milliseconds: 1500),
+        isDismissible: true,
+        overlayBlur: 0,
+        mainButton: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text(
+            'Fechar',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       );
     }
     return null;
@@ -141,6 +156,48 @@ class FamilyApiClient {
           "Authorization": token,
         },
         body: requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      Get.defaultDialog(
+        title: "Erro",
+        content: Text("$err"),
+      );
+    }
+    return null;
+  }
+
+  deleteFamily(String token, Family family) async {
+    try {
+      var familyUrl = Uri.parse('$baseUrl/v1/familia/delete/${family.id}');
+
+      var response = await httpClient.delete(
+        familyUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
       );
 
       if (response.statusCode == 200) {

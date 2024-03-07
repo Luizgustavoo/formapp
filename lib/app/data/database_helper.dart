@@ -31,6 +31,7 @@ class DatabaseHelper {
 
       CREATE TABLE people_table (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        foto TEXT,
         nome TEXT,
         cpf TEXT,
         estadoCivilId INTEGER,
@@ -49,7 +50,6 @@ class DatabaseHelper {
         usuarioId INTEGER,
         familiaId INTEGER,
         igrejaId TEXT,
-        foto TEXT
       );
 
       CREATE TABLE family_service_table (

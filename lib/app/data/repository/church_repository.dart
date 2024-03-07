@@ -6,23 +6,23 @@ class ChurchRepository {
   final ChurchApiClient apiClient = ChurchApiClient();
   final box = GetStorage();
 
-  Future<List<Igreja>> getAll(String token) async {
+  Future<List<Church>> getAll(String token) async {
     // Verifica se existem dados salvos localmente
     if (box.hasData('church')) {
       List<dynamic> localData = box.read<List<dynamic>>('church')!;
-      List<Igreja> localChurchList = localData
-          .map((e) => Igreja.fromJson(e as Map<String, dynamic>))
+      List<Church> localChurchList = localData
+          .map((e) => Church.fromJson(e as Map<String, dynamic>))
           .toList();
       return localChurchList;
     } else {
       // Se não houver dados salvos localmente, solicite à API
-      List<Igreja> list = <Igreja>[];
+      List<Church> list = <Church>[];
 
       var response = await apiClient.getAll(token);
 
       if (response != null) {
         response.forEach((e) {
-          list.add(Igreja.fromJson(e));
+          list.add(Church.fromJson(e));
         });
 
         // Salva os dados localmente

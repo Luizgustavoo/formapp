@@ -21,11 +21,11 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 30),
+      margin: const EdgeInsets.only(top: 25),
       child: ListView(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(10),
             child: Form(
               key: controller.peopleFormKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -80,12 +80,10 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      const Text(
-                        'Provedor da casa: ',
-                        style: TextStyle(),
+                      const SizedBox(width: 70),
+                      Text(
+                        'Provedor: ',
+                        style: CustomTextStyle.button2(context),
                       ),
                       Obx(() => Switch(
                             activeColor: Colors.orange.shade700,
@@ -247,6 +245,33 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   Row(
                     children: [
                       Expanded(
+                        child: TextFormField(
+                          maxLength: 15,
+                          controller: controller.celularPessoaController,
+                          decoration: const InputDecoration(
+                              counterText: "",
+                              border: OutlineInputBorder(),
+                              labelText: 'Telefone'),
+                          onChanged: (value) =>
+                              controller.onPhoneChanged(value),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          controller: controller.redeSocialPessoaController,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Rede Social @'),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
                         flex: 3,
                         child: TextFormField(
                           controller:
@@ -269,46 +294,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Zona Eleitoral'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: controller.localTrabalhoPessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Local de Trabalho'),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: controller.cargoPessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Cargo'),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          maxLength: 15,
-                          controller: controller.celularPessoaController,
-                          decoration: const InputDecoration(
-                              counterText: "",
-                              border: OutlineInputBorder(),
-                              labelText: 'Telefone'),
-                          onChanged: (value) =>
-                              controller.onPhoneChanged(value),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          controller: controller.redeSocialPessoaController,
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Rede Social @'),
-                          onChanged: (value) {},
                         ),
                       ),
                     ],
@@ -398,9 +383,20 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         labelText: 'Função/Igreja'),
                     onChanged: (value) {},
                   ),
-                  const SizedBox(
-                    height: 8,
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: controller.localTrabalhoPessoaController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Local de Trabalho'),
                   ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: controller.cargoPessoaController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Cargo'),
+                  ),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

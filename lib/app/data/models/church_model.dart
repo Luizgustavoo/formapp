@@ -1,6 +1,6 @@
 import 'package:formapp/app/data/models/user_model.dart';
 
-class Igreja {
+class Church {
   int? id;
   String? descricao;
   String? observacoes;
@@ -10,7 +10,7 @@ class Igreja {
   String? dataUpdate;
   User? user;
 
-  Igreja(
+  Church(
       {this.id,
       this.descricao,
       this.observacoes,
@@ -20,7 +20,7 @@ class Igreja {
       this.dataUpdate,
       this.user});
 
-  Igreja.fromJson(Map<String, dynamic> json) {
+  Church.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     descricao = json['descricao'];
     observacoes = json['observacoes'];

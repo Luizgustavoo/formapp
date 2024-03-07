@@ -1,6 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/auth_model.dart';
 import 'package:formapp/app/data/repository/auth_repository.dart';
+import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -21,6 +23,9 @@ class LoginController extends GetxController {
   RxString errorMessage = ''.obs;
 
   RxBool showErrorSnackbar = false.obs;
+
+  final userController = Get.put(UserController());
+
   void login() async {
     if (formKey.currentState!.validate()) {
       loading.value = true;
@@ -29,7 +34,9 @@ class LoginController extends GetxController {
 
       if (auth != null) {
         box.write('auth', auth?.toJson());
-
+        final String? token = await FirebaseMessaging.instance.getToken();
+        final id = box.read('auth')['user']['id'];
+        userController.updateFirebaseTokenUser(id: id, tokenFirebase: token);
         Get.offAllNamed('/home');
       } else {
         showErrorSnackbar.value = true;

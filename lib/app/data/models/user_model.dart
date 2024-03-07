@@ -9,6 +9,7 @@ class User {
   String? senha;
   int? usuarioId;
   User? user;
+  String? tokenFirebase;
   dynamic familiaId;
 
   User(
@@ -22,6 +23,7 @@ class User {
       this.user,
       this.usuarioId,
       this.senha,
+      this.tokenFirebase,
       this.familiaId});
 
   User.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class User {
     dataCadastro = json['data_cadastro'];
     dataUpdate = json['data_update'];
     senha = json['senha'];
+    tokenFirebase = json['token_firebase'];
     usuarioId = json['usuario_id'] as int;
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     familiaId = json['familia_id'] as dynamic;
@@ -48,6 +51,7 @@ class User {
     data['data_cadastro'] = dataCadastro;
     data['data_update'] = dataUpdate;
     data['senha'] = senha;
+    data['token_firebase'] = tokenFirebase;
     data['usuario_id'] = usuarioId;
     if (user != null) {
       data['usuario'] = user!.toJson();

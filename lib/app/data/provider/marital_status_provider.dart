@@ -10,9 +10,9 @@ class MaritalStatusApiClient {
 
   getAll(String token) async {
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/estadocivil/list');
+      var maritalUrl = Uri.parse('$baseUrl/v1/estadocivil/list');
       var response = await httpClient.get(
-        familyUrl,
+        maritalUrl,
         headers: {
           "Accept": "application/json",
           "Authorization": token,

@@ -191,4 +191,51 @@ class UserApiClient {
     }
     return null;
   }
+
+  updateFirebaseTokenUser(String token, User user, String tokenFirebase) async {
+    try {
+      var userUrl =
+          Uri.parse('$baseUrl/v1/usuario/update-token-firebase/${user.id}');
+
+      var requestBody = {
+        "token_firebase": tokenFirebase,
+      };
+
+      var response = await httpClient.put(
+        userUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      Get.defaultDialog(
+        title: "Erro",
+        content: Text("$err"),
+      );
+    }
+    return null;
+  }
 }

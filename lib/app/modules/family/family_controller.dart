@@ -9,6 +9,7 @@ import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class FamilyController extends GetxController
     with SingleGetTickerProviderMixin {
@@ -45,6 +46,10 @@ class FamilyController extends GetxController
   Animation<double>? animation;
   AnimationController? animationController;
   dynamic mensagem;
+
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+  GlobalKey keyOne = GlobalKey();
 
   final DatabaseHelper localDatabase = DatabaseHelper();
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
@@ -171,6 +176,35 @@ class FamilyController extends GetxController
         "message": "Preencha todos os campos da família!"
       };
     }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> deleteFamily(int id) async {
+    Family family = Family(
+      id: id,
+    );
+
+    final token = box.read('auth')['access_token'];
+
+    if (await ConnectionStatus.verifyConnection()) {
+      mensagem = await repository.deleteFamily("Bearer $token", family);
+    } else {
+      mensagem = localDatabase.delete(family.id!, 'family_table');
+    }
+
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe uma família com esse nome!"
+        };
+      }
+    }
+
+    getFamilies();
+
     return retorno;
   }
 

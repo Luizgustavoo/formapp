@@ -126,6 +126,7 @@ class CustomFamilyCard extends StatelessWidget {
                           children: [
                             if (!isExpanded.value) ...[
                               IconButton(
+                                key: familyController.keyOne,
                                 iconSize: 22,
                                 onPressed: editFamily,
                                 icon: const Icon(Icons.edit_outlined),
@@ -165,7 +166,10 @@ class CustomFamilyCard extends StatelessWidget {
                                   ),
                                 IconButton(
                                   iconSize: 22,
-                                  onPressed: deleteFamily,
+                                  onPressed: () {
+                                    showDialog(context, family);
+                                    // familyController.deleteFamily(family.id!);
+                                  },
                                   icon: const Icon(Icons.delete_outlined),
                                 ),
                               ]
@@ -274,6 +278,57 @@ class CustomFamilyCard extends StatelessWidget {
               ],
             )),
       ),
+    );
+  }
+
+  void showDialog(context, Family family) {
+    Get.defaultDialog(
+      titlePadding: const EdgeInsets.all(16),
+      contentPadding: const EdgeInsets.all(16),
+      title: "Confirmação",
+      titleStyle: CustomTextStyle.titleSplash(context),
+      content: Text(
+        textAlign: TextAlign.center,
+        "Tem certeza que deseja remover a ${family.nome} ?",
+        style: const TextStyle(
+          fontFamily: 'Poppinss',
+          fontSize: 18,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Get.back();
+          },
+          child: Text(
+            "Cancelar",
+            style: CustomTextStyle.button2(context),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            Map<String, dynamic> retorno =
+                await familyController.deleteFamily(family.id!);
+
+            if (retorno['return'] == 0) {
+              Get.back();
+            }
+            Get.snackbar(
+              snackPosition: SnackPosition.BOTTOM,
+              duration: const Duration(milliseconds: 1500),
+              retorno['return'] == 0 ? 'Sucesso' : "Falha",
+              retorno['message'],
+              backgroundColor:
+                  retorno['return'] == 0 ? Colors.green : Colors.red,
+              colorText: Colors.white,
+            );
+          },
+          child: Text(
+            "Confirmar",
+            style: CustomTextStyle.button(context),
+          ),
+        ),
+      ],
     );
   }
 }

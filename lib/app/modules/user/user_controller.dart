@@ -11,7 +11,7 @@ class UserController extends GetxController {
   RxList<User> listUsers = <User>[].obs;
 
   final box = GetStorage('credenciado');
-  final repository = Get.find<UserRepository>();
+  final repository = Get.put(UserRepository());
 
   User? selectedUser;
 
@@ -175,6 +175,24 @@ class UserController extends GetxController {
         "message": "Preencha todos os campos da família!"
       };
     }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> updateFirebaseTokenUser(
+      {int? id, String? tokenFirebase}) async {
+    User user = User(id: id, tokenFirebase: tokenFirebase);
+
+    final token = box.read('auth')['access_token'];
+
+    final mensagem = await repository.updateFirebaseTokenUser(
+        "Bearer $token", user, tokenFirebase!);
+
+    if (mensagem == null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 1, "message": "Falha ao cadastrar token!"};
+      }
+    }
+
     return retorno;
   }
 

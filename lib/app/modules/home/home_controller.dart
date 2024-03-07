@@ -7,10 +7,16 @@ class HomeController extends GetxController {
   var box;
   RxString username = "".obs;
 
+  // final NotificationSetUp _noti = NotificationSetUp();
+
+  var context = Get.context;
+
   @override
   void onInit() {
     box = GetStorage('credenciado');
     username.value = box.read('auth')['user']['nome'] ?? "Sem dados";
+    // _noti.configurePushNotification(context!);
+    // _noti.eventListenerCallback(context!);
     super.onInit();
   }
 

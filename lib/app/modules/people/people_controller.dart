@@ -58,9 +58,9 @@ class PeopleController extends GetxController {
   final repositoryChurch = Get.find<ChurchRepository>();
   final box = GetStorage('credenciado');
   RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
-  RxList<Religiao> listReligion = <Religiao>[].obs;
+  RxList<Religion> listReligion = <Religion>[].obs;
   RxList<People> composicaoFamiliar = <People>[].obs;
-  RxList<Igreja> listChurch = <Igreja>[].obs;
+  RxList<Church> listChurch = <Church>[].obs;
   int suggestionsCount = 12;
   final focus = FocusNode();
   List<String> suggestions = [];
@@ -121,7 +121,7 @@ class PeopleController extends GetxController {
 
   void getPeoples() async {
     final token = box.read('auth')['access_token'];
-    listPeoples.value = await repository.getALl("Bearer $token");
+    listPeoples.value = await repository.getAll("Bearer $token");
   }
 
   Future<Map<String, dynamic>> savePeople(Family family) async {
@@ -158,7 +158,7 @@ class PeopleController extends GetxController {
               "return": 0,
               "message": "Operação realizada com sucesso!"
             };
-            getPeoples();
+            familyController.getFamilies();
           }
         } else if (mensagem['message'] == 'ja_existe') {
           retorno = {

@@ -181,7 +181,7 @@ class ListUserView extends GetView<UserController> {
                                       icon: const Icon(
                                         Icons.message_outlined,
                                         size: 25,
-                                        color: Colors.grey,
+                                        color: Colors.green,
                                       )),
                               title: Text(
                                 user.nome!,

@@ -6,26 +6,23 @@ class ReligionRepository {
   final ReligionApiClient apiClient = ReligionApiClient();
   final box = GetStorage();
 
-  Future<List<Religiao>> getAll(String token) async {
-    // Verifica se existem dados salvos localmente
+  Future<List<Religion>> getAll(String token) async {
     if (box.hasData('religion')) {
       List<dynamic> localData = box.read<List<dynamic>>('religion')!;
-      List<Religiao> localReligionList = localData
-          .map((e) => Religiao.fromJson(e as Map<String, dynamic>))
+      List<Religion> localReligionList = localData
+          .map((e) => Religion.fromJson(e as Map<String, dynamic>))
           .toList();
       return localReligionList;
     } else {
-      // Se não houver dados salvos localmente, solicite à API
-      List<Religiao> list = <Religiao>[];
+      List<Religion> list = <Religion>[];
 
       var response = await apiClient.getAll(token);
 
       if (response != null) {
         response.forEach((e) {
-          list.add(Religiao.fromJson(e));
+          list.add(Religion.fromJson(e));
         });
 
-        // Salva os dados localmente
         box.write('religion', list.map((e) => e.toJson()).toList());
       }
 
