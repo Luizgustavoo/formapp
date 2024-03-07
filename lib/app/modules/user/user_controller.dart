@@ -32,7 +32,10 @@ class UserController extends GetxController {
 
   @override
   void onInit() {
-    getUsers();
+    if (box.read('auth') != null) {
+      getUsers();
+    }
+
     super.onInit();
   }
 

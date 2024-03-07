@@ -8,10 +8,15 @@ class MaritalStatusRepository {
   final box = GetStorage();
 
   Future<List<MaritalStatus>> getAll(String token) async {
-    List<dynamic> localData = box.read<List<dynamic>>('maritalStatus')!;
-    List<MaritalStatus> localMaritalStatusList = localData
-        .map((e) => MaritalStatus.fromJson(e as Map<String, dynamic>))
-        .toList();
+    List<dynamic> localData = [];
+    List<MaritalStatus> localMaritalStatusList = [];
+
+    if (box.hasData('maritalStatus')) {
+      List<dynamic> localData = box.read<List<dynamic>>('maritalStatus')!;
+      localMaritalStatusList = localData
+          .map((e) => MaritalStatus.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
 
     List<MaritalStatus> list = <MaritalStatus>[];
     if (await ConnectionStatus.verifyConnection()) {

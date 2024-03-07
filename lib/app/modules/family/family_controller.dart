@@ -58,15 +58,18 @@ class FamilyController extends GetxController
 
   @override
   void onInit() {
-    final internetStatusProvider = Get.find<InternetStatusProvider>();
-    final statusStream = internetStatusProvider.statusStream;
-    statusStream.listen((status) {
-      if (status == InternetStatus.connected) {
-        getFamilies();
-      }
-    });
+    if (box.read('auth') != null) {
+      final internetStatusProvider = Get.find<InternetStatusProvider>();
+      final statusStream = internetStatusProvider.statusStream;
+      statusStream.listen((status) {
+        if (status == InternetStatus.connected) {
+          getFamilies();
+        }
+      });
 
-    getFamilies();
+      getFamilies();
+    }
+
     super.onInit();
   }
 

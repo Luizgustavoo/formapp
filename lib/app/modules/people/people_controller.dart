@@ -92,19 +92,23 @@ class PeopleController extends GetxController {
 
   @override
   void onInit() async {
-    await getMaritalStatus();
-    getPeoples();
-    await getReligion();
-    getChurch();
+    await Future.wait([
+      getMaritalStatus(),
+      getPeoples(),
+      getReligion(),
+      getChurch(),
+    ]);
     super.onInit();
   }
 
   @override
   void onClose() async {
-    await getMaritalStatus();
-    await getReligion();
-    getPeoples();
-    getChurch();
+    await Future.wait([
+      getMaritalStatus(),
+      getPeoples(),
+      getReligion(),
+      getChurch(),
+    ]);
     super.onClose();
   }
 
@@ -119,7 +123,7 @@ class PeopleController extends GetxController {
     }
   }
 
-  void getPeoples() async {
+  Future<void> getPeoples() async {
     final token = box.read('auth')['access_token'];
     listPeoples.value = await repository.getAll("Bearer $token");
   }
@@ -277,7 +281,7 @@ class PeopleController extends GetxController {
     listReligion.assignAll(updatedList);
   }
 
-  void getChurch() async {
+  Future<void> getChurch() async {
     listChurch.clear();
     final token = box.read('auth')['access_token'];
     listChurch.value = await repositoryChurch.getAll("Bearer $token");
