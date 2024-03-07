@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/family/family_binding.dart';
 import 'package:formapp/app/modules/family/views/list_family_view.dart';
 import 'package:formapp/app/modules/home/home_binding.dart';
@@ -15,7 +16,8 @@ import 'package:formapp/app/modules/user/views/list_user_view.dart';
 import 'package:formapp/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 
-class ApppPages {
+class AppPages {
+  static late BuildContext context;
   static final routes = [
     GetPage(
       name: Routes.INITIAL,

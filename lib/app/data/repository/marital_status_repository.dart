@@ -12,7 +12,7 @@ class MaritalStatusRepository {
     List<MaritalStatus> localMaritalStatusList = [];
 
     if (box.hasData('maritalStatus')) {
-      List<dynamic> localData = box.read<List<dynamic>>('maritalStatus')!;
+      localData = box.read<List<dynamic>>('maritalStatus')!;
       localMaritalStatusList = localData
           .map((e) => MaritalStatus.fromJson(e as Map<String, dynamic>))
           .toList();

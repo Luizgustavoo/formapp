@@ -3,6 +3,7 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
+import 'package:formapp/app/global/widgets/show_case.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
@@ -31,6 +32,8 @@ class CustomFamilyCard extends StatelessWidget {
   Family family;
   final messageController = Get.find<MessageController>();
 
+  final int? index;
+
   CustomFamilyCard(
       {Key? key,
       this.familyName = '',
@@ -42,6 +45,7 @@ class CustomFamilyCard extends StatelessWidget {
       required this.family,
       this.addMember,
       required this.stripe,
+      required this.index,
       this.peopleNames,
       this.local = false,
       this.showAddMember = false})
@@ -125,12 +129,24 @@ class CustomFamilyCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             if (!isExpanded.value) ...[
-                              IconButton(
-                                key: familyController.keyOne,
-                                iconSize: 22,
-                                onPressed: editFamily,
-                                icon: const Icon(Icons.edit_outlined),
-                              ),
+                              index == 0
+                                  ? ShowCaseView(
+                                      border: const CircleBorder(),
+                                      description:
+                                          'Aqui você pode editar as informações da família.',
+                                      globalKey: familyController.editFamily,
+                                      title: 'EDIÇÃO',
+                                      child: IconButton(
+                                        iconSize: 22,
+                                        onPressed: editFamily,
+                                        icon: const Icon(Icons.edit_outlined),
+                                      ),
+                                    )
+                                  : IconButton(
+                                      iconSize: 22,
+                                      onPressed: editFamily,
+                                      icon: const Icon(Icons.edit_outlined),
+                                    ),
                               if (familiaId == null) ...[
                                 IconButton(
                                   iconSize: 22,

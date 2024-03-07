@@ -3,6 +3,7 @@ import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/global/widgets/create_family_modal.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/message_service_modal.dart';
+import 'package:formapp/app/global/widgets/show_case.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
@@ -30,24 +31,30 @@ class FamilyView extends GetView<FamilyController> {
         title: const Text('Famílias Cadastradas'),
         actions: [
           if (familiaId == null) ...[
-            IconButton(
-                onPressed: () {
-                  controller.clearAllFamilyTextFields();
-                  controller.typeOperation.value = 1;
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    isDismissible: false,
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: CreateFamilyModal(
-                        tipoOperacao: 'insert',
-                        titulo: "Cadastro de Família",
+            ShowCaseView(
+              title: 'ADICONAR FAMÍLIA',
+              description: 'Adicione famílias.',
+              border: const CircleBorder(),
+              globalKey: controller.addFamily,
+              child: IconButton(
+                  onPressed: () {
+                    controller.clearAllFamilyTextFields();
+                    controller.typeOperation.value = 1;
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      isDismissible: false,
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: CreateFamilyModal(
+                          tipoOperacao: 'insert',
+                          titulo: "Cadastro de Família",
+                        ),
                       ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.add_rounded))
+                    );
+                  },
+                  icon: const Icon(Icons.add_rounded)),
+            )
           ]
         ],
       ),
@@ -85,6 +92,7 @@ class FamilyView extends GetView<FamilyController> {
                     return const ShimmerCustomFamilyCard();
                   } else {
                     return CustomFamilyCard(
+                      index: index,
                       local: family.familyLocal!,
                       family: family,
                       showAddMember: true,

@@ -10,6 +10,7 @@ import 'package:formapp/app/theme/app_theme.dart';
 import 'package:formapp/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,15 +28,20 @@ void main() async {
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    systemNavigationBarColor: Colors.orange.shade300,
+    systemNavigationBarColor: Colors.orange.withAlpha(150),
   ));
 
-  runApp(GetMaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'Inclusão Familiar',
-    theme: appThemeData,
-    initialRoute: Routes.INITIAL,
-    getPages: ApppPages.routes,
-    initialBinding: InitialBinding(),
-  ));
+  runApp(
+    ShowCaseWidget(
+      builder: Builder(
+          builder: (context) => GetMaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Inclusão Familiar',
+                theme: appThemeData,
+                initialRoute: Routes.INITIAL,
+                getPages: AppPages.routes,
+                initialBinding: InitialBinding(),
+              )),
+    ),
+  );
 }

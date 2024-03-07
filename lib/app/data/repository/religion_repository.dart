@@ -1,5 +1,6 @@
 import 'package:formapp/app/data/models/religion_model.dart';
 import 'package:formapp/app/data/provider/religion_provider.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ReligionRepository {
@@ -7,15 +8,18 @@ class ReligionRepository {
   final box = GetStorage();
 
   Future<List<Religion>> getAll(String token) async {
+    List<dynamic> localData = [];
+    List<Religion> localReligionList = [];
+
     if (box.hasData('religion')) {
-      List<dynamic> localData = box.read<List<dynamic>>('religion')!;
-      List<Religion> localReligionList = localData
+      localData = box.read<List<dynamic>>('maritalStatus')!;
+      localReligionList = localData
           .map((e) => Religion.fromJson(e as Map<String, dynamic>))
           .toList();
-      return localReligionList;
-    } else {
-      List<Religion> list = <Religion>[];
+    }
 
+    List<Religion> list = <Religion>[];
+    if (await ConnectionStatus.verifyConnection()) {
       var response = await apiClient.getAll(token);
 
       if (response != null) {
@@ -25,8 +29,10 @@ class ReligionRepository {
 
         box.write('religion', list.map((e) => e.toJson()).toList());
       }
-
-      return list;
+    } else {
+      return localReligionList;
     }
+
+    return list;
   }
 }

@@ -9,7 +9,7 @@ import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class FamilyController extends GetxController
     with SingleGetTickerProviderMixin {
@@ -47,14 +47,19 @@ class FamilyController extends GetxController
   AnimationController? animationController;
   dynamic mensagem;
 
-  TutorialCoachMark? tutorialCoachMark;
-  List<TargetFocus> targets = [];
-  GlobalKey keyOne = GlobalKey();
+  GlobalKey editFamily = GlobalKey();
+  GlobalKey messageFamily = GlobalKey();
+  GlobalKey addFamily = GlobalKey();
+  GlobalKey supportFamily = GlobalKey();
+  GlobalKey addMember = GlobalKey();
+  GlobalKey disableFamily = GlobalKey();
 
   final DatabaseHelper localDatabase = DatabaseHelper();
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
   final status = Get.find<InternetStatusProvider>().status;
+
+  dynamic context = Get.context;
 
   @override
   void onInit() {
@@ -66,9 +71,19 @@ class FamilyController extends GetxController
           getFamilies();
         }
       });
-
       getFamilies();
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ShowCaseWidget.of(Get.context!).startShowCase([
+        addFamily,
+        editFamily,
+        addMember,
+        disableFamily,
+        messageFamily,
+        supportFamily,
+      ]);
+    });
 
     super.onInit();
   }

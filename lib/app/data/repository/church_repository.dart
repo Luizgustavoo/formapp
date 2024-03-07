@@ -1,5 +1,6 @@
 import 'package:formapp/app/data/models/church_model.dart';
 import 'package:formapp/app/data/provider/church_provider.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ChurchRepository {
@@ -7,17 +8,18 @@ class ChurchRepository {
   final box = GetStorage();
 
   Future<List<Church>> getAll(String token) async {
-    // Verifica se existem dados salvos localmente
+    List<dynamic> localData = [];
+    List<Church> localChurchList = [];
+
     if (box.hasData('church')) {
-      List<dynamic> localData = box.read<List<dynamic>>('church')!;
-      List<Church> localChurchList = localData
+      localData = box.read<List<dynamic>>('maritalStatus')!;
+      localChurchList = localData
           .map((e) => Church.fromJson(e as Map<String, dynamic>))
           .toList();
-      return localChurchList;
-    } else {
-      // Se não houver dados salvos localmente, solicite à API
-      List<Church> list = <Church>[];
+    }
 
+    List<Church> list = <Church>[];
+    if (await ConnectionStatus.verifyConnection()) {
       var response = await apiClient.getAll(token);
 
       if (response != null) {
@@ -25,11 +27,12 @@ class ChurchRepository {
           list.add(Church.fromJson(e));
         });
 
-        // Salva os dados localmente
         box.write('church', list.map((e) => e.toJson()).toList());
       }
-
-      return list;
+    } else {
+      return localChurchList;
     }
+
+    return list;
   }
 }
