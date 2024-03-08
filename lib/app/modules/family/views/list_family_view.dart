@@ -26,6 +26,7 @@ class FamilyView extends GetView<FamilyController> {
   @override
   Widget build(BuildContext context) {
     final familiaId = peopleController.box.read('auth')['user']['familia_id'];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Famílias Cadastradas'),
