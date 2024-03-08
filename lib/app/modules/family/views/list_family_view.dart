@@ -31,30 +31,31 @@ class FamilyView extends GetView<FamilyController> {
         title: const Text('Famílias Cadastradas'),
         actions: [
           if (familiaId == null) ...[
-            ShowCaseView(
-              title: 'ADICONAR FAMÍLIA',
-              description: 'Adicione famílias.',
-              border: const CircleBorder(),
-              globalKey: controller.addFamily,
-              child: IconButton(
-                  onPressed: () {
-                    controller.clearAllFamilyTextFields();
-                    controller.typeOperation.value = 1;
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      context: context,
-                      builder: (context) => Padding(
-                        padding: MediaQuery.of(context).viewInsets,
-                        child: CreateFamilyModal(
-                          tipoOperacao: 'insert',
-                          titulo: "Cadastro de Família",
-                        ),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.add_rounded)),
-            )
+            IconButton(
+              onPressed: () {
+                controller.clearAllFamilyTextFields();
+                controller.typeOperation.value = 1;
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  isDismissible: false,
+                  context: context,
+                  builder: (context) => Padding(
+                    padding: MediaQuery.of(context).viewInsets,
+                    child: CreateFamilyModal(
+                      tipoOperacao: 'insert',
+                      titulo: "Cadastro de Família",
+                    ),
+                  ),
+                );
+              },
+              icon: ShowCaseView(
+                title: 'ADICONAR FAMÍLIA',
+                description: 'Adicione famílias.',
+                border: const CircleBorder(),
+                globalKey: controller.addFamily,
+                child: const Icon(Icons.add_rounded),
+              ),
+            ),
           ]
         ],
       ),
