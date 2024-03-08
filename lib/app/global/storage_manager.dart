@@ -4,14 +4,14 @@ class StorageManager {
   static final _storage = GetStorage('acessos_app_familia');
   static const _key = 'userIds';
 
-  static List<int> getUserIds() {
+  static List getUserIds() {
     // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
-    return _storage.read<List<int>>(_key) ?? [];
+    return _storage.read<List<dynamic>>(_key) ?? [];
   }
 
   static void addUser(int userId) {
     // Obtém a lista atual de IDs
-    List<int> userIds = getUserIds();
+    List userIds = getUserIds();
 
     // Adiciona o novo ID à lista
     userIds.add(userId);

@@ -78,7 +78,7 @@ class FamilyController extends GetxController
 
       int idLogado = box.read('auth')['user']['id'];
 
-      List<int> storedUserIds = StorageManager.getUserIds();
+      List storedUserIds = StorageManager.getUserIds();
 
       if (!storedUserIds.contains(idLogado)) {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +20,7 @@ class CreateFamilyModal extends StatelessWidget {
   final String? tipoOperacao;
 
   final FamilyController controller = Get.find();
+  final PeopleController peopleController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -264,6 +267,21 @@ class CreateFamilyModal extends StatelessWidget {
 
                       if (retorno['return'] == 0) {
                         Get.back();
+                        peopleController.clearAllPeopleTextFields();
+                        Future.delayed(const Duration(seconds: 1), () {
+                          return showModalBottomSheet(
+                            isScrollControlled: true,
+                            isDismissible: false,
+                            context: context,
+                            builder: (context) => Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: AddPeopleFamilyView(
+                                tipoOperacao: 0,
+                                family: family,
+                              ),
+                            ),
+                          );
+                        });
                       }
                       Get.snackbar(
                         snackPosition: SnackPosition.BOTTOM,
