@@ -59,6 +59,8 @@ class FamilyController extends GetxController
 
   final status = Get.find<InternetStatusProvider>().status;
 
+  final showCaseViewShown = false.obs;
+
   dynamic context = Get.context;
 
   @override
@@ -78,10 +80,10 @@ class FamilyController extends GetxController
       ShowCaseWidget.of(Get.context!).startShowCase([
         addFamily,
         editFamily,
-        addMember,
-        disableFamily,
         messageFamily,
         supportFamily,
+        addMember,
+        disableFamily,
       ]);
     });
 
