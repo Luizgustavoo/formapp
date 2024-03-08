@@ -22,6 +22,7 @@ class HomeController extends GetxController {
 
   void exit() {
     box.erase();
+
     Get.offAllNamed('/login');
   }
 }

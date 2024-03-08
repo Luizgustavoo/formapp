@@ -5,6 +5,7 @@ import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
+import 'package:formapp/app/global/storage_manager.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
@@ -74,18 +75,24 @@ class FamilyController extends GetxController
         }
       });
       getFamilies();
-    }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ShowCaseWidget.of(Get.context!).startShowCase([
-        addFamily,
-        editFamily,
-        messageFamily,
-        supportFamily,
-        addMember,
-        disableFamily,
-      ]);
-    });
+      int idLogado = box.read('auth')['user']['id'];
+
+      List<int> storedUserIds = StorageManager.getUserIds();
+
+      if (!storedUserIds.contains(idLogado)) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          ShowCaseWidget.of(Get.context!).startShowCase([
+            addFamily,
+            editFamily,
+            messageFamily,
+            supportFamily,
+            addMember,
+            disableFamily,
+          ]);
+        });
+      }
+    }
 
     super.onInit();
   }
