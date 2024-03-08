@@ -55,7 +55,7 @@ class PeopleController extends GetxController {
   int? idFamilySelected;
 
   RxList<People> listPeoples = <People>[].obs;
-  final repositoryChurch = Get.find<ChurchRepository>();
+  final repositoryChurch = Get.put(ChurchRepository());
   final box = GetStorage('credenciado');
   RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
   RxList<Religion> listReligion = <Religion>[].obs;
@@ -72,11 +72,11 @@ class PeopleController extends GetxController {
   People? selectedPeople;
   FamilyService? selectedService;
 
-  final repository = Get.find<PeopleRepository>();
+  final repository = Get.put(PeopleRepository());
   final familyController = Get.find<FamilyController>();
   final repositoryService = Get.find<FamilyServiceRepository>();
   final maritalRepository = Get.find<MaritalStatusRepository>();
-  final repositoryReligion = Get.find<ReligionRepository>();
+  final repositoryReligion = Get.put(ReligionRepository());
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
@@ -92,12 +92,14 @@ class PeopleController extends GetxController {
 
   @override
   void onInit() async {
-    await Future.wait([
-      getMaritalStatus(),
-      getPeoples(),
-      getReligion(),
-      getChurch(),
-    ]);
+    if (box.read('auth') != null) {
+      await Future.wait([
+        getMaritalStatus(),
+        getPeoples(),
+        getReligion(),
+        getChurch(),
+      ]);
+    }
     super.onInit();
   }
 

@@ -5,7 +5,6 @@ import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
-import 'package:formapp/app/global/storage_manager.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
@@ -76,22 +75,11 @@ class FamilyController extends GetxController
       });
       getFamilies();
 
-      int idLogado = box.read('auth')['user']['id'];
+      // int idLogado = box.read('auth')['user']['id'];
 
-      List storedUserIds = StorageManager.getUserIds();
+      // List storedUserIds = StorageManager.getUserIds();
 
-      if (!storedUserIds.contains(idLogado)) {
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          ShowCaseWidget.of(Get.context!).startShowCase([
-            addFamily,
-            editFamily,
-            messageFamily,
-            supportFamily,
-            addMember,
-            disableFamily,
-          ]);
-        });
-      }
+      checkShowcase();
     }
 
     super.onInit();
@@ -112,6 +100,34 @@ class FamilyController extends GetxController
               family.nome!.toLowerCase().contains(query.toLowerCase()))
           .toList());
     }
+  }
+
+  void checkShowcase() {
+    final userId = getUserId();
+    final shown = box.read('showcaseShown_$userId') ?? false;
+    if (!shown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(Get.context!).startShowCase([
+          addFamily,
+          editFamily,
+          messageFamily,
+          supportFamily,
+          addMember,
+          disableFamily,
+        ]);
+      });
+      box.write('showcaseShown_$userId', true);
+    }
+  }
+
+  int getUserId() {
+    final userId = box.read('userId');
+    return userId ?? 0; // Ou algum valor padrão, dependendo da sua lógica
+  }
+
+  void clearShowcase() {
+    final userId = getUserId();
+    box.remove('showcaseShown_$userId');
   }
 
   Future<Map<String, dynamic>> saveFamily() async {

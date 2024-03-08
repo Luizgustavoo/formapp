@@ -20,7 +20,7 @@ import '../../../global/shimmer/shimmer_custom_family_card.dart';
 class FamilyView extends GetView<FamilyController> {
   FamilyView({super.key});
 
-  final PeopleController peopleController = Get.find();
+  final PeopleController peopleController = Get.put(PeopleController());
   final messageController = Get.put(MessageController());
 
   @override

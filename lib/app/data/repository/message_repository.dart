@@ -11,9 +11,11 @@ class MessageRepository {
 
     var response = await apiClient.getAll(token);
 
-    response.forEach((e) {
-      list.add(Message.fromJson(e));
-    });
+    if (response != null) {
+      response.forEach((e) {
+        list.add(Message.fromJson(e));
+      });
+    }
 
     return list;
   }
