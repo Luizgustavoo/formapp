@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -17,11 +18,14 @@ class FamilyApiClient {
     final familiaId = box.read('auth')['user']['familia_id'];
     try {
       Uri familyUrl;
-      if (familiaId != null) {
+
+      if (UserStorage.getUserType() == 1) {
+        familyUrl = Uri.parse('$baseUrl/v1/familia/list/');
+      } else if (UserStorage.getUserType() == 2) {
+        familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
+      } else {
         familyUrl =
             Uri.parse('$baseUrl/v1/familia/list-familiar/id/$familiaId');
-      } else {
-        familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
       }
 
       var response = await httpClient.get(
@@ -157,6 +161,8 @@ class FamilyApiClient {
         },
         body: requestBody,
       );
+
+      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

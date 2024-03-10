@@ -7,6 +7,7 @@ import 'package:formapp/app/data/provider/via_cep.dart';
 import 'package:formapp/app/data/repository/family_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/connection_service.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -27,6 +28,8 @@ class FamilyController extends GetxController
   TextEditingController statusFamiliaController = TextEditingController();
 
   RxInt typeOperation = 1.obs;
+
+  RxString filtroUsuario = "".obs;
 
   final box = GetStorage('credenciado');
   Family? selectedFamily;
@@ -65,7 +68,12 @@ class FamilyController extends GetxController
 
   @override
   void onInit() {
-    if (box.read('auth') != null) {
+    print('dados do usuario logado');
+    print(UserStorage.getToken());
+    print(UserStorage.getUserType());
+    print(UserStorage.getFamilyId());
+
+    if (UserStorage.existUser()) {
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;
       statusStream.listen((status) {
@@ -85,12 +93,6 @@ class FamilyController extends GetxController
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    getFamilies();
-    super.onClose();
-  }
-
   void searchFamily(String query) {
     if (query.isEmpty) {
       getFamilies();
@@ -99,6 +101,16 @@ class FamilyController extends GetxController
           .where((family) =>
               family.nome!.toLowerCase().contains(query.toLowerCase()))
           .toList());
+    }
+  }
+
+  void searchFamilyUserId(String query) {
+    if (query.isNotEmpty) {
+      getFamilies().then((value) {
+        listFamilies.assignAll(listFamilies
+            .where((family) => family.usuarioId == int.parse(query))
+            .toList());
+      });
     }
   }
 
@@ -143,10 +155,10 @@ class FamilyController extends GetxController
         uf: uf.value,
         residenciaPropria: residenceOwn.value ? 'sim' : 'nao',
         status: 1,
-        usuarioId: box.read('auth')['user']['id'],
+        usuarioId: UserStorage.getUserId(),
       );
 
-      final token = box.read('auth')['access_token'];
+      final token = UserStorage.getToken();
 
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await repository.insertFamily("Bearer $token", family);
@@ -194,10 +206,10 @@ class FamilyController extends GetxController
         uf: uf.value,
         residenciaPropria: residenceOwn.value ? 'sim' : 'nao',
         status: 1,
-        usuarioId: box.read('auth')['user']['id'],
+        usuarioId: UserStorage.getUserId(),
       );
 
-      final token = box.read('auth')['access_token'];
+      final token = UserStorage.getToken();
 
       final mensagem = await repository.updateFamily("Bearer $token", family);
 
@@ -227,7 +239,7 @@ class FamilyController extends GetxController
       id: id,
     );
 
-    final token = box.read('auth')['access_token'];
+    final token = UserStorage.getToken();
 
     if (await ConnectionStatus.verifyConnection()) {
       mensagem = await repository.deleteFamily("Bearer $token", family);
@@ -254,7 +266,7 @@ class FamilyController extends GetxController
   Future<Map<String, dynamic>> sendFamilyToAPIOffline(Family family) async {
     try {
       if (await ConnectionStatus.verifyConnection()) {
-        final token = box.read('auth')['access_token'];
+        final token = UserStorage.getToken();
         var mensagem = await repository.insertFamily("Bearer $token", family);
 
         await localDatabase.delete(family.id!, 'family_table');
@@ -285,9 +297,12 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  void getFamilies() async {
-    final token = box.read('auth')['access_token'];
-    listFamilies.value = await repository.getAll("Bearer $token");
+  Future<void> getFamilies() async {
+    try {
+      final token = UserStorage.getToken();
+      listFamilies.value = await repository.getAll("Bearer $token");
+      update();
+    } catch (e) {}
   }
 
   void clearAllFamilyTextFields() {

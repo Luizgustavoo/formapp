@@ -1,6 +1,7 @@
 import 'package:formapp/app/data/provider/people_provider.dart';
 import 'package:formapp/app/data/repository/family_service_repository.dart';
 import 'package:formapp/app/data/repository/people_repository.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:get/get.dart';
 
@@ -12,5 +13,6 @@ class PeopleBinding implements Bindings {
     Get.lazyPut<PeopleApiClient>(() => PeopleApiClient());
     Get.lazyPut<PeopleRepository>(() => PeopleRepository());
     Get.lazyPut<FamilyServiceRepository>(() => FamilyServiceRepository());
+    Get.lazyPut(() => FamilyController());
   }
 }

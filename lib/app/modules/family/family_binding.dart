@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class FamilyBinding implements Bindings {
   @override
   void dependencies() {
-    Get.put<FamilyController>(FamilyController(), permanent: true);
+    Get.put<FamilyController>(FamilyController());
     Get.put<FamilyRepository>(FamilyRepository());
     Get.put<FamilyServiceRepository>(FamilyServiceRepository());
     Get.put<FamilyApiClient>(FamilyApiClient());
