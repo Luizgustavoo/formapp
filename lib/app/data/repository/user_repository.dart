@@ -9,9 +9,11 @@ class UserRepository {
 
     var response = await apiClient.getAll(token);
 
-    response.forEach((e) {
-      list.add(User.fromJson(e));
-    });
+    if (response != null) {
+      response.forEach((e) {
+        list.add(User.fromJson(e));
+      });
+    }
 
     return list;
   }

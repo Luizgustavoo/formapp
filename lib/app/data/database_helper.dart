@@ -2,16 +2,18 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static const String dbName = 'family_database.db';
+  //static const String dbName = 'family_database.db';
   //static const String tableName = 'family_table';
 
   Future<Database> getDatabase() async {
-    final String path = join(await getDatabasesPath(), dbName);
-    return openDatabase(path, version: 1, onCreate: _onCreate);
+    final String path = join(await getDatabasesPath(), 'family_database.db');
+    return openDatabase(path, version: 2, onCreate: _onCreate);
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
+    try {
+      print('Criando tabelas...');
+      await db.execute('''
       CREATE TABLE family_table(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
@@ -29,56 +31,73 @@ class DatabaseHelper {
         data_update    TEXT
       );
 
-      CREATE TABLE people_table (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        foto TEXT,
-        nome TEXT,
-        cpf TEXT,
-        estadoCivilId INTEGER,
-        parentesco TEXT,
-        provedorCasa TEXT,
-        sexo TEXT,
-        dataNascimento TEXT,
-        tituloEleitor TEXT,
-        zonaEleitoral TEXT,
-        celular TEXT,
-        redeSocial TEXT,
-        localTrabalho TEXT,
-        cargoTrabalho TEXT,
-        funcaoIgreja TEXT,
-        status INTEGER,
-        usuarioId INTEGER,
-        familiaId INTEGER,
-        igrejaId TEXT,
-      );
-
-      CREATE TABLE family_service_table (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        data_atendimento TEXT,
-        assunto TEXT,
-        descricao TEXT,
-        usuario_id INTEGER,
-        data_cadastro TEXT,
-        data_update TEXT,
-        pessoa_id INTEGER
-      );
-
-      CREATE TABLE message_table (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        data TEXT,
-        titulo TEXT,
-        descricao TEXT,
-        usuario_id INTEGER,
-        data_cadastro TEXT,
-        data_update TEXT
-      );
     ''');
+
+      await db.execute('''
+        CREATE TABLE people_table(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          foto TEXT,
+          nome TEXT,
+          cpf TEXT,
+          estadoCivilId TEXT,
+          parentesco TEXT,
+          provedorCasa TEXT,
+          sexo TEXT,
+          dataNascimento TEXT,
+          tituloEleitor TEXT,
+          zonaEleitoral TEXT,
+          celular TEXT,
+          redeSocial TEXT,
+          localTrabalho TEXT,
+          cargoTrabalho TEXT,
+          funcaoIgreja TEXT,
+          status TEXT,
+          usuarioId TEXT,
+          familiaId TEXT,
+          igrejaId TEXT,
+        );
+
+      ''');
+
+      await db.execute('''
+        CREATE TABLE family_service_table (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          data_atendimento TEXT,
+          assunto TEXT,
+          descricao TEXT,
+          usuario_id INTEGER,
+          data_cadastro TEXT,
+          data_update TEXT,
+          pessoa_id INTEGER
+        );
+      ''');
+
+      await db.execute('''
+
+        CREATE TABLE message_table (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          data TEXT,
+          titulo TEXT,
+          descricao TEXT,
+          usuario_id INTEGER,
+          data_cadastro TEXT,
+          data_update TEXT
+        );
+      ''');
+    } catch (e) {
+      print('Falha ao criar as tabelas $e');
+    }
   }
 
   Future<dynamic> insert(Map<String, dynamic> data, String tableName) async {
-    final Database db = await getDatabase();
-    var response = await db.insert(tableName, data,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    int? response;
+    try {
+      final Database db = await getDatabase();
+      response = await db.insert(tableName, data,
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } catch (e) {
+      print('erro ao inserir pessoa localmente $e');
+    }
 
     return response;
   }

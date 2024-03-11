@@ -112,7 +112,8 @@ class CustomFamilyCard extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Credenciado: ${family.user!.nome!}",
+                        Text(
+                            "Credenciado: ${family.user != null ? family.user!.nome! : ""}",
                             style: CustomTextStyle.form(context)),
                         Text(provedor, style: CustomTextStyle.form(context)),
                         Text(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
+import 'package:formapp/app/data/family_database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
@@ -10,7 +11,7 @@ import 'package:http/http.dart' as http;
 
 class FamilyApiClient {
   final http.Client httpClient = http.Client();
-  final DatabaseHelper localDatabase = DatabaseHelper();
+  final FamilyDatabaseHelper localDataBase = FamilyDatabaseHelper();
   final box = GetStorage('credenciado');
 
   getAll(String token) async {
@@ -236,39 +237,34 @@ class FamilyApiClient {
     return null;
   }
 
-  Future<dynamic> saveFamilyLocally(Map<String, dynamic> familyData) async {
-    var retorno = await localDatabase.insert(familyData, 'family_table');
-    return retorno;
-  }
-
-  Future<List<Map<String, dynamic>>> getAllFamiliesLocally() async {
-    return await localDatabase.getAllDataLocal('family_table');
+  Future<List<Family>> getAllFamiliesLocally() async {
+    return await localDataBase.getAllFamily();
   }
 
   Future<dynamic> saveFamilyLocal(Family family) async {
-    final familyData = {
-      'nome': family.nome,
-      'endereco': family.endereco,
-      'numero_casa': family.numeroCasa,
-      'bairro': family.bairro,
-      'cidade': family.cidade,
-      'uf': family.uf,
-      'complemento': family.complemento,
-      'residencia_propria': family.residenciaPropria,
-      'usuario_id': family.usuarioId,
-      'status': family.status,
-      'cep': family.cep,
-      'data_cadastro': '2024-02-22',
-      'data_update': '2024-02-23',
-    };
+    Family familyLocal = Family(
+      nome: family.nome,
+      endereco: family.endereco,
+      numeroCasa: family.numeroCasa,
+      bairro: family.bairro,
+      cidade: family.cidade,
+      uf: family.uf,
+      complemento: family.complemento,
+      residenciaPropria: family.residenciaPropria,
+      usuarioId: family.usuarioId,
+      status: family.status,
+      cep: family.cep,
+      dataCadastro: '2024-02-22',
+      dataUpdate: '2024-02-23',
+    );
 
-    return await saveFamilyLocally(familyData);
+    return await localDataBase.insertFamily(familyLocal);
   }
 
   Future<void> deleteFamilyLocally(Family family) async {
     try {
       if (family.id != null) {
-        await localDatabase.delete(family.id!, 'family_table');
+        //await localDatabase.delete(family.id!, 'family_table');
         print('Família excluída localmente com sucesso');
       } else {
         print('ID da família é nulo. Não é possível excluir.');

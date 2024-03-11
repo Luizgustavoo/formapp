@@ -12,10 +12,10 @@ class FamilyRepository {
 
     var responseLocal = await apiClient.getAllFamiliesLocally();
 
-    for (var familyLocal in responseLocal) {
-      Family f = Family.fromJson(familyLocal);
-      f.familyLocal = true;
-      list.add(f);
+    for (Family familyLocal in responseLocal) {
+      familyLocal.familyLocal = true;
+
+      list.add(familyLocal);
     }
 
     if (await ConnectionStatus.verifyConnection()) {
