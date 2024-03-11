@@ -68,11 +68,6 @@ class FamilyController extends GetxController
 
   @override
   void onInit() {
-    print('dados do usuario logado');
-    print(UserStorage.getToken());
-    print(UserStorage.getUserType());
-    print(UserStorage.getFamilyId());
-
     if (UserStorage.existUser()) {
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;

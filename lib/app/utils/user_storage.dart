@@ -26,6 +26,14 @@ class UserStorage {
     return 0;
   }
 
+  static String getUserName() {
+    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
+    if (existUser()) {
+      return _box.read('auth')['user']['nome'];
+    }
+    return "";
+  }
+
   static int getUserType() {
     // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {

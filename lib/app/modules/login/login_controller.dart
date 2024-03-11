@@ -2,8 +2,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/auth_model.dart';
 import 'package:formapp/app/data/repository/auth_repository.dart';
+import 'package:formapp/app/data/repository/church_repository.dart';
+import 'package:formapp/app/data/repository/marital_status_repository.dart';
+import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:formapp/app/global/storage_manager.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -41,6 +45,17 @@ class LoginController extends GetxController {
         final String? token = await FirebaseMessaging.instance.getToken();
         final id = box.read('auth')['user']['id'];
         userController.updateFirebaseTokenUser(id: id, tokenFirebase: token);
+
+        final MaritalStatusRepository repositoryMarital =
+            Get.find<MaritalStatusRepository>();
+        final ReligionRepository repositoryReligion =
+            Get.put(ReligionRepository());
+        final ChurchRepository churchReligion = Get.put(ChurchRepository());
+
+        await repositoryMarital.getAll("Bearer ${UserStorage.getToken()}");
+        await repositoryReligion.getAll("Bearer ${UserStorage.getToken()}");
+        await churchReligion.getAll("Bearer ${UserStorage.getToken()}");
+
         Get.offAllNamed('/home');
       } else {
         showErrorSnackbar.value = true;

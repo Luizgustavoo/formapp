@@ -12,7 +12,7 @@ class ChurchRepository {
     List<Church> localChurchList = [];
 
     if (box.hasData('church')) {
-      localData = box.read<List<dynamic>>('maritalStatus')!;
+      localData = box.read<List<dynamic>>('church')!;
       localChurchList = localData
           .map((e) => Church.fromJson(e as Map<String, dynamic>))
           .toList();
