@@ -1,4 +1,3 @@
-import 'package:coachmaker/coachmaker.dart';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
@@ -48,14 +47,11 @@ class ListUserView extends GetView<UserController> {
       ),
       body: Column(
         children: [
-          CoachPoint(
-            initial: '1',
-            child: SearchWidget(
-                controller: controller.searchController,
-                onSearchPressed: (context, a, query) {
-                  controller.searchUsers(query);
-                }),
-          ),
+          SearchWidget(
+              controller: controller.searchController,
+              onSearchPressed: (context, a, query) {
+                controller.searchUsers(query);
+              }),
           Obx(() => Expanded(
                 child: ListView.builder(
                     itemCount: controller.listUsers.length,

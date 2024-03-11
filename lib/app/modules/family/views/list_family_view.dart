@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/global/widgets/create_family_modal.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
@@ -9,7 +8,6 @@ import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 
@@ -72,7 +70,7 @@ class FamilyView extends GetView<FamilyController> {
             Padding(
               padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
               child: SizedBox(
-                height: 40, // Defina a altura desejada aqui
+                height: 40,
                 child: Obx(
                   () => ListView.builder(
                     itemCount: userController.listUsers.length,
@@ -88,25 +86,19 @@ class FamilyView extends GetView<FamilyController> {
                             controller.searchFamilyUserId(idClicado);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Colors.transparent, // Cor de fundo transparente
-                            elevation: 0, // Remove a elevação padrão
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(25), // Borda circular
+                              borderRadius: BorderRadius.circular(25),
                               side: const BorderSide(
-                                  width: 1.2,
-                                  color: Colors
-                                      .orange), // Espessura da borda e cor laranja
+                                  width: 1.2, color: Colors.orange),
                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(1.0),
                             child: Text(
                               userController.listUsers[index].nome!,
-                              style: TextStyle(
-                                  color: Colors
-                                      .orange.shade500), // Cor do texto laranja
+                              style: TextStyle(color: Colors.orange.shade500),
                             ),
                           ),
                         ),
@@ -124,24 +116,6 @@ class FamilyView extends GetView<FamilyController> {
           Expanded(
             child: Obx(() {
               final status = Get.find<InternetStatusProvider>().status;
-
-              // return CustomFamilyCard(
-              //   index: 0,
-              //   local: false,
-              //   family: Family(
-              //       nome: "Nome da família",
-              //       user: User(nome: "Nome do Credenciado")),
-              //   showAddMember: true,
-              //   stripe: true,
-              //   familyName: "Nome da família",
-              //   provedor: "Provedor: Nome do Provedor",
-              //   editFamily: () {},
-              //   messageMember: () {},
-              //   supportFamily: () {},
-              //   addMember: null,
-              //   deleteFamily: () {},
-              //   peopleNames: const ['Pessoa 01', 'Pessoa 02'],
-              // );
 
               final List<Family> familiesToShow = controller.listFamilies;
 
