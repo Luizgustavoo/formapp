@@ -155,28 +155,18 @@ class FamilyController extends GetxController
 
       final token = UserStorage.getToken();
 
-      if (await ConnectionStatus.verifyConnection()) {
-        mensagem = await repository.insertFamily("Bearer $token", family);
-        if (mensagem != null) {
-          if (mensagem['message'] == 'success') {
-            retorno = {
-              "return": 0,
-              "message": "Operação realizada com sucesso!"
-            };
-            getFamilies();
-          }
-        } else if (mensagem['message'] == 'ja_existe') {
-          retorno = {
-            "return": 1,
-            "message": "Já existe uma família com esse nome!"
-          };
-        }
-      } else {
-        mensagem = await repository.saveFamilyLocal(family);
-        if (int.parse(mensagem.toString()) > 0) {
+      mensagem = await repository.insertFamily("Bearer $token", family);
+      if (mensagem != null) {
+        print(mensagem['message']);
+        if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
           getFamilies();
         }
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe uma família com esse nome!"
+        };
       }
     } else {
       retorno = {
@@ -239,7 +229,7 @@ class FamilyController extends GetxController
     if (await ConnectionStatus.verifyConnection()) {
       mensagem = await repository.deleteFamily("Bearer $token", family);
     } else {
-      mensagem = localDatabase.delete(family.id!, 'family_table');
+      //mensagem = localDatabase.delete(family.id!, 'family_table');
     }
 
     if (mensagem != null) {
@@ -264,7 +254,7 @@ class FamilyController extends GetxController
         final token = UserStorage.getToken();
         var mensagem = await repository.insertFamily("Bearer $token", family);
 
-        await localDatabase.delete(family.id!, 'family_table');
+        //await localDatabase.delete(family.id!, 'family_table');
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {

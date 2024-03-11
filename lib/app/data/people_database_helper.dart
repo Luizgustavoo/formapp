@@ -9,7 +9,7 @@ class PeopleDatabaseHelper {
 
   Future<Database> getDatabase() async {
     final String path = join(await getDatabasesPath(), dbName);
-    return openDatabase(path, version: 4, onCreate: _onCreate);
+    return openDatabase(path, version: 2, onCreate: _onCreate);
   }
 
   Future<void> _onCreate(Database db, int version) async {

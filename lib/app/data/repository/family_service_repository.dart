@@ -28,14 +28,4 @@ class FamilyServiceRepository {
       rethrow;
     }
   }
-
-  saveFamilyServiceLocal(FamilyService familyService) async {
-    try {
-      var response = await apiClient.saveFamilyServiceLocal(familyService);
-      return response;
-    } catch (e) {
-      print('Erro ao inserir a família: $e');
-      rethrow;
-    }
-  }
 }

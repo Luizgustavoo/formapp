@@ -119,4 +119,32 @@ class People {
     }
     return data;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nome': nome,
+      'foto': foto,
+      'sexo': sexo,
+      'cpf': cpf,
+      'data_nascimento': dataNascimento,
+      'estadocivil_id': estadoCivilId,
+      'titulo_eleitor': tituloEleitor,
+      'zona_eleitoral': zonaEleitoral,
+      'telefone': telefone,
+      'rede_social': redeSocial,
+      'provedor_casa': provedorCasa,
+      'igreja_id': igrejaId as String,
+      'local_trabalho': localTrabalho,
+      'cargo_trabalho': cargoTrabalho,
+      'religiao_id': religiaoId,
+      'funcao_igreja': funcaoIgreja,
+      'usuario_id': usuarioId,
+      'status': status,
+      'data_cadastro': dataCadastro,
+      'data_update': dataUpdate,
+      'familia_id': familiaId,
+      'parentesco': parentesco,
+    };
+  }
 }

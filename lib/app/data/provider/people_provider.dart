@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
+import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/people_database_helper.dart';
+import 'package:formapp/app/utils/connection_service.dart';
+import 'package:formapp/app/utils/local_storage_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -76,70 +79,98 @@ class PeopleApiClient {
 
   insertPeople(String token, People pessoa, File imageFile) async {
     try {
-      var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/create');
+      if (await ConnectionStatus.verifyConnection()) {
+        var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/create');
 
-      var request = http.MultipartRequest('POST', pessoaUrl);
+        var request = http.MultipartRequest('POST', pessoaUrl);
 
-      request.fields.addAll({
-        "nome": pessoa.nome!,
-        "sexo": pessoa.sexo!,
-        "cpf": pessoa.cpf!,
-        "data_nascimento": pessoa.dataNascimento!,
-        "estadocivil_id": pessoa.estadoCivilId.toString(),
-        "titulo_eleitor": pessoa.tituloEleitor!,
-        "zona_eleitoral": pessoa.zonaEleitoral!,
-        "telefone": pessoa.telefone!,
-        "rede_social": pessoa.redeSocial!,
-        "provedor_casa": pessoa.provedorCasa!,
-        "igreja_id": pessoa.igrejaId.toString(),
-        "local_trabalho": pessoa.localTrabalho!,
-        "cargo_trabalho": pessoa.cargoTrabalho!,
-        "religiao_id": pessoa.religiaoId.toString(),
-        "funcao_igreja": pessoa.funcaoIgreja!,
-        "usuario_id": pessoa.usuarioId.toString(),
-        "status": pessoa.status.toString(),
-        "familia_id": pessoa.familiaId.toString(),
-        "parentesco": pessoa.parentesco!,
-      });
+        request.fields.addAll({
+          "nome": pessoa.nome!,
+          "sexo": pessoa.sexo!,
+          "cpf": pessoa.cpf!,
+          "data_nascimento": pessoa.dataNascimento!,
+          "estadocivil_id": pessoa.estadoCivilId.toString(),
+          "titulo_eleitor": pessoa.tituloEleitor!,
+          "zona_eleitoral": pessoa.zonaEleitoral!,
+          "telefone": pessoa.telefone!,
+          "rede_social": pessoa.redeSocial!,
+          "provedor_casa": pessoa.provedorCasa!,
+          "igreja_id": pessoa.igrejaId.toString(),
+          "local_trabalho": pessoa.localTrabalho!,
+          "cargo_trabalho": pessoa.cargoTrabalho!,
+          "religiao_id": pessoa.religiaoId.toString(),
+          "funcao_igreja": pessoa.funcaoIgreja!,
+          "usuario_id": pessoa.usuarioId.toString(),
+          "status": pessoa.status.toString(),
+          "familia_id": pessoa.familiaId.toString(),
+          "parentesco": pessoa.parentesco!,
+        });
 
-      if (imageFile.path.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'foto', // Nome do campo que a API espera para a imagem
-          imageFile.path, // Caminho do arquivo da imagem
-        ));
-      }
+        if (imageFile.path.isNotEmpty) {
+          request.files.add(await http.MultipartFile.fromPath(
+            'foto', // Nome do campo que a API espera para a imagem
+            imageFile.path, // Caminho do arquivo da imagem
+          ));
+        }
 
-      request.headers.addAll({
-        'Accept': 'application/json',
-        'Authorization': token,
-        // Adicione outros cabeçalhos conforme necessário
-      });
+        request.headers.addAll({
+          'Accept': 'application/json',
+          'Authorization': token,
+          // Adicione outros cabeçalhos conforme necessário
+        });
 
-      var response = await request.send();
+        var response = await request.send();
 
-      var responseStream = await response.stream.bytesToString();
-      var httpResponse = http.Response(responseStream, response.statusCode);
+        var responseStream = await response.stream.bytesToString();
+        var httpResponse = http.Response(responseStream, response.statusCode);
 
-      if (response.statusCode == 200) {
-        return json.decode(httpResponse.body);
-      } else if (response.statusCode == 422 ||
-          json.decode(httpResponse.body)['message'] == "ja_existe") {
-        return json.decode(httpResponse.body);
-      } else if (response.statusCode == 401 &&
-          json.decode(httpResponse.body)['message'] == "Token has expired") {
-        Get.defaultDialog(
-          title: "Expirou",
-          content: const Text(
-              'O token de autenticação expirou, faça login novamente.'),
-        );
-        var box = GetStorage('credenciado');
-        box.erase();
-        Get.offAllNamed('/login');
+        if (response.statusCode == 200) {
+          return json.decode(httpResponse.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(httpResponse.body)['message'] == "ja_existe") {
+          return json.decode(httpResponse.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(httpResponse.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
       } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
+        //SALVANDO DADOS LOCALMENTE
+
+        final dbHelper = DatabaseHelper();
+        dynamic retorno = await dbHelper.insertPeople(pessoa);
+
+        print(retorno);
+
+        Map<String, dynamic> responseData = {};
+
+        if (retorno > 0) {
+          responseData = {
+            'message': 'success',
+            'objeto': pessoa,
+          };
+        } else {
+          responseData = {
+            'code': 0,
+            'message': 'Operação realizada com sucesso',
+          };
+        }
+
+        // Converter o mapa em uma string JSON
+        String jsonResponse = jsonEncode(responseData);
+
+        return json.decode(jsonResponse);
       }
     } catch (err) {
       Get.defaultDialog(

@@ -86,4 +86,23 @@ class Family {
     }
     return data;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nome': nome,
+      'endereco': endereco,
+      'numero_casa': numeroCasa,
+      'bairro': bairro,
+      'cidade': cidade,
+      'uf': uf,
+      'complemento': complemento,
+      'residencia_propria': residenciaPropria,
+      'usuario_id': usuarioId,
+      'status': status,
+      'data_cadastro': dataCadastro,
+      'data_update': dataUpdate,
+      'cep': cep,
+    };
+  }
 }

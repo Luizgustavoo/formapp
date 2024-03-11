@@ -132,26 +132,4 @@ class MessageApiClient {
     }
     return null;
   }
-
-  /*SALVAR DADOS OFFLINE DA MENSAGEM */
-  Future<void> saveMessageLocally(Map<String, dynamic> messageData) async {
-    await localDatabase.insert(messageData, 'message_table');
-  }
-
-  Future<List<Map<String, dynamic>>> getAllMessageLocally() async {
-    return await localDatabase.getAllDataLocal('message_table');
-  }
-
-  Future<void> saveMessageLocal(Message message) async {
-    final messageData = {
-      'data': message.data,
-      'titulo': message.titulo,
-      'descricao': message.descricao,
-      'usuario_id': message.usuarioId,
-      'data_cadastro': message.dataCadastro,
-      'data_update': message.dataUpdate,
-    };
-
-    await saveMessageLocally(messageData);
-  }
 }

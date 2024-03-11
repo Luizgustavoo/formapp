@@ -4,6 +4,8 @@ import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/family_database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/utils/connection_service.dart';
+import 'package:formapp/app/utils/local_storage_service.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -81,51 +83,80 @@ class FamilyApiClient {
 
   insertFamily(String token, Family family) async {
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
+      if (await ConnectionStatus.verifyConnection()) {
+        //SALVANDO DADOS NA API
+        var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
 
-      var requestBody = {
-        "nome": family.nome,
-        "cep": family.cep,
-        "endereco": family.endereco,
-        "numero_casa": family.numeroCasa,
-        "bairro": family.bairro,
-        "cidade": family.cidade,
-        "uf": family.uf,
-        "complemento": family.complemento,
-        "residencia_propria": family.residenciaPropria,
-        "status": family.status.toString(),
-        "usuario_id": family.usuarioId.toString(),
-      };
+        var requestBody = {
+          "nome": family.nome,
+          "cep": family.cep,
+          "endereco": family.endereco,
+          "numero_casa": family.numeroCasa,
+          "bairro": family.bairro,
+          "cidade": family.cidade,
+          "uf": family.uf,
+          "complemento": family.complemento,
+          "residencia_propria": family.residenciaPropria,
+          "status": family.status.toString(),
+          "usuario_id": family.usuarioId.toString(),
+        };
 
-      var response = await httpClient.post(
-        familyUrl,
-        headers: {
-          "Accept": "application/json",
-          "Authorization": token,
-        },
-        body: requestBody,
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else if (response.statusCode == 422 ||
-          json.decode(response.body)['message'] == "ja_existe") {
-        return json.decode(response.body);
-      } else if (response.statusCode == 401 &&
-          json.decode(response.body)['message'] == "Token has expired") {
-        Get.defaultDialog(
-          title: "Expirou",
-          content: const Text(
-              'O token de autenticação expirou, faça login novamente.'),
+        var response = await httpClient.post(
+          familyUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+          body: requestBody,
         );
-        var box = GetStorage('credenciado');
-        box.erase();
-        Get.offAllNamed('/login');
+
+        if (response.statusCode == 200) {
+          return json.decode(response.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(response.body)['message'] == "ja_existe") {
+          return json.decode(response.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(response.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
       } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
+        //SALVANDO DADOS LOCALMENTE
+
+        final dbHelper = DatabaseHelper();
+        dynamic retorno = await dbHelper.insertFamily(family);
+
+        print(retorno);
+
+        Map<String, dynamic> responseData = {};
+
+        if (retorno > 0) {
+          responseData = {
+            'message': 'success',
+            'objeto': family,
+          };
+        } else {
+          responseData = {
+            'code': 0,
+            'message': 'Operação realizada com sucesso',
+          };
+        }
+
+        // Converter o mapa em uma string JSON
+        String jsonResponse = jsonEncode(responseData);
+
+        return json.decode(jsonResponse);
       }
     } catch (err) {
       Get.defaultDialog(

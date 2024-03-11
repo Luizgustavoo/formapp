@@ -155,28 +155,18 @@ class PeopleController extends GetxController {
 
       final token = box.read('auth')['access_token'];
 
-      if (await ConnectionStatus.verifyConnection()) {
-        mensagem = await repository.insertPeople(
-            "Bearer $token", pessoa, File(photoUrlPath.value));
-        if (mensagem != null) {
-          if (mensagem['message'] == 'success') {
-            retorno = {
-              "return": 0,
-              "message": "Operação realizada com sucesso!"
-            };
-            familyController.getFamilies();
-          }
-        } else if (mensagem['message'] == 'ja_existe') {
-          retorno = {
-            "return": 1,
-            "message": "Já existe um usuário com esse e-mail!"
-          };
-        }
-      } else {
-        mensagem = await repository.savePeopleLocal(pessoa);
-        if (int.parse(mensagem.toString()) > 0) {
+      mensagem = await repository.insertPeople(
+          "Bearer $token", pessoa, File(photoUrlPath.value));
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+          familyController.getFamilies();
         }
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe um usuário com esse e-mail!"
+        };
       }
     } else {
       retorno = {
@@ -416,7 +406,7 @@ class PeopleController extends GetxController {
       mensagem = await repositoryService.insertService(
           "Bearer $token", familyService, family);
     } else {
-      await repositoryService.saveFamilyServiceLocal(familyService);
+      //await repositoryService.saveFamilyServiceLocal(familyService);
     }
 
     if (mensagem != null) {

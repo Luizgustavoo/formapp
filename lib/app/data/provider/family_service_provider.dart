@@ -117,27 +117,4 @@ class FamilyServiceApiClient {
     }
     return null;
   }
-
-  /*SALVAR DADOS OFFLINE DO ATENDIMENTO */
-  Future<void> saveFamilyServiceLocally(
-      Map<String, dynamic> familyServiceData) async {
-    await localDatabase.insert(familyServiceData, 'family_service_table');
-  }
-
-  Future<List<Map<String, dynamic>>> getAllFamilyServiceLocally() async {
-    return await localDatabase.getAllDataLocal('family_service_table');
-  }
-
-  Future<void> saveFamilyServiceLocal(FamilyService familyService) async {
-    final familyServiceData = {
-      'data_atendimento': familyService.dataAtendimento,
-      'assunto': familyService.assunto,
-      'descricao': familyService.descricao,
-      'usuario_id': familyService.usuarioId,
-      'data_cadastro': familyService.dataCadastro,
-      'data_update': familyService.dataUpdate,
-      'pessoa_id': familyService.pessoaId,
-    };
-    await saveFamilyServiceLocally(familyServiceData);
-  }
 }

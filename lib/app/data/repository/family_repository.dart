@@ -1,5 +1,6 @@
 import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
+import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/family_provider.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 
@@ -10,7 +11,7 @@ class FamilyRepository {
   getAll(String token) async {
     List<Family> list = <Family>[];
 
-    var responseLocal = await apiClient.getAllFamiliesLocally();
+    var responseLocal = await getFamiliesWithPeopleLocal();
 
     for (Family familyLocal in responseLocal) {
       familyLocal.familyLocal = true;
@@ -70,5 +71,33 @@ class FamilyRepository {
       print('Erro ao inserir a família: $e');
       rethrow;
     }
+  }
+
+  Future<List<Family>> getFamiliesWithPeopleLocal() async {
+    final dbHelper = DatabaseHelper();
+    final result = await dbHelper.getFamiliesWithPeople();
+
+    List<Family> families = [];
+    int? currentFamilyId;
+    Family? currentFamily;
+
+    for (final row in result) {
+      final familyId = row['family_id'] as int?;
+      final familyNome = row['family_nome'] as String?;
+      final peopleId = row['people_id'] as int?;
+      final peopleNome = row['people_nome'] as String?;
+
+      if (currentFamilyId != familyId) {
+        currentFamily = Family(id: familyId, nome: familyNome, pessoas: []);
+        families.add(currentFamily);
+        currentFamilyId = familyId;
+      }
+
+      if (peopleId != null && peopleNome != null) {
+        currentFamily?.pessoas?.add(People(id: peopleId, nome: peopleNome));
+      }
+    }
+
+    return families;
   }
 }
