@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/family_database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/utils/user_storage.dart';
@@ -162,8 +161,6 @@ class FamilyApiClient {
         },
         body: requestBody,
       );
-
-      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

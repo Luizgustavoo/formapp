@@ -57,6 +57,7 @@ class ListUserView extends GetView<UserController> {
                     itemCount: controller.listUsers.length,
                     itemBuilder: (context, index) {
                       User user = controller.listUsers[index];
+
                       return Padding(
                         padding:
                             const EdgeInsets.only(left: 5, right: 5, bottom: 5),

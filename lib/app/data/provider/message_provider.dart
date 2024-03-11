@@ -17,14 +17,9 @@ class MessageApiClient {
 
   getAll(String token) async {
     final id = box.read('auth')['user']['id'];
-    // final familiaId = box.read('auth')['user']['familia_id'];
+
     try {
-      // Uri peopleUrl;
-      // if (familiaId != null) {
       var messageUrl = Uri.parse('$baseUrl/v1/mensagem/list/$id');
-      // } else {
-      //   messageUrl = Uri.parse('$baseUrl/v1/pessoa/list/id/$id');
-      // }
 
       var response = await httpClient.get(
         messageUrl,
@@ -33,6 +28,8 @@ class MessageApiClient {
           "Authorization": token,
         },
       );
+
+      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -92,7 +89,8 @@ class MessageApiClient {
         "descricao": message.descricao,
         "usuario_remetente": id.toString(),
         "pessoas": jsonEncode(pessoasJson),
-        "usuario_destinatario": user != null ? user.id.toString() : ''
+        "usuario_destinatario": user != null ? user.id.toString() : '',
+        "token_firebase": user!.tokenFirebase ?? ''
       };
       var response = await httpClient.post(
         messageUrl,
@@ -102,6 +100,8 @@ class MessageApiClient {
         },
         body: requestBody,
       );
+
+      print(response.body);
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
