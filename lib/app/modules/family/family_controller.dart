@@ -297,7 +297,9 @@ class FamilyController extends GetxController
       final token = UserStorage.getToken();
       listFamilies.value = await repository.getAll("Bearer $token");
       update();
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   void clearAllFamilyTextFields() {

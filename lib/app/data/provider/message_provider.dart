@@ -79,19 +79,24 @@ class MessageApiClient {
     try {
       var messageUrl = Uri.parse('$baseUrl/v1/mensagem/create');
 
-      List<Map<String, dynamic>> pessoasJson = <Map<String, dynamic>>[];
-      if (family != null) {
-        pessoasJson = family.pessoas!.map((pessoa) => pessoa.toJson()).toList();
-      }
+      // List<Map<String, dynamic>> pessoasJson = <Map<String, dynamic>>[];
+      // if (family != null) {
+      //   pessoasJson = family.pessoas!.map((pessoa) => pessoa.toJson()).toList();
+      // }
 
       var requestBody = {
         "titulo": message.titulo,
         "descricao": message.descricao,
         "usuario_remetente": id.toString(),
-        "pessoas": jsonEncode(pessoasJson),
-        "usuario_destinatario": user != null ? user.id.toString() : '',
-        "token_firebase": user!.tokenFirebase ?? ''
+        // "pessoas": jsonEncode(pessoasJson),
       };
+      if (user != null) {
+        requestBody['usuario_destinatario'] = user.id.toString();
+        requestBody['token_firebase'] = user.tokenFirebase;
+      }
+      if (family != null) {
+        requestBody['familia_id'] = family.id.toString();
+      }
       var response = await httpClient.post(
         messageUrl,
         headers: {
@@ -100,9 +105,7 @@ class MessageApiClient {
         },
         body: requestBody,
       );
-
-      print(response.body);
-
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||

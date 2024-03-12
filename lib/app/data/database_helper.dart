@@ -12,7 +12,6 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     try {
-      print('Criando tabelas...');
       await db.execute('''
       CREATE TABLE family_table(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
