@@ -17,6 +17,7 @@ class DatabaseHelper {
     return _database!;
   }
 
+<<<<<<< HEAD
   Future<Database> initDatabase() async {
     final path = join(await getDatabasesPath(), 'credenciado.db');
     return openDatabase(path, version: 1, onCreate: _createDatabase);
@@ -25,6 +26,12 @@ class DatabaseHelper {
   Future<void> _createDatabase(Database db, int version) async {
     await db.execute('''
       CREATE TABLE families(
+=======
+  Future<void> _onCreate(Database db, int version) async {
+    try {
+      await db.execute('''
+      CREATE TABLE family_table(
+>>>>>>> 100d6fe5f3e0e185e7b540b71fed6e6f2cb6f9d5
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
         endereco TEXT,

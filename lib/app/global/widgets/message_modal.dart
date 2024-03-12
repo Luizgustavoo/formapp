@@ -73,10 +73,10 @@ class MessageModal extends StatelessWidget {
                 onPressed: () async {
                   Map<String, dynamic> retorno = <String, dynamic>{};
                   if (user != null) {
-                    retorno = await controller.saveMessage(user: user);
+                    retorno = await controller.sendMessage(user: user);
                   }
                   if (family != null) {
-                    retorno = await controller.saveMessage(family: family);
+                    retorno = await controller.sendMessage(family: family);
                   }
 
                   if (retorno['return'] == 0) {

@@ -1,96 +1,97 @@
-import 'dart:io';
+// ignore_for_file: avoid_print
 
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/widgets.dart';
-import 'package:formapp/firebase_options.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
-class NotificationSetUp {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
-  Future<void> initializeNotification() async {
-    AwesomeNotifications().initialize('resource://drawable/res_launcher_icon', [
-      NotificationChannel(
-        channelKey: 'high_importance_channel',
-        channelName: 'Credenciado',
-        importance: NotificationImportance.Max,
-        vibrationPattern: highVibrationPattern,
-        channelShowBadge: true,
-        channelDescription: 'Credenciado',
-      ),
-    ]);
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
+Future<void> handleBackgroundMessage(message) async {
+  FirebaseMessaging.instance.getInitialMessage().then(
+    (remoteMessage) {
+      final Map<String, dynamic>? data = remoteMessage?.data;
+      if (data != null &&
+          data.containsKey('click_action') &&
+          data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK') {
+        Get.toNamed('/list-message');
       }
-    });
+    },
+  );
+}
+
+class FirebaseApi {
+  final _firebaseMessaging = FirebaseMessaging.instance;
+
+  final _androidChannel = const AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications',
+    importance: Importance.defaultImportance,
+  );
+  final _localNotifications = FlutterLocalNotificationsPlugin();
+
+  void handleMessage(RemoteMessage? message) {
+    if (message == null) return;
+
+    Get.toNamed('/list-message');
   }
 
-  void configurePushNotification() async {
-    await initializeNotification();
+  Future initLocalNotifications() async {
+    const iOS = IOSInitializationSettings();
+    const android = AndroidInitializationSettings('@drawable/ic_launcher');
+    const settings = InitializationSettings(android: android, iOS: iOS);
+
+    await _localNotifications.initialize(settings,
+        onSelectNotification: (payload) {
+      final message = RemoteMessage.fromMap(jsonDecode(payload!));
+      handleMessage(message);
+    });
+
+    final plataform = _localNotifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    await plataform?.createNotificationChannel(_androidChannel);
+  }
+
+  Future initPushNotifications() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
-    if (Platform.isIOS) getIOSPermission();
-    FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      if (message.notification != null) {
-        createOrderNotification(
-          title: message.notification!.title,
-          body: message.notification!.body,
-        );
-      }
+    _firebaseMessaging.getInitialMessage().then(handleMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    FirebaseMessaging.onMessage.listen((message) {
+      final notification = message.notification;
+      if (notification == null) return;
+
+      _localNotifications.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+            android: AndroidNotificationDetails(
+              _androidChannel.id,
+              _androidChannel.name,
+              channelDescription: _androidChannel.description,
+              icon: '@drawable/ic_launcher',
+            ),
+            iOS: const IOSNotificationDetails(
+              presentAlert: true,
+              presentBadge: true,
+              presentSound: true,
+            )),
+        payload: jsonEncode(message.toMap()),
+      );
     });
   }
 
-  Future<void> createOrderNotification({String? title, String? body}) async {
-    await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-      id: 0,
-      channelKey: 'high_importance_channel',
-      title: title,
-      body: body,
-    ));
-  }
-
-  void eventListenerCallback() {
-    AwesomeNotifications().setListeners(
-      onActionReceivedMethod: NotificationController.onActionReceivedMethod,
-    );
-  }
-
-  void getIOSPermission() {
-    _firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-    );
-  }
-
-  @pragma('vm:entry-point')
-  Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
-}
-
-class NotificationController {
-  @pragma('vm:entry-point')
-  static Future<void> onActionReceivedMethod(
-      ReceivedNotification receivedNotification) async {
-    BuildContext? context = Get.context;
-
-    // Verifica se o contexto é válido antes de tentar navegar
-    if (context != null) {
-      Get.offAllNamed('/list-message');
-    } else {
-      // Se o contexto não for válido, você pode tentar navegar de volta ao MaterialApp
-      Get.toNamed('/list-message');
-    }
+  Future<void> initNotifications() async {
+    await _firebaseMessaging.requestPermission();
+    Future.delayed(const Duration(seconds: 5), () {
+      initPushNotifications();
+    });
+    initLocalNotifications();
   }
 }
