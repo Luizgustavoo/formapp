@@ -57,6 +57,28 @@ class MessageController extends GetxController {
     return retorno;
   }
 
+  Future<Map<String, dynamic>> changeMessage({User? user}) async {
+    Message message = Message(
+      titulo: subjectController.text,
+      descricao: messageController.text,
+    );
+    final token = box.read('auth')['access_token'];
+    if (await ConnectionStatus.verifyConnection()) {
+      mensagem = await repository.messageChange("Bearer $token", message, user);
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        }
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe uma família com esse nome!"
+        };
+      }
+    }
+    return retorno;
+  }
+
   void clearModalMessage() {
     subjectController.value = TextEditingValue.empty;
     messageController.value = TextEditingValue.empty;

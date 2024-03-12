@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:formapp/app/data/provider/internet_status_provider.dart';
@@ -26,13 +25,6 @@ void main() async {
   );
 
   await FirebaseApi().initNotifications();
-
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-
-  final String? token = await FirebaseMessaging.instance.getToken();
-  debugPrint(token);
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,

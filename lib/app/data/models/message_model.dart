@@ -6,6 +6,7 @@ class Message {
   int? usuarioId;
   String? dataCadastro;
   String? dataUpdate;
+  String? lida;
 
   Message({
     this.id,
@@ -25,6 +26,7 @@ class Message {
     usuarioId = json['usuario_id'];
     dataCadastro = json['data_cadastro'];
     dataUpdate = json['data_update'];
+    lida = json['lida'];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +38,7 @@ class Message {
     data['usuario_id'] = usuarioId;
     data['data_cadastro'] = dataCadastro;
     data['data_update'] = dataUpdate;
+    data['lida'] = lida;
     return data;
   }
 }

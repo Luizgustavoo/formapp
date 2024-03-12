@@ -105,6 +105,54 @@ class MessageApiClient {
         },
         body: requestBody,
       );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      Get.defaultDialog(
+        title: "Errorou",
+        content: Text("$err"),
+      );
+    }
+    return null;
+  }
+
+  messageChange(String token, Message message, User? user) async {
+    final id = box.read('auth')['user']['id'];
+    try {
+      var messageUrl = Uri.parse('$baseUrl/v1/mensagem/change');
+
+      var requestBody = {
+        "usuario_id": id.toString(),
+        "mensagem_id": message.id,
+      };
+
+      var response = await httpClient.post(
+        messageUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
       print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);

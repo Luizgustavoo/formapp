@@ -32,4 +32,15 @@ class MessageRepository {
       rethrow;
     }
   }
+
+  messageChange(String token, Message message, User? user) async {
+    try {
+      var response = await apiClient.messageChange(token, message, user);
+
+      return response;
+    } catch (e) {
+      print('Erro ao enviar mensagem para a família: $e');
+      rethrow;
+    }
+  }
 }

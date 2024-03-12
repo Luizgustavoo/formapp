@@ -1,15 +1,19 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:intl/intl.dart';
+
+import 'package:formapp/app/utils/custom_text_style.dart';
 
 class CustomCardMessage extends StatelessWidget {
   const CustomCardMessage({
+    Key? key,
+    this.lida,
     this.title,
-    this.date,
     this.desc,
-    super.key,
-  });
+    this.date,
+  }) : super(key: key);
 
+  final String? lida;
   final String? title;
   final String? desc;
   final DateTime? date;
@@ -25,6 +29,7 @@ class CustomCardMessage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ExpansionTile(
+            onExpansionChanged: (value) {},
             childrenPadding: const EdgeInsets.all(5),
             expandedAlignment: Alignment.centerLeft,
             shape:
