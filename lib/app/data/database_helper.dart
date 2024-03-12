@@ -25,8 +25,6 @@ class DatabaseHelper {
   Future<void> _createDatabase(Database db, int version) async {
     await db.execute('''
       CREATE TABLE families(
-=======
->>>>>>> 5b702f5d0c20aeb3c19aec84eeddb7d34e59df1c
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
         endereco TEXT,

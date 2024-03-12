@@ -6,9 +6,9 @@ import 'package:formapp/app/global/widgets/message_service_modal.dart';
 import 'package:formapp/app/global/widgets/show_case.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 
@@ -16,6 +16,7 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/global/widgets/custom_family_card.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
+import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 
 import '../../../global/shimmer/shimmer_custom_family_card.dart';
 
@@ -28,14 +29,13 @@ class FamilyView extends GetView<FamilyController> {
 
   @override
   Widget build(BuildContext context) {
-    final familiaId = peopleController.box.read('auth')['user']['familia_id'];
     userController.getUsers();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Famílias Cadastradas'),
         actions: [
-          if (familiaId == null) ...[
+          if (UserStorage.getUserType() < 3) ...[
             IconButton(
               onPressed: () {
                 controller.clearAllFamilyTextFields();
@@ -146,7 +146,7 @@ class FamilyView extends GetView<FamilyController> {
                       family: family,
                       showAddMember: true,
                       stripe: index % 2 == 0 ? true : false,
-                      familyName: family.endereco.toString(),
+                      familyName: family.nome.toString(),
                       provedor: "Provedor: $provedorCasa",
                       editFamily: () {
                         controller.selectedFamily = family;

@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 class PeopleBinding implements Bindings {
   @override
   void dependencies() {
+    print('DAQUI PRA BAIXO');
     Get.lazyPut<PeopleController>(() => PeopleController());
     Get.lazyPut<PeopleApiClient>(() => PeopleApiClient());
     Get.lazyPut<PeopleRepository>(() => PeopleRepository());

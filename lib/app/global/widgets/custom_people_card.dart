@@ -116,8 +116,10 @@ class CustomPeopleCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Atendimentos:",
-                            style: CustomTextStyle.subtitleNegrit(context)),
+                        Text(
+                          "Atendimentos:",
+                          style: CustomTextStyle.subtitleNegrit(context),
+                        ),
                         Divider(
                           height: 3,
                           thickness: 2,

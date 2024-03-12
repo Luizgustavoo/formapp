@@ -26,6 +26,7 @@ class MaritalStatusRepository {
           list.add(MaritalStatus.fromJson(e));
         });
         box.write('maritalStatus', list.map((e) => e.toJson()).toList());
+        print(box.read('maritalStatus'));
       }
     } else {
       return localMaritalStatusList;

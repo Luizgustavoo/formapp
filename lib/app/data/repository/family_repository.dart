@@ -125,7 +125,7 @@ class FamilyRepository {
       if (currentFamilyId != idFamilia) {
         currentFamily = Family(
           id: idFamilia,
-          nome: nomePeople,
+          nome: nomeFamilia,
           endereco: enderecoFamilia,
           numeroCasa: numeroCasaFamilia,
           bairro: bairroFamilia,

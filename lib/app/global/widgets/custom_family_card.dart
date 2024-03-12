@@ -8,6 +8,7 @@ import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
@@ -147,7 +148,7 @@ class CustomFamilyCard extends StatelessWidget {
                                       onPressed: editFamily,
                                       icon: const Icon(Icons.edit_outlined),
                                     ),
-                              if (familiaId == null) ...[
+                              if (UserStorage.getUserType() < 3) ...[
                                 index == 0
                                     ? ShowCaseView(
                                         title: 'MENSAGEM',

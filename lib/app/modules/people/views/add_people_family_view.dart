@@ -277,6 +277,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         child: TextFormField(
                           controller:
                               controller.tituloEleitoralPessoaController,
+                          keyboardType: TextInputType.number,
                           maxLength: 12,
                           decoration: const InputDecoration(
                               counterText: "",

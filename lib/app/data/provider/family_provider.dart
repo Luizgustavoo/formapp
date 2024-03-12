@@ -5,6 +5,7 @@ import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/family_database_helper.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/utils/connection_service.dart';
+import 'package:formapp/app/utils/local_storage_service.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -192,6 +193,8 @@ class FamilyApiClient {
         },
         body: requestBody,
       );
+
+      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

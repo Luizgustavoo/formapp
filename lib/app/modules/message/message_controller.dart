@@ -34,7 +34,7 @@ class MessageController extends GetxController {
     listMessages.value = await repository.getAll("Bearer $token");
   }
 
-  Future<Map<String, dynamic>> sendMessage({Family? family, User? user}) async {
+  Future<Map<String, dynamic>> saveMessage({Family? family, User? user}) async {
     Message message = Message(
       titulo: subjectController.text,
       descricao: messageController.text,
