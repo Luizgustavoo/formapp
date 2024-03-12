@@ -4,7 +4,6 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/internet_status_provider.dart';
 import 'package:formapp/app/data/provider/via_cep.dart';
-import 'package:formapp/app/data/repository/family_repository.dart';
 import 'package:formapp/app/utils/format_validator.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:formapp/app/utils/user_storage.dart';
