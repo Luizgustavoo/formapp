@@ -8,6 +8,7 @@ import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 
@@ -146,7 +147,7 @@ class FamilyView extends GetView<FamilyController> {
                       family: family,
                       showAddMember: true,
                       stripe: index % 2 == 0 ? true : false,
-                      familyName: family.nome.toString(),
+                      familyName: family.endereco.toString(),
                       provedor: "Provedor: $provedorCasa",
                       editFamily: () {
                         controller.selectedFamily = family;

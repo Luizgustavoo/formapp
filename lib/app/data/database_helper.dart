@@ -84,10 +84,46 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getFamiliesWithPeople() async {
     final db = await database;
     return await db.rawQuery('''
-      SELECT families.id AS family_id, families.nome AS family_nome,
-             people.id AS people_id, people.nome AS people_nome
+      SELECT 
+      families.id AS id_familia,
+families.nome AS nome_familia,
+families.endereco AS endereco_familia,
+families.numero_casa AS numero_casa_familia,
+families.bairro AS bairro_familia,
+families.cidade AS cidade_familia,
+families.uf AS uf_familia,
+families.complemento AS complemento_familia,
+families.residencia_propria AS residencia_propria_familia,
+families.usuario_id AS usuario_id_familia,
+families.status AS status_familia,
+families.data_cadastro AS data_cadastro_familia,
+families.data_update AS data_update_familia,
+families.cep AS cep_familia,
+people.id AS id_people,
+people.nome AS nome_people,
+people.foto AS foto_people,
+people.sexo AS sexo_people,
+people.cpf AS cpf_people,
+people.data_nascimento AS data_nascimento_people,
+people.estadocivil_id AS estadocivil_id_people,
+people.titulo_eleitor AS titulo_eleitor_people,
+people.zona_eleitoral AS zona_eleitoral_people,
+people.telefone AS telefone_people,
+people.rede_social AS rede_social_people,
+people.provedor_casa AS provedor_casa_people,
+people.igreja_id AS igreja_id_people,
+people.local_trabalho AS local_trabalho_people,
+people.cargo_trabalho AS cargo_trabalho_people,
+people.religiao_id AS religiao_id_people,
+people.funcao_igreja AS funcao_igreja_people,
+people.usuario_id AS usuario_id_people,
+people.status AS status_people,
+people.data_cadastro AS data_cadastro_people,
+people.data_update AS data_update_people,
+people.familia_id AS familia_id_people,
+people.parentesco AS parentesco_people
       FROM families
-      LEFT JOIN people ON families.id = people.family_id
+      LEFT JOIN people ON families.id = people.familia_id
     ''');
   }
 }
