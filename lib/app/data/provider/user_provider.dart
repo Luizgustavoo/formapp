@@ -124,7 +124,7 @@ class UserApiClient {
         "nome": user.nome,
         "tipousuario_id": user.tipousuarioId.toString(),
         "username": user.username,
-        "password": user.senha,
+        "senha": user.senha,
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
       };

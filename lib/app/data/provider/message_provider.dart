@@ -135,14 +135,13 @@ class MessageApiClient {
     return null;
   }
 
-  messageChange(String token, Message message, User? user) async {
-    final id = box.read('auth')['user']['id'];
+  messageChange(String token, int messageId, int userId) async {
     try {
       var messageUrl = Uri.parse('$baseUrl/v1/mensagem/change');
 
       var requestBody = {
-        "usuario_id": id.toString(),
-        "mensagem_id": message.id,
+        "usuario_id": userId.toString(),
+        "mensagem_id": messageId.toString(),
       };
 
       var response = await httpClient.post(

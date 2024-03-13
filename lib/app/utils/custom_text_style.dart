@@ -9,7 +9,15 @@ class CustomTextStyle {
     );
   }
 
-  static TextStyle? date(BuildContext context) {
+  static TextStyle? dateRegular(BuildContext context) {
+    return TextStyle(
+      fontSize: 16,
+      color: Colors.orange.shade900,
+      fontFamily: 'Poppinss',
+    );
+  }
+
+  static TextStyle? dateNegrit(BuildContext context) {
     return TextStyle(
       fontSize: 16,
       color: Colors.orange.shade900,
@@ -35,18 +43,18 @@ class CustomTextStyle {
 
   static TextStyle? subtitle(BuildContext context) {
     return const TextStyle(
-      fontSize: 16,
-      color: Colors.black87,
-      fontFamily: 'Poppinss',
-    );
+        fontSize: 16,
+        color: Colors.black87,
+        fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
   }
 
   static TextStyle? subtitleNegrit(BuildContext context) {
     return const TextStyle(
-      fontSize: 16,
-      color: Colors.black87,
-      fontFamily: 'Poppins',
-    );
+        fontSize: 16,
+        color: Colors.black87,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.clip);
   }
 
   static TextStyle? button(BuildContext context) {
@@ -78,6 +86,22 @@ class CustomTextStyle {
         fontSize: 16,
         color: Colors.black87,
         fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
+  }
+
+  static TextStyle? subjectMessageRegular(BuildContext context) {
+    return TextStyle(
+        fontSize: 15,
+        color: Colors.grey.shade700,
+        fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
+  }
+
+  static TextStyle? subjectMessageNegrit(BuildContext context) {
+    return TextStyle(
+        fontSize: 15,
+        color: Colors.grey.shade700,
+        fontFamily: 'Poppins',
         overflow: TextOverflow.clip);
   }
 }

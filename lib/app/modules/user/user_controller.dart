@@ -226,7 +226,8 @@ class UserController extends GetxController {
   void fillInUserFields() {
     nameController.text = selectedUser!.nome.toString();
     usernameController.text = selectedUser!.username.toString();
-    passwordController.text = selectedUser!.senha.toString();
+    passwordController.text = '';
+    familyController.selectedFamily = selectedUser!.family;
   }
 
   void clearAllUserTextFields() {

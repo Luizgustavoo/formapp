@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:formapp/app/data/base_url.dart';
+import 'package:formapp/app/utils/user_storage.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class AuthApiClient {
@@ -19,6 +21,26 @@ class AuthApiClient {
         // Adicione uma lógica para tratar o erro de autenticação aqui
       } else {
         print('Erro - get:${response.body}');
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> getLogout() async {
+    var loginUrl = Uri.parse('$baseUrl/logout');
+    try {
+      var response = await httpClient.post(
+        loginUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer ${UserStorage.getToken()}",
+        },
+      );
+      if (response.statusCode == 200) {
+        UserStorage.clearBox();
+        Get.offAllNamed('/login');
       }
     } catch (e) {
       print(e);

@@ -63,16 +63,6 @@ class FamilyRepository {
     }
   }
 
-  saveFamilyLocal(Family family) async {
-    try {
-      var response = await apiClient.saveFamilyLocal(family);
-      return response;
-    } catch (e) {
-      print('Erro ao inserir a família: $e');
-      rethrow;
-    }
-  }
-
   Future<List<Family>> getFamiliesWithPeopleLocal() async {
     final dbHelper = DatabaseHelper();
     final result = await dbHelper.getFamiliesWithPeople();

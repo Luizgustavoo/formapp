@@ -5,11 +5,16 @@ import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 
 class CreateUserModal extends StatelessWidget {
-  CreateUserModal(
-      {super.key, this.user, required this.titulo, this.tipoOperacao});
+  CreateUserModal({
+    super.key,
+    this.user,
+    required this.titulo,
+    this.tipoOperacao,
+  });
 
   final controller = Get.find<UserController>();
   final familyController = Get.put(FamilyController());
@@ -22,6 +27,7 @@ class CreateUserModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final familiaId = familyController.box.read('auth')['user']['familia_id'];
+    final selectedFamily = familyController.selectedFamily;
     return Form(
         key: controller.userFormKey,
         child: SingleChildScrollView(
@@ -104,7 +110,7 @@ class CreateUserModal extends StatelessWidget {
                   () => DropdownButtonFormField<Family>(
                     isDense: true,
                     menuMaxHeight: Get.size.height / 2,
-                    value: familyController.selectedFamily,
+                    value: selectedFamily,
                     onChanged: (Family? value) {
                       familyController.selectedFamily = value;
                     },
@@ -141,8 +147,9 @@ class CreateUserModal extends StatelessWidget {
                             : await controller.updateUser(user!.id!);
 
                         if (tipoOperacao == 'update' &&
-                            retorno['return'] == 0) {
-                          homeController.exit();
+                            retorno['return'] == 0 &&
+                            user!.id == UserStorage.getUserId()) {
+                          homeController.logout();
                         }
                         if (tipoOperacao == 'insert' &&
                             retorno['return'] == 0) {

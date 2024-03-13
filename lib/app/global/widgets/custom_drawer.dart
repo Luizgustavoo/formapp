@@ -70,7 +70,7 @@ class CustomDrawer extends GetView<HomeController> {
               ),
               CustomListTile(Icons.home_rounded, 'HOME', () {}, true),
               CustomListTile(Icons.exit_to_app_rounded, 'SAIR', () {
-                controller.exit();
+                controller.logout();
               }, true),
             ],
           ),

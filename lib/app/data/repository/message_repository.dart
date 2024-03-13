@@ -33,9 +33,9 @@ class MessageRepository {
     }
   }
 
-  messageChange(String token, Message message, User? user) async {
+  messageChange(String token, int mensagemId, int userId) async {
     try {
-      var response = await apiClient.messageChange(token, message, user);
+      var response = await apiClient.messageChange(token, mensagemId, userId);
 
       return response;
     } catch (e) {

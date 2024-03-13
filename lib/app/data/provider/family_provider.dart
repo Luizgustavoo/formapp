@@ -136,8 +136,6 @@ class FamilyApiClient {
         final dbHelper = DatabaseHelper();
         dynamic retorno = await dbHelper.insertFamily(family);
 
-        print(retorno);
-
         Map<String, dynamic> responseData = {};
 
         if (retorno > 0) {
@@ -269,26 +267,6 @@ class FamilyApiClient {
 
   Future<List<Family>> getAllFamiliesLocally() async {
     return await localDataBase.getAllFamily();
-  }
-
-  Future<dynamic> saveFamilyLocal(Family family) async {
-    Family familyLocal = Family(
-      nome: family.nome,
-      endereco: family.endereco,
-      numeroCasa: family.numeroCasa,
-      bairro: family.bairro,
-      cidade: family.cidade,
-      uf: family.uf,
-      complemento: family.complemento,
-      residenciaPropria: family.residenciaPropria,
-      usuarioId: family.usuarioId,
-      status: family.status,
-      cep: family.cep,
-      dataCadastro: '2024-02-22',
-      dataUpdate: '2024-02-23',
-    );
-
-    return await localDataBase.insertFamily(familyLocal);
   }
 
   Future<void> deleteFamilyLocally(Family family) async {

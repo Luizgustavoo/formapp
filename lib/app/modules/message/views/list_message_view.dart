@@ -19,9 +19,7 @@ class MessageView extends GetView<MessageController> {
             itemBuilder: (context, index) {
               Message message = controller.listMessages[index];
               return CustomCardMessage(
-                title: message.titulo,
-                date: DateTime.parse(message.dataCadastro!),
-                desc: message.descricao,
+                message: message,
               );
             })));
   }

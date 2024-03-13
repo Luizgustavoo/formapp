@@ -1,3 +1,5 @@
+import 'package:formapp/app/data/models/family_model.dart';
+
 class User {
   int? id;
   String? nome;
@@ -11,20 +13,23 @@ class User {
   User? user;
   String? tokenFirebase;
   dynamic familiaId;
+  Family? family;
 
-  User(
-      {this.id,
-      this.nome,
-      this.username,
-      this.tipousuarioId,
-      this.status,
-      this.dataCadastro,
-      this.dataUpdate,
-      this.user,
-      this.usuarioId,
-      this.senha,
-      this.tokenFirebase,
-      this.familiaId});
+  User({
+    this.id,
+    this.nome,
+    this.username,
+    this.tipousuarioId,
+    this.status,
+    this.dataCadastro,
+    this.dataUpdate,
+    this.user,
+    this.usuarioId,
+    this.senha,
+    this.tokenFirebase,
+    this.familiaId,
+    this.family,
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -39,6 +44,7 @@ class User {
     usuarioId = json['usuario_id'] as int;
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     familiaId = json['familia_id'] as dynamic;
+    family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
   }
 
   Map<String, dynamic> toJson() {

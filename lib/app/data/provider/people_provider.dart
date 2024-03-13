@@ -150,8 +150,6 @@ class PeopleApiClient {
         final dbHelper = DatabaseHelper();
         dynamic retorno = await dbHelper.insertPeople(pessoa);
 
-        print(retorno);
-
         Map<String, dynamic> responseData = {};
 
         if (retorno > 0) {

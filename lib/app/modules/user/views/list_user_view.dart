@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
+import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/global/widgets/create_user_modal.dart';
@@ -15,6 +16,7 @@ class ListUserView extends GetView<UserController> {
   final box = GetStorage('credenciado');
 
   final messageController = Get.put(MessageController());
+  final familyController = Get.put(FamilyController());
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +134,7 @@ class ListUserView extends GetView<UserController> {
                                           onPressed: () {
                                             controller.selectedUser = user;
                                             controller.fillInUserFields();
+                                            print(user.family);
                                             showModalBottomSheet(
                                               isScrollControlled: true,
                                               isDismissible: false,

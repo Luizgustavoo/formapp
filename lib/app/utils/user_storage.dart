@@ -18,6 +18,13 @@ class UserStorage {
     return "";
   }
 
+  static void clearBox() {
+    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
+    if (existUser()) {
+      _box.erase();
+    }
+  }
+
   static int getUserId() {
     // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {

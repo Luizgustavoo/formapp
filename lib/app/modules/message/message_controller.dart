@@ -6,6 +6,7 @@ import 'package:formapp/app/data/repository/message_repository.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 class MessageController extends GetxController {
   TextEditingController subjectController = TextEditingController();
@@ -16,6 +17,7 @@ class MessageController extends GetxController {
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
   dynamic mensagem;
   final box = GetStorage('credenciado');
+  var message = Message().obs;
 
   @override
   void onInit() {
@@ -57,23 +59,15 @@ class MessageController extends GetxController {
     return retorno;
   }
 
-  Future<Map<String, dynamic>> changeMessage({User? user}) async {
-    Message message = Message(
-      titulo: subjectController.text,
-      descricao: messageController.text,
-    );
+  Future<Map<String, dynamic>> changeMessage(int messageId, int userId) async {
     final token = box.read('auth')['access_token'];
     if (await ConnectionStatus.verifyConnection()) {
-      mensagem = await repository.messageChange("Bearer $token", message, user);
+      mensagem =
+          await repository.messageChange("Bearer $token", messageId, userId);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
         }
-      } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uma família com esse nome!"
-        };
       }
     }
     return retorno;
@@ -82,5 +76,12 @@ class MessageController extends GetxController {
   void clearModalMessage() {
     subjectController.value = TextEditingValue.empty;
     messageController.value = TextEditingValue.empty;
+  }
+
+  String get formattedDate {
+    String? dataCadastro = message.value.dataCadastro;
+    return dataCadastro != null
+        ? DateFormat('dd/MM/yyyy').format(DateTime.parse(dataCadastro))
+        : '';
   }
 }

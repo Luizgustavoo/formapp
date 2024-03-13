@@ -13,4 +13,12 @@ class AuthRepository {
       return null;
     }
   }
+
+  Future<void> getLogout() async {
+    try {
+      await apiClient.getLogout();
+    } catch (e) {
+      print(e);
+    }
+  }
 }
