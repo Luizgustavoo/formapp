@@ -48,7 +48,7 @@ class DatabaseHelper {
           foto TEXT,
           nome TEXT,
           cpf TEXT,
-          estadocivil_id TEXT,
+          estadocivil_id INTEGER,
           parentesco TEXT,
           provedor_casa TEXT,
           sexo TEXT,
@@ -61,9 +61,9 @@ class DatabaseHelper {
           cargo_trabalho TEXT,
           funcao_igreja TEXT,
           status TEXT,
-          usuario_id TEXT,
+          usuario_id INTEGER,
           igreja_id TEXT,
-          religiao_id TEXT,
+          religiao_id INTEGER,
           familia_id INTEGER,
           data_cadastro TEXT,
           data_update TEXT
@@ -79,6 +79,16 @@ class DatabaseHelper {
   Future<int> insertPeople(People people) async {
     final db = await database;
     return await db.insert('people', people.toMap());
+  }
+
+  Future<int> updatePeople(People people) async {
+    final db = await database;
+    return await db.update(
+      'people',
+      people.toMap(),
+      where: 'id = ?',
+      whereArgs: [people.id],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getFamiliesWithPeople() async {

@@ -17,11 +17,6 @@ class HomeController extends GetxController {
   }
 
   void logout() {
-    // repository.getLogout();
-
-    final box = GetStorage('credenciado');
-    box.erase();
-
-    Get.offAllNamed('/login');
+    repository.getLogout();
   }
 }

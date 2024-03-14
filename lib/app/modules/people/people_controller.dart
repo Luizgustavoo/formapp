@@ -16,6 +16,7 @@ import 'package:formapp/app/data/repository/religion_repository.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:formapp/app/utils/format_validator.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -130,33 +131,38 @@ class PeopleController extends GetxController {
     listPeoples.value = await repository.getAll("Bearer $token");
   }
 
-  Future<Map<String, dynamic>> savePeople(Family family) async {
+  Future<Map<String, dynamic>> savePeople(
+      Family family, bool peopleLocal) async {
     if (peopleFormKey.currentState!.validate()) {
+      String imagePath = photoUrlPath.value;
+
       People pessoa = People(
-          nome: nomePessoaController.text,
-          cpf: cpfPessoaController.text,
-          estadoCivilId: estadoCivilSelected.value,
-          parentesco: parentesco.value,
-          provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
-          sexo: sexo.value,
-          dataNascimento: nascimentoPessoaController.text,
-          tituloEleitor: tituloEleitoralPessoaController.text,
-          zonaEleitoral: zonaEleitoralPessoaController.text,
-          localTrabalho: localTrabalhoPessoaController.text,
-          cargoTrabalho: cargoPessoaController.text,
-          telefone: celularPessoaController.text,
-          redeSocial: redeSocialPessoaController.text,
-          religiaoId: religiaoSelected.value,
-          igrejaId: igrejaPessoaController.text,
-          funcaoIgreja: funcaoIgrejaPessoaController.text,
-          status: 1,
-          usuarioId: box.read('auth')['user']['id'],
-          familiaId: family.id);
+        nome: nomePessoaController.text,
+        cpf: cpfPessoaController.text,
+        estadoCivilId: estadoCivilSelected.value,
+        parentesco: parentesco.value,
+        provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
+        sexo: sexo.value,
+        dataNascimento: nascimentoPessoaController.text,
+        tituloEleitor: tituloEleitoralPessoaController.text,
+        zonaEleitoral: zonaEleitoralPessoaController.text,
+        localTrabalho: localTrabalhoPessoaController.text,
+        cargoTrabalho: cargoPessoaController.text,
+        telefone: celularPessoaController.text,
+        redeSocial: redeSocialPessoaController.text,
+        religiaoId: religiaoSelected.value,
+        igrejaId: igrejaPessoaController.text,
+        funcaoIgreja: funcaoIgrejaPessoaController.text,
+        status: 1,
+        usuarioId: box.read('auth')['user']['id'],
+        familiaId: family.id,
+        foto: imagePath,
+      );
 
       final token = box.read('auth')['access_token'];
 
       mensagem = await repository.insertPeople(
-          "Bearer $token", pessoa, File(photoUrlPath.value));
+          "Bearer $token", pessoa, File(photoUrlPath.value), peopleLocal);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
@@ -177,33 +183,36 @@ class PeopleController extends GetxController {
     return retorno;
   }
 
-  Future<Map<String, dynamic>> updatePeople() async {
+  Future<Map<String, dynamic>> updatePeople(bool peopleLocal) async {
     if (peopleFormKey.currentState!.validate()) {
+      String imagePath = photoUrlPath.value;
       People pessoa = People(
-          id: int.parse(idPessoaController.text),
-          nome: nomePessoaController.text,
-          cpf: cpfPessoaController.text,
-          estadoCivilId: estadoCivilSelected.value,
-          parentesco: parentesco.value,
-          provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
-          sexo: sexo.value,
-          dataNascimento: nascimentoPessoaController.text,
-          tituloEleitor: tituloEleitoralPessoaController.text,
-          zonaEleitoral: zonaEleitoralPessoaController.text,
-          localTrabalho: localTrabalhoPessoaController.text,
-          cargoTrabalho: cargoPessoaController.text,
-          telefone: celularPessoaController.text,
-          redeSocial: redeSocialPessoaController.text,
-          religiaoId: religiaoSelected.value,
-          igrejaId: igrejaPessoaController.text,
-          funcaoIgreja: funcaoIgrejaPessoaController.text,
-          status: 1,
-          usuarioId: box.read('auth')['user']['id']);
+        id: int.parse(idPessoaController.text),
+        nome: nomePessoaController.text,
+        cpf: cpfPessoaController.text,
+        estadoCivilId: estadoCivilSelected.value,
+        parentesco: parentesco.value,
+        provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
+        sexo: sexo.value,
+        dataNascimento: nascimentoPessoaController.text,
+        tituloEleitor: tituloEleitoralPessoaController.text,
+        zonaEleitoral: zonaEleitoralPessoaController.text,
+        localTrabalho: localTrabalhoPessoaController.text,
+        cargoTrabalho: cargoPessoaController.text,
+        telefone: celularPessoaController.text,
+        redeSocial: redeSocialPessoaController.text,
+        religiaoId: religiaoSelected.value,
+        igrejaId: igrejaPessoaController.text,
+        funcaoIgreja: funcaoIgrejaPessoaController.text,
+        status: 1,
+        usuarioId: UserStorage.getUserId(),
+        foto: imagePath,
+      );
 
       final token = box.read('auth')['access_token'];
 
       final mensagem = await repository.updatePeople("Bearer $token", pessoa,
-          File(photoUrlPath.value), oldImagePath.value);
+          File(photoUrlPath.value), oldImagePath.value, peopleLocal);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -312,6 +321,16 @@ class PeopleController extends GetxController {
     isImagePicPathSet.value = false;
     provedorCheckboxValue.value =
         selectedPeople!.provedorCasa! == 'sim' ? true : false;
+
+    // Verifique se o caminho da imagem local está definido
+    if (photoUrlPath.value.isNotEmpty) {
+      // Defina a imagem usando FileImage para exibir localmente
+      isImagePicPathSet.value = true;
+      photoUrlPath.value = selectedPeople!.foto!;
+    } else {
+      // Caso contrário, defina para false e exiba a imagem padrão
+      isImagePicPathSet.value = false;
+    }
   }
 
   void setImagePeople(String path) {

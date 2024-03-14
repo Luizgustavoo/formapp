@@ -19,9 +19,11 @@ class PeopleRepository {
     return list;
   }
 
-  insertPeople(String token, People pessoa, File imageFile) async {
+  insertPeople(
+      String token, People pessoa, File imageFile, bool peopleLocal) async {
     try {
-      var response = await apiClient.insertPeople(token, pessoa, imageFile);
+      var response =
+          await apiClient.insertPeople(token, pessoa, imageFile, peopleLocal);
 
       return response;
     } catch (e) {
@@ -30,11 +32,11 @@ class PeopleRepository {
     }
   }
 
-  updatePeople(
-      String token, People pessoa, File imageFile, String? oldImagePath) async {
+  updatePeople(String token, People pessoa, File imageFile,
+      String? oldImagePath, bool peopleLocal) async {
     try {
-      var response =
-          await apiClient.updatePeople(token, pessoa, imageFile, oldImagePath);
+      var response = await apiClient.updatePeople(
+          token, pessoa, imageFile, oldImagePath, peopleLocal);
 
       return response;
     } catch (e) {

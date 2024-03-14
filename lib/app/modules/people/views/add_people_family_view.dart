@@ -12,11 +12,17 @@ import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
-  const AddPeopleFamilyView(
-      {super.key, this.family, required this.tipoOperacao});
+  const AddPeopleFamilyView({
+    super.key,
+    this.family,
+    required this.tipoOperacao,
+    required this.peopleLocal,
+  });
 
   final Family? family;
   final int tipoOperacao;
+
+  final bool peopleLocal;
 
   @override
   Widget build(BuildContext context) {
@@ -413,8 +419,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       ElevatedButton(
                           onPressed: () async {
                             Map<String, dynamic> retorno = tipoOperacao == 0
-                                ? await controller.savePeople(family!)
-                                : await controller.updatePeople();
+                                ? await controller.savePeople(
+                                    family!, peopleLocal)
+                                : await controller.updatePeople(peopleLocal);
                             if (retorno['return'] == 0) {
                               Get.back();
                             }

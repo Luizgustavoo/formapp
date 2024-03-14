@@ -18,7 +18,7 @@ class Family {
   String? cep;
   User? user;
   List<People>? pessoas;
-  bool? familyLocal;
+  bool? familyLocal = false;
 
   Family(
       {this.id,

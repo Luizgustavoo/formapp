@@ -207,6 +207,7 @@ class FamilyView extends GetView<FamilyController> {
                           builder: (context) => Padding(
                             padding: MediaQuery.of(context).viewInsets,
                             child: AddPeopleFamilyView(
+                              peopleLocal: family.familyLocal!,
                               tipoOperacao: 0,
                               family: family,
                             ),

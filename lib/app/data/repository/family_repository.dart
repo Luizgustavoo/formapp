@@ -100,13 +100,13 @@ class FamilyRepository {
       final telefonePeople = row['telefone_people'] as String?;
       final redeSocialPeople = row['rede_social_people'] as String?;
       final provedorCasaPeople = row['provedor_casa_people'] as String?;
-      final igrejaIdPeople = row['igreja_id_people'] as int?;
+      final igrejaIdPeople = row['igreja_id_people'] as String?;
       final localTrabalhoPeople = row['local_trabalho_people'] as String?;
       final cargoTrabalhoPeople = row['cargo_trabalho_people'] as String?;
       final religiaoIdPeople = row['religiao_id_people'] as int?;
       final funcaoIgrejaPeople = row['funcao_igreja_people'] as String?;
       final usuarioIdPeople = row['usuario_id_people'] as int?;
-      final statusPeople = row['status_people'] as int?;
+      final statusPeople = row['status_people'] as String?;
       final dataCadastroPeople = row['data_cadastro_people'] as String?;
       final dataUpdatePeople = row['data_update_people'] as String?;
       final familiaIdPeople = row['familia_id_people'] as int?;
@@ -130,36 +130,36 @@ class FamilyRepository {
           cep: cepFamilia,
           pessoas: [],
         );
+
+        if (idPeople != null && nomePeople != null) {
+          currentFamily.pessoas?.add(People(
+            id: idPeople,
+            nome: nomePeople,
+            foto: fotoPeople,
+            sexo: sexoPeople,
+            cpf: cpfPeople,
+            dataNascimento: dataNascimentoPeople,
+            estadoCivilId: estadocivilIdPeople,
+            tituloEleitor: tituloEleitorPeople,
+            zonaEleitoral: zonaEleitoralPeople,
+            telefone: telefonePeople,
+            redeSocial: redeSocialPeople,
+            provedorCasa: provedorCasaPeople,
+            igrejaId: igrejaIdPeople,
+            localTrabalho: localTrabalhoPeople,
+            cargoTrabalho: cargoTrabalhoPeople,
+            religiaoId: religiaoIdPeople,
+            funcaoIgreja: funcaoIgrejaPeople,
+            usuarioId: usuarioIdPeople,
+            status: int.parse(statusPeople.toString()),
+            dataCadastro: dataCadastroPeople,
+            dataUpdate: dataUpdatePeople,
+            familiaId: idFamilia,
+            parentesco: parentescoPeople,
+          ));
+        }
         families.add(currentFamily);
         currentFamilyId = idFamilia;
-      }
-
-      if (idPeople != null && nomePeople != null) {
-        currentFamily?.pessoas?.add(People(
-          id: idPeople,
-          nome: nomePeople,
-          foto: fotoPeople,
-          sexo: sexoPeople,
-          cpf: cpfPeople,
-          dataNascimento: dataNascimentoPeople,
-          estadoCivilId: estadocivilIdPeople,
-          tituloEleitor: tituloEleitorPeople,
-          zonaEleitoral: zonaEleitoralPeople,
-          telefone: telefonePeople,
-          redeSocial: redeSocialPeople,
-          provedorCasa: provedorCasaPeople,
-          igrejaId: igrejaIdPeople,
-          localTrabalho: localTrabalhoPeople,
-          cargoTrabalho: cargoTrabalhoPeople,
-          religiaoId: religiaoIdPeople,
-          funcaoIgreja: funcaoIgrejaPeople,
-          usuarioId: usuarioIdPeople,
-          status: statusPeople,
-          dataCadastro: dataCadastroPeople,
-          dataUpdate: dataUpdatePeople,
-          familiaId: idFamilia,
-          parentesco: parentescoPeople,
-        ));
       }
     }
 

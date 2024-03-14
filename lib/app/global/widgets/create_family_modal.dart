@@ -276,6 +276,7 @@ class CreateFamilyModal extends StatelessWidget {
                             builder: (context) => Padding(
                               padding: MediaQuery.of(context).viewInsets,
                               child: AddPeopleFamilyView(
+                                peopleLocal: family!.familyLocal!,
                                 tipoOperacao: 0,
                                 family: family,
                               ),
