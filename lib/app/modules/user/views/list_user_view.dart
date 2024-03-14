@@ -4,7 +4,6 @@ import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/modules/user/static/screen_user_elements.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/global/widgets/create_user_modal.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
@@ -25,24 +24,26 @@ class ListUserView extends GetView<UserController> {
     final familiaId = controller.box.read('auth')['user']['familia_id'];
     return Scaffold(
       appBar: AppBar(
-        title: const Text(ScreenUserElements.listagemUsuariosTitle),
+        title: const Text('Listagem de Usuários'),
         actions: [
           if (familiaId == null) ...[
             IconButton(
-              onPressed: () {
-                controller.clearAllUserTextFields();
-                ScreenUserElements.createUserModal(
-                  context: context,
-                  tipoOperacao: 'insert',
-                  titulo: ScreenUserElements.cadastroUsuarioTitle,
-                  child: CreateUserModal(
-                    tipoOperacao: 'insert',
-                    titulo: ScreenUserElements.cadastroUsuarioTitle,
-                  ),
-                );
-              },
-              icon: const Icon(Icons.add_rounded),
-            )
+                onPressed: () {
+                  controller.clearAllUserTextFields();
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: CreateUserModal(
+                        tipoOperacao: 'insert',
+                        titulo: 'Cadastro de Usuário',
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.add_rounded))
           ]
         ],
       ),
@@ -213,8 +214,8 @@ class ListUserView extends GetView<UserController> {
       content: Text(
         textAlign: TextAlign.center,
         user.status == 0
-            ? "${ScreenUserElements.mensagemConfirmacaoAtivarUsuario} ${user.nome} ?"
-            : "${ScreenUserElements.mensagemConfirmacaoDesativarUsuario} ${user.nome} ?",
+            ? "Tem certeza que deseja ativar novamente o usuário ${user.nome} ?"
+            : "Tem certeza que deseja desativar o usuário ${user.nome} ?",
         style: const TextStyle(
           fontFamily: 'Poppinss',
           fontSize: 18,
