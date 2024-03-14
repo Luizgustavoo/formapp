@@ -14,6 +14,7 @@ class UserController extends GetxController {
   final repository = Get.put(UserRepository());
 
   User? selectedUser;
+  RxInt? selectedFamily;
 
   final GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
 
@@ -113,7 +114,7 @@ class UserController extends GetxController {
           tipousuarioId: 3,
           status: 1,
           usuarioId: box.read('auth')['user']['id'],
-          familiaId: familyController.selectedFamily!.id);
+          familiaId: selectedFamily!.value);
 
       final token = box.read('auth')['access_token'];
 

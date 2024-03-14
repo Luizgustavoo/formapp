@@ -7,6 +7,7 @@ import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class CreateUserModal extends StatelessWidget {
   CreateUserModal({
@@ -107,17 +108,17 @@ class CreateUserModal extends StatelessWidget {
               ),
               if (familiaId == null) ...[
                 Obx(
-                  () => DropdownButtonFormField<Family>(
+                  () => DropdownButtonFormField<int>(
                     isDense: true,
                     menuMaxHeight: Get.size.height / 2,
-                    value: selectedFamily,
-                    onChanged: (Family? value) {
-                      familyController.selectedFamily = value;
+                    value: user?.family?.id,
+                    onChanged: (int? value) {
+                      controller.selectedFamily!.value = value!;
                     },
                     items: familyController.listFamilies
-                        .map<DropdownMenuItem<Family>>((Family family) {
-                      return DropdownMenuItem<Family>(
-                        value: family,
+                        .map<DropdownMenuItem<int>>((Family family) {
+                      return DropdownMenuItem<int>(
+                        value: family.id,
                         child: Text(family.nome!),
                       );
                     }).toList(),
