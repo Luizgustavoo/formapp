@@ -29,7 +29,7 @@ class AuthApiClient {
   }
 
   Future<Map<String, dynamic>?> getLogout() async {
-    var loginUrl = Uri.parse('$baseUrl/logout');
+    var loginUrl = Uri.parse('$baseUrl/v1/logout');
     try {
       var response = await httpClient.post(
         loginUrl,
