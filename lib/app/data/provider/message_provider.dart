@@ -29,8 +29,6 @@ class MessageApiClient {
         },
       );
 
-      print(json.decode(response.body));
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -152,7 +150,6 @@ class MessageApiClient {
         },
         body: requestBody,
       );
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||

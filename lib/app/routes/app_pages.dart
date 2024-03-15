@@ -11,6 +11,8 @@ import 'package:formapp/app/modules/message/message_binding.dart';
 import 'package:formapp/app/modules/message/views/list_message_view.dart';
 import 'package:formapp/app/modules/people/people_binding.dart';
 import 'package:formapp/app/modules/people/views/list_people_view.dart';
+import 'package:formapp/app/modules/perfil/perfil_binding.dart';
+import 'package:formapp/app/modules/perfil/perfil_view.dart';
 import 'package:formapp/app/modules/user/user_binding.dart';
 import 'package:formapp/app/modules/user/views/list_user_view.dart';
 import 'package:formapp/app/routes/app_routes.dart';
@@ -53,6 +55,11 @@ class AppPages {
       name: Routes.LIST_MESSAGE,
       page: () => const MessageView(),
       binding: MessageBinding(),
+    ),
+    GetPage(
+      name: Routes.PERFIL,
+      page: () => const PerfilView(),
+      binding: PerfilBinding(),
     ),
   ];
 }

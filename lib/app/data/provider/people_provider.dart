@@ -168,8 +168,6 @@ class PeopleApiClient {
         // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
 
-        print(json.decode(jsonResponse));
-
         return json.decode(jsonResponse);
       }
     } catch (err) {
@@ -273,8 +271,6 @@ class PeopleApiClient {
 
         // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
-
-        print(json.decode(jsonResponse));
 
         return json.decode(jsonResponse);
       }

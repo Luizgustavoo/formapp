@@ -73,7 +73,7 @@ class CustomPeopleCard extends StatelessWidget {
           ),
         ),
         child: Card(
-          margin: EdgeInsets.zero,
+          margin: const EdgeInsets.all(3),
           elevation: 3,
           color: (stripe ? Colors.grey.shade300 : Colors.white),
           child: Padding(
@@ -120,10 +120,10 @@ class CustomPeopleCard extends StatelessWidget {
                           "Atendimentos:",
                           style: CustomTextStyle.subtitleNegrit(context),
                         ),
-                        Divider(
+                        const Divider(
                           height: 3,
                           thickness: 2,
-                          color: Colors.orange.shade300,
+                          color: Color(0xFF123d68),
                         ),
                       ],
                     ),

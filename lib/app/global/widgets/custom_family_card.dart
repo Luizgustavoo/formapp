@@ -121,10 +121,10 @@ class CustomFamilyCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     height: 3,
                     thickness: 2,
-                    color: Colors.orange.shade300,
+                    color: Color(0xFF123d68),
                   ),
                   Obx(() => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

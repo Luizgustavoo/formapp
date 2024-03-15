@@ -50,6 +50,8 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_messaging: ^14.7.10
   flutter_local_notifications: ^9.9.1
+  fl_chart: ^0.64.0
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:

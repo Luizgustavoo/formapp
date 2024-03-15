@@ -9,6 +9,22 @@ class CustomTextStyle {
     );
   }
 
+  static TextStyle? appBarTitle(BuildContext context) {
+    return const TextStyle(
+      fontSize: 30,
+      color: Colors.white,
+      fontFamily: 'Poppins',
+    );
+  }
+
+  static TextStyle? appBarSubtitle(BuildContext context) {
+    return const TextStyle(
+        fontSize: 14,
+        color: Colors.white,
+        fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
+  }
+
   static TextStyle? dateRegular(BuildContext context) {
     return TextStyle(
       fontSize: 16,
@@ -45,6 +61,14 @@ class CustomTextStyle {
     return const TextStyle(
         fontSize: 16,
         color: Colors.black87,
+        fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
+  }
+
+  static TextStyle? homeCount(BuildContext context) {
+    return const TextStyle(
+        fontSize: 14,
+        color: Color(0xFF123d68),
         fontFamily: 'Poppinss',
         overflow: TextOverflow.clip);
   }
@@ -103,5 +127,12 @@ class CustomTextStyle {
         color: Colors.grey.shade700,
         fontFamily: 'Poppins',
         overflow: TextOverflow.clip);
+  }
+
+  static TextStyle? textFormFieldStyle(BuildContext context) {
+    return const TextStyle(
+      color: Colors.black54,
+      fontFamily: 'Poppins',
+    );
   }
 }

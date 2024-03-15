@@ -157,7 +157,6 @@ class FamilyController extends GetxController
 
       mensagem = await repository.insertFamily("Bearer $token", family);
       if (mensagem != null) {
-        print(mensagem['message']);
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
           getFamilies();
@@ -287,7 +286,9 @@ class FamilyController extends GetxController
       final token = UserStorage.getToken();
       listFamilies.value = await repository.getAll("Bearer $token");
       update();
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   void clearAllFamilyTextFields() {

@@ -11,14 +11,10 @@ class InitialView extends GetView<InitialController> {
   @override
   Widget build(BuildContext context) {
     return EasySplashScreen(
-      logoWidth: 80,
+      logoWidth: 100,
       loaderColor: Colors.black54,
       logo: Image.asset(
         'assets/images/logo_splash.png',
-      ),
-      title: Text(
-        "Inclusão Familiar",
-        style: CustomTextStyle.titleSplash(context),
       ),
       backgroundColor: Colors.white,
       showLoader: true,
