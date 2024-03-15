@@ -74,8 +74,8 @@ class PeopleController extends GetxController {
   FamilyService? selectedService;
 
   final repository = Get.put(PeopleRepository());
-  final familyController = Get.find<FamilyController>();
-  final repositoryService = Get.find<FamilyServiceRepository>();
+  final familyController = Get.put(FamilyController());
+  final repositoryService = Get.put(FamilyServiceRepository());
   final maritalRepository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.put(ReligionRepository());
 

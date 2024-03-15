@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   final String? title;
-  final VoidCallback? ontap;
+  final VoidCallback? onTap;
   final String? imageUrl;
 
   const CustomCard({
     Key? key,
     @required this.title,
-    @required this.ontap,
+    @required this.onTap,
     @required this.imageUrl,
   }) : super(key: key);
 
@@ -20,7 +20,7 @@ class CustomCard extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
-        onTap: ontap,
+        onTap: onTap,
         child: Column(
           children: [
             Container(

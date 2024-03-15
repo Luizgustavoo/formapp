@@ -7,7 +7,7 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:get/get.dart';
 import 'package:searchfield/searchfield.dart';
 
-import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
+import 'package:formapp/app/global/widgets/custom_camera_modal.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 
@@ -79,7 +79,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               onPressed: () {
                                 showModalBottomSheet(
                                   context: context,
-                                  builder: (context) => CustomBottomSheet(),
+                                  builder: (context) => CustomCameraModal(),
                                 );
                               },
                             ),

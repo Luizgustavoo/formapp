@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
+import 'package:formapp/app/global/widgets/custom_app_bar.dart';
 import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
@@ -23,29 +24,8 @@ class ListUserView extends GetView<UserController> {
     var idUserLogged = box.read('auth')['user']['id'];
     final familiaId = controller.box.read('auth')['user']['familia_id'];
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Listagem de Usuários'),
-        actions: [
-          if (familiaId == null) ...[
-            IconButton(
-                onPressed: () {
-                  controller.clearAllUserTextFields();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    isDismissible: false,
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: CreateUserModal(
-                        tipoOperacao: 'insert',
-                        titulo: 'Cadastro de Usuário',
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.add_rounded))
-          ]
-        ],
+      appBar: const CustomAppBar(
+        showPadding: false,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -54,6 +34,7 @@ class ListUserView extends GetView<UserController> {
                 topStart: Radius.circular(15), topEnd: Radius.circular(15))),
         child: Column(
           children: [
+            const SizedBox(height: 10),
             SearchWidget(
                 controller: controller.searchController,
                 onSearchPressed: (context, a, query) {
@@ -209,6 +190,30 @@ class ListUserView extends GetView<UserController> {
                       }),
                 ))
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF123d68),
+        onPressed: () {
+          if (familiaId == null) {
+            controller.clearAllUserTextFields();
+            showModalBottomSheet(
+              isScrollControlled: true,
+              isDismissible: false,
+              context: context,
+              builder: (context) => Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: CreateUserModal(
+                  tipoOperacao: 'insert',
+                  titulo: 'Cadastro de Usuário',
+                ),
+              ),
+            );
+          }
+        },
+        child: const Icon(
+          Icons.add_rounded,
+          color: Colors.white,
         ),
       ),
     );

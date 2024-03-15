@@ -33,7 +33,10 @@ class _SearchWidgetState extends State<SearchWidget> {
             onPressed: () {
               widget.onSearchPressed(context, 1, widget.controller.text);
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(
+              Icons.search,
+              color: Color(0xFF123d68),
+            ),
           ),
         ),
       ),

@@ -4,9 +4,9 @@ import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CustomBottomSheet extends StatelessWidget {
-  final PeopleController controller = Get.find();
-  CustomBottomSheet({super.key});
+class CustomCameraModal extends StatelessWidget {
+  final PeopleController controller = Get.put(PeopleController());
+  CustomCameraModal({super.key});
 
   @override
   Widget build(BuildContext context) {

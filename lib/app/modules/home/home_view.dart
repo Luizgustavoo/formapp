@@ -7,7 +7,6 @@ import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 
 import 'package:formapp/app/global/widgets/custom_card.dart';
-import 'package:formapp/app/global/widgets/custom_drawer.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -20,7 +19,6 @@ class HomeView extends GetView<HomeController> {
         userName: user[0],
         showPadding: true,
       ),
-      drawer: const CustomDrawer(),
       body: Container(
         decoration: const BoxDecoration(
             color: Colors.white,
@@ -54,14 +52,14 @@ class HomeView extends GetView<HomeController> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        const Text(
-                          textAlign: TextAlign.center,
-                          '8600',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 40,
-                              color: Color(0xfffc9805)),
-                        ),
+                        Obx(() => Text(
+                              textAlign: TextAlign.center,
+                              controller.counter.value.toString(),
+                              style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 40,
+                                  color: Color(0xfffc9805)),
+                            )),
                         Text(
                           textAlign: TextAlign.center,
                           'Famílias\ncadastradas',
@@ -137,21 +135,23 @@ class CategoryItems extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         CustomCard(
-          ontap: () {
+          onTap: () {
             Get.toNamed("/list-family");
           },
           title: 'Famílias',
           imageUrl: 'assets/images/familia_icon.png',
         ),
         CustomCard(
-          ontap: () {
+          onTap: () {
             Get.toNamed('/list-people');
           },
           title: 'Pessoas',
           imageUrl: 'assets/images/pessoa_icon.png',
         ),
         CustomCard(
-          ontap: () {},
+          onTap: () {
+            Get.toNamed('/list-user');
+          },
           title: 'Liderança',
           imageUrl: 'assets/images/lider_icon.png',
         ),

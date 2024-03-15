@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:badges/badges.dart' as badges;
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({Key? key, this.userName, this.showPadding})
@@ -16,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
+      elevation: 1,
       automaticallyImplyLeading: false,
       flexibleSpace: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -66,15 +67,38 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 const SizedBox(width: 10),
                 Row(
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.toNamed('/list-message');
-                      },
-                      icon: const Icon(
-                        Icons.sms,
-                        color: Colors.white,
-                        size: 28,
-                      ),
+                    Stack(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.toNamed('/list-message');
+                          },
+                          icon: const Icon(
+                            Icons.sms,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: badges.Badge(
+                            showBadge: true,
+                            ignorePointer: false,
+                            onTap: () {},
+                            badgeContent: const Icon(Icons.check,
+                                color: Colors.white, size: 10),
+                            badgeAnimation:
+                                const badges.BadgeAnimation.rotation(
+                              animationDuration: Duration(seconds: 1),
+                              colorChangeAnimationDuration:
+                                  Duration(seconds: 1),
+                              loopAnimation: false,
+                              curve: Curves.easeInOut,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                     IconButton(
                       onPressed: () {

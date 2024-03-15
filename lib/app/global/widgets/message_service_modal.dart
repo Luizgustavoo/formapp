@@ -45,12 +45,12 @@ class MessageServiceModal extends StatelessWidget {
                   titulo!,
                   style: CustomTextStyle.title(context),
                 ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5, bottom: 10),
+          const Padding(
+            padding: EdgeInsets.only(right: 5, bottom: 10),
             child: Divider(
               height: 5,
               thickness: 3,
-              color: Colors.orange.shade500,
+              color: Color(0xFF123d68),
             ),
           ),
           showWidget

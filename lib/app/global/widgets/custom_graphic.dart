@@ -6,38 +6,39 @@ import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:get/get.dart';
 
 class GraphicWidget extends GetView<HomeController> {
-  const GraphicWidget({super.key});
+  const GraphicWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.3,
       child: AspectRatio(
-          aspectRatio: 1,
-          child: Obx(
-            () => PieChart(
-              PieChartData(
-                pieTouchData: PieTouchData(
-                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                    if (!event.isInterestedForInteractions ||
-                        pieTouchResponse == null ||
-                        pieTouchResponse.touchedSection == null) {
-                      controller.touchedIndex.value = -1;
-                      return;
-                    }
-                    controller.touchedIndex.value =
-                        pieTouchResponse.touchedSection!.touchedSectionIndex;
-                  },
-                ),
-                borderData: FlBorderData(
-                  show: false,
-                ),
-                sectionsSpace: 0,
-                centerSpaceRadius: 0,
-                sections: showingSections(controller.genres),
+        aspectRatio: 1,
+        child: Obx(
+          () => PieChart(
+            PieChartData(
+              pieTouchData: PieTouchData(
+                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                  if (!event.isInterestedForInteractions ||
+                      pieTouchResponse == null ||
+                      pieTouchResponse.touchedSection == null) {
+                    controller.touchedIndex.value = -1;
+                    return;
+                  }
+                  controller.touchedIndex.value =
+                      pieTouchResponse.touchedSection!.touchedSectionIndex;
+                },
               ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              sectionsSpace: 0,
+              centerSpaceRadius: 0,
+              sections: showingSections(controller.genres),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
@@ -45,6 +46,11 @@ class GraphicWidget extends GetView<HomeController> {
     final List<Color> sectionColors = [
       Colors.red,
       Colors.blue,
+    ];
+
+    final List<String> sectionImages = [
+      'assets/images/female.svg',
+      'assets/images/male.svg',
     ];
 
     return genres.asMap().entries.map((entry) {
@@ -72,9 +78,9 @@ class GraphicWidget extends GetView<HomeController> {
           shadows: shadows,
         ),
         badgeWidget: _Badge(
-          'assets/icons/ophthalmology-svgrepo-com.svg',
+          sectionImages[index % sectionImages.length],
           size: widgetSize,
-          borderColor: Colors.red,
+          borderColor: sectionColors[index % sectionColors.length],
         ),
         badgePositionPercentageOffset: .98,
       );
@@ -88,6 +94,7 @@ class _Badge extends StatelessWidget {
     required this.size,
     required this.borderColor,
   });
+
   final String svgAsset;
   final double size;
   final Color borderColor;
@@ -114,12 +121,11 @@ class _Badge extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.all(size * .15),
-      child: const Center(
-          // child: SvgPicture.asset(
-          //   svgAsset,
-          //   // ),
-          // ),
-          ),
+      child: Center(
+        child: SvgPicture.asset(
+          svgAsset,
+        ),
+      ),
     );
   }
 }

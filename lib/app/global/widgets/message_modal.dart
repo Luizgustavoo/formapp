@@ -33,12 +33,12 @@ class MessageModal extends StatelessWidget {
               style: CustomTextStyle.title(context),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
+          const Padding(
+            padding: EdgeInsets.only(right: 5),
             child: Divider(
               height: 5,
               thickness: 3,
-              color: Colors.orange.shade500,
+              color: Color(0xFF123d68),
             ),
           ),
           const SizedBox(height: 10),

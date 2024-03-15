@@ -11,7 +11,6 @@ class UserStorage {
   }
 
   static String getToken() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['access_token'];
     }
@@ -19,14 +18,12 @@ class UserStorage {
   }
 
   static void clearBox() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       _box.erase();
     }
   }
 
   static int getUserId() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['user']['id'];
     }
@@ -34,15 +31,20 @@ class UserStorage {
   }
 
   static String getUserName() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['user']['nome'];
     }
     return "";
   }
 
+  static String getUserLogin() {
+    if (existUser()) {
+      return _box.read('auth')['user']['username'];
+    }
+    return "";
+  }
+
   static int getUserType() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['user']['tipousuario_id'];
     }
@@ -50,7 +52,6 @@ class UserStorage {
   }
 
   static int getFamilyId() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser() && getUserType() == 3) {
       return _box.read('auth')['user']['familia_id'];
     }
