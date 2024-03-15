@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
@@ -331,7 +332,7 @@ class FamilyApiClient {
     }
   }
 
-  Future<void> insertFamilyLocalForApi(Family? family, String token) async {
+  Future<void> insertFamilyLocalForApi(String token, Family? family) async {
     var pessoaUrl = Uri.parse('$baseUrl/v1/familia/create-api-to-local');
 
     var request = http.MultipartRequest('POST', pessoaUrl);
@@ -382,15 +383,25 @@ class FamilyApiClient {
         // Adicione outros campos conforme necessário
       });
 
-      if (people.foto != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'foto', // Nome do campo que a API espera para a imagem
-          people.foto!.path, // Caminho do arquivo da imagem
-        ));
+      if (people.foto != null && people.foto is String) {
+        File imageFile = File(people.foto!);
+        if (imageFile.existsSync()) {
+          request.files.add(await http.MultipartFile.fromPath(
+            'foto', // Nome do campo que a API espera para a imagem
+            imageFile.path, // Caminho do arquivo da imagem
+          ));
+        } else {
+          print('Arquivo de imagem não encontrado: ${people.foto}');
+        }
       }
     }
 
     var response = await request.send();
+
+    var responseStream = await response.stream.bytesToString();
+    var httpResponse = http.Response(responseStream, response.statusCode);
+
+    print(json.decode(httpResponse.body.toString()));
 
     if (response.statusCode == 200) {
       print('Família enviada com sucesso');

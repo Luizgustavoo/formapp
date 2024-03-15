@@ -251,7 +251,7 @@ class FamilyController extends GetxController
       if (await ConnectionStatus.verifyConnection()) {
         final token = UserStorage.getToken();
         var mensagem =
-            await repository.insertFamily("Bearer $token", family, false);
+            await repository.insertFamilyLocalToAPi("Bearer $token", family);
 
         //await localDatabase.delete(family.id!, 'family_table');
 

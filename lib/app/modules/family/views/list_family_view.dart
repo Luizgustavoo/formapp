@@ -29,8 +29,6 @@ class FamilyView extends GetView<FamilyController> {
 
   @override
   Widget build(BuildContext context) {
-    userController.getUsers();
-
     return Scaffold(
       appBar: const CustomAppBar(
         showPadding: false,

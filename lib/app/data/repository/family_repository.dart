@@ -41,6 +41,17 @@ class FamilyRepository {
     }
   }
 
+  insertFamilyLocalToAPi(String token, Family family) async {
+    try {
+      var response = await apiClient.insertFamilyLocalForApi(token, family);
+
+      return response;
+    } catch (e) {
+      print('Erro ao inserir a família: $e');
+      rethrow;
+    }
+  }
+
   updateFamily(String token, Family family, bool familyLocal) async {
     try {
       var response = await apiClient.updateFamily(token, family, familyLocal);

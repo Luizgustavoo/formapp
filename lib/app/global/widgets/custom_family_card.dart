@@ -6,6 +6,7 @@ import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:formapp/app/utils/user_storage.dart';
@@ -74,25 +75,36 @@ class CustomFamilyCard extends StatelessWidget {
               title: Column(
                 children: [
                   ListTile(
-                    leading: local
+                    leading: (local && family.pessoas!.isNotEmpty)
                         ? IconButton(
                             onPressed: () async {
-                              Map<String, dynamic> retorno =
-                                  await familyController
-                                      .sendFamilyToAPI(family);
+                              if (await ConnectionStatus.verifyConnection()) {
+                                Map<String, dynamic> retorno =
+                                    await familyController
+                                        .sendFamilyToAPI(family);
 
-                              Get.back();
+                                Get.back();
 
-                              Get.snackbar(
-                                snackPosition: SnackPosition.BOTTOM,
-                                duration: const Duration(milliseconds: 1500),
-                                retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                                retorno['message'],
-                                backgroundColor: retorno['return'] == 0
-                                    ? Colors.green
-                                    : Colors.red,
-                                colorText: Colors.white,
-                              );
+                                Get.snackbar(
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  duration: const Duration(milliseconds: 1500),
+                                  retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                                  retorno['message'],
+                                  backgroundColor: retorno['return'] == 0
+                                      ? Colors.green
+                                      : Colors.red,
+                                  colorText: Colors.white,
+                                );
+                              } else {
+                                Get.snackbar(
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  duration: const Duration(milliseconds: 1500),
+                                  "Sem conexão",
+                                  "Verifique sua conexão com a internet!",
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                              }
                             },
                             icon: const Icon(
                               Icons.refresh_rounded,
