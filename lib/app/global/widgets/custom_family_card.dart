@@ -83,7 +83,7 @@ class CustomFamilyCard extends StatelessWidget {
                                     await familyController
                                         .sendFamilyToAPI(family);
 
-                                Get.back();
+                                //Get.back();
 
                                 Get.snackbar(
                                   snackPosition: SnackPosition.BOTTOM,

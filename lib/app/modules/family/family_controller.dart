@@ -257,6 +257,8 @@ class FamilyController extends GetxController
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
+            deleteFamily(family.id!, true);
+
             retorno = {
               "return": 0,
               "message": "Operação realizada com sucesso!"
@@ -266,10 +268,12 @@ class FamilyController extends GetxController
               "return": 1,
               "message": "Já existe uam família com esse nome!"
             };
+          } else {
+            retorno = {"return": 1, "message": "Falha!"};
           }
         }
+        getFamilies();
       }
-      getFamilies();
     } catch (e) {
       print('Erro ao enviar dados da família para a API: $e');
     }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/database_helper.dart';
@@ -10,6 +11,7 @@ import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 class FamilyApiClient {
   final http.Client httpClient = http.Client();
@@ -332,7 +334,8 @@ class FamilyApiClient {
     }
   }
 
-  Future<void> insertFamilyLocalForApi(String token, Family? family) async {
+  Future<Map<String, dynamic>> insertFamilyLocalForApi(
+      String token, Family? family) async {
     var pessoaUrl = Uri.parse('$baseUrl/v1/familia/create-api-to-local');
 
     var request = http.MultipartRequest('POST', pessoaUrl);
@@ -358,56 +361,82 @@ class FamilyApiClient {
       "usuario_id": family.usuarioId.toString(),
     });
 
-    // Adiciona informações de cada pessoa na família
-    for (var people in family.pessoas!) {
-      request.fields.addAll({
-        "nome": people.nome!,
-        "sexo": people.sexo!,
-        "cpf": people.cpf!,
-        "data_nascimento": people.dataNascimento!,
-        "estadocivil_id": people.estadoCivilId.toString(),
-        "titulo_eleitor": people.tituloEleitor!,
-        "zona_eleitoral": people.zonaEleitoral!,
-        "telefone": people.telefone!,
-        "rede_social": people.redeSocial!,
-        "provedor_casa": people.provedorCasa!,
-        "igreja_id": people.igrejaId.toString(),
-        "local_trabalho": people.localTrabalho!,
-        "cargo_trabalho": people.cargoTrabalho!,
-        "religiao_id": people.religiaoId.toString(),
-        "funcao_igreja": people.funcaoIgreja!,
-        "usuario_id": people.usuarioId.toString(),
-        "status": people.status.toString(),
-        "familia_id": people.familiaId.toString(),
-        "parentesco": people.parentesco!,
-        // Adicione outros campos conforme necessário
-      });
+    // Lista de mapas para representar pessoas
+    List<Map<String, dynamic>> peopleList = [];
 
-      if (people.foto != null && people.foto is String) {
-        File imageFile = File(people.foto!);
+    // Adiciona informações de cada pessoa na família
+    for (var person in family.pessoas!) {
+      String uniqueNumericId = generateNumericUniqueId(8);
+      // Mapa representando a pessoa
+      Map<String, dynamic> personData = {
+        "nome": person.nome!,
+        "sexo": person.sexo!,
+        "cpf": person.cpf!,
+        "data_nascimento": person.dataNascimento!,
+        "estadocivil_id": person.estadoCivilId.toString(),
+        "titulo_eleitor": person.tituloEleitor!,
+        "zona_eleitoral": person.zonaEleitoral!,
+        "telefone": person.telefone!,
+        "rede_social": person.redeSocial!,
+        "provedor_casa": person.provedorCasa!,
+        "igreja_id": person.igrejaId.toString(),
+        "local_trabalho": person.localTrabalho!,
+        "cargo_trabalho": person.cargoTrabalho!,
+        "religiao_id": person.religiaoId.toString(),
+        "funcao_igreja": person.funcaoIgreja!,
+        "usuario_id": person.usuarioId.toString(),
+        "status": person.status.toString(),
+        "familia_id": person.familiaId.toString(),
+        "parentesco": person.parentesco!,
+        "codigo_unico": uniqueNumericId
+      };
+
+      // Adiciona o mapa da pessoa à lista
+      peopleList.add(personData);
+
+      // Adiciona a foto da pessoa, se existir
+      if (person.foto != null && person.foto is String) {
+        File imageFile = File(person.foto!);
         if (imageFile.existsSync()) {
+          String semEspacos = person.nome.toString().replaceAll(' ', '');
+          String minuscula = semEspacos.toLowerCase();
+
           request.files.add(await http.MultipartFile.fromPath(
-            'foto', // Nome do campo que a API espera para a imagem
+            uniqueNumericId, // Nome do campo que a API espera para a imagem (com identificador único)
             imageFile.path, // Caminho do arquivo da imagem
           ));
         } else {
-          print('Arquivo de imagem não encontrado: ${people.foto}');
+          print('Arquivo de imagem não encontrado: ${person.foto}');
         }
       }
     }
+
+    // Converta a lista de pessoas em JSON e adicione aos dados da família
+    request.fields['pessoas'] = json.encode(peopleList);
 
     var response = await request.send();
 
     var responseStream = await response.stream.bytesToString();
     var httpResponse = http.Response(responseStream, response.statusCode);
 
-    print(json.decode(httpResponse.body.toString()));
-
     if (response.statusCode == 200) {
-      print('Família enviada com sucesso');
+      return json.decode(httpResponse.body.toString());
     } else {
-      print(
-          'Falha ao enviar a família. Código de status: ${response.statusCode}');
+      Map<String, dynamic> responseData = {};
+
+      responseData = {
+        'code': 1,
+        'message': 'error',
+      };
+
+      return responseData;
     }
+  }
+
+  String generateNumericUniqueId(int length) {
+    final random = Random();
+    final max = pow(10, length).toInt();
+    final uniqueId = random.nextInt(max);
+    return uniqueId.toString().padLeft(length, '0');
   }
 }
