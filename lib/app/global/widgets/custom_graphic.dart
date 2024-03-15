@@ -11,33 +11,36 @@ class GraphicWidget extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.3,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: Obx(
-          () => PieChart(
-            PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  if (!event.isInterestedForInteractions ||
-                      pieTouchResponse == null ||
-                      pieTouchResponse.touchedSection == null) {
-                    controller.touchedIndex.value = -1;
-                    return;
-                  }
-                  controller.touchedIndex.value =
-                      pieTouchResponse.touchedSection!.touchedSectionIndex;
-                },
+      aspectRatio: 1,
+      child: Column(
+        children: [
+          Expanded(
+            child: Obx(
+              () => PieChart(
+                PieChartData(
+                  pieTouchData: PieTouchData(
+                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                      if (!event.isInterestedForInteractions ||
+                          pieTouchResponse == null ||
+                          pieTouchResponse.touchedSection == null) {
+                        controller.touchedIndex.value = -1;
+                        return;
+                      }
+                      controller.touchedIndex.value =
+                          pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    },
+                  ),
+                  borderData: FlBorderData(
+                    show: false,
+                  ),
+                  sectionsSpace: 0,
+                  centerSpaceRadius: 0,
+                  sections: showingSections(controller.genres),
+                ),
               ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              sectionsSpace: 0,
-              centerSpaceRadius: 0,
-              sections: showingSections(controller.genres),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

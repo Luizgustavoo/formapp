@@ -1,3 +1,4 @@
+import 'package:formapp/app/data/models/count_families_and_people.dart';
 import 'package:formapp/app/data/models/genre_model.dart';
 import 'package:formapp/app/data/provider/home_provider.dart';
 
@@ -14,5 +15,13 @@ class HomeRepository {
       return genre;
     }
     return [];
+  }
+
+  Future<CountFamiliesAndPeople> getCountFamiliesAndPeople() async {
+    var response = await apiClient.getCountFamiliesAndPeople();
+
+    CountFamiliesAndPeople count = CountFamiliesAndPeople.fromJson(response);
+
+    return count;
   }
 }

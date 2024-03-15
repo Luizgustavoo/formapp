@@ -11,7 +11,6 @@ import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:uuid/uuid.dart';
 
 class FamilyApiClient {
   final http.Client httpClient = http.Client();
@@ -398,9 +397,6 @@ class FamilyApiClient {
       if (person.foto != null && person.foto is String) {
         File imageFile = File(person.foto!);
         if (imageFile.existsSync()) {
-          String semEspacos = person.nome.toString().replaceAll(' ', '');
-          String minuscula = semEspacos.toLowerCase();
-
           request.files.add(await http.MultipartFile.fromPath(
             uniqueNumericId, // Nome do campo que a API espera para a imagem (com identificador único)
             imageFile.path, // Caminho do arquivo da imagem

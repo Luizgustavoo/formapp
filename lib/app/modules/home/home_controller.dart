@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 import 'dart:async';
 
+import 'package:formapp/app/data/models/count_families_and_people.dart';
 import 'package:formapp/app/data/models/genre_model.dart';
 import 'package:formapp/app/data/repository/auth_repository.dart';
 import 'package:formapp/app/data/repository/home_repository.dart';
@@ -20,35 +21,30 @@ class HomeController extends GetxController {
   RxList<Genre> genres = <Genre>[].obs;
 
   RxInt number = 0.obs;
-  RxInt counter = 0.obs;
   RxBool isNumActive = true.obs;
+  RxInt totalFamilies = 0.obs;
+  RxInt totalPeoples = 0.obs;
+
+  RxInt counter = 0.obs;
+  RxInt counter2 = 0.obs;
   late Timer timer;
+  late Timer timer2;
+
+  @override
+  void onInit() async {
+    await getCountFamiliesAndPeople();
+    startTimer();
+    username.value = UserStorage.getUserName();
+    startTimer();
+    getCountGenre();
+
+    super.onInit();
+  }
 
   @override
   void onClose() {
     timer.cancel();
     super.onClose();
-  }
-
-  void startTimer() {
-    timer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
-      if (counter < 250) {
-        counter++;
-      } else {
-        timer.cancel(); // Cancela o timer quando o contador atinge 50
-      }
-    });
-  }
-
-  @override
-  void onInit() async {
-    print('passei no oninit home controller');
-    startTimer();
-    username.value = UserStorage.getUserName();
-
-    getCountGenre();
-
-    super.onInit();
   }
 
   void onCountUpdate(num value) {
@@ -74,5 +70,38 @@ class HomeController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  getCountFamiliesAndPeople() async {
+    try {
+      CountFamiliesAndPeople resposta =
+          await homeRepository.getCountFamiliesAndPeople();
+      if (UserStorage.getUserType() == 1) {
+        totalFamilies.value = resposta.allFamily;
+        totalPeoples.value = resposta.allPeople;
+      } else if (UserStorage.getUserType() == 2) {
+        totalFamilies.value = resposta.familyUser;
+        totalPeoples.value = resposta.peopleUser;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+      if (counter < totalFamilies.value) {
+        counter++;
+      } else {
+        timer.cancel(); // Cancela o timer quando o contador atinge 50
+      }
+    });
+    timer2 = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+      if (counter2 < totalPeoples.value) {
+        counter2++;
+      } else {
+        timer.cancel(); // Cancela o timer quando o contador atinge 50
+      }
+    });
   }
 }

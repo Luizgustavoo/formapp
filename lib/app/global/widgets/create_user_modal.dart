@@ -7,7 +7,6 @@ import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class CreateUserModal extends StatelessWidget {
   CreateUserModal({
@@ -82,27 +81,29 @@ class CreateUserModal extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              Obx(() => TextFormField(
-                    validator: (value) {
-                      return controller.validatePassword(value);
-                    },
-                    controller: controller.passwordController,
-                    obscureText: !controller.isPasswordVisible.value,
-                    decoration: InputDecoration(
-                        suffixIcon: Obx(() => IconButton(
-                              icon: Icon(
-                                  controller.isPasswordVisible.value
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                  color: Colors.black54),
-                              onPressed: () {
-                                controller.isPasswordVisible.value =
-                                    !controller.isPasswordVisible.value;
-                              },
-                            )),
-                        labelText: 'Senha',
-                        border: const OutlineInputBorder()),
-                  )),
+              if (tipoOperacao == 'insert') ...[
+                Obx(() => TextFormField(
+                      validator: (value) {
+                        return controller.validatePassword(value);
+                      },
+                      controller: controller.passwordController,
+                      obscureText: !controller.isPasswordVisible.value,
+                      decoration: InputDecoration(
+                          suffixIcon: Obx(() => IconButton(
+                                icon: Icon(
+                                    controller.isPasswordVisible.value
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: Colors.black54),
+                                onPressed: () {
+                                  controller.isPasswordVisible.value =
+                                      !controller.isPasswordVisible.value;
+                                },
+                              )),
+                          labelText: 'Senha',
+                          border: const OutlineInputBorder()),
+                    )),
+              ],
               const SizedBox(
                 height: 8,
               ),

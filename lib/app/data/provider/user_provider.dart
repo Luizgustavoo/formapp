@@ -123,11 +123,17 @@ class UserApiClient {
       var requestBody = {
         "nome": user.nome,
         "tipousuario_id": user.tipousuarioId.toString(),
-        "username": user.username,
-        "senha": user.senha,
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
       };
+
+      if (user.username!.isNotEmpty) {
+        requestBody['username'] = user.username;
+      }
+
+      if (user.senha!.isNotEmpty) {
+        requestBody['senha'] = user.senha;
+      }
 
       var response = await httpClient.put(
         userUrl,
