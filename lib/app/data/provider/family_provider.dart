@@ -80,9 +80,9 @@ class FamilyApiClient {
     return null;
   }
 
-  insertFamily(String token, Family family) async {
+  insertFamily(String token, Family family, bool familyLocal) async {
     try {
-      if (await ConnectionStatus.verifyConnection()) {
+      if (await ConnectionStatus.verifyConnection() && !familyLocal) {
         //SALVANDO DADOS NA API
         var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
 
@@ -164,53 +164,78 @@ class FamilyApiClient {
     return null;
   }
 
-  updateFamily(String token, Family family) async {
+  updateFamily(String token, Family family, bool familyLocal) async {
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/familia/update/${family.id}');
+      if (await ConnectionStatus.verifyConnection() && !familyLocal) {
+        var familyUrl = Uri.parse('$baseUrl/v1/familia/update/${family.id}');
 
-      var requestBody = {
-        "nome": family.nome,
-        "cep": family.cep,
-        "endereco": family.endereco,
-        "numero_casa": family.numeroCasa,
-        "bairro": family.bairro,
-        "cidade": family.cidade,
-        "uf": family.uf,
-        "complemento": family.complemento,
-        "residencia_propria": family.residenciaPropria,
-        "status": family.status.toString(),
-        "usuario_id": family.usuarioId.toString(),
-      };
+        var requestBody = {
+          "nome": family.nome,
+          "cep": family.cep,
+          "endereco": family.endereco,
+          "numero_casa": family.numeroCasa,
+          "bairro": family.bairro,
+          "cidade": family.cidade,
+          "uf": family.uf,
+          "complemento": family.complemento,
+          "residencia_propria": family.residenciaPropria,
+          "status": family.status.toString(),
+          "usuario_id": family.usuarioId.toString(),
+        };
 
-      var response = await httpClient.put(
-        familyUrl,
-        headers: {
-          "Accept": "application/json",
-          "Authorization": token,
-        },
-        body: requestBody,
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else if (response.statusCode == 422 ||
-          json.decode(response.body)['message'] == "ja_existe") {
-        return json.decode(response.body);
-      } else if (response.statusCode == 401 &&
-          json.decode(response.body)['message'] == "Token has expired") {
-        Get.defaultDialog(
-          title: "Expirou",
-          content: const Text(
-              'O token de autenticação expirou, faça login novamente.'),
+        var response = await httpClient.put(
+          familyUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+          body: requestBody,
         );
-        var box = GetStorage('credenciado');
-        box.erase();
-        Get.offAllNamed('/login');
+
+        if (response.statusCode == 200) {
+          return json.decode(response.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(response.body)['message'] == "ja_existe") {
+          return json.decode(response.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(response.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
       } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
+        //update family local
+        final dbHelper = DatabaseHelper();
+        dynamic retorno = await dbHelper.updateFamily(family);
+
+        Map<String, dynamic> responseData = {};
+
+        if (retorno > 0) {
+          responseData = {
+            'message': 'success',
+            'objeto': family,
+          };
+        } else {
+          responseData = {
+            'code': 0,
+            'message': 'Operação realizada com sucesso',
+          };
+        }
+
+        // Converter o mapa em uma string JSON
+        String jsonResponse = jsonEncode(responseData);
+
+        return json.decode(jsonResponse);
       }
     } catch (err) {
       Get.defaultDialog(
@@ -221,38 +246,63 @@ class FamilyApiClient {
     return null;
   }
 
-  deleteFamily(String token, Family family) async {
+  deleteFamily(String token, Family family, bool familyLocal) async {
     try {
-      var familyUrl = Uri.parse('$baseUrl/v1/familia/delete/${family.id}');
+      if (await ConnectionStatus.verifyConnection() && !familyLocal) {
+        var familyUrl = Uri.parse('$baseUrl/v1/familia/delete/${family.id}');
 
-      var response = await httpClient.delete(
-        familyUrl,
-        headers: {
-          "Accept": "application/json",
-          "Authorization": token,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else if (response.statusCode == 422 ||
-          json.decode(response.body)['message'] == "ja_existe") {
-        return json.decode(response.body);
-      } else if (response.statusCode == 401 &&
-          json.decode(response.body)['message'] == "Token has expired") {
-        Get.defaultDialog(
-          title: "Expirou",
-          content: const Text(
-              'O token de autenticação expirou, faça login novamente.'),
+        var response = await httpClient.delete(
+          familyUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
         );
-        var box = GetStorage('credenciado');
-        box.erase();
-        Get.offAllNamed('/login');
+
+        if (response.statusCode == 200) {
+          return json.decode(response.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(response.body)['message'] == "ja_existe") {
+          return json.decode(response.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(response.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
       } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
+        //remover offline
+        final dbHelper = DatabaseHelper();
+        dynamic retorno = await dbHelper.deleteFamilyAndPeople(family.id!);
+
+        Map<String, dynamic> responseData = {};
+
+        if (retorno > 0) {
+          responseData = {
+            'message': 'success',
+            'objeto': family,
+          };
+        } else {
+          responseData = {
+            'code': 0,
+            'message': 'Operação realizada com sucesso',
+          };
+        }
+
+        // Converter o mapa em uma string JSON
+        String jsonResponse = jsonEncode(responseData);
+
+        return json.decode(jsonResponse);
       }
     } catch (err) {
       Get.defaultDialog(
@@ -278,6 +328,75 @@ class FamilyApiClient {
     } catch (e) {
       print('Erro ao excluir família localmente: $e');
       rethrow;
+    }
+  }
+
+  Future<void> insertFamilyLocalForApi(Family? family, String token) async {
+    var pessoaUrl = Uri.parse('$baseUrl/v1/familia/create-api-to-local');
+
+    var request = http.MultipartRequest('POST', pessoaUrl);
+
+    request.headers.addAll({
+      "Content-Type": "multipart/form-data",
+      'Accept': 'application/json',
+      'Authorization': "Bearer $token",
+    });
+
+    // Adiciona informações da família
+    request.fields.addAll({
+      "nome": family!.nome!,
+      "cep": family.cep!,
+      "endereco": family.endereco!,
+      "numero_casa": family.numeroCasa!,
+      "bairro": family.bairro!,
+      "cidade": family.cidade!,
+      "uf": family.uf!,
+      "complemento": family.complemento!,
+      "residencia_propria": family.residenciaPropria!,
+      "status": family.status.toString(),
+      "usuario_id": family.usuarioId.toString(),
+    });
+
+    // Adiciona informações de cada pessoa na família
+    for (var people in family.pessoas!) {
+      request.fields.addAll({
+        "nome": people.nome!,
+        "sexo": people.sexo!,
+        "cpf": people.cpf!,
+        "data_nascimento": people.dataNascimento!,
+        "estadocivil_id": people.estadoCivilId.toString(),
+        "titulo_eleitor": people.tituloEleitor!,
+        "zona_eleitoral": people.zonaEleitoral!,
+        "telefone": people.telefone!,
+        "rede_social": people.redeSocial!,
+        "provedor_casa": people.provedorCasa!,
+        "igreja_id": people.igrejaId.toString(),
+        "local_trabalho": people.localTrabalho!,
+        "cargo_trabalho": people.cargoTrabalho!,
+        "religiao_id": people.religiaoId.toString(),
+        "funcao_igreja": people.funcaoIgreja!,
+        "usuario_id": people.usuarioId.toString(),
+        "status": people.status.toString(),
+        "familia_id": people.familiaId.toString(),
+        "parentesco": people.parentesco!,
+        // Adicione outros campos conforme necessário
+      });
+
+      if (people.foto != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'foto', // Nome do campo que a API espera para a imagem
+          people.foto!.path, // Caminho do arquivo da imagem
+        ));
+      }
+    }
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('Família enviada com sucesso');
+    } else {
+      print(
+          'Falha ao enviar a família. Código de status: ${response.statusCode}');
     }
   }
 }

@@ -149,35 +149,65 @@ class CustomFamilyCard extends StatelessWidget {
                                       icon: const Icon(Icons.edit_outlined),
                                     ),
                               if (UserStorage.getUserType() < 3) ...[
-                                index == 0
-                                    ? ShowCaseView(
-                                        title: 'MENSAGEM',
-                                        description:
-                                            'Aqui você pode mandar mensagem para todos os integrantes da família.',
-                                        border: const CircleBorder(),
-                                        globalKey:
-                                            familyController.messageFamily,
-                                        child: IconButton(
+                                if (!local) ...[
+                                  index == 0
+                                      ? ShowCaseView(
+                                          title: 'MENSAGEM',
+                                          description:
+                                              'Aqui você pode mandar mensagem para todos os integrantes da família.',
+                                          border: const CircleBorder(),
+                                          globalKey:
+                                              familyController.messageFamily,
+                                          child: IconButton(
+                                            iconSize: 22,
+                                            onPressed: messageMember,
+                                            icon: const Icon(
+                                                Icons.email_outlined),
+                                          ),
+                                        )
+                                      : IconButton(
                                           iconSize: 22,
                                           onPressed: messageMember,
                                           icon:
                                               const Icon(Icons.email_outlined),
                                         ),
-                                      )
-                                    : IconButton(
-                                        iconSize: 22,
-                                        onPressed: messageMember,
-                                        icon: const Icon(Icons.email_outlined),
-                                      ),
-                                index == 0
-                                    ? ShowCaseView(
-                                        title: 'ATENDIMENTO',
-                                        description:
-                                            'Aqui você pode realizar atendimento para a família.',
-                                        border: const CircleBorder(),
-                                        globalKey:
-                                            familyController.supportFamily,
-                                        child: IconButton(
+                                ],
+                                if (!local) ...[
+                                  index == 0
+                                      ? ShowCaseView(
+                                          title: 'ATENDIMENTO',
+                                          description:
+                                              'Aqui você pode realizar atendimento para a família.',
+                                          border: const CircleBorder(),
+                                          globalKey:
+                                              familyController.supportFamily,
+                                          child: IconButton(
+                                            iconSize: 22,
+                                            onPressed: () async {
+                                              peopleController
+                                                  .clearModalMessageService();
+                                              showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                isDismissible: false,
+                                                context: context,
+                                                builder: (context) => Padding(
+                                                  padding:
+                                                      MediaQuery.of(context)
+                                                          .viewInsets,
+                                                  child: MessageServiceModal(
+                                                    family: family,
+                                                    showWidget: true,
+                                                    titulo:
+                                                        'Atendimento ${family.nome}',
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            icon: const Icon(
+                                                Icons.support_agent_rounded),
+                                          ),
+                                        )
+                                      : IconButton(
                                           iconSize: 22,
                                           onPressed: () async {
                                             peopleController
@@ -200,32 +230,8 @@ class CustomFamilyCard extends StatelessWidget {
                                           },
                                           icon: const Icon(
                                               Icons.support_agent_rounded),
-                                        ),
-                                      )
-                                    : IconButton(
-                                        iconSize: 22,
-                                        onPressed: () async {
-                                          peopleController
-                                              .clearModalMessageService();
-                                          showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            isDismissible: false,
-                                            context: context,
-                                            builder: (context) => Padding(
-                                              padding: MediaQuery.of(context)
-                                                  .viewInsets,
-                                              child: MessageServiceModal(
-                                                family: family,
-                                                showWidget: true,
-                                                titulo:
-                                                    'Atendimento ${family.nome}',
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        icon: const Icon(
-                                            Icons.support_agent_rounded),
-                                      ),
+                                        )
+                                ],
                                 if (showAddMember)
                                   index == 0
                                       ? ShowCaseView(
@@ -406,7 +412,7 @@ class CustomFamilyCard extends StatelessWidget {
         ElevatedButton(
           onPressed: () async {
             Map<String, dynamic> retorno =
-                await familyController.deleteFamily(family.id!);
+                await familyController.deleteFamily(family.id!, local);
 
             if (retorno['return'] == 0) {
               Get.back();

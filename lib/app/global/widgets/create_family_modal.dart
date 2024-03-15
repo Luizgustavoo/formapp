@@ -3,6 +3,7 @@ import 'package:formapp/app/data/models/family_model.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 
@@ -261,9 +262,15 @@ class CreateFamilyModal extends StatelessWidget {
                     )),
                 ElevatedButton(
                     onPressed: () async {
+                      bool familiaLocal = false;
+                      if (await ConnectionStatus.verifyConnection()) {
+                        familiaLocal = true;
+                      }
+
                       Map<String, dynamic> retorno = tipoOperacao == 'insert'
-                          ? await controller.saveFamily()
-                          : await controller.updateFamily(family!.id!);
+                          ? await controller.saveFamily(familiaLocal)
+                          : await controller.updateFamily(
+                              family!.id!, family!.familyLocal!);
 
                       if (retorno['return'] == 0) {
                         Get.back();

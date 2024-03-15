@@ -253,7 +253,7 @@ class PeopleApiClient {
         //alterando a pessoa local
 
         final dbHelper = DatabaseHelper();
-        dynamic retorno = await dbHelper.insertPeople(pessoa);
+        dynamic retorno = await dbHelper.updatePeople(pessoa);
 
         Map<String, dynamic> responseData = {};
 

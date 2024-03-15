@@ -187,29 +187,29 @@ class PeopleController extends GetxController {
     if (peopleFormKey.currentState!.validate()) {
       String imagePath = photoUrlPath.value;
       People pessoa = People(
-        id: int.parse(idPessoaController.text),
-        nome: nomePessoaController.text,
-        cpf: cpfPessoaController.text,
-        estadoCivilId: estadoCivilSelected.value,
-        parentesco: parentesco.value,
-        provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
-        sexo: sexo.value,
-        dataNascimento: nascimentoPessoaController.text,
-        tituloEleitor: tituloEleitoralPessoaController.text,
-        zonaEleitoral: zonaEleitoralPessoaController.text,
-        localTrabalho: localTrabalhoPessoaController.text,
-        cargoTrabalho: cargoPessoaController.text,
-        telefone: celularPessoaController.text,
-        redeSocial: redeSocialPessoaController.text,
-        religiaoId: religiaoSelected.value,
-        igrejaId: igrejaPessoaController.text,
-        funcaoIgreja: funcaoIgrejaPessoaController.text,
-        status: 1,
-        usuarioId: UserStorage.getUserId(),
-        foto: imagePath,
-      );
+          id: int.parse(idPessoaController.text),
+          nome: nomePessoaController.text,
+          cpf: cpfPessoaController.text,
+          estadoCivilId: estadoCivilSelected.value,
+          parentesco: parentesco.value,
+          provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
+          sexo: sexo.value,
+          dataNascimento: nascimentoPessoaController.text,
+          tituloEleitor: tituloEleitoralPessoaController.text,
+          zonaEleitoral: zonaEleitoralPessoaController.text,
+          localTrabalho: localTrabalhoPessoaController.text,
+          cargoTrabalho: cargoPessoaController.text,
+          telefone: celularPessoaController.text,
+          redeSocial: redeSocialPessoaController.text,
+          religiaoId: religiaoSelected.value,
+          igrejaId: igrejaPessoaController.text,
+          funcaoIgreja: funcaoIgrejaPessoaController.text,
+          status: 1,
+          usuarioId: UserStorage.getUserId(),
+          foto: imagePath,
+          familiaId: int.parse(familiaId.text));
 
-      final token = box.read('auth')['access_token'];
+      final token = UserStorage.getToken();
 
       final mensagem = await repository.updatePeople("Bearer $token", pessoa,
           File(photoUrlPath.value), oldImagePath.value, peopleLocal);
@@ -318,6 +318,7 @@ class PeopleController extends GetxController {
     religiaoSelected.value = selectedPeople!.religiaoId!;
     photoUrlPath.value = selectedPeople!.foto!;
     oldImagePath.value = selectedPeople!.foto!;
+    redeSocialPessoaController.text = selectedPeople!.redeSocial!;
     isImagePicPathSet.value = false;
     provedorCheckboxValue.value =
         selectedPeople!.provedorCasa! == 'sim' ? true : false;

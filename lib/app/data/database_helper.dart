@@ -76,6 +76,16 @@ class DatabaseHelper {
     return await db.insert('families', family.toMap());
   }
 
+  Future<int> updateFamily(Family family) async {
+    final db = await database;
+    return await db.update(
+      'families',
+      family.toMap(),
+      where: 'id = ?',
+      whereArgs: [family.id],
+    );
+  }
+
   Future<int> insertPeople(People people) async {
     final db = await database;
     return await db.insert('people', people.toMap());
@@ -89,6 +99,16 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [people.id],
     );
+  }
+
+  Future<int> deleteFamilyAndPeople(int familyId) async {
+    int delete = 0;
+    final db = await database;
+    delete += await db.delete('people',
+        where: 'familia_id = ? and id > 0', whereArgs: [familyId]);
+    delete +=
+        await db.delete('families', where: 'id = ?', whereArgs: [familyId]);
+    return delete;
   }
 
   Future<List<Map<String, dynamic>>> getFamiliesWithPeople() async {

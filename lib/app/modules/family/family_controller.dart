@@ -137,7 +137,7 @@ class FamilyController extends GetxController
     box.remove('showcaseShown_$userId');
   }
 
-  Future<Map<String, dynamic>> saveFamily() async {
+  Future<Map<String, dynamic>> saveFamily(bool familyLocal) async {
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
         nome: nomeFamiliaController.text,
@@ -155,7 +155,8 @@ class FamilyController extends GetxController
 
       final token = UserStorage.getToken();
 
-      mensagem = await repository.insertFamily("Bearer $token", family);
+      mensagem =
+          await repository.insertFamily("Bearer $token", family, familyLocal);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
@@ -176,7 +177,7 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<Map<String, dynamic>> updateFamily(int id) async {
+  Future<Map<String, dynamic>> updateFamily(int id, bool familyLocal) async {
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
         id: id,
@@ -195,7 +196,8 @@ class FamilyController extends GetxController
 
       final token = UserStorage.getToken();
 
-      final mensagem = await repository.updateFamily("Bearer $token", family);
+      final mensagem =
+          await repository.updateFamily("Bearer $token", family, familyLocal);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -218,18 +220,15 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<Map<String, dynamic>> deleteFamily(int id) async {
+  Future<Map<String, dynamic>> deleteFamily(int id, bool familyLocal) async {
     Family family = Family(
       id: id,
     );
 
     final token = UserStorage.getToken();
 
-    if (await ConnectionStatus.verifyConnection()) {
-      mensagem = await repository.deleteFamily("Bearer $token", family);
-    } else {
-      //mensagem = localDatabase.delete(family.id!, 'family_table');
-    }
+    mensagem =
+        await repository.deleteFamily("Bearer $token", family, familyLocal);
 
     if (mensagem != null) {
       if (mensagem['message'] == 'success') {
@@ -251,7 +250,8 @@ class FamilyController extends GetxController
     try {
       if (await ConnectionStatus.verifyConnection()) {
         final token = UserStorage.getToken();
-        var mensagem = await repository.insertFamily("Bearer $token", family);
+        var mensagem =
+            await repository.insertFamily("Bearer $token", family, false);
 
         //await localDatabase.delete(family.id!, 'family_table');
 
