@@ -187,7 +187,7 @@ class CategoryItems extends StatelessWidget {
       crossAxisCount: 3,
       crossAxisSpacing: 2,
       mainAxisSpacing: 2,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       children: [
         CustomCard(
           onTap: () {

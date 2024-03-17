@@ -45,156 +45,168 @@ class ListUserView extends GetView<UserController> {
                   child: ListView.builder(
                       itemCount: controller.listUsers.length,
                       itemBuilder: (context, index) {
-                        if (controller.listUsers[index].id !=
-                            UserStorage.getUserId()) {
-                          User user = controller.listUsers[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                left: 5, right: 5, bottom: 5),
-                            child: Dismissible(
-                              key: UniqueKey(),
-                              direction: familiaId != null
-                                  ? DismissDirection.none
-                                  : DismissDirection.endToStart,
-                              confirmDismiss:
-                                  (DismissDirection direction) async {
-                                if (direction == DismissDirection.endToStart) {
-                                  showDialog(context, user);
-                                }
-                                return false;
-                              },
-                              background: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: user.status == 1
-                                      ? Colors.red.shade500
-                                      : Colors.green,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerRight,
+                        User user = controller.listUsers[index];
+
+                        String typeUser = user.tipousuarioId == 1
+                            ? "Master"
+                            : (user.tipousuarioId == 2 ? "Lider" : "Familiar");
+
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, bottom: 5),
+                          child: Dismissible(
+                            key: UniqueKey(),
+                            direction: familiaId != null
+                                ? DismissDirection.none
+                                : DismissDirection.endToStart,
+                            confirmDismiss: (DismissDirection direction) async {
+                              if (direction == DismissDirection.endToStart) {
+                                showDialog(context, user);
+                              }
+                              return false;
+                            },
+                            background: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: user.status == 1
+                                    ? Colors.red.shade500
+                                    : Colors.green,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          user.status == 1
-                                              ? const Icon(Icons.delete_outline,
-                                                  color: Colors.white, size: 25)
-                                              : const Icon(
-                                                  Icons.check_rounded,
-                                                  size: 25,
-                                                  color: Colors.white,
-                                                ),
-                                        ],
-                                      ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        user.status == 1
+                                            ? const Icon(Icons.delete_outline,
+                                                color: Colors.white, size: 25)
+                                            : const Icon(
+                                                Icons.check_rounded,
+                                                size: 25,
+                                                color: Colors.white,
+                                              ),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ),
-                              child: Card(
-                                child: ListTile(
-                                  leading: user.status == 1 &&
-                                          familiaId != null &&
-                                          idUserLogged == user.id
-                                      ? IconButton(
-                                          onPressed: () {
-                                            controller.selectedUser = user;
-                                            controller.fillInUserFields();
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              isDismissible: false,
-                                              context: context,
-                                              builder: (context) => Padding(
-                                                padding: MediaQuery.of(context)
-                                                    .viewInsets,
-                                                child: CreateUserModal(
-                                                  tipoOperacao: 'update',
-                                                  titulo:
-                                                      'Alteração de Usuário',
-                                                  user: user,
-                                                ),
+                            ),
+                            child: Card(
+                              color: user.tipousuarioId == 2
+                                  ? const Color(0xFF123d68)
+                                  : null,
+                              child: ListTile(
+                                leading: user.status == 1 &&
+                                        familiaId != null &&
+                                        idUserLogged == user.id
+                                    ? IconButton(
+                                        onPressed: () {
+                                          controller.selectedUser = user;
+                                          controller.fillInUserFields();
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            isDismissible: false,
+                                            context: context,
+                                            builder: (context) => Padding(
+                                              padding: MediaQuery.of(context)
+                                                  .viewInsets,
+                                              child: CreateUserModal(
+                                                tipoOperacao: 'update',
+                                                titulo: 'Alteração de Usuário',
+                                                user: user,
                                               ),
-                                            );
-                                          },
-                                          icon: const Icon(Icons.edit_outlined,
-                                              color: Colors.blue, size: 25))
-                                      : user.status == 1 && familiaId == null
-                                          ? IconButton(
-                                              onPressed: () {
-                                                controller.selectedUser = user;
-                                                controller.fillInUserFields();
-                                                showModalBottomSheet(
-                                                  isScrollControlled: true,
-                                                  isDismissible: false,
-                                                  context: context,
-                                                  builder: (context) => Padding(
-                                                    padding:
-                                                        MediaQuery.of(context)
-                                                            .viewInsets,
-                                                    child: CreateUserModal(
-                                                      tipoOperacao: 'update',
-                                                      titulo:
-                                                          'Alteração de Usuário',
-                                                      user: user,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              icon: const Icon(
-                                                  Icons.edit_outlined,
-                                                  color: Colors.blue,
-                                                  size: 25))
-                                          : const CircleAvatar(
-                                              radius: 25,
-                                              backgroundImage: AssetImage(
-                                                  'assets/images/default_avatar.jpg'),
                                             ),
-                                  trailing: idUserLogged == user.id
-                                      ? const SizedBox(
-                                          width: 50,
-                                          height: 50,
-                                        )
-                                      : IconButton(
-                                          onPressed: () async {
-                                            messageController
-                                                .clearModalMessage();
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              isDismissible: false,
-                                              context: context,
-                                              builder: (context) => Padding(
-                                                padding: MediaQuery.of(context)
-                                                    .viewInsets,
-                                                child: MessageModal(
-                                                  user: user,
-                                                  titulo:
-                                                      'Mensagem para ${user.nome}',
+                                          );
+                                        },
+                                        icon: const Icon(Icons.edit_outlined,
+                                            color: Colors.blue, size: 25))
+                                    : user.status == 1 && familiaId == null
+                                        ? IconButton(
+                                            onPressed: () {
+                                              controller.selectedUser = user;
+                                              controller.fillInUserFields();
+                                              showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                isDismissible: false,
+                                                context: context,
+                                                builder: (context) => Padding(
+                                                  padding:
+                                                      MediaQuery.of(context)
+                                                          .viewInsets,
+                                                  child: CreateUserModal(
+                                                    tipoOperacao: 'update',
+                                                    titulo:
+                                                        'Alteração de Usuário',
+                                                    user: user,
+                                                  ),
                                                 ),
+                                              );
+                                            },
+                                            icon: const Icon(
+                                                Icons.edit_outlined,
+                                                color: Colors.blue,
+                                                size: 25))
+                                        : const CircleAvatar(
+                                            radius: 25,
+                                            backgroundImage: AssetImage(
+                                                'assets/images/default_avatar.jpg'),
+                                          ),
+                                trailing: idUserLogged == user.id
+                                    ? const SizedBox(
+                                        width: 50,
+                                        height: 50,
+                                      )
+                                    : IconButton(
+                                        onPressed: () async {
+                                          messageController.clearModalMessage();
+                                          showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            isDismissible: false,
+                                            context: context,
+                                            builder: (context) => Padding(
+                                              padding: MediaQuery.of(context)
+                                                  .viewInsets,
+                                              child: MessageModal(
+                                                user: user,
+                                                titulo:
+                                                    'Mensagem para ${user.nome}',
                                               ),
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.message_outlined,
-                                            size: 25,
-                                            color: Colors.green,
-                                          )),
-                                  title: Text(
-                                    user.nome!,
-                                    style:
-                                        CustomTextStyle.subtitleNegrit(context),
-                                  ),
-                                  subtitle: Text(
-                                    user.username!,
-                                    style: CustomTextStyle.form(context),
-                                  ),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.message_outlined,
+                                          size: 25,
+                                          color: Colors.green,
+                                        )),
+                                title: Text(
+                                  user.nome!,
+                                  style:
+                                      CustomTextStyle.subtitleNegrit(context),
+                                ),
+                                subtitle: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      user.username!,
+                                      style: CustomTextStyle.form(context),
+                                    ),
+                                    Text(
+                                      "Usuário $typeUser",
+                                      style: CustomTextStyle.form(context),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          );
-                        }
+                          ),
+                        );
+
                         return null;
                       }),
                 ))
