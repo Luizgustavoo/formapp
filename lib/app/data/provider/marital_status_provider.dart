@@ -31,17 +31,9 @@ class MaritalStatusApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Errorrrrrr",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Error",
-        content: Text("$err"),
-      );
+      print("$err");
     }
     return null;
   }

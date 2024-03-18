@@ -58,7 +58,7 @@ class LoginView extends GetView<LoginController> {
                         ),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(
-                            sigmaX: 10,
+                            sigmaX: 0,
                           ),
                           child: Form(
                             key: controller.formKey,

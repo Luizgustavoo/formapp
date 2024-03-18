@@ -133,30 +133,32 @@ class ListUserView extends GetView<UserController> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF123d68),
-        onPressed: () {
-          if (familiaId == null) {
-            controller.clearAllUserTextFields();
-            showModalBottomSheet(
-              isScrollControlled: true,
-              isDismissible: false,
-              context: context,
-              builder: (context) => Padding(
-                padding: MediaQuery.of(context).viewInsets,
-                child: CreateUserModal(
-                  tipoOperacao: 'insert',
-                  titulo: 'Cadastro de Usuário',
-                ),
+      floatingActionButton: UserStorage.getUserType() < 3
+          ? FloatingActionButton(
+              backgroundColor: const Color(0xFF123d68),
+              onPressed: () {
+                if (familiaId == null) {
+                  controller.clearAllUserTextFields();
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: CreateUserModal(
+                        tipoOperacao: 'insert',
+                        titulo: 'Cadastro de Usuário',
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
               ),
-            );
-          }
-        },
-        child: const Icon(
-          Icons.add_rounded,
-          color: Colors.white,
-        ),
-      ),
+            )
+          : null,
     );
   }
 

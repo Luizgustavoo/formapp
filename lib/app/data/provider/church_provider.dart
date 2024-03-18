@@ -32,16 +32,10 @@ class ChurchApiClient {
         box.erase();
         Get.offAllNamed('/login');
       } else {
-        Get.defaultDialog(
-          title: "Errooooor",
-          content: Text(json.decode(response.body).toString()),
-        );
+        print(json.decode(response.body).toString());
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Error",
-        content: Text("$err"),
-      );
+      print("$err");
     }
     return null;
   }

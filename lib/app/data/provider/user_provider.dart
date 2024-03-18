@@ -34,11 +34,6 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
       Get.snackbar(
@@ -101,17 +96,9 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      print("$err");
     }
     return null;
   }
@@ -125,6 +112,7 @@ class UserApiClient {
         "tipousuario_id": user.tipousuarioId.toString(),
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
+        "familia_id": user.familiaId.toString(),
       };
 
       if (user.username!.isNotEmpty) {
@@ -158,17 +146,9 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      print("$err");
     }
     return null;
   }
@@ -195,17 +175,9 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      print("$err");
     }
     return null;
   }
@@ -242,17 +214,9 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      print("$err");
     }
     return null;
   }

@@ -115,17 +115,6 @@ class PeopleController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onClose() async {
-    await Future.wait([
-      getMaritalStatus(),
-      getPeoples(),
-      getReligion(),
-      getChurch(),
-    ]);
-    super.onClose();
-  }
-
   Future<void> searchPeople(String query) async {
     try {
       if (query.isEmpty) {
@@ -294,27 +283,33 @@ class PeopleController extends GetxController {
   }
 
   Future<void> getMaritalStatus() async {
-    final token = box.read('auth')['access_token'];
-    final updatedList = await maritalRepository.getAll("Bearer $token");
-    listMaritalStatus.assignAll(updatedList);
+    if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
+      final updatedList = await maritalRepository.getAll("Bearer $token");
+      listMaritalStatus.assignAll(updatedList);
+    }
   }
 
   Future<void> getReligion() async {
-    listReligion.clear();
-    final token = box.read('auth')['access_token'];
-    final updatedList = await repositoryReligion.getAll("Bearer $token");
-    listReligion.assignAll(updatedList);
+    if (UserStorage.existUser()) {
+      listReligion.clear();
+      final token = UserStorage.getToken();
+      final updatedList = await repositoryReligion.getAll("Bearer $token");
+      listReligion.assignAll(updatedList);
+    }
   }
 
   Future<void> getChurch() async {
-    listChurch.clear();
-    final token = box.read('auth')['access_token'];
-    listChurch.value = await repositoryChurch.getAll("Bearer $token");
+    if (UserStorage.existUser()) {
+      listChurch.clear();
+      final token = UserStorage.getToken();
+      listChurch.value = await repositoryChurch.getAll("Bearer $token");
 
-    suggestions.clear();
+      suggestions.clear();
 
-    for (var element in listChurch) {
-      suggestions.add(element.descricao!);
+      for (var element in listChurch) {
+        suggestions.add(element.descricao!);
+      }
     }
   }
 

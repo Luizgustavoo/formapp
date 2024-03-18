@@ -15,7 +15,7 @@ class UserController extends GetxController {
   final repository = Get.put(UserRepository());
 
   User? selectedUser;
-  RxInt? selectedFamily;
+  RxInt? familyUser = 0.obs;
 
   final GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
 
@@ -127,10 +127,10 @@ class UserController extends GetxController {
           senha: passwordController.text,
           tipousuarioId: 3,
           status: 1,
-          usuarioId: box.read('auth')['user']['id'],
-          familiaId: selectedFamily!.value);
+          usuarioId: UserStorage.getUserId(),
+          familiaId: familyUser!.value);
 
-      final token = box.read('auth')['access_token'];
+      final token = UserStorage.getToken();
 
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await userRepository.insertUser("Bearer $token", user);
@@ -168,10 +168,11 @@ class UserController extends GetxController {
         senha: passwordController.text,
         tipousuarioId: 3,
         status: 1,
-        usuarioId: box.read('auth')['user']['id'],
+        usuarioId: UserStorage.getUserId(),
+        familiaId: familyUser?.value,
       );
 
-      final token = box.read('auth')['access_token'];
+      final token = UserStorage.getToken();
 
       final mensagem = await repository.updateUser("Bearer $token", user);
 

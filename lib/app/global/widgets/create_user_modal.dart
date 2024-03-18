@@ -106,27 +106,31 @@ class CreateUserModal extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              if (familiaId == null) ...[
-                Obx(
-                  () => DropdownButtonFormField<int>(
-                    isDense: true,
-                    menuMaxHeight: Get.size.height / 2,
-                    value: user?.family?.id,
-                    onChanged: (int? value) {
-                      controller.selectedFamily!.value = value!;
-                    },
-                    items: familyController.listFamilies
-                        .map<DropdownMenuItem<int>>((Family family) {
-                      return DropdownMenuItem<int>(
-                        value: family.id,
-                        child: Text(family.nome!),
-                      );
-                    }).toList(),
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Família'),
-                  ),
+              Obx(
+                () => DropdownButtonFormField<int>(
+                  isDense: true,
+                  menuMaxHeight: Get.size.height / 2,
+                  value: user?.familiaId ??
+                      (familyController.listFamilies.isNotEmpty
+                          ? familyController.listFamilies.first.id
+                          : null),
+                  onChanged: (int? value) {
+                    print(value);
+                    if (value != null) {
+                      controller.familyUser!.value = value;
+                    }
+                  },
+                  items: familyController.listFamilies
+                      .map<DropdownMenuItem<int>>((Family family) {
+                    return DropdownMenuItem<int>(
+                      value: family.id,
+                      child: Text(family.nome!),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), labelText: 'Família'),
                 ),
-              ],
+              ),
               const SizedBox(
                 height: 16,
               ),
@@ -150,7 +154,7 @@ class CreateUserModal extends StatelessWidget {
                         if (tipoOperacao == 'update' &&
                             retorno['return'] == 0 &&
                             user!.id == UserStorage.getUserId()) {
-                          homeController.logout();
+                          //homeController.logout();
                         }
                         if (tipoOperacao == 'insert' &&
                             retorno['return'] == 0) {

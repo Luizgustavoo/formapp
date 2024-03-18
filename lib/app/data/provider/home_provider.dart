@@ -21,11 +21,6 @@ class HomeApiClient {
       );
       if (response.statusCode == 200) {
         return json.decode(response.body);
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
       Get.snackbar(
@@ -66,11 +61,6 @@ class HomeApiClient {
       );
       if (response.statusCode == 200) {
         return json.decode(response.body);
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
       Get.snackbar(
