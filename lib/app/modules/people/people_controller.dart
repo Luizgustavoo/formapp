@@ -102,6 +102,15 @@ class PeopleController extends GetxController {
         getReligion(),
         getChurch(),
       ]);
+      if (Get.arguments != null) {
+        var sexo = Get.arguments;
+        // Filtra a lista de pessoas pelo sexo
+        RxList<People> pessoasFiltradas =
+            listPeoples.where((pessoa) => pessoa.sexo == sexo).toList().obs;
+
+        // Atualiza a lista de pessoas com os resultados filtrados
+        listPeoples.assignAll(pessoasFiltradas);
+      }
     }
     super.onInit();
   }

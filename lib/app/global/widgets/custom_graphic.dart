@@ -80,10 +80,15 @@ class GraphicWidget extends GetView<HomeController> {
           color: const Color(0xffffffff),
           shadows: shadows,
         ),
-        badgeWidget: _Badge(
-          sectionImages[index % sectionImages.length],
-          size: widgetSize,
-          borderColor: sectionColors[index % sectionColors.length],
+        badgeWidget: InkWell(
+          onTap: () {
+            Get.toNamed("/list-people", arguments: genre.sexo);
+          },
+          child: _Badge(
+            sectionImages[index % sectionImages.length],
+            size: widgetSize,
+            borderColor: sectionColors[index % sectionColors.length],
+          ),
         ),
         badgePositionPercentageOffset: .98,
       );

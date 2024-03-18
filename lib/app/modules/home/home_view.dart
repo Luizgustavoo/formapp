@@ -60,82 +60,92 @@ class HomeView extends GetView<HomeController> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Card(
-                        elevation: 10,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: const BorderSide(
-                            color: Color(0xFF123d68),
-                            width: 1,
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed("/list-family");
+                        },
+                        child: Card(
+                          elevation: 10,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: const BorderSide(
+                              color: Color(0xFF123d68),
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        shadowColor: const Color(0xFF123d68),
-                        semanticContainer: true,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 12,
-                            right: 12,
-                            bottom: 10,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Obx(() => Text(
-                                    textAlign: TextAlign.center,
-                                    controller.counter.value.toString(),
-                                    style: const TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 40,
-                                        color: Color(0xfffc9805)),
-                                  )),
-                              Text(
-                                'Famílias\ncadastradas',
-                                textAlign: TextAlign.center,
-                                style: CustomTextStyle.homeCount(context),
-                              ),
-                            ],
+                          shadowColor: const Color(0xFF123d68),
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              right: 12,
+                              bottom: 10,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Obx(() => Text(
+                                      textAlign: TextAlign.center,
+                                      controller.counter.value.toString(),
+                                      style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 40,
+                                          color: Color(0xfffc9805)),
+                                    )),
+                                Text(
+                                  'Famílias\ncadastradas',
+                                  textAlign: TextAlign.center,
+                                  style: CustomTextStyle.homeCount(context),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Card(
-                        shadowColor: const Color(0xFF123d68),
-                        elevation: 10,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: const BorderSide(
-                            color: Color(0xFF123d68),
-                            width: 1,
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed("/list-people");
+                        },
+                        child: Card(
+                          shadowColor: const Color(0xFF123d68),
+                          elevation: 10,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: const BorderSide(
+                              color: Color(0xFF123d68),
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        semanticContainer: true,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 12,
-                            right: 12,
-                            bottom: 10,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Obx(() => Text(
-                                    textAlign: TextAlign.center,
-                                    controller.counter2.value.toString(),
-                                    style: const TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontSize: 40,
-                                        color: Color(0xfffc9805)),
-                                  )),
-                              Text(
-                                'Pessoas\ncadastradas',
-                                textAlign: TextAlign.center,
-                                style: CustomTextStyle.homeCount(context),
-                              ),
-                            ],
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: 12,
+                              right: 12,
+                              bottom: 10,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Obx(() => Text(
+                                      textAlign: TextAlign.center,
+                                      controller.counter2.value.toString(),
+                                      style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 40,
+                                          color: Color(0xfffc9805)),
+                                    )),
+                                Text(
+                                  'Pessoas\ncadastradas',
+                                  textAlign: TextAlign.center,
+                                  style: CustomTextStyle.homeCount(context),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
