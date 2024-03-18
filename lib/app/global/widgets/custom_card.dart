@@ -48,13 +48,15 @@ class CustomCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 5),
-            Text(
-              title!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 14,
-                fontFamily: 'Poppinss',
-                color: Colors.black54,
+            Flexible(
+              child: Text(
+                title!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Poppinss',
+                  color: Colors.black54,
+                ),
               ),
             ),
           ],

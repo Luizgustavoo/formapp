@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class CustomTextStyle {
   static TextStyle? title(BuildContext context) {
     return const TextStyle(
-      fontSize: 20,
-      color: Colors.black87,
-      fontFamily: 'Poppins',
-    );
+        fontSize: 20,
+        color: Colors.black87,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.ellipsis);
   }
 
   static TextStyle? appBarTitle(BuildContext context) {
@@ -81,6 +81,14 @@ class CustomTextStyle {
         overflow: TextOverflow.clip);
   }
 
+  static TextStyle? subtitleWhite(BuildContext context) {
+    return const TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.clip);
+  }
+
   static TextStyle? button(BuildContext context) {
     return const TextStyle(
       fontSize: 12,
@@ -101,6 +109,14 @@ class CustomTextStyle {
     return const TextStyle(
       fontSize: 14,
       color: Colors.black87,
+      fontFamily: 'Poppinss',
+    );
+  }
+
+  static TextStyle? formWhite(BuildContext context) {
+    return const TextStyle(
+      fontSize: 14,
+      color: Colors.white,
       fontFamily: 'Poppinss',
     );
   }

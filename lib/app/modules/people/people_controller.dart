@@ -79,6 +79,8 @@ class PeopleController extends GetxController {
   final maritalRepository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.put(ReligionRepository());
 
+  RxBool isLoading = true.obs;
+
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
   dynamic mensagem;
@@ -115,20 +117,33 @@ class PeopleController extends GetxController {
     super.onClose();
   }
 
-  void searchPeople(String query) {
-    if (query.isEmpty) {
-      getPeoples();
-    } else {
-      listPeoples.assignAll(listPeoples
-          .where((people) =>
-              people.nome!.toLowerCase().contains(query.toLowerCase()))
-          .toList());
+  Future<void> searchPeople(String query) async {
+    try {
+      if (query.isEmpty) {
+        await getPeoples(); // Aqui você deve implementar sua lógica para buscar as famílias
+      } else {
+        final filteredFamilies = listPeoples
+            .where((family) =>
+                family.nome!.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        listPeoples.assignAll(filteredFamilies);
+      }
+    } catch (error) {
+      print('Erro ao buscar famílias: $error');
+      rethrow;
     }
   }
 
   Future<void> getPeoples() async {
-    final token = box.read('auth')['access_token'];
-    listPeoples.value = await repository.getAll("Bearer $token");
+    isLoading.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listPeoples.value = await repository.getAll("Bearer $token");
+      update();
+    } catch (e) {
+      print(e);
+    }
+    isLoading.value = false;
   }
 
   Future<Map<String, dynamic>> savePeople(

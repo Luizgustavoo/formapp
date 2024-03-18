@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/people_model.dart';
+import 'package:formapp/app/global/shimmer/shimmer_custom_people_card.dart';
 import 'package:formapp/app/global/widgets/custom_app_bar.dart';
 import 'package:formapp/app/global/widgets/custom_people_card.dart';
 import 'package:formapp/app/global/widgets/search_widget.dart';
@@ -29,20 +30,33 @@ class ListPeopleView extends GetView<PeopleController> {
                   controller.searchPeople(query);
                 }),
             Expanded(
-              child: Obx(() => ListView.builder(
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: 5, // Número de itens de exemplo para o shimmer
+                    itemBuilder: (context, index) {
+                      return const ShimmerCustomPeopleCard();
+                    },
+                  );
+                } else {
+                  return ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     physics: const BouncingScrollPhysics(),
                     itemCount: controller.listPeoples.length,
                     itemBuilder: (context, index) {
                       People people = controller.listPeoples[index];
-
                       return CustomPeopleCard(
                         people: people,
                         stripe: index % 2 == 0 ? true : false,
                       );
                     },
-                  )),
+                  );
+                }
+              }),
             )
           ],
         ),

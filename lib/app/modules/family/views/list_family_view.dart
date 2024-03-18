@@ -49,128 +49,131 @@ class FamilyView extends GetView<FamilyController> {
             Expanded(
               child: Obx(() {
                 final status = Get.find<InternetStatusProvider>().status;
-
                 final List<Family> familiesToShow = controller.listFamilies;
 
-                return familiesToShow.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'Ainda não há famílias cadastradas',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: familiesToShow.length,
-                        itemBuilder: (context, index) {
-                          final Family family = familiesToShow[index];
-                          String provedorCasa = "";
+                if (controller.isLoadingFamilies.value) {
+                  // Mostra o shimmer enquanto as famílias estão sendo carregadas
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: 5, // Ajuste conforme necessário
+                    itemBuilder: (context, index) {
+                      return const ShimmerCustomFamilyCard();
+                    },
+                  );
+                } else {
+                  // Mostra a lista de famílias carregadas
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: familiesToShow.length,
+                    itemBuilder: (context, index) {
+                      final Family family = familiesToShow[index];
+                      String provedorCasa = "";
 
-                          if (family.pessoas != null &&
-                              family.pessoas!.isNotEmpty) {
-                            for (var p in family.pessoas!) {
-                              if (p.provedorCasa == 'sim') {
-                                provedorCasa += p.nome!;
-                              }
-                            }
+                      if (family.pessoas != null &&
+                          family.pessoas!.isNotEmpty) {
+                        for (var p in family.pessoas!) {
+                          if (p.provedorCasa == 'sim') {
+                            provedorCasa += p.nome!;
                           }
+                        }
+                      }
 
-                          if (status == InternetStatus.disconnected &&
-                              !family.familyLocal!) {
-                            return const ShimmerCustomFamilyCard();
-                          } else {
-                            return CustomFamilyCard(
-                              index: index,
-                              local: family.familyLocal!,
-                              family: family,
-                              showAddMember: true,
-                              stripe: index % 2 == 0 ? true : false,
-                              familyName: family.nome.toString(),
-                              provedor: "Provedor: $provedorCasa",
-                              editFamily: () {
-                                controller.selectedFamily = family;
+                      if (status == InternetStatus.disconnected &&
+                          !family.familyLocal!) {
+                        return const ShimmerCustomFamilyCard();
+                      } else {
+                        return CustomFamilyCard(
+                          index: index,
+                          local: family.familyLocal!,
+                          family: family,
+                          showAddMember: true,
+                          stripe: index % 2 == 0 ? true : false,
+                          familyName: family.nome.toString(),
+                          provedor: "Provedor: $provedorCasa",
+                          editFamily: () {
+                            controller.selectedFamily = family;
 
-                                controller.fillInFields();
+                            controller.fillInFields();
 
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: CreateFamilyModal(
-                                      tipoOperacao: 'update',
-                                      titulo: 'Alteração da Família',
-                                      family: family,
-                                    ),
-                                  ),
-                                );
-                              },
-                              messageMember: () {
-                                messageController.clearModalMessage();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: MessageModal(
-                                      family: family,
-                                      titulo: 'Mensagem para a Família',
-                                    ),
-                                  ),
-                                );
-                              },
-                              supportFamily: () {
-                                peopleController.clearModalMessageService();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: MessageServiceModal(
-                                      family: family,
-                                      showWidget: true,
-                                      tipoOperacao: 'insert',
-                                      titulo: 'Atendimento ${family.nome}',
-                                    ),
-                                  ),
-                                );
-                              },
-                              addMember: () {
-                                peopleController.clearAllPeopleTextFields();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: AddPeopleFamilyView(
-                                      peopleLocal: family.familyLocal!,
-                                      tipoOperacao: 0,
-                                      family: family,
-                                    ),
-                                  ),
-                                );
-                              },
-                              deleteFamily: () {
-                                Get.to(const ListPeopleView());
-                              },
-                              peopleNames: family.pessoas != null
-                                  ? family.pessoas!
-                                      .map((person) => person.nome!)
-                                      .toList()
-                                  : null,
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: false,
+                              context: context,
+                              builder: (context) => Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: CreateFamilyModal(
+                                  tipoOperacao: 'update',
+                                  titulo: 'Alteração da Família',
+                                  family: family,
+                                ),
+                              ),
                             );
-                          }
-                        },
-                      );
+                          },
+                          messageMember: () {
+                            messageController.clearModalMessage();
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: false,
+                              context: context,
+                              builder: (context) => Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: MessageModal(
+                                  family: family,
+                                  titulo: 'Mensagem para a Família',
+                                ),
+                              ),
+                            );
+                          },
+                          supportFamily: () {
+                            peopleController.clearModalMessageService();
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: false,
+                              context: context,
+                              builder: (context) => Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: MessageServiceModal(
+                                  family: family,
+                                  showWidget: true,
+                                  tipoOperacao: 'insert',
+                                  titulo: 'Atendimento ${family.nome}',
+                                ),
+                              ),
+                            );
+                          },
+                          addMember: () {
+                            peopleController.clearAllPeopleTextFields();
+                            showModalBottomSheet(
+                              isScrollControlled: true,
+                              isDismissible: false,
+                              context: context,
+                              builder: (context) => Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: AddPeopleFamilyView(
+                                  peopleLocal: family.familyLocal!,
+                                  tipoOperacao: 0,
+                                  family: family,
+                                ),
+                              ),
+                            );
+                          },
+                          deleteFamily: () {
+                            Get.to(const ListPeopleView());
+                          },
+                          peopleNames: family.pessoas != null
+                              ? family.pessoas!
+                                  .map((person) => person.nome!)
+                                  .toList()
+                              : null,
+                        );
+                      }
+                    },
+                  );
+                }
               }),
             )
           ],

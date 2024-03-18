@@ -13,7 +13,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class FamilyController extends GetxController
-    with SingleGetTickerProviderMixin {
+    with GetSingleTickerProviderStateMixin {
   TextEditingController searchController = TextEditingController();
   TextEditingController idFamiliaController = TextEditingController();
   TextEditingController nomeFamiliaController = TextEditingController();
@@ -64,6 +64,8 @@ class FamilyController extends GetxController
 
   final showCaseViewShown = false.obs;
 
+  RxBool isLoadingFamilies = true.obs;
+
   dynamic context = Get.context;
 
   @override
@@ -88,14 +90,20 @@ class FamilyController extends GetxController
     super.onInit();
   }
 
-  void searchFamily(String query) {
-    if (query.isEmpty) {
-      getFamilies();
-    } else {
-      listFamilies.assignAll(listFamilies
-          .where((family) =>
-              family.nome!.toLowerCase().contains(query.toLowerCase()))
-          .toList());
+  Future<void> searchFamily(String query) async {
+    try {
+      if (query.isEmpty) {
+        await getFamilies(); // Aqui você deve implementar sua lógica para buscar as famílias
+      } else {
+        final filteredFamilies = listFamilies
+            .where((family) =>
+                family.nome!.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        listFamilies.assignAll(filteredFamilies);
+      }
+    } catch (error) {
+      print('Erro ao buscar famílias: $error');
+      rethrow;
     }
   }
 
@@ -286,6 +294,7 @@ class FamilyController extends GetxController
   }
 
   Future<void> getFamilies() async {
+    isLoadingFamilies.value = true;
     try {
       final token = UserStorage.getToken();
       listFamilies.value = await repository.getAll("Bearer $token");
@@ -293,6 +302,7 @@ class FamilyController extends GetxController
     } catch (e) {
       print(e);
     }
+    isLoadingFamilies.value = false;
   }
 
   void clearAllFamilyTextFields() {

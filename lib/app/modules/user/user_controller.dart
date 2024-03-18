@@ -3,6 +3,7 @@ import 'package:formapp/app/data/models/user_model.dart';
 import 'package:formapp/app/data/repository/user_repository.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/connection_service.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -21,6 +22,8 @@ class UserController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  RxBool isLoading = true.obs;
 
   RxBool isPasswordVisible = false.obs;
 
@@ -50,22 +53,33 @@ class UserController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  void searchUsers(String query) {
-    if (query.isEmpty) {
-      getUsers();
-    } else {
-      listUsers.assignAll(listUsers
-          .where((user) =>
-              user.nome!.toLowerCase().contains(query.toLowerCase()) ||
-              user.username!.toLowerCase().contains(query.toLowerCase()))
-          .toList());
+  Future<void> searchUsers(String query) async {
+    try {
+      if (query.isEmpty) {
+        await getUsers(); // Aqui você deve implementar sua lógica para buscar as famílias
+      } else {
+        final filteredFamilies = listUsers
+            .where((family) =>
+                family.nome!.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        listUsers.assignAll(filteredFamilies);
+      }
+    } catch (error) {
+      print('Erro ao buscar famílias: $error');
+      rethrow;
     }
   }
 
-  void getUsers() async {
-    final token = box.read('auth')['access_token'];
-
-    listUsers.value = await repository.getAll("Bearer $token");
+  Future<void> getUsers() async {
+    isLoading.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listUsers.value = await repository.getAll("Bearer $token");
+      update();
+    } catch (e) {
+      print(e);
+    }
+    isLoading.value = false;
   }
 
   //*VALIDAÇÕES*/

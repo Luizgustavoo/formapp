@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/data/base_url.dart';
 import 'package:formapp/app/data/models/family_model.dart';
 import 'package:get/get.dart';
-import 'package:searchfield/searchfield.dart';
 
 import 'package:formapp/app/global/widgets/custom_camera_modal.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
@@ -253,6 +252,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           maxLength: 15,
                           controller: controller.celularPessoaController,
                           decoration: const InputDecoration(
@@ -289,13 +289,13 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Título de Eleitor'),
-                          onChanged: (value) {},
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         flex: 2,
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: controller.zonaEleitoralPessoaController,
                           maxLength: 3,
                           decoration: const InputDecoration(
@@ -330,58 +330,85 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  GestureDetector(
+                  TextFormField(
+                    controller: controller.igrejaPessoaController,
+                    readOnly: true,
                     onTap: () async {
-                      controller.getChurch();
+                      final selectedChurch = await showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Selecione uma Igreja'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: controller.suggestions
+                                    .map(
+                                      (e) => ListTile(
+                                        title: Text(e),
+                                        onTap: () {
+                                          Navigator.of(context).pop(e);
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+
+                      if (selectedChurch != null) {
+                        controller.igrejaPessoaController.text = selectedChurch;
+                      }
                     },
-                    child: SearchField(
-                      suggestionDirection: SuggestionDirection.flex,
-                      controller: controller.igrejaPessoaController,
-                      onSearchTextChanged: (query) {
-                        final filter = controller.suggestions
-                            .where((element) => element
-                                .toLowerCase()
-                                .contains(query.toLowerCase()))
-                            .toList();
-                        return filter
-                            .map((e) => SearchFieldListItem<String>(e,
-                                child: controller.searchChild(e)))
-                            .toList();
-                      },
-                      onTap: () {},
-                      key: const Key('searchfield'),
-                      hint: 'Selecione uma Igreja',
-                      itemHeight: 50,
-                      scrollbarDecoration: ScrollbarDecoration(),
-                      onTapOutside: (x) {
-                        controller.focus.unfocus();
-                      },
-                      suggestionStyle:
-                          const TextStyle(fontSize: 18, color: Colors.black),
-                      searchStyle:
-                          const TextStyle(fontSize: 18, color: Colors.black),
-                      searchInputDecoration: const InputDecoration(
-                        hintStyle: TextStyle(fontSize: 18, color: Colors.black),
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Igreja',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.arrow_drop_down),
+                        onPressed: () async {
+                          final selectedChurch = await showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text(
+                                  'Selecione uma Igreja',
+                                ),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: controller.suggestions
+                                        .map(
+                                          (e) => ListTile(
+                                            title: Text(
+                                              e,
+                                              style:
+                                                  const TextStyle(fontSize: 30),
+                                            ),
+                                            onTap: () {
+                                              Navigator.of(context).pop(e);
+                                            },
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+
+                          if (selectedChurch != null) {
+                            controller.igrejaPessoaController.text =
+                                selectedChurch;
+                          }
+                        },
                       ),
-                      suggestionsDecoration: SuggestionDecoration(
-                        color: Colors.grey.shade300,
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      suggestions: controller.suggestions
-                          .map((e) => SearchFieldListItem<String>(e,
-                              child: controller.searchChild(e)))
-                          .toList(),
-                      focusNode: controller.focus,
-                      suggestionState: Suggestion.expand,
-                      onSuggestionTap: (SearchFieldListItem<String> x) {
-                        controller.focus.unfocus();
-                      },
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Selecione uma igreja';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -389,7 +416,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Função/Igreja'),
-                    onChanged: (value) {},
                   ),
                   const SizedBox(height: 8),
                   TextFormField(

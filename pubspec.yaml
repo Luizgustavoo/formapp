@@ -38,7 +38,6 @@ dependencies:
   http: ^0.13.6
   get_storage: ^2.0.0
   easy_splash_screen: ^1.0.4
-  searchfield: ^0.9.2
   image_picker: ^1.0.7
   sqflite: ^2.3.2
   path: ^1.8.3

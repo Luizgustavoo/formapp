@@ -15,6 +15,9 @@ import 'package:showcaseview/showcaseview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   await GetStorage.init('credenciado');
 
   Get.put(InternetStatusProvider());
