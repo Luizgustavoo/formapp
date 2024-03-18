@@ -7,6 +7,7 @@ import 'package:formapp/app/global/widgets/message_modal.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 
 class CustomUserCard extends StatelessWidget {
   CustomUserCard({
@@ -29,60 +30,40 @@ class CustomUserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool editaMaster = UserStorage.getUserType() == 1;
+    bool editaLider =
+        UserStorage.getUserType() == 1 || user.id == UserStorage.getUserId();
+    bool editaFamiliar = user.id == UserStorage.getUserId();
+
     return Card(
       color: user.tipousuarioId == 2 ? const Color(0xFF123d68) : null,
       child: ListTile(
-        leading:
-            user.status == 1 && familiaId != null && idUserLogged == user.id
-                ? IconButton(
-                    onPressed: () {
-                      controller.selectedUser = user;
-                      controller.fillInUserFields();
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        isDismissible: false,
-                        context: context,
-                        builder: (context) => Padding(
-                          padding: MediaQuery.of(context).viewInsets,
-                          child: CreateUserModal(
-                            tipoOperacao: 'update',
-                            titulo: 'Alteração de Usuário',
-                            user: user,
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.edit_outlined,
-                        color: Colors.blue, size: 25))
-                : user.status == 1 && familiaId == null
-                    ? IconButton(
-                        onPressed: () {
-                          controller.selectedUser = user;
-                          controller.fillInUserFields();
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            isDismissible: false,
-                            context: context,
-                            builder: (context) => Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: CreateUserModal(
-                                tipoOperacao: 'update',
-                                titulo: 'Alteração de Usuário',
-                                user: user,
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.edit_outlined,
-                            color: user.tipousuarioId == 2
-                                ? Colors.white
-                                : Colors.blue,
-                            size: 25))
-                    : const CircleAvatar(
-                        radius: 25,
-                        backgroundImage:
-                            AssetImage('assets/images/default_avatar.jpg'),
+        leading: (editaMaster || editaLider || editaFamiliar)
+            ? IconButton(
+                onPressed: () {
+                  controller.selectedUser = user;
+                  controller.fillInUserFields();
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: CreateUserModal(
+                        tipoOperacao: 'update',
+                        titulo: 'Alteração de Usuário',
+                        user: user,
                       ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.edit_outlined,
+                    color: Colors.blue, size: 25),
+              )
+            : const CircleAvatar(
+                radius: 25,
+                backgroundImage: AssetImage('assets/images/default_avatar.jpg'),
+              ),
         trailing: idUserLogged == user.id
             ? const SizedBox(
                 width: 50,

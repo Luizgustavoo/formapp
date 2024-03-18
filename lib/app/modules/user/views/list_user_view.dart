@@ -9,6 +9,7 @@ import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/global/widgets/create_user_modal.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -62,12 +63,22 @@ class ListUserView extends GetView<UserController> {
                                   ? "Lider"
                                   : "Familiar");
 
+                          bool desativaMaster = UserStorage.getUserType() == 1;
+                          bool desativaLider = UserStorage.getUserType() == 1 ||
+                              user.id == UserStorage.getUserId();
+                          bool desativaFamiliar =
+                              user.id == UserStorage.getUserId() ||
+                                  desativaMaster ||
+                                  desativaLider;
+
                           return Padding(
                             padding: const EdgeInsets.only(
                                 left: 5, right: 5, bottom: 5),
                             child: Dismissible(
                               key: UniqueKey(),
-                              direction: familiaId != null
+                              direction: (!desativaMaster &&
+                                      !desativaLider &&
+                                      !desativaFamiliar)
                                   ? DismissDirection.none
                                   : DismissDirection.endToStart,
                               confirmDismiss:
