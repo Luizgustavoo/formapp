@@ -68,6 +68,8 @@ class FamilyController extends GetxController
 
   dynamic context = Get.context;
 
+  Rx<Color> corFundoScaffold = Colors.white.obs;
+
   @override
   void onInit() {
     if (UserStorage.existUser()) {

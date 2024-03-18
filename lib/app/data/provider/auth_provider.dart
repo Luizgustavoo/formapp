@@ -47,4 +47,23 @@ class AuthApiClient {
     }
     return null;
   }
+
+  Future<Map<String, dynamic>?> forgotPassword(String username) async {
+    var forgotUrl = Uri.parse('$baseUrl/forgot-password');
+    try {
+      var response = await httpClient.post(forgotUrl, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer ${UserStorage.getToken()}",
+      }, body: {
+        'username': username
+      });
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 }

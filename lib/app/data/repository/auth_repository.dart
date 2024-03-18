@@ -21,4 +21,14 @@ class AuthRepository {
       print(e);
     }
   }
+
+  forgotPassword(String username) async {
+    try {
+      var response = await apiClient.forgotPassword(username);
+      if (response != null) return response;
+    } catch (e) {
+      print(e);
+    }
+    return;
+  }
 }

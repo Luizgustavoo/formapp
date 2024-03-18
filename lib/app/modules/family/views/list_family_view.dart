@@ -52,18 +52,16 @@ class FamilyView extends GetView<FamilyController> {
                 final List<Family> familiesToShow = controller.listFamilies;
 
                 if (controller.isLoadingFamilies.value) {
-                  // Mostra o shimmer enquanto as famílias estão sendo carregadas
                   return ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: 5, // Ajuste conforme necessário
+                    itemCount: 5,
                     itemBuilder: (context, index) {
                       return const ShimmerCustomFamilyCard();
                     },
                   );
                 } else {
-                  // Mostra a lista de famílias carregadas
                   return ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,

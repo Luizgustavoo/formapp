@@ -17,14 +17,15 @@ class FamilyApiClient {
   final FamilyDatabaseHelper localDataBase = FamilyDatabaseHelper();
   final box = GetStorage('credenciado');
 
-  getAll(String token) async {
+  getAll(String token, {int? page}) async {
     final id = box.read('auth')['user']['id'];
     final familiaId = box.read('auth')['user']['familia_id'];
     try {
       Uri familyUrl;
 
       if (UserStorage.getUserType() == 1) {
-        familyUrl = Uri.parse('$baseUrl/v1/familia/list/');
+        familyUrl =
+            Uri.parse('$baseUrl/v1/familia/list-paginate/?page=$page&limit=5');
       } else if (UserStorage.getUserType() == 2) {
         familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
       } else {

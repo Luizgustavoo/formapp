@@ -20,8 +20,12 @@ class LoginController extends GetxController {
   final repository = Get.put(AuthRepository());
   Auth? auth;
   final formKey = GlobalKey<FormState>();
+  final forgotKey = GlobalKey<FormState>();
   TextEditingController usernameCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
+  TextEditingController forgotPasswordCtrl = TextEditingController();
+
+  Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
   final box = GetStorage('credenciado');
 
@@ -107,5 +111,27 @@ class LoginController extends GetxController {
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  Future<Map<String, dynamic>> forgotPassword(String username) async {
+    try {
+      if (forgotKey.currentState!.validate()) {
+        var mensagem = await repository.forgotPassword(username);
+
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            retorno = {
+              "return": 0,
+              "message": "Senha temporária enviada por e-mail!"
+            };
+          } else {
+            retorno = {"return": 1, "message": "Falha!"};
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return retorno;
   }
 }

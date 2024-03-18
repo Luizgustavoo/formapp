@@ -31,8 +31,6 @@ class ChurchApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        print(json.decode(response.body).toString());
       }
     } catch (err) {
       print("$err");

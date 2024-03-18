@@ -205,7 +205,9 @@ class LoginView extends GetView<LoginController> {
                                     ),
                                   ),
                                   TextButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showForgotPasswordModal(context);
+                                      },
                                       child: Text(
                                         'Esqueceu a senha?',
                                         style: CustomTextStyle
@@ -229,4 +231,84 @@ class LoginView extends GetView<LoginController> {
   }
 
   Widget _gap() => const SizedBox(height: 16);
+  void showForgotPasswordModal(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      isDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+              child: Form(
+                key: controller.forgotKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Recuperar senha",
+                        style: CustomTextStyle.title(context)),
+                    const SizedBox(height: 20),
+                    Text(
+                      "Digite seu nome de usuário para recuperar a senha:",
+                      style: CustomTextStyle.subtitle(context),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: controller.forgotPasswordCtrl,
+                      decoration: const InputDecoration(
+                        labelText: "Usuário",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) => controller.validateUsername(value),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text("Cancelar"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Map<String, dynamic> retorno =
+                                await controller.forgotPassword(
+                                    controller.forgotPasswordCtrl.text);
+
+                            if (retorno['return'] == 0) {
+                              Get.back();
+                            }
+                            Get.snackbar(
+                              snackPosition: SnackPosition.BOTTOM,
+                              duration: const Duration(milliseconds: 1500),
+                              retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                              retorno['message'],
+                              backgroundColor: retorno['return'] == 0
+                                  ? Colors.green
+                                  : Colors.red,
+                              colorText: Colors.white,
+                            );
+                          },
+                          child: const Text(
+                            "Recuperar",
+                            style: TextStyle(
+                                fontFamily: 'Poppinss', color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

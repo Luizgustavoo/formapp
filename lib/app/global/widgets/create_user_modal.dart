@@ -26,7 +26,6 @@ class CreateUserModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final familiaId = familyController.box.read('auth')['user']['familia_id'];
     return Form(
         key: controller.userFormKey,
         child: SingleChildScrollView(
@@ -115,7 +114,6 @@ class CreateUserModal extends StatelessWidget {
                           ? familyController.listFamilies.first.id
                           : null),
                   onChanged: (int? value) {
-                    print(value);
                     if (value != null) {
                       controller.familyUser!.value = value;
                     }
