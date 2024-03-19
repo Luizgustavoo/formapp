@@ -33,21 +33,12 @@ class HomeController extends GetxController
 
   @override
   void onInit() async {
-    print("-------ONINIT DA HOME CONTROLLER------");
     await getCountFamiliesAndPeople();
     startTimer();
     username.value = UserStorage.getUserName();
     startTimer();
     await getCountGenre();
-
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    print("-------ONREADY DA HOME CONTROLLER------");
-    // TODO: implement onReady
-    super.onReady();
   }
 
   @override

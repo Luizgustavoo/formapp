@@ -20,6 +20,16 @@ class Family {
   List<People>? pessoas;
   bool? familyLocal = false;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Family &&
+          runtimeType == other.runtimeType &&
+          id == other.id; // Adicione outros atributos se necessário
+
+  @override
+  int get hashCode => id.hashCode; // Use outros atributos se necessário
+
   Family(
       {this.id,
       this.nome,

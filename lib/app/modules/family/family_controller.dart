@@ -64,11 +64,14 @@ class FamilyController extends GetxController
 
   final showCaseViewShown = false.obs;
 
-  RxBool isLoadingFamilies = true.obs;
-
-  dynamic context = Get.context;
+  RxBool isLoadingFamilies = false.obs;
 
   Rx<Color> corFundoScaffold = Colors.white.obs;
+
+  final ScrollController scrollController = ScrollController();
+
+  int currentPage = 1;
+  bool isLoadingMore = false;
 
   @override
   void onInit() {
@@ -81,21 +84,47 @@ class FamilyController extends GetxController
         }
       });
       getFamilies();
-
-      // int idLogado = box.read('auth')['user']['id'];
-
-      // List storedUserIds = StorageManager.getUserIds();
-
       checkShowcase();
     }
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        if (!isLoadingMore) {
+          loadMoreFamilies().then((value) => isLoadingFamilies.value = false);
+        }
+      }
+    });
 
     super.onInit();
+  }
+
+  Future<void> loadMoreFamilies() async {
+    try {
+      isLoadingMore = true;
+      final token = UserStorage.getToken();
+      final nextPage = currentPage + 1;
+      final moreFamilies =
+          await repository.getAll("Bearer $token", page: nextPage);
+      if (moreFamilies.isNotEmpty) {
+        for (final family in moreFamilies) {
+          if (!listFamilies
+              .any((existingFamily) => existingFamily.id == family.id)) {
+            listFamilies.add(family);
+          }
+        }
+        currentPage = nextPage;
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingMore = false;
+    }
   }
 
   Future<void> searchFamily(String query) async {
     try {
       if (query.isEmpty) {
-        await getFamilies(); // Aqui você deve implementar sua lógica para buscar as famílias
+        await getFamilies();
       } else {
         final filteredFamilies = listFamilies
             .where((family) =>
@@ -139,7 +168,7 @@ class FamilyController extends GetxController
 
   int getUserId() {
     final userId = box.read('userId');
-    return userId ?? 0; // Ou algum valor padrão, dependendo da sua lógica
+    return userId ?? 0;
   }
 
   void clearShowcase() {
@@ -263,8 +292,6 @@ class FamilyController extends GetxController
         var mensagem =
             await repository.insertFamilyLocalToAPi("Bearer $token", family);
 
-        //await localDatabase.delete(family.id!, 'family_table');
-
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
             deleteFamily(family.id!, true);
@@ -295,11 +322,11 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<void> getFamilies() async {
+  Future<void> getFamilies({int? page}) async {
     isLoadingFamilies.value = true;
     try {
       final token = UserStorage.getToken();
-      listFamilies.value = await repository.getAll("Bearer $token");
+      listFamilies.value = await repository.getAll("Bearer $token", page: page);
       update();
     } catch (e) {
       print(e);
@@ -308,7 +335,6 @@ class FamilyController extends GetxController
   }
 
   void clearAllFamilyTextFields() {
-    // Lista de todos os TextEditingController
     final textControllers = [
       idFamiliaController,
       nomeFamiliaController,
@@ -322,7 +348,6 @@ class FamilyController extends GetxController
       statusFamiliaController,
     ];
 
-    // Itera sobre todos os TextEditingController e limpa cada um deles
     for (final controller in textControllers) {
       controller.clear();
     }
@@ -343,7 +368,6 @@ class FamilyController extends GetxController
     statusFamiliaController.text = selectedFamily!.status.toString();
   }
 
-  //?PARTE RESPONSAVEL PELO CEP */
   void searchCEP() async {
     final cep = cepFamiliaController.text;
     final addressData = await ViaCEPService.getAddressFromCEP(cep);
@@ -372,9 +396,7 @@ class FamilyController extends GetxController
     complementoFamiliaController.text = '';
     numeroCasaFamiliaController.text = '';
   }
-  //?FINAL DA PARTE RESPONSAVEL PELO CEP */
 
-  /*PARTE RESPONSAVEL PELA FORMATACAO*/
   void onCEPChanged(String cep) {
     final formattedCEP = FormattersValidators.formatCEP(cep);
     cepFamiliaController.value = TextEditingValue(

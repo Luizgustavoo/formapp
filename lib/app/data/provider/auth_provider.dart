@@ -57,7 +57,6 @@ class AuthApiClient {
       }, body: {
         'username': username
       });
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       }

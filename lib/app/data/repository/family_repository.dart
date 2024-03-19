@@ -8,24 +8,36 @@ class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
   final DatabaseHelper localDatabase = DatabaseHelper();
 
-  getAll(String token) async {
+  getAll(String token, {int? page}) async {
     List<Family> list = <Family>[];
 
     var responseLocal = await getFamiliesWithPeopleLocal();
 
     for (Family familyLocal in responseLocal) {
       familyLocal.familyLocal = true;
-
       list.add(familyLocal);
     }
 
     if (await ConnectionStatus.verifyConnection()) {
-      var response = await apiClient.getAll(token);
-      response.forEach((e) {
+      var response = await apiClient.getAll(token, page: page);
+      List<Family> newFamilies = [];
+      response['data'].forEach((e) {
         Family f = Family.fromJson(e);
         f.familyLocal = false;
-        list.add(f);
+        newFamilies.add(f);
       });
+
+      // Clear the existing list before adding new families
+      if (page == 1) {
+        list.clear();
+      }
+
+      // Add families from the API response to the list if they don't already exist
+      for (var family in newFamilies) {
+        if (!list.contains(family)) {
+          list.add(family);
+        }
+      }
     }
     return list;
   }

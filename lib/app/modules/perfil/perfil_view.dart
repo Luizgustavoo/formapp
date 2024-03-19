@@ -9,7 +9,6 @@ import 'package:formapp/app/global/widgets/custom_camera_modal.dart';
 import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
 import 'package:formapp/app/modules/perfil/perfil_controller.dart';
-import 'package:formapp/app/routes/app_routes.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
