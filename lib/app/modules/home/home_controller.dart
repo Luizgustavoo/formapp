@@ -8,7 +8,8 @@ import 'package:formapp/app/data/repository/home_repository.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 
-class HomeController extends GetxController {
+class HomeController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   var box;
   RxString username = "".obs;
   final repository = Get.find<AuthRepository>();
@@ -32,13 +33,21 @@ class HomeController extends GetxController {
 
   @override
   void onInit() async {
+    print("-------ONINIT DA HOME CONTROLLER------");
     await getCountFamiliesAndPeople();
     startTimer();
     username.value = UserStorage.getUserName();
     startTimer();
-    getCountGenre();
+    await getCountGenre();
 
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    print("-------ONREADY DA HOME CONTROLLER------");
+    // TODO: implement onReady
+    super.onReady();
   }
 
   @override

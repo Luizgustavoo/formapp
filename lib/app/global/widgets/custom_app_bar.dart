@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart' as badges;
@@ -36,7 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     showPadding == false
                         ? IconButton(
                             onPressed: () {
-                              Get.back();
+                              Get.offAllNamed('/home');
                             },
                             icon: const Icon(
                               Icons.arrow_back_ios_new_rounded,

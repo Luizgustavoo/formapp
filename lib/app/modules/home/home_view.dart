@@ -14,6 +14,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final List<String> user = UserStorage.getUserName().split(' ');
+
     return Scaffold(
       appBar: CustomAppBar(
         userName: user[0],
