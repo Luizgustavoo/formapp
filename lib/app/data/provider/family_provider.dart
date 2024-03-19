@@ -25,7 +25,7 @@ class FamilyApiClient {
 
       if (UserStorage.getUserType() == 1) {
         familyUrl =
-            Uri.parse('$baseUrl/v1/familia/list-paginate/?page=$page&limit=5');
+            Uri.parse('$baseUrl/v1/familia/list-paginate/?page=$page&limit');
       } else if (UserStorage.getUserType() == 2) {
         familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
       } else {
