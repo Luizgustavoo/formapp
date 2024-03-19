@@ -161,7 +161,7 @@ class PeopleApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -257,7 +257,7 @@ class PeopleApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -296,7 +296,7 @@ class PeopleApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -332,19 +332,5 @@ class PeopleApiClient {
     );
 
     return await localDatabase.insertPeople(peopleData);
-  }
-
-  Future<void> deletePeopleLocally(People people) async {
-    try {
-      if (people.id != null) {
-        //await localDatabase.delete(people.id!, 'family_table');
-        print('Família excluída localmente com sucesso');
-      } else {
-        print('ID da família é nulo. Não é possível excluir.');
-      }
-    } catch (e) {
-      print('Erro ao excluir família localmente: $e');
-      rethrow;
-    }
   }
 }

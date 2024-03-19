@@ -18,7 +18,7 @@ class AuthRepository {
     try {
       await apiClient.getLogout();
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
   }
 
@@ -27,7 +27,7 @@ class AuthRepository {
       var response = await apiClient.forgotPassword(username);
       if (response != null) return response;
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
     return;
   }

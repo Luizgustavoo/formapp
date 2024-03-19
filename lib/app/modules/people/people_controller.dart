@@ -127,8 +127,7 @@ class PeopleController extends GetxController {
         listPeoples.assignAll(filteredFamilies);
       }
     } catch (error) {
-      print('Erro ao buscar famílias: $error');
-      rethrow;
+      throw Exception('Erro ao buscar famílias: $error');
     }
   }
 
@@ -139,7 +138,7 @@ class PeopleController extends GetxController {
       listPeoples.value = await repository.getAll("Bearer $token");
       update();
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
     isLoading.value = false;
   }

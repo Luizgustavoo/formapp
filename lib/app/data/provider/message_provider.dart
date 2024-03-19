@@ -115,7 +115,7 @@ class MessageApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -154,7 +154,7 @@ class MessageApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }

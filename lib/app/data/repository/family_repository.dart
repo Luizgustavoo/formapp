@@ -48,8 +48,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
-      rethrow;
+      throw Exception('Erro ao inserir a família: $e');
     }
   }
 
@@ -59,8 +58,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
-      rethrow;
+      throw Exception('Erro ao inserir a família: $e');
     }
   }
 
@@ -70,8 +68,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao atualizar a família: $e');
-      rethrow;
+      throw Exception('Erro ao atualizar a família: $e');
     }
   }
 
@@ -81,8 +78,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao atualizar a família: $e');
-      rethrow;
+      throw Exception('Erro ao atualizar a família: $e');
     }
   }
 

@@ -13,8 +13,7 @@ class FamilyServiceRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir o atendimento: $e');
-      rethrow;
+      throw Exception('Erro ao inserir o atendimento: $e');
     }
   }
 
@@ -24,8 +23,7 @@ class FamilyServiceRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao atualizar a família: $e');
-      rethrow;
+      throw Exception('Erro ao atualizar a família: $e');
     }
   }
 }

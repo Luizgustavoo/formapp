@@ -308,30 +308,13 @@ class FamilyApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      throw Exception('Erro ao buscar dados: $err');
     }
     return null;
   }
 
   Future<List<Family>> getAllFamiliesLocally() async {
     return await localDataBase.getAllFamily();
-  }
-
-  Future<void> deleteFamilyLocally(Family family) async {
-    try {
-      if (family.id != null) {
-        //await localDatabase.delete(family.id!, 'family_table');
-        print('Família excluída localmente com sucesso');
-      } else {
-        print('ID da família é nulo. Não é possível excluir.');
-      }
-    } catch (e) {
-      print('Erro ao excluir família localmente: $e');
-      rethrow;
-    }
   }
 
   Future<Map<String, dynamic>> insertFamilyLocalForApi(
@@ -403,7 +386,7 @@ class FamilyApiClient {
             imageFile.path, // Caminho do arquivo da imagem
           ));
         } else {
-          print('Arquivo de imagem não encontrado: ${person.foto}');
+          throw Exception('Arquivo de imagem não encontrado: ${person.foto}');
         }
       }
     }

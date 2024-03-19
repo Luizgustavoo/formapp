@@ -130,7 +130,7 @@ class LoginController extends GetxController {
         }
       }
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
     return retorno;
   }

@@ -115,7 +115,7 @@ class FamilyController extends GetxController
         currentPage = nextPage;
       } else {}
     } catch (e) {
-      print(e);
+      throw Exception(e);
     } finally {
       isLoadingMore = false;
     }
@@ -133,8 +133,7 @@ class FamilyController extends GetxController
         listFamilies.assignAll(filteredFamilies);
       }
     } catch (error) {
-      print('Erro ao buscar famílias: $error');
-      rethrow;
+      throw Exception('Erro ao buscar famílias: $error');
     }
   }
 
@@ -312,7 +311,7 @@ class FamilyController extends GetxController
         getFamilies();
       }
     } catch (e) {
-      print('Erro ao enviar dados da família para a API: $e');
+      throw Exception('Erro ao enviar dados da família para a API: $e');
     }
     return retorno;
   }
@@ -329,7 +328,7 @@ class FamilyController extends GetxController
       listFamilies.value = await repository.getAll("Bearer $token", page: page);
       update();
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
     isLoadingFamilies.value = false;
   }

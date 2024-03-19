@@ -33,7 +33,7 @@ class ChurchApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception('Erro ao buscar dados: $err');
     }
     return null;
   }

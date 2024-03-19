@@ -28,8 +28,7 @@ class MessageRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao enviar mensagem para a família: $e');
-      rethrow;
+      throw Exception('Erro ao enviar mensagem para a família: $e');
     }
   }
 
@@ -39,8 +38,7 @@ class MessageRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao enviar mensagem para a família: $e');
-      rethrow;
+      throw Exception('Erro ao enviar mensagem para a família: $e');
     }
   }
 }

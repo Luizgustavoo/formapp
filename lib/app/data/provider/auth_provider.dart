@@ -17,18 +17,17 @@ class AuthApiClient {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {
-        print('Erro de autenticação: Usuário ou senha inválidos');
-        // Adicione uma lógica para tratar o erro de autenticação aqui
+        throw AuthenticationException(
+            'Erro de autenticação: Usuário ou senha inválidos');
       } else {
-        print('Erro - get:${response.body}');
+        throw Exception('Erro - get:${response.body}');
       }
     } catch (e) {
-      print(e);
+      throw Exception('Erro ao fazer login: $e');
     }
-    return null;
   }
 
-  Future<Map<String, dynamic>?> getLogout() async {
+  Future<void> getLogout() async {
     var loginUrl = Uri.parse('$baseUrl/v1/logout');
     try {
       var response = await httpClient.post(
@@ -41,11 +40,12 @@ class AuthApiClient {
       if (response.statusCode == 200) {
         UserStorage.clearBox();
         Get.offAllNamed('/login');
+      } else {
+        throw Exception('Erro ao fazer logout: ${response.statusCode}');
       }
     } catch (e) {
-      print(e);
+      throw Exception('Erro ao fazer logout: $e');
     }
-    return null;
   }
 
   Future<Map<String, dynamic>?> forgotPassword(String username) async {
@@ -59,10 +59,20 @@ class AuthApiClient {
       });
       if (response.statusCode == 200) {
         return json.decode(response.body);
+      } else {
+        throw Exception('Erro ao redefinir senha: ${response.statusCode}');
       }
     } catch (e) {
-      print(e);
+      throw Exception('Erro ao redefinir senha: $e');
     }
-    return null;
   }
+}
+
+class AuthenticationException implements Exception {
+  final String message;
+
+  AuthenticationException(this.message);
+
+  @override
+  String toString() => message;
 }

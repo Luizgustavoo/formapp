@@ -53,7 +53,7 @@ class FamilyServiceApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -97,7 +97,7 @@ class FamilyServiceApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }

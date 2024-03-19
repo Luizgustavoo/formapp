@@ -68,7 +68,7 @@ class HomeController extends GetxController
       List<Genre> genre = await homeRepository.getCountGenre();
       genres.assignAll(genre);
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
   }
 
@@ -84,7 +84,7 @@ class HomeController extends GetxController
         totalPeoples.value = resposta.peopleUser;
       }
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
   }
 

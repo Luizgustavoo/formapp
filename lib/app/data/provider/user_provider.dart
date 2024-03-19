@@ -98,7 +98,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -148,7 +148,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -177,7 +177,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
@@ -216,7 +216,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print("$err");
+      throw Exception("$err");
     }
     return null;
   }
