@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/home/home_controller.dart';
+import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart' as badges;
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({Key? key, this.userName, this.showPadding})
-      : super(key: key);
+  CustomAppBar({Key? key, this.userName, this.showPadding}) : super(key: key);
   final String? userName;
   final bool? showPadding;
 
@@ -15,8 +14,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ? const Size.fromHeight(100)
       : const Size.fromHeight(160);
 
+  final messageController = Get.put(MessageController());
+
   @override
   Widget build(BuildContext context) {
+    messageController.getMessages();
+
     return AppBar(
       elevation: 1,
       automaticallyImplyLeading: false,
@@ -80,25 +83,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             size: 28,
                           ),
                         ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: badges.Badge(
-                            showBadge: true,
-                            ignorePointer: false,
-                            onTap: () {},
-                            badgeContent: const Icon(Icons.check,
-                                color: Colors.white, size: 10),
-                            badgeAnimation:
-                                const badges.BadgeAnimation.rotation(
-                              animationDuration: Duration(seconds: 1),
-                              colorChangeAnimationDuration:
-                                  Duration(seconds: 1),
-                              loopAnimation: false,
-                              curve: Curves.easeInOut,
-                            ),
-                          ),
-                        )
+                        Obx(() => Positioned(
+                              right: 0,
+                              top: 0,
+                              child: messageController
+                                          .quantidadeMensagensNaoLidas.value >
+                                      0
+                                  ? badges.Badge(
+                                      showBadge: true,
+                                      ignorePointer: false,
+                                      onTap: () {},
+                                      badgeContent: const Icon(Icons.check,
+                                          color: Colors.white, size: 10),
+                                      badgeAnimation:
+                                          const badges.BadgeAnimation.rotation(
+                                        animationDuration: Duration(seconds: 1),
+                                        colorChangeAnimationDuration:
+                                            Duration(seconds: 1),
+                                        loopAnimation: false,
+                                        curve: Curves.easeInOut,
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                            ))
                       ],
                     ),
                     IconButton(

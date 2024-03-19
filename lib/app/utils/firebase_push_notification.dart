@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:formapp/app/modules/message/message_controller.dart';
 import 'package:get/get.dart';
 
 Future<void> handleBackgroundMessage(message) async {
@@ -22,6 +23,8 @@ Future<void> handleBackgroundMessage(message) async {
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
+  final messageController = Get.put(MessageController());
+
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
     'High Importance Notifications',
@@ -32,6 +35,8 @@ class FirebaseApi {
 
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
+
+    messageController.getMessages();
 
     Get.toNamed('/list-message');
   }
@@ -65,6 +70,8 @@ class FirebaseApi {
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if (notification == null) return;
+
+      messageController.getMessages();
 
       _localNotifications.show(
         notification.hashCode,

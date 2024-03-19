@@ -26,7 +26,7 @@ class ListUserView extends GetView<UserController> {
     var idUserLogged = box.read('auth')['user']['id'];
     final familiaId = controller.box.read('auth')['user']['familia_id'];
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         showPadding: false,
       ),
       body: Container(

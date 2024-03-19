@@ -36,6 +36,7 @@ class CustomCardMessage extends StatelessWidget {
             onExpansionChanged: (value) {
               if (lida.value == false) {
                 controller.changeMessage(message!.id!, UserStorage.getUserId());
+                controller.quantidadeMensagensNaoLidas--;
                 lida.value = true;
               }
             },
