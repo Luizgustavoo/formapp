@@ -11,7 +11,7 @@ class MessageView extends GetView<MessageController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(
+        appBar: CustomAppBar(
           showPadding: false,
         ),
         body: Container(
@@ -22,17 +22,19 @@ class MessageView extends GetView<MessageController> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              Obx(() => ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: controller.listMessages.length,
-                  itemBuilder: (context, index) {
-                    Message message = controller.listMessages[index];
-                    return CustomCardMessage(
-                      message: message,
-                    );
-                  })),
+              Obx(() => Expanded(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: controller.listMessages.length,
+                        itemBuilder: (context, index) {
+                          Message message = controller.listMessages[index];
+                          return CustomCardMessage(
+                            message: message,
+                          );
+                        }),
+                  )),
             ],
           ),
         ));

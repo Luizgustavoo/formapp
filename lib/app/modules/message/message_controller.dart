@@ -17,6 +17,7 @@ class MessageController extends GetxController {
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
   dynamic mensagem;
+  RxInt quantidadeMensagensNaoLidas = 0.obs;
   final box = GetStorage('credenciado');
   var message = Message().obs;
 
@@ -36,6 +37,9 @@ class MessageController extends GetxController {
     if (UserStorage.existUser()) {
       final token = UserStorage.getToken();
       listMessages.value = await repository.getAll("Bearer $token");
+
+      quantidadeMensagensNaoLidas.value =
+          listMessages.where((message) => message.lida == 'nao').length;
     }
   }
 

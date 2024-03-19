@@ -13,7 +13,7 @@ class ListPeopleView extends GetView<PeopleController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         showPadding: false,
       ),
       body: Container(

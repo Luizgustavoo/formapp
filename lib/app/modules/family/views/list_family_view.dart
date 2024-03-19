@@ -31,7 +31,7 @@ class FamilyView extends GetView<FamilyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         showPadding: false,
       ),
       body: Container(
