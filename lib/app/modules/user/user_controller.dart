@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:formapp/app/data/models/user_model.dart';
+import 'package:formapp/app/data/provider/internet_status_provider.dart';
+import 'package:formapp/app/data/repository/auth_repository.dart';
 import 'package:formapp/app/data/repository/user_repository.dart';
 import 'package:formapp/app/modules/family/family_controller.dart';
 import 'package:formapp/app/utils/connection_service.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserController extends GetxController {
   TextEditingController searchController = TextEditingController();
@@ -18,6 +23,7 @@ class UserController extends GetxController {
   RxInt? familyUser = 0.obs;
 
   final GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> perfilFormKey = GlobalKey<FormState>();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
@@ -33,20 +39,66 @@ class UserController extends GetxController {
 
   final userRepository = Get.find<UserRepository>();
   final familyController = Get.put(FamilyController());
+  final authRepository = Get.find<AuthRepository>();
+
+  final ScrollController scrollController = ScrollController();
+
+  int currentPage = 1;
+  bool isLoadingMore = false;
+
+  var isImagePicPathSet = false.obs;
+  var photoUrlPath = ''.obs;
+  RxString oldImagePath = ''.obs;
 
   @override
   void onInit() {
-    if (box.read('auth') != null) {
+    if (UserStorage.existUser()) {
+      final internetStatusProvider = Get.find<InternetStatusProvider>();
+      final statusStream = internetStatusProvider.statusStream;
+      statusStream.listen((status) {
+        if (status == InternetStatus.connected) {
+          getUsers();
+        }
+      });
       getUsers();
     }
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        if (!isLoadingMore) {
+          loadMoreUsers().then((value) => isLoading.value = false);
+        }
+      }
+    });
 
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    getUsers();
-    super.onClose();
+  void logout() {
+    authRepository.getLogout();
+  }
+
+  Future<void> loadMoreUsers() async {
+    try {
+      isLoadingMore = true;
+      final token = UserStorage.getToken();
+      final nextPage = currentPage + 1;
+      final moreUsers =
+          await repository.getAll("Bearer $token", page: nextPage);
+      if (moreUsers.isNotEmpty) {
+        for (final user in moreUsers) {
+          if (!listUsers
+              .any((existingFamily) => existingFamily.id == user.id)) {
+            listUsers.add(user);
+          }
+        }
+        currentPage = nextPage;
+      } else {}
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      isLoadingMore = false;
+    }
   }
 
   void togglePasswordVisibility() {
@@ -56,7 +108,7 @@ class UserController extends GetxController {
   Future<void> searchUsers(String query) async {
     try {
       if (query.isEmpty) {
-        await getUsers(); // Aqui você deve implementar sua lógica para buscar as famílias
+        await getUsers();
       } else {
         final filteredFamilies = listUsers
             .where((family) =>
@@ -69,11 +121,11 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> getUsers() async {
+  Future<void> getUsers({int? page}) async {
     isLoading.value = true;
     try {
       final token = UserStorage.getToken();
-      listUsers.value = await repository.getAll("Bearer $token");
+      listUsers.value = await repository.getAll("Bearer $token", page: page);
       update();
     } catch (e) {
       throw Exception(e);
@@ -81,7 +133,22 @@ class UserController extends GetxController {
     isLoading.value = false;
   }
 
-  //*VALIDAÇÕES*/
+  void setImagePeople(String path) {
+    photoUrlPath.value = path;
+    isImagePicPathSet.value = true;
+  }
+
+  Future<void> takePhoto(ImageSource source) async {
+    File? pickedFile;
+    ImagePicker imagePicker = ImagePicker();
+
+    final pickedImage =
+        await imagePicker.pickImage(source: source, imageQuality: 100);
+
+    pickedFile = File(pickedImage!.path);
+    setImagePeople(pickedFile.path);
+  }
+
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor digite sua senha';
@@ -116,7 +183,6 @@ class UserController extends GetxController {
     }
     return null;
   }
-  //*FIM VALIDAÇÕES*/
 
   Future<Map<String, dynamic>> saveUser() async {
     if (userFormKey.currentState!.validate()) {
@@ -158,14 +224,16 @@ class UserController extends GetxController {
     return retorno;
   }
 
-  Future<Map<String, dynamic>> updateUser(int id) async {
+  Future<Map<String, dynamic>> updateUser(int id, int tipoUsuarioId) async {
     if (userFormKey.currentState!.validate()) {
+      String imagePath = photoUrlPath.value;
+
       User user = User(
         id: id,
         nome: nameController.text,
         username: usernameController.text,
         senha: passwordController.text,
-        tipousuarioId: 3,
+        tipousuarioId: tipoUsuarioId,
         status: 1,
         usuarioId: UserStorage.getUserId(),
         familiaId: familyUser?.value,
@@ -173,7 +241,12 @@ class UserController extends GetxController {
 
       final token = UserStorage.getToken();
 
-      final mensagem = await repository.updateUser("Bearer $token", user);
+      final mensagem = await repository.updateUser(
+        "Bearer $token",
+        user,
+        File(imagePath),
+        oldImagePath.value,
+      );
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -181,7 +254,7 @@ class UserController extends GetxController {
         } else if (mensagem['message'] == 'ja_existe') {
           retorno = {
             "return": 1,
-            "message": "Já existe uam família com esse nome!"
+            "message": "Já existe uma família com esse nome!"
           };
         }
       }
@@ -243,6 +316,13 @@ class UserController extends GetxController {
     usernameController.text = selectedUser!.username.toString();
     passwordController.text = '';
     familyController.selectedFamily = selectedUser!.family;
+  }
+
+  void fillInPerfilFields() {
+    nameController.text = UserStorage.getUserName();
+    usernameController.text = UserStorage.getUserLogin();
+    passwordController.text = '';
+    photoUrlPath.value = UserStorage.getUserPhoto();
   }
 
   void clearAllUserTextFields() {

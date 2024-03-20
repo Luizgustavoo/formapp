@@ -147,7 +147,7 @@ class CreateUserModal extends StatelessWidget {
                       onPressed: () async {
                         Map<String, dynamic> retorno = tipoOperacao == 'insert'
                             ? await controller.saveUser()
-                            : await controller.updateUser(user!.id!);
+                            : await controller.updateUser(user!.id!, 3);
 
                         if (tipoOperacao == 'update' &&
                             retorno['return'] == 0 &&

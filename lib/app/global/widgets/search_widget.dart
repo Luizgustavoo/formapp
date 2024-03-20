@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 class SearchWidget extends StatefulWidget {
   final TextEditingController controller;
   final Function(BuildContext, int, String) onSearchPressed;
+  final bool isLoading; // Adicionando esta propriedade
 
-  const SearchWidget(
-      {super.key, required this.controller, required this.onSearchPressed});
+  const SearchWidget({
+    Key? key,
+    required this.controller,
+    required this.onSearchPressed,
+    required this.isLoading, // Passando isLoading como parâmetro
+  }) : super(key: key);
 
   @override
   State<SearchWidget> createState() => _SearchWidgetState();
@@ -19,7 +24,10 @@ class _SearchWidgetState extends State<SearchWidget> {
       child: TextField(
         controller: widget.controller,
         onChanged: (query) {
-          widget.onSearchPressed(context, 1, query);
+          // Verificar se não está carregando para evitar múltiplas pesquisas
+          if (!widget.isLoading) {
+            widget.onSearchPressed(context, 1, query);
+          }
         },
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
@@ -31,7 +39,10 @@ class _SearchWidgetState extends State<SearchWidget> {
           ),
           suffixIcon: IconButton(
             onPressed: () {
-              widget.onSearchPressed(context, 1, widget.controller.text);
+              // Verificar se não está carregando para evitar múltiplas pesquisas
+              if (!widget.isLoading) {
+                widget.onSearchPressed(context, 1, widget.controller.text);
+              }
             },
             icon: const Icon(
               Icons.search,

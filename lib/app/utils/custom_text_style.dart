@@ -110,6 +110,7 @@ class CustomTextStyle {
       fontSize: 14,
       color: Colors.black87,
       fontFamily: 'Poppinss',
+      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -118,6 +119,7 @@ class CustomTextStyle {
       fontSize: 14,
       color: Colors.white,
       fontFamily: 'Poppinss',
+      overflow: TextOverflow.ellipsis,
     );
   }
 

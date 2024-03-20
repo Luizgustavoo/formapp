@@ -1,9 +1,7 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
 import 'dart:async';
 
 import 'package:formapp/app/data/models/count_families_and_people.dart';
 import 'package:formapp/app/data/models/genre_model.dart';
-import 'package:formapp/app/data/repository/auth_repository.dart';
 import 'package:formapp/app/data/repository/home_repository.dart';
 import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
@@ -12,7 +10,7 @@ class HomeController extends GetxController
     with GetSingleTickerProviderStateMixin {
   var box;
   RxString username = "".obs;
-  final repository = Get.find<AuthRepository>();
+
   final homeRepository = Get.find<HomeRepository>();
   RxInt familyUser = 150.obs;
   RxInt allFamily = 0.obs;
@@ -38,6 +36,7 @@ class HomeController extends GetxController
     username.value = UserStorage.getUserName();
     startTimer();
     await getCountGenre();
+    clearTouchedIndex();
     super.onInit();
   }
 
@@ -55,12 +54,12 @@ class HomeController extends GetxController
     isNumActive.value = true;
   }
 
-  void logout() {
-    repository.getLogout();
-  }
-
   void updateCounter(int newValue) {
     allFamily.value = newValue;
+  }
+
+  void clearTouchedIndex() {
+    touchedIndex.value = -1;
   }
 
   getCountGenre() async {
@@ -89,18 +88,18 @@ class HomeController extends GetxController
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (counter < totalFamilies.value) {
         counter++;
       } else {
-        timer.cancel(); // Cancela o timer quando o contador atinge 50
+        timer.cancel();
       }
     });
-    timer2 = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+    timer2 = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (counter2 < totalPeoples.value) {
         counter2++;
       } else {
-        timer.cancel(); // Cancela o timer quando o contador atinge 50
+        timer2.cancel();
       }
     });
   }

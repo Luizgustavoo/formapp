@@ -16,16 +16,19 @@ class FamilyListModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white.withAlpha(190),
       appBar: AppBar(
         title: const Text('Listagem de Famílias'),
       ),
       body: Column(
         children: [
           SearchWidget(
-              controller: controller.searchController,
-              onSearchPressed: (context, a, query) {
-                controller.searchFamily(query);
-              }),
+            controller: controller.searchController,
+            onSearchPressed: (context, a, query) {
+              controller.searchFamily(query);
+            },
+            isLoading: controller.isLoadingFamilies.value,
+          ),
           Expanded(
               child: Obx(
             () => ListView.builder(

@@ -27,10 +27,11 @@ class FamilyApiClient {
         familyUrl =
             Uri.parse('$baseUrl/v1/familia/list-paginate/?page=$page&limit');
       } else if (UserStorage.getUserType() == 2) {
-        familyUrl = Uri.parse('$baseUrl/v1/familia/list/id/$id');
+        familyUrl = Uri.parse(
+            '$baseUrl/v1/familia/list-paginate/id/$id/?page=$page&limit');
       } else {
-        familyUrl =
-            Uri.parse('$baseUrl/v1/familia/list-familiar/id/$familiaId');
+        familyUrl = Uri.parse(
+            '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/?page=$page&limit');
       }
 
       var response = await httpClient.get(

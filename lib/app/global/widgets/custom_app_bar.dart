@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/message/message_controller.dart';
+import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart' as badges;
@@ -15,6 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       : const Size.fromHeight(160);
 
   final messageController = Get.put(MessageController());
+  final userController = Get.put(UserController());
 
   @override
   Widget build(BuildContext context) {
@@ -108,16 +110,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ))
                       ],
                     ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/perfil');
-                      },
-                      icon: const Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 28,
+                    if (ModalRoute.of(context)!.settings.name != '/perfil')
+                      IconButton(
+                        onPressed: () {
+                          userController.fillInPerfilFields();
+                          Get.toNamed('/perfil');
+                        },
+                        icon: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ],

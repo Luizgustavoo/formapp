@@ -78,7 +78,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               onPressed: () {
                                 showModalBottomSheet(
                                   context: context,
-                                  builder: (context) => CustomCameraModal(),
+                                  builder: (context) => CustomCameraModal(
+                                    tyContext: 'pessoa',
+                                  ),
                                 );
                               },
                             ),

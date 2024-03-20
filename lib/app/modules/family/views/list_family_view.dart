@@ -43,10 +43,12 @@ class FamilyView extends GetView<FamilyController> {
           children: [
             const SizedBox(height: 10),
             SearchWidget(
-                controller: controller.searchController,
-                onSearchPressed: (context, a, query) {
-                  controller.searchFamily(query);
-                }),
+              controller: controller.searchController,
+              onSearchPressed: (context, a, query) {
+                controller.searchFamily(query);
+              },
+              isLoading: controller.isLoadingFamilies.value,
+            ),
             Expanded(
                 child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollInfo) {
@@ -94,7 +96,16 @@ class FamilyView extends GetView<FamilyController> {
 
                         if (status == InternetStatus.disconnected &&
                             !family.familyLocal!) {
-                          return const ShimmerCustomFamilyCard();
+                          return ListView.builder(
+                            controller: controller.scrollController,
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: 5,
+                            itemBuilder: (context, index) {
+                              return const ShimmerCustomFamilyCard();
+                            },
+                          );
                         } else {
                           return AnimationConfiguration.staggeredList(
                             position: index,

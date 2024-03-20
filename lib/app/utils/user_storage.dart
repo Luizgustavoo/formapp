@@ -17,6 +17,13 @@ class UserStorage {
     return "";
   }
 
+  static String getUserPhoto() {
+    if (existUser()) {
+      return _box.read('auth')['user']['foto'] ?? "";
+    }
+    return "";
+  }
+
   static void clearBox() {
     if (existUser()) {
       _box.erase();

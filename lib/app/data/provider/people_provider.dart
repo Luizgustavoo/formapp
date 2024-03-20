@@ -6,6 +6,7 @@ import 'package:formapp/app/data/database_helper.dart';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/people_database_helper.dart';
 import 'package:formapp/app/utils/connection_service.dart';
+import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -15,15 +16,17 @@ class PeopleApiClient {
   final PeopleDatabaseHelper localDatabase = PeopleDatabaseHelper();
   final box = GetStorage('credenciado');
 
-  getAll(String token) async {
-    final id = box.read('auth')['user']['id'];
+  getAll(String token, {int? page}) async {
+    final id = UserStorage.getUserId();
     final familiaId = box.read('auth')['user']['familia_id'];
     try {
       Uri peopleUrl;
       if (familiaId != null) {
-        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list-familiar/id/$familiaId');
+        peopleUrl = Uri.parse(
+            '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit');
       } else {
-        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list/id/$id');
+        peopleUrl = Uri.parse(
+            '$baseUrl/v1/pessoa/list-paginate/id/$id/?page=$page&limit');
       }
 
       var response = await httpClient.get(
@@ -103,15 +106,14 @@ class PeopleApiClient {
 
         if (imageFile.path.isNotEmpty) {
           request.files.add(await http.MultipartFile.fromPath(
-            'foto', // Nome do campo que a API espera para a imagem
-            imageFile.path, // Caminho do arquivo da imagem
+            'foto',
+            imageFile.path,
           ));
         }
 
         request.headers.addAll({
           'Accept': 'application/json',
           'Authorization': token,
-          // Adicione outros cabeçalhos conforme necessário
         });
 
         var response = await request.send();
@@ -136,8 +138,6 @@ class PeopleApiClient {
           Get.offAllNamed('/login');
         }
       } else {
-        //SALVANDO DADOS LOCALMENTE
-
         final dbHelper = DatabaseHelper();
         dynamic retorno = await dbHelper.insertPeople(pessoa);
 
@@ -155,7 +155,6 @@ class PeopleApiClient {
           };
         }
 
-        // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
 
         return json.decode(jsonResponse);
@@ -198,8 +197,8 @@ class PeopleApiClient {
 
         if (imageFile.path.isNotEmpty && imageFile.path != oldImagePath) {
           request.files.add(await http.MultipartFile.fromPath(
-            'foto', // Nome do campo que a API espera para a imagem
-            imageFile.path, // Caminho do arquivo da imagem
+            'foto',
+            imageFile.path,
           ));
         }
 
@@ -207,7 +206,6 @@ class PeopleApiClient {
           "Content-Type": "multipart/form-data",
           'Accept': 'application/json',
           'Authorization': token,
-          // Adicione outros cabeçalhos conforme necessário
         });
 
         var response = await request.send();
@@ -232,8 +230,6 @@ class PeopleApiClient {
           Get.offAllNamed('/login');
         }
       } else {
-        //alterando a pessoa local
-
         final dbHelper = DatabaseHelper();
         dynamic retorno = await dbHelper.updatePeople(pessoa);
 
@@ -251,7 +247,6 @@ class PeopleApiClient {
           };
         }
 
-        // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
 
         return json.decode(jsonResponse);

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:formapp/app/modules/people/people_controller.dart';
+import 'package:formapp/app/modules/user/user_controller.dart';
 import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CustomCameraModal extends StatelessWidget {
   final PeopleController controller = Get.put(PeopleController());
-  CustomCameraModal({super.key});
+  final UserController userController = Get.put(UserController());
+  CustomCameraModal({super.key, required this.tyContext});
+
+  final String? tyContext;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,9 @@ class CustomCameraModal extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  controller.takePhoto(ImageSource.gallery);
+                  tyContext == 'pessoa'
+                      ? controller.takePhoto(ImageSource.gallery)
+                      : userController.takePhoto(ImageSource.gallery);
                   Get.back();
                 },
               ),
@@ -63,7 +69,9 @@ class CustomCameraModal extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  controller.takePhoto(ImageSource.camera);
+                  tyContext == 'pessoa'
+                      ? controller.takePhoto(ImageSource.camera)
+                      : userController.takePhoto(ImageSource.camera);
                   Get.back();
                 },
               ),

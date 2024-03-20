@@ -87,6 +87,11 @@ class PeopleController extends GetxController {
 
   final status = Get.find<InternetStatusProvider>().status;
 
+  final ScrollController scrollController = ScrollController();
+
+  int currentPage = 1;
+  bool isLoadingMore = false;
+
   Widget searchChild(x) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
         child:
@@ -95,24 +100,60 @@ class PeopleController extends GetxController {
 
   @override
   void onInit() async {
-    if (box.read('auth') != null) {
-      await Future.wait([
-        getMaritalStatus(),
-        getPeoples(),
-        getReligion(),
-        getChurch(),
-      ]);
+    if (UserStorage.existUser()) {
+      final internetStatusProvider = Get.find<InternetStatusProvider>();
+      final statusStream = internetStatusProvider.statusStream;
+      statusStream.listen((status) {
+        if (status == InternetStatus.connected) {
+          Future.wait([
+            getMaritalStatus(),
+            getPeoples(),
+            getReligion(),
+            getChurch(),
+          ]);
+        }
+      });
       if (Get.arguments != null) {
         var sexo = Get.arguments;
-        // Filtra a lista de pessoas pelo sexo
         RxList<People> pessoasFiltradas =
             listPeoples.where((pessoa) => pessoa.sexo == sexo).toList().obs;
-
-        // Atualiza a lista de pessoas com os resultados filtrados
         listPeoples.assignAll(pessoasFiltradas);
       }
+      scrollController.addListener(() {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
+          if (!isLoadingMore) {
+            loadMorePeoples().then((value) => isLoading.value = false);
+          }
+        }
+      });
+      getPeoples();
     }
+
     super.onInit();
+  }
+
+  Future<void> loadMorePeoples() async {
+    try {
+      isLoadingMore = true;
+      final token = UserStorage.getToken();
+      final nextPage = currentPage + 1;
+      final moreFamilies =
+          await repository.getAll("Bearer $token", page: nextPage);
+      if (moreFamilies.isNotEmpty) {
+        for (final family in moreFamilies) {
+          if (!listPeoples
+              .any((existingFamily) => existingFamily.id == family.id)) {
+            listPeoples.add(family);
+          }
+        }
+        currentPage = nextPage;
+      } else {}
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      isLoadingMore = false;
+    }
   }
 
   Future<void> searchPeople(String query) async {
@@ -131,11 +172,11 @@ class PeopleController extends GetxController {
     }
   }
 
-  Future<void> getPeoples() async {
+  Future<void> getPeoples({int? page}) async {
     isLoading.value = true;
     try {
       final token = UserStorage.getToken();
-      listPeoples.value = await repository.getAll("Bearer $token");
+      listPeoples.value = await repository.getAll("Bearer $token", page: page);
       update();
     } catch (e) {
       throw Exception(e);

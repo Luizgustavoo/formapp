@@ -26,13 +26,9 @@ class FamilyRepository {
         f.familyLocal = false;
         newFamilies.add(f);
       });
-
-      // Clear the existing list before adding new families
       if (page == 1) {
         list.clear();
       }
-
-      // Add families from the API response to the list if they don't already exist
       for (var family in newFamilies) {
         if (!list.contains(family)) {
           list.add(family);

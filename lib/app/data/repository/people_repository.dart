@@ -1,21 +1,30 @@
 import 'dart:io';
 import 'package:formapp/app/data/models/people_model.dart';
 import 'package:formapp/app/data/provider/people_provider.dart';
+import 'package:formapp/app/utils/connection_service.dart';
 
 class PeopleRepository {
   final PeopleApiClient apiClient = PeopleApiClient();
 
-  getAll(String token) async {
+  getAll(String token, {int? page}) async {
     List<People> list = <People>[];
 
-    var response = await apiClient.getAll(token);
-
-    if (response != null) {
-      response.forEach((e) {
-        list.add(People.fromJson(e));
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAll(token, page: page);
+      List<People> newPeoples = [];
+      response['data'].forEach((e) {
+        People p = People.fromJson(e);
+        newPeoples.add(p);
       });
+      if (page == 1) {
+        list.clear();
+      }
+      for (var family in newPeoples) {
+        if (!list.contains(family)) {
+          list.add(family);
+        }
+      }
     }
-
     return list;
   }
 
