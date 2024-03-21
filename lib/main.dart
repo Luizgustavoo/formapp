@@ -29,16 +29,17 @@ void main() async {
   await FirebaseApi().initNotifications();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    systemNavigationBarColor: Colors.transparent,
-  ));
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarIconBrightness: Brightness.dark));
 
   runApp(
     ShowCaseWidget(
       builder: Builder(
         builder: (context) => GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Inclusão Familiar',
+          title: 'UCIF',
           theme: appThemeData,
           initialRoute: Routes.INITIAL,
           getPages: AppPages.routes,

@@ -55,7 +55,7 @@ class PerfilView extends GetView<UserController> {
                                 bottom: 0,
                                 right: 0,
                                 child: Material(
-                                  color: const Color(0xFF123d68),
+                                  color: const Color(0xFF1C6399),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(80),
                                   ),

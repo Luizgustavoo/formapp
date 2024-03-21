@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:formapp/app/utils/custom_route.dart';
 
 final ThemeData appThemeData = ThemeData(
-  scaffoldBackgroundColor: const Color(0xFF123d68),
+  scaffoldBackgroundColor: const Color(0xFF1C6399),
   elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF123d68),
+    backgroundColor: const Color(0xFF1C6399),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5),
     ),
@@ -19,7 +19,7 @@ final ThemeData appThemeData = ThemeData(
   appBarTheme: const AppBarTheme(
     iconTheme: IconThemeData(color: Colors.white),
     centerTitle: true,
-    backgroundColor: Color(0xFF123d68),
+    backgroundColor: Color(0xFF1C6399),
     titleTextStyle: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.bold,

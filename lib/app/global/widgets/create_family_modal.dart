@@ -42,7 +42,7 @@ class CreateFamilyModal extends StatelessWidget {
               child: Divider(
                 height: 5,
                 thickness: 3,
-                color: Color(0xFF123d68),
+                color: Color(0xFF1C6399),
               ),
             ),
             const SizedBox(

@@ -36,7 +36,7 @@ class CustomUserCard extends StatelessWidget {
     bool editaFamiliar = user.id == UserStorage.getUserId();
 
     return Card(
-      color: user.tipousuarioId == 2 ? const Color(0xFF123d68) : null,
+      color: user.tipousuarioId == 2 ? const Color(0xFF1C6399) : null,
       child: ListTile(
         leading: (editaMaster || editaLider || editaFamiliar)
             ? IconButton(
@@ -57,8 +57,9 @@ class CustomUserCard extends StatelessWidget {
                     ),
                   );
                 },
-                icon: const Icon(Icons.edit_outlined,
-                    color: Colors.blue, size: 25),
+                icon: Icon(Icons.edit_outlined,
+                    color: user.tipousuarioId == 2 ? Colors.white : Colors.blue,
+                    size: 25),
               )
             : const CircleAvatar(
                 radius: 25,

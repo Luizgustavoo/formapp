@@ -27,7 +27,7 @@ class CustomCard extends StatelessWidget {
               width: MediaQuery.of(context).size.height * 0.12,
               height: MediaQuery.of(context).size.height * 0.12,
               decoration: BoxDecoration(
-                color: const Color(0xFF123d68),
+                color: const Color(0xFF1C6399),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.black, // Cor da borda

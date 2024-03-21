@@ -123,7 +123,7 @@ class CustomPeopleCard extends StatelessWidget {
                         const Divider(
                           height: 3,
                           thickness: 2,
-                          color: Color(0xFF123d68),
+                          color: Color(0xFF1C6399),
                         ),
                       ],
                     ),

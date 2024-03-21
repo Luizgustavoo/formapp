@@ -19,7 +19,7 @@ class CustomTextStyle {
 
   static TextStyle? appBarSubtitle(BuildContext context) {
     return const TextStyle(
-        fontSize: 14,
+        fontSize: 15,
         color: Colors.white,
         fontFamily: 'Poppinss',
         overflow: TextOverflow.clip);
@@ -68,7 +68,7 @@ class CustomTextStyle {
   static TextStyle? homeCount(BuildContext context) {
     return const TextStyle(
         fontSize: 14,
-        color: Color(0xFF123d68),
+        color: Color(0xFF1C6399),
         fontFamily: 'Poppinss',
         overflow: TextOverflow.clip);
   }

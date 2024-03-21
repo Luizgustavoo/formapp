@@ -217,7 +217,7 @@ class FamilyView extends GetView<FamilyController> {
       ),
       floatingActionButton: UserStorage.getUserType() < 3
           ? FloatingActionButton(
-              backgroundColor: const Color(0xFF123d68),
+              backgroundColor: const Color(0xFF1C6399),
               onPressed: () {
                 controller.clearAllFamilyTextFields();
                 controller.typeOperation.value = 1;

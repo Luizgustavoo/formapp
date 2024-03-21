@@ -12,14 +12,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => showPadding == false
-      ? const Size.fromHeight(100)
-      : const Size.fromHeight(160);
+      ? Size.fromHeight(Get.height * 0.1)
+      : Size.fromHeight(Get.height * 0.2);
 
   final messageController = Get.put(MessageController());
   final userController = Get.put(UserController());
 
   @override
   Widget build(BuildContext context) {
+    final currentTime = DateTime.now();
+    String greeting = getGreeting(currentTime);
     messageController.getMessages();
 
     return AppBar(
@@ -54,20 +56,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     Image.asset(
                       'assets/images/logo_horizontal.png',
-                      width: 50,
-                      height: 50,
+                      width: Get.width * 0.25,
+                      height: Get.height * 0.1,
                     ),
-                    const SizedBox(width: 5),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Adbras',
-                            style: CustomTextStyle.appBarSubtitle(context)),
-                        Text('Projeto união político',
-                            style: CustomTextStyle.appBarSubtitle(context)),
-                      ],
-                    ),
+                    const SizedBox(width: 15),
                   ],
                 ),
                 const SizedBox(width: 10),
@@ -146,7 +138,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       Row(
                         children: [
-                          Text('Seja bem vindo de volta!',
+                          Text('$greeting, seja bem vindo!',
                               style: CustomTextStyle.appBarSubtitle(context)),
                         ],
                       ),
@@ -159,6 +151,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
     );
+  }
+
+  String getGreeting(DateTime currentTime) {
+    String greeting = '';
+
+    if (currentTime.hour < 12) {
+      greeting = 'Bom dia';
+    } else if (currentTime.hour < 18) {
+      greeting = 'Boa tarde';
+    } else {
+      greeting = 'Boa noite';
+    }
+
+    return greeting;
   }
 }
 

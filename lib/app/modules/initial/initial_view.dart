@@ -11,7 +11,7 @@ class InitialView extends GetView<InitialController> {
   @override
   Widget build(BuildContext context) {
     return EasySplashScreen(
-      logoWidth: 100,
+      logoWidth: 130,
       loaderColor: Colors.black54,
       logo: Image.asset(
         'assets/images/logo_splash.png',

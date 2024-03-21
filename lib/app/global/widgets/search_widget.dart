@@ -46,7 +46,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             },
             icon: const Icon(
               Icons.search,
-              color: Color(0xFF123d68),
+              color: Color(0xFF1C6399),
             ),
           ),
         ),

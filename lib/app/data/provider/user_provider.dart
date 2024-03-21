@@ -25,7 +25,6 @@ class UserApiClient {
           "Authorization": token,
         },
       );
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&

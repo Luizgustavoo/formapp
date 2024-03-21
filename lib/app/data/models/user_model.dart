@@ -14,6 +14,7 @@ class User {
   String? tokenFirebase;
   dynamic familiaId;
   Family? family;
+  dynamic foto;
 
   User({
     this.id,
@@ -29,6 +30,7 @@ class User {
     this.tokenFirebase,
     this.familiaId,
     this.family,
+    this.foto,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class User {
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     familiaId = json['familia_id'] as dynamic;
     family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
+    foto = json['foto'];
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +66,7 @@ class User {
       data['usuario'] = user!.toJson();
     }
     data['familia_id'] = familiaId;
+    data['foto'] = foto;
     return data;
   }
 }
