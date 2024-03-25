@@ -12,20 +12,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => showPadding == false
-      ? Size.fromHeight(Get.height * 0.1)
+      ? Size.fromHeight(Get.height * 0.15)
       : Size.fromHeight(Get.height * 0.2);
 
   final messageController = Get.put(MessageController());
   final userController = Get.put(UserController());
+  final RxString greeting = ''.obs;
 
   @override
   Widget build(BuildContext context) {
     final currentTime = DateTime.now();
-    String greeting = getGreeting(currentTime);
+    greeting.value = getGreeting(currentTime);
     messageController.getMessages();
 
+    ever(greeting, (_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.forceAppUpdate();
+      });
+    });
+
     return AppBar(
-      elevation: 1,
+      elevation: 0,
       automaticallyImplyLeading: false,
       flexibleSpace: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
