@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/models/family_service_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/global/widgets/family_list_modal.dart';
-import 'package:formapp/app/global/widgets/message_service_modal.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/global/widgets/family_list_modal.dart';
+import 'package:ucif/app/global/widgets/message_service_modal.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 // ignore: must_be_immutable
 class CustomPeopleCard extends StatelessWidget {

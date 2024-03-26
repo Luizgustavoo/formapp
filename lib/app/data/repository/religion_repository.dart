@@ -1,7 +1,7 @@
-import 'package:formapp/app/data/models/religion_model.dart';
-import 'package:formapp/app/data/provider/religion_provider.dart';
-import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ucif/app/data/models/religion_model.dart';
+import 'package:ucif/app/data/provider/religion_provider.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 
 class ReligionRepository {
   final ReligionApiClient apiClient = ReligionApiClient();

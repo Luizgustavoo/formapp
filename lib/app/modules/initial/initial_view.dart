@@ -1,9 +1,9 @@
 import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/initial/initial_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 
 import 'package:get/get.dart';
+import 'package:ucif/app/modules/initial/initial_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class InitialView extends GetView<InitialController> {
   const InitialView({super.key});

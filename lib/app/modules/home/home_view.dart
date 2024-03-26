@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/global/widgets/custom_app_bar.dart';
-import 'package:formapp/app/global/widgets/custom_graphic.dart';
-import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
-import 'package:formapp/app/utils/user_storage.dart';
-import 'package:get/get.dart';
 
-import 'package:formapp/app/global/widgets/custom_card.dart';
+import 'package:get/get.dart';
+import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_card.dart';
+import 'package:ucif/app/global/widgets/custom_graphic.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);

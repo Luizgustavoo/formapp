@@ -1,4 +1,4 @@
-import 'package:formapp/app/data/models/user_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 
 class Church {
   int? id;

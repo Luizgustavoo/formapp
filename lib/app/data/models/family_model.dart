@@ -1,5 +1,5 @@
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 
 class Family {
   int? id;

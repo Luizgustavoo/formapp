@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/family_service_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class MessageServiceModal extends StatelessWidget {
   MessageServiceModal(

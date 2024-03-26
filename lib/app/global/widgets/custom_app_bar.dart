@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({Key? key, this.userName, this.showPadding}) : super(key: key);
@@ -11,9 +11,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? showPadding;
 
   @override
-  Size get preferredSize => showPadding == false
-      ? Size.fromHeight(Get.height * 0.15)
-      : Size.fromHeight(Get.height * 0.2);
+  Size get preferredSize {
+    double factor = 0.2; // Ajuste esse fator conforme necessário
+    if (showPadding == false) {
+      factor = 0.15; // Ajuste esse fator conforme necessário
+    }
+    return Size.fromHeight(Get.height * factor);
+  }
 
   final messageController = Get.put(MessageController());
   final userController = Get.put(UserController());

@@ -1,7 +1,7 @@
-import 'package:formapp/app/data/models/church_model.dart';
-import 'package:formapp/app/data/provider/church_provider.dart';
-import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ucif/app/data/models/church_model.dart';
+import 'package:ucif/app/data/provider/church_provider.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 
 class ChurchRepository {
   final ChurchApiClient apiClient = ChurchApiClient();

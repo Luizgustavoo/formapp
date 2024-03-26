@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:formapp/app/data/models/count_families_and_people.dart';
-import 'package:formapp/app/data/models/genre_model.dart';
-import 'package:formapp/app/data/repository/home_repository.dart';
-import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/count_families_and_people.dart';
+import 'package:ucif/app/data/models/genre_model.dart';
+import 'package:ucif/app/data/repository/home_repository.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeController extends GetxController
     with GetSingleTickerProviderStateMixin {

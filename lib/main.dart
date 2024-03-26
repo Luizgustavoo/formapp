@@ -1,16 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:formapp/app/data/provider/internet_status_provider.dart';
-import 'package:formapp/app/data/repository/marital_status_repository.dart';
-import 'package:formapp/app/routes/app_pages.dart';
-import 'package:formapp/app/routes/app_routes.dart';
-import 'package:formapp/app/theme/app_theme.dart';
-import 'package:formapp/app/utils/firebase_push_notification.dart';
-import 'package:formapp/firebase_options.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/data/repository/marital_status_repository.dart';
+import 'package:ucif/app/routes/app_pages.dart';
+import 'package:ucif/app/routes/app_routes.dart';
+import 'package:ucif/app/theme/app_theme.dart';
+import 'package:ucif/app/utils/firebase_push_notification.dart';
+import 'package:ucif/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

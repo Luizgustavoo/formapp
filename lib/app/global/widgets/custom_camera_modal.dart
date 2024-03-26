@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
+
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CustomCameraModal extends StatelessWidget {
   final PeopleController controller = Get.put(PeopleController());

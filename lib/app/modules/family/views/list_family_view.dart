@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:formapp/app/data/provider/internet_status_provider.dart';
-import 'package:formapp/app/global/widgets/create_family_modal.dart';
-import 'package:formapp/app/global/widgets/custom_app_bar.dart';
-import 'package:formapp/app/global/widgets/message_modal.dart';
-import 'package:formapp/app/global/widgets/message_service_modal.dart';
-import 'package:formapp/app/global/widgets/show_case.dart';
-import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/modules/people/views/list_people_view.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/user_storage.dart';
-import 'package:get/get.dart';
 
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/global/widgets/custom_family_card.dart';
-import 'package:formapp/app/global/widgets/search_widget.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
+import 'package:get/get.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/global/widgets/create_family_modal.dart';
+import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_family_card.dart';
+import 'package:ucif/app/global/widgets/message_modal.dart';
+import 'package:ucif/app/global/widgets/message_service_modal.dart';
+import 'package:ucif/app/global/widgets/search_widget.dart';
+import 'package:ucif/app/global/widgets/show_case.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
+
+import 'package:ucif/app/modules/people/views/list_people_view.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 import '../../../global/shimmer/shimmer_custom_family_card.dart';
 

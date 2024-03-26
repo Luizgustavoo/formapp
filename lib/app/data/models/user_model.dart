@@ -1,4 +1,4 @@
-import 'package:formapp/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_model.dart';
 
 class User {
   int? id;

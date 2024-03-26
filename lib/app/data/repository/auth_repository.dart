@@ -1,5 +1,5 @@
-import 'package:formapp/app/data/models/auth_model.dart';
-import 'package:formapp/app/data/provider/auth_provider.dart';
+import 'package:ucif/app/data/models/auth_model.dart';
+import 'package:ucif/app/data/provider/auth_provider.dart';
 
 class AuthRepository {
   final AuthApiClient apiClient = AuthApiClient();

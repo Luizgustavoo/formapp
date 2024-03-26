@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/data/provider/internet_status_provider.dart';
-import 'package:formapp/app/global/shimmer/shimmer_custom_user_card.dart';
-import 'package:formapp/app/global/widgets/custom_app_bar.dart';
-import 'package:formapp/app/global/widgets/custom_user_card.dart';
-import 'package:formapp/app/global/widgets/search_widget.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/global/shimmer/shimmer_custom_user_card.dart';
+import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_user_card.dart';
+import 'package:ucif/app/global/widgets/search_widget.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class ListUserView extends GetView<UserController> {
   ListUserView({super.key});

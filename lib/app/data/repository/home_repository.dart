@@ -1,6 +1,6 @@
-import 'package:formapp/app/data/models/count_families_and_people.dart';
-import 'package:formapp/app/data/models/genre_model.dart';
-import 'package:formapp/app/data/provider/home_provider.dart';
+import 'package:ucif/app/data/models/count_families_and_people.dart';
+import 'package:ucif/app/data/models/genre_model.dart';
+import 'package:ucif/app/data/provider/home_provider.dart';
 
 class HomeRepository {
   final HomeApiClient apiClient = HomeApiClient();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class MessageModal extends StatelessWidget {
   MessageModal({

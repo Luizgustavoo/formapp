@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/data/provider/user_provider.dart';
-import 'package:formapp/app/utils/connection_service.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/user_provider.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 
 class UserRepository {
   final UserApiClient apiClient = UserApiClient();

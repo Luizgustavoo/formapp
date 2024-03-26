@@ -1,7 +1,7 @@
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/message_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/data/provider/message_provider.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/message_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/message_provider.dart';
 
 class MessageRepository {
   final MessageApiClient apiClient = MessageApiClient();

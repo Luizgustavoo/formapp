@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBm0aP5l9O0x76R6zQC5zbwixnxUy5U28s',
-    appId: '1:583893302729:android:832bd069c11c4a1d817c18',
-    messagingSenderId: '583893302729',
-    projectId: 'credenciado-943e8',
-    storageBucket: 'credenciado-943e8.appspot.com',
+    apiKey: 'AIzaSyCrz1Zfq68eam5jKG7G1c1Ia3U_AIWNmnc',
+    appId: '1:357309654279:android:a46ec0d512772e1b5051a2',
+    messagingSenderId: '357309654279',
+    projectId: 'br-com-ucif-57b91',
+    storageBucket: 'br-com-ucif-57b91.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBsmh9kvW4p_BbU59Spw8TQfSqs9qSZyxc',
-    appId: '1:583893302729:ios:3814e0ceea28d48e817c18',
-    messagingSenderId: '583893302729',
-    projectId: 'credenciado-943e8',
-    storageBucket: 'credenciado-943e8.appspot.com',
-    iosBundleId: 'br.com.wip.formapp',
+    apiKey: 'AIzaSyBB_4Xei5vIfFBNIUt-xsefC5REytf91xs',
+    appId: '1:357309654279:ios:62ac950fbdb747c05051a2',
+    messagingSenderId: '357309654279',
+    projectId: 'br-com-ucif-57b91',
+    storageBucket: 'br-com-ucif-57b91.appspot.com',
+    iosBundleId: 'br.com.ucif',
   );
 }

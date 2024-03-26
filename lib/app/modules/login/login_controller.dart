@@ -1,15 +1,16 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/auth_model.dart';
-import 'package:formapp/app/data/repository/auth_repository.dart';
-import 'package:formapp/app/data/repository/church_repository.dart';
-import 'package:formapp/app/data/repository/marital_status_repository.dart';
-import 'package:formapp/app/data/repository/religion_repository.dart';
-import 'package:formapp/app/global/storage_manager.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/user_storage.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ucif/app/data/models/auth_model.dart';
+import 'package:ucif/app/data/repository/auth_repository.dart';
+import 'package:ucif/app/data/repository/church_repository.dart';
+import 'package:ucif/app/data/repository/marital_status_repository.dart';
+import 'package:ucif/app/data/repository/religion_repository.dart';
+import 'package:ucif/app/global/storage_manager.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class LoginController extends GetxController {
   RxBool isPasswordVisible = false.obs;

@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/login/login_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/modules/login/login_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});

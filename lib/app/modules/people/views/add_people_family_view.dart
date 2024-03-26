@@ -2,13 +2,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/models/family_model.dart';
 import 'package:get/get.dart';
 
-import 'package:formapp/app/global/widgets/custom_camera_modal.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/global/widgets/custom_camera_modal.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
   const AddPeopleFamilyView({

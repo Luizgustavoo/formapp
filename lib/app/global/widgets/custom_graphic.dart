@@ -1,9 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:formapp/app/data/models/genre_model.dart';
-import 'package:formapp/app/modules/home/home_controller.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/genre_model.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
 
 class GraphicWidget extends GetView<HomeController> {
   const GraphicWidget({Key? key}) : super(key: key);

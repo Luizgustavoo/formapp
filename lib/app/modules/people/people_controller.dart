@@ -1,25 +1,26 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/church_model.dart';
-import 'package:formapp/app/data/models/marital_status_model.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/family_service_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/models/religion_model.dart';
-import 'package:formapp/app/data/provider/internet_status_provider.dart';
-import 'package:formapp/app/data/repository/church_repository.dart';
-import 'package:formapp/app/data/repository/family_service_repository.dart';
-import 'package:formapp/app/data/repository/marital_status_repository.dart';
-import 'package:formapp/app/data/repository/people_repository.dart';
-import 'package:formapp/app/data/repository/religion_repository.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/utils/connection_service.dart';
-import 'package:formapp/app/utils/format_validator.dart';
-import 'package:formapp/app/utils/user_storage.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ucif/app/data/models/church_model.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/marital_status_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/religion_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/data/repository/church_repository.dart';
+import 'package:ucif/app/data/repository/family_service_repository.dart';
+import 'package:ucif/app/data/repository/marital_status_repository.dart';
+import 'package:ucif/app/data/repository/people_repository.dart';
+import 'package:ucif/app/data/repository/religion_repository.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/format_validator.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();

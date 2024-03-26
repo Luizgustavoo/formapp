@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "583893302729",
-    "project_id": "credenciado-943e8",
-    "storage_bucket": "credenciado-943e8.appspot.com"
+    "project_number": "357309654279",
+    "project_id": "br-com-ucif-57b91",
+    "storage_bucket": "br-com-ucif-57b91.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:583893302729:android:832bd069c11c4a1d817c18",
+        "mobilesdk_app_id": "1:357309654279:android:a46ec0d512772e1b5051a2",
         "android_client_info": {
-          "package_name": "br.com.wip.formapp"
+          "package_name": "br.com.ucif"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBm0aP5l9O0x76R6zQC5zbwixnxUy5U28s"
+          "current_key": "AIzaSyCrz1Zfq68eam5jKG7G1c1Ia3U_AIWNmnc"
         }
       ],
       "services": {

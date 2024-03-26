@@ -3,14 +3,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/global/widgets/custom_app_bar.dart';
-import 'package:formapp/app/global/widgets/custom_camera_modal.dart';
-import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
-import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_camera_modal.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class PerfilView extends GetView<UserController> {
   PerfilView({Key? key}) : super(key: key);

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/message_model.dart';
-import 'package:formapp/app/global/widgets/custom_app_bar.dart';
-import 'package:formapp/app/global/widgets/custom_card_message.dart';
-import 'package:formapp/app/modules/message/message_controller.dart';
+
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/message_model.dart';
+import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_card_message.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
 
 class MessageView extends GetView<MessageController> {
   const MessageView({super.key});
