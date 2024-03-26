@@ -94,7 +94,7 @@ class CustomPeopleCard extends StatelessWidget {
                             ? const AssetImage(
                                 'assets/images/default_avatar.jpg')
                             : NetworkImage(
-                                    '$urlImagem/public/storage/${people.foto}')
+                                    '$urlImagem/storage/app/public/${people.foto}')
                                 as ImageProvider,
                       ),
                       title: Text(people.nome!.toUpperCase(),

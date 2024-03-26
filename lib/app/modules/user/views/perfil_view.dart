@@ -45,7 +45,7 @@ class PerfilView extends GetView<UserController> {
                               ? FileImage(File(controller.photoUrlPath.value))
                               : (controller.photoUrlPath.value.isNotEmpty
                                   ? NetworkImage(
-                                          '$urlImagem/public/storage/${controller.photoUrlPath.value}')
+                                          '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
                                       as ImageProvider<Object>?
                                   : const AssetImage(
                                       'assets/images/default_avatar.jpg')),
