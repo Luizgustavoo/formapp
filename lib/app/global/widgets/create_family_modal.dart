@@ -237,9 +237,9 @@ class CreateFamilyModal extends StatelessWidget {
                   style: TextStyle(),
                 ),
                 Obx(() => Switch(
-                      activeColor: Colors.orange.shade700,
-                      inactiveThumbColor: Colors.orange.shade500,
-                      inactiveTrackColor: Colors.orange.shade100,
+                      activeColor: Colors.blue.shade700,
+                      inactiveThumbColor: Colors.blue.shade500,
+                      inactiveTrackColor: Colors.blue.shade100,
                       value: controller.residenceOwn.value,
                       onChanged: (value) {
                         controller.residenceOwn.value = value;

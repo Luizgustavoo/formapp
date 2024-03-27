@@ -164,29 +164,6 @@ class CustomFamilyCard extends StatelessWidget {
                                 if (!local) ...[
                                   index == 0
                                       ? ShowCaseView(
-                                          title: 'MENSAGEM',
-                                          description:
-                                              'Aqui você pode mandar mensagem para todos os integrantes da família.',
-                                          border: const CircleBorder(),
-                                          globalKey:
-                                              familyController.messageFamily,
-                                          child: IconButton(
-                                            iconSize: 22,
-                                            onPressed: messageMember,
-                                            icon: const Icon(
-                                                Icons.email_outlined),
-                                          ),
-                                        )
-                                      : IconButton(
-                                          iconSize: 22,
-                                          onPressed: messageMember,
-                                          icon:
-                                              const Icon(Icons.email_outlined),
-                                        ),
-                                ],
-                                if (!local) ...[
-                                  index == 0
-                                      ? ShowCaseView(
                                           title: 'ATENDIMENTO',
                                           description:
                                               'Aqui você pode realizar atendimento para a família.',
