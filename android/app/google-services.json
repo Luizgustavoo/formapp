@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:357309654279:android:c7658c55762220165051a2",
+        "mobilesdk_app_id": "1:357309654279:android:41b161c0036582ff5051a2",
         "android_client_info": {
-          "package_name": "br.com.app.ucif"
+          "package_name": "br.com.ucif.app"
         }
       },
       "oauth_client": [],

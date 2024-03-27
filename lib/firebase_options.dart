@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCrz1Zfq68eam5jKG7G1c1Ia3U_AIWNmnc',
-    appId: '1:357309654279:android:c7658c55762220165051a2',
+    appId: '1:357309654279:android:41b161c0036582ff5051a2',
     messagingSenderId: '357309654279',
     projectId: 'br-com-ucif-57b91',
     storageBucket: 'br-com-ucif-57b91.appspot.com',
@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBB_4Xei5vIfFBNIUt-xsefC5REytf91xs',
-    appId: '1:357309654279:ios:7e5564ddbad64ed15051a2',
+    appId: '1:357309654279:ios:f70974ddb249890c5051a2',
     messagingSenderId: '357309654279',
     projectId: 'br-com-ucif-57b91',
     storageBucket: 'br-com-ucif-57b91.appspot.com',
-    iosBundleId: 'br.com.app.ucif',
+    iosBundleId: 'br.com.ucif.app',
   );
 }
