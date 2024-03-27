@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>br.com.ucif</string>
+	<string>br.com.app.ucif</string>
 	<key>PROJECT_ID</key>
 	<string>br-com-ucif-57b91</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:357309654279:ios:62ac950fbdb747c05051a2</string>
+	<string>1:357309654279:ios:7e5564ddbad64ed15051a2</string>
 </dict>
 </plist>
