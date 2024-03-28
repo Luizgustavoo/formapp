@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBB_4Xei5vIfFBNIUt-xsefC5REytf91xs</string>
+	<string>AIzaSyCPiQSnEWg8JY5G0lzyONnV_XBPNzAMNRs</string>
 	<key>GCM_SENDER_ID</key>
-	<string>357309654279</string>
+	<string>762390064615</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>br.com.ucif.app</string>
 	<key>PROJECT_ID</key>
-	<string>br-com-ucif-57b91</string>
+	<string>br-com-app-ucif</string>
 	<key>STORAGE_BUCKET</key>
-	<string>br-com-ucif-57b91.appspot.com</string>
+	<string>br-com-app-ucif.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:357309654279:ios:f70974ddb249890c5051a2</string>
+	<string>1:762390064615:ios:592584edb0c7795fcce142</string>
 </dict>
 </plist>
