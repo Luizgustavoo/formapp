@@ -52,7 +52,6 @@ class FamilyController extends GetxController
   dynamic mensagem;
 
   GlobalKey editFamily = GlobalKey();
-  GlobalKey messageFamily = GlobalKey();
   GlobalKey addFamily = GlobalKey();
   GlobalKey supportFamily = GlobalKey();
   GlobalKey addMember = GlobalKey();
@@ -156,7 +155,6 @@ class FamilyController extends GetxController
         ShowCaseWidget.of(Get.context!).startShowCase([
           addFamily,
           editFamily,
-          messageFamily,
           supportFamily,
           addMember,
           disableFamily,

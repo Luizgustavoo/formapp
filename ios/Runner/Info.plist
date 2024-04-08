@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -32,9 +36,9 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>O Aplicativo precisa de permissão para acessar a câmera. Isso é necessário para realizar o registro.</string>
+	<string>O aplicativo precisa de permissão para acessar a câmera. Isso será necessário para cadastrar uma pessoa ou para alterar sua foto de perfil.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>O aplicativo precisa de permissão para acessar sua galeria e biblioteca de imagens.</string>
+	<string>A aplicação requer acesso à sua galeria e biblioteca de imagens para possibilitar a seleção de fotos previamente capturadas.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

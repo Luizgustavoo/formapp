@@ -12,9 +12,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    double factor = 0.2; // Ajuste esse fator conforme necessário
+    double factor = 0.25; // Ajuste esse fator conforme necessário
     if (showPadding == false) {
-      factor = 0.15; // Ajuste esse fator conforme necessário
+      factor = 0.18; // Ajuste esse fator conforme necessário
     }
     return Size.fromHeight(Get.height * factor);
   }
