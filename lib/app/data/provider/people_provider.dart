@@ -77,7 +77,8 @@ class PeopleApiClient {
   insertPeople(
       String token, People pessoa, File imageFile, bool peopleLocal) async {
     try {
-      if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/create');
 
         var request = http.MultipartRequest('POST', pessoaUrl);
@@ -120,6 +121,8 @@ class PeopleApiClient {
 
         var responseStream = await response.stream.bytesToString();
         var httpResponse = http.Response(responseStream, response.statusCode);
+
+        print(json.decode(httpResponse.body));
 
         if (response.statusCode == 200) {
           return json.decode(httpResponse.body);

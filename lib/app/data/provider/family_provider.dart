@@ -84,9 +84,10 @@ class FamilyApiClient {
     return null;
   }
 
-  insertFamily(String token, Family family, bool familyLocal) async {
+  insertFamily(String token, Family family) async {
     try {
-      if (await ConnectionStatus.verifyConnection() && !familyLocal) {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected) {
         //SALVANDO DADOS NA API
         var familyUrl = Uri.parse('$baseUrl/v1/familia/create');
 

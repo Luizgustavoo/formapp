@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ucif/app/data/models/count_families_and_people.dart';
 import 'package:ucif/app/data/models/genre_model.dart';
 import 'package:ucif/app/data/repository/home_repository.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeController extends GetxController
@@ -30,12 +31,16 @@ class HomeController extends GetxController
 
   @override
   void onInit() async {
-    await getCountFamiliesAndPeople();
-    startTimer();
-    username.value = UserStorage.getUserName();
-    startTimer();
-    await getCountGenre();
-    clearTouchedIndex();
+    bool isConnected = await ConnectionStatus.verifyConnection();
+    if (isConnected) {
+      await getCountFamiliesAndPeople();
+      startTimer();
+      username.value = UserStorage.getUserName();
+      startTimer();
+      await getCountGenre();
+      clearTouchedIndex();
+    }
+
     super.onInit();
   }
 

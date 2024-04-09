@@ -43,27 +43,7 @@ class MessageApiClient {
         box.erase();
         Get.offAllNamed('/login');
       }
-    } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-    }
+    } catch (err) {}
     return null;
   }
 

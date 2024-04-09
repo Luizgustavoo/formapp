@@ -174,7 +174,7 @@ class FamilyController extends GetxController
     box.remove('showcaseShown_$userId');
   }
 
-  Future<Map<String, dynamic>> saveFamily(bool familyLocal) async {
+  Future<Map<String, dynamic>> saveFamily() async {
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
         nome: nomeFamiliaController.text,
@@ -192,8 +192,7 @@ class FamilyController extends GetxController
 
       final token = UserStorage.getToken();
 
-      mensagem =
-          await repository.insertFamily("Bearer $token", family, familyLocal);
+      mensagem = await repository.insertFamily("Bearer $token", family);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};

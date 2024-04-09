@@ -102,6 +102,16 @@ class PeopleController extends GetxController {
   @override
   void onInit() async {
     if (UserStorage.existUser()) {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected) {
+        Future.wait([
+          getMaritalStatus(),
+          getPeoples(),
+          getReligion(),
+          getChurch(),
+        ]);
+      }
+
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;
       statusStream.listen((status) {
@@ -114,6 +124,7 @@ class PeopleController extends GetxController {
           ]);
         }
       });
+
       if (Get.arguments != null) {
         var sexo = Get.arguments;
         RxList<People> pessoasFiltradas =
@@ -128,6 +139,7 @@ class PeopleController extends GetxController {
           }
         }
       });
+
       getPeoples();
     }
 
@@ -217,6 +229,9 @@ class PeopleController extends GetxController {
 
       mensagem = await repository.insertPeople(
           "Bearer $token", pessoa, File(photoUrlPath.value), peopleLocal);
+
+      print(mensagem);
+
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};

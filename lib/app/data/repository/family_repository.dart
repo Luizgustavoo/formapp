@@ -38,9 +38,9 @@ class FamilyRepository {
     return list;
   }
 
-  insertFamily(String token, Family family, bool familyLocal) async {
+  insertFamily(String token, Family family) async {
     try {
-      var response = await apiClient.insertFamily(token, family, familyLocal);
+      var response = await apiClient.insertFamily(token, family);
 
       return response;
     } catch (e) {

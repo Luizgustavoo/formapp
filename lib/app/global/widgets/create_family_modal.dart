@@ -64,9 +64,12 @@ class CreateFamilyModal extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Focus(
-              onFocusChange: (hasFocus) {
+              onFocusChange: (hasFocus) async {
                 if (!hasFocus) {
-                  controller.searchCEP();
+                  bool isConnected = await ConnectionStatus.verifyConnection();
+                  if (isConnected) {
+                    controller.searchCEP();
+                  }
                 }
               },
               child: TextFormField(
@@ -263,13 +266,8 @@ class CreateFamilyModal extends StatelessWidget {
                     )),
                 ElevatedButton(
                     onPressed: () async {
-                      bool familiaLocal = false;
-                      if (await ConnectionStatus.verifyConnection()) {
-                        familiaLocal = true;
-                      }
-
                       Map<String, dynamic> retorno = tipoOperacao == 'insert'
-                          ? await controller.saveFamily(familiaLocal)
+                          ? await controller.saveFamily()
                           : await controller.updateFamily(
                               family!.id!, family!.familyLocal!);
 
