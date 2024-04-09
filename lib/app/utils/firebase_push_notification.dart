@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 Future<void> handleBackgroundMessage(message) async {
   FirebaseMessaging.instance.getInitialMessage().then(
@@ -13,7 +14,8 @@ Future<void> handleBackgroundMessage(message) async {
       final Map<String, dynamic>? data = remoteMessage?.data;
       if (data != null &&
           data.containsKey('click_action') &&
-          data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK') {
+          data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+          UserStorage.existUser()) {
         Get.toNamed('/list-message');
       }
     },
@@ -34,7 +36,7 @@ class FirebaseApi {
   final _localNotifications = FlutterLocalNotificationsPlugin();
 
   void handleMessage(RemoteMessage? message) {
-    if (message == null) return;
+    if (message == null || !UserStorage.existUser()) return;
 
     messageController.getMessages();
 

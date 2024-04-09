@@ -14,6 +14,16 @@ class AuthRepository {
     }
   }
 
+  getSignUp(String nome, String username, String senha) async {
+    var json = await apiClient.getSignUp(nome, username, senha);
+
+    if (json != null) {
+      return json;
+    } else {
+      return null;
+    }
+  }
+
   Future<void> getLogout() async {
     try {
       await apiClient.getLogout();

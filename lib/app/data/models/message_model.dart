@@ -9,22 +9,22 @@ class Message {
   int? remetenteId;
   String? remetenteNome;
   int? destinatario;
+  String? solicitacao;
 
-  Message({
-    this.id,
-    this.titulo,
-    this.descricao,
-    this.usuarioId,
-    this.dataCadastro,
-    this.dataUpdate,
-    this.remetenteId,
-    this.remetenteNome,
-    this.destinatario,
-  });
+  Message(
+      {this.id,
+      this.titulo,
+      this.descricao,
+      this.usuarioId,
+      this.dataCadastro,
+      this.dataUpdate,
+      this.remetenteId,
+      this.remetenteNome,
+      this.destinatario,
+      this.solicitacao});
 
   Message.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-
     titulo = json['titulo'];
     descricao = json['descricao'];
     usuarioId = json['usuario_id'];
@@ -34,6 +34,7 @@ class Message {
     remetenteId = json['remetente_id'];
     remetenteNome = json['remetente_nome'];
     destinatario = json['destinatario'];
+    solicitacao = json['solicitacao'];
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +49,7 @@ class Message {
     data['remetente_id'] = remetenteId;
     data['remetente_nome'] = remetenteNome;
     data['destinatario'] = destinatario;
+    data['solicitacao'] = solicitacao;
     return data;
   }
 }

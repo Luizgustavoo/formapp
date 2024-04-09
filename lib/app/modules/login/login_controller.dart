@@ -14,6 +14,7 @@ import 'package:ucif/app/utils/user_storage.dart';
 
 class LoginController extends GetxController {
   RxBool isPasswordVisible = false.obs;
+  RxBool confirmPasswordVisible = false.obs;
   RxBool rememberMe = false.obs;
   RxInt onToggle = 0.obs;
   RxBool loading = false.obs;
@@ -21,23 +22,33 @@ class LoginController extends GetxController {
   final repository = Get.put(AuthRepository());
   Auth? auth;
   final formKey = GlobalKey<FormState>();
+
   final forgotKey = GlobalKey<FormState>();
   TextEditingController usernameCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
   TextEditingController forgotPasswordCtrl = TextEditingController();
 
+  //Controller e keys do cadastro do usuario
+  final signupKey = GlobalKey<FormState>();
+  TextEditingController nameSignUpCtrl = TextEditingController();
+  TextEditingController usernameSignUpCtrl = TextEditingController();
+  TextEditingController passwordSignUpCtrl = TextEditingController();
+  TextEditingController confirmPasswordSignUpCtrl = TextEditingController();
+
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
   final box = GetStorage('credenciado');
 
+  RxBool isLoggingIn = false.obs;
   RxString errorMessage = ''.obs;
-
   RxBool showErrorSnackbar = false.obs;
+  dynamic mensagem;
 
   final userController = Get.put(UserController());
 
   void login() async {
     if (formKey.currentState!.validate()) {
+      isLoggingIn.value = true;
       loading.value = true;
 
       auth = await repository.getLogin(usernameCtrl.text, passwordCtrl.text);
@@ -68,7 +79,44 @@ class LoginController extends GetxController {
       }
 
       loading.value = false;
+      isLoggingIn.value = false;
     }
+  }
+
+  Future<Map<String, dynamic>> signUp() async {
+    if (signupKey.currentState!.validate()) {
+      if (passwordSignUpCtrl.text == confirmPasswordSignUpCtrl.text) {
+        isLoggingIn.value = true;
+        loading.value = true;
+
+        mensagem = await repository.getSignUp(nameSignUpCtrl.text,
+            usernameSignUpCtrl.text, passwordSignUpCtrl.text);
+
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            retorno = {
+              "return": 0,
+              "message":
+                  "Sucesso! Fique atento ao seu e-mail cadastrado, pois iremos informar o status da sua solicitação."
+            };
+          } else if (mensagem['message'] == 'ja_existe') {
+            retorno = {
+              "return": 1,
+              "message": "Já existe um usuário com esse nome!"
+            };
+          } else {
+            retorno = {"return": 1, "message": "Falha!"};
+          }
+        } else {
+          showErrorSnackbar.value = true;
+          showErrorMessage();
+        }
+
+        loading.value = false;
+        isLoggingIn.value = false;
+      }
+    }
+    return retorno;
   }
 
   //*VALIDAÇÕES */
@@ -85,13 +133,30 @@ class LoginController extends GetxController {
     return null;
   }
 
-  String? validatePassword(String? value) {
+  String? validatePassword(String? value, bool isLogin) {
     if (value == null || value.isEmpty) {
       return 'Por favor digite sua senha';
     }
 
+    if (!isLogin) {
+      if (value != passwordSignUpCtrl.text) {
+        return 'A senhas não coincidem';
+      }
+    }
+
     if (value.length < 4) {
       return 'A senha deve conter 4 caracteres';
+    }
+    return null;
+  }
+
+  String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor, digite seu nome completo';
+    }
+    List<String> partesNome = value.split(' ');
+    if (partesNome.length < 2) {
+      return 'Por favor, digite pelo menos um nome e um sobrenome';
     }
     return null;
   }
@@ -117,7 +182,7 @@ class LoginController extends GetxController {
   Future<Map<String, dynamic>> forgotPassword(String username) async {
     try {
       if (forgotKey.currentState!.validate()) {
-        var mensagem = await repository.forgotPassword(username);
+        mensagem = await repository.forgotPassword(username);
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
@@ -134,5 +199,18 @@ class LoginController extends GetxController {
       throw Exception(e);
     }
     return retorno;
+  }
+
+  void clearAllSignUpTextFields() {
+    final textControllers = [
+      nameSignUpCtrl,
+      usernameSignUpCtrl,
+      passwordSignUpCtrl,
+      confirmPasswordSignUpCtrl
+    ];
+
+    for (final controller in textControllers) {
+      controller.clear();
+    }
   }
 }

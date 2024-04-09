@@ -65,45 +65,51 @@ class LoginView extends GetView<LoginController> {
                             child: Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  TextFormField(
-                                    controller: controller.usernameCtrl,
-                                    validator: (value) {
-                                      return controller.validateUsername(value);
-                                    },
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.all(15),
-                                      isDense: true,
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      labelText: 'USUÁRIO',
-                                      labelStyle: const TextStyle(
-                                          color: Colors.black54,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 16),
-                                      hintText: 'Digite seu usuário...',
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black54,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 12),
-                                      suffixIcon: const Icon(
-                                          Icons.email_rounded,
-                                          color: Colors.black54),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
+                                  Obx(
+                                    () => TextFormField(
+                                      enabled: !controller.isLoggingIn.value,
+                                      controller: controller.usernameCtrl,
+                                      validator: (value) {
+                                        return controller
+                                            .validateUsername(value);
+                                      },
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.all(15),
+                                        isDense: true,
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        labelText: 'USUÁRIO',
+                                        labelStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 16),
+                                        hintText: 'Digite seu usuário...',
+                                        hintStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12),
+                                        suffixIcon: const Icon(
+                                            Icons.email_rounded,
+                                            color: Colors.black54),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      ),
                                     ),
                                   ),
                                   _gap(),
                                   Obx(() => TextFormField(
+                                        enabled: !controller.isLoggingIn.value,
                                         controller: controller.passwordCtrl,
                                         validator: (value) {
-                                          return controller
-                                              .validatePassword(value);
+                                          return controller.validatePassword(
+                                              value, true);
                                         },
                                         obscureText:
                                             !controller.isPasswordVisible.value,
@@ -144,10 +150,21 @@ class LoginView extends GetView<LoginController> {
                                                   },
                                                 ))),
                                       )),
-                                  _gap(),
-                                  const SizedBox(
-                                    height: 10,
+                                  const SizedBox(height: 15),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        showForgotPasswordModal(context);
+                                      },
+                                      child: Text(
+                                        'Esqueceu a senha?',
+                                        style: CustomTextStyle
+                                            .subjectMessageNegrit(context),
+                                      ),
+                                    ),
                                   ),
+                                  const SizedBox(height: 15),
                                   SizedBox(
                                     height: 70,
                                     width: double.infinity,
@@ -166,7 +183,7 @@ class LoginView extends GetView<LoginController> {
                                               'ENTRAR',
                                               style: TextStyle(
                                                   fontSize: 20,
-                                                  fontFamily: 'Poppinss',
+                                                  fontFamily: 'Poppins',
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white),
                                             ),
@@ -204,15 +221,26 @@ class LoginView extends GetView<LoginController> {
                                       ),
                                     ),
                                   ),
-                                  TextButton(
-                                      onPressed: () {
-                                        showForgotPasswordModal(context);
-                                      },
-                                      child: Text(
-                                        'Esqueceu a senha?',
-                                        style: CustomTextStyle
-                                            .subjectMessageNegrit(context),
-                                      ))
+                                  const SizedBox(height: 15),
+                                  Text(
+                                    'Ou',
+                                    textAlign: TextAlign.center,
+                                    style: CustomTextStyle.subjectMessageNegrit(
+                                        context),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  SizedBox(
+                                    height: 50,
+                                    child: TextButton(
+                                        onPressed: () {
+                                          controller.clearAllSignUpTextFields();
+                                          Get.toNamed('/signup');
+                                        },
+                                        child: Text('CRIE UMA CONTA',
+                                            style: CustomTextStyle.buttonSignUp(
+                                              context,
+                                            ))),
+                                  )
                                 ],
                               ),
                             ),

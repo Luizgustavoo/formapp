@@ -147,6 +147,14 @@ class CustomTextStyle {
         overflow: TextOverflow.clip);
   }
 
+  static TextStyle? buttonSignUp(BuildContext context) {
+    return const TextStyle(
+        fontSize: 15,
+        color: Color(0xFF1C6399),
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.clip);
+  }
+
   static TextStyle? textFormFieldStyle(BuildContext context) {
     return const TextStyle(
       color: Colors.black54,

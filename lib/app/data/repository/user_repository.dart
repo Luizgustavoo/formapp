@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/models/user_type_model.dart';
 import 'package:ucif/app/data/provider/user_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 
@@ -73,6 +74,32 @@ class UserRepository {
       return response;
     } catch (e) {
       throw Exception('Erro ao atualizar a família: $e');
+    }
+  }
+
+  Future<List<TypeUser>> getAllTypeUser(String token) async {
+    List<TypeUser> list = <TypeUser>[];
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAllTypeUser(token);
+
+      if (response != null) {
+        response.forEach((e) {
+          list.add(TypeUser.fromJson(e));
+        });
+      }
+    }
+    return list;
+  }
+
+  approveUser(String token, int tipoUsuarioId, int idAprovacao, int idMensagem,
+      int usuarioId, int familiaId, String action) async {
+    try {
+      var response = await apiClient.approveUser(token, tipoUsuarioId,
+          idAprovacao, idMensagem, usuarioId, familiaId, action);
+
+      return response;
+    } catch (e) {
+      throw Exception('Erro ao aprovar a usuário: $e');
     }
   }
 }

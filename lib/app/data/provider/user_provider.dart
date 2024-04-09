@@ -266,4 +266,81 @@ class UserApiClient {
     }
     return null;
   }
+
+  getAllTypeUser(String token) async {
+    try {
+      var churchUrl = Uri.parse('$baseUrl/v1/tipousuario/list');
+      var response = await httpClient.get(
+        churchUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      throw Exception('Erro ao buscar dados: $err');
+    }
+    return null;
+  }
+
+  approveUser(String token, int tipoUsuarioId, int idAprovacao, int idMensagem,
+      int usuarioId, int familiaId, String action) async {
+    try {
+      var approveUser = Uri.parse('$baseUrl/v1/usuario/aprovar-negar');
+
+      var requestBody = {
+        "idAprovacao": idAprovacao.toString(),
+        "tipousuario_id": tipoUsuarioId.toString(),
+        "idMensagem": idMensagem.toString(),
+        "usuario_id": usuarioId.toString(),
+        "action": action
+      };
+
+      if (tipoUsuarioId == 3) {
+        requestBody['familia_id'] = familiaId.toString();
+      }
+
+      var response = await httpClient.post(
+        approveUser,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      throw Exception("$err");
+    }
+    return null;
+  }
 }

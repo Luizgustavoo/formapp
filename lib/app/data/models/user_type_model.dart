@@ -1,18 +1,18 @@
-class TipoUsuario {
+class TypeUser {
   int? id;
   String? descricao;
   int? status;
   String? dataCadastro;
   String? dataUpdate;
 
-  TipoUsuario(
+  TypeUser(
       {this.id,
       this.descricao,
       this.status,
       this.dataCadastro,
       this.dataUpdate});
 
-  TipoUsuario.fromJson(Map<String, dynamic> json) {
+  TypeUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     descricao = json['descricao'];
     status = json['status'];

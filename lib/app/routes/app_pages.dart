@@ -6,7 +6,8 @@ import 'package:ucif/app/modules/home/home_view.dart';
 import 'package:ucif/app/modules/initial/initial_binding.dart';
 import 'package:ucif/app/modules/initial/initial_view.dart';
 import 'package:ucif/app/modules/login/login_binding.dart';
-import 'package:ucif/app/modules/login/login_view.dart';
+import 'package:ucif/app/modules/login/views/login_view.dart';
+import 'package:ucif/app/modules/login/views/signup_view.dart';
 import 'package:ucif/app/modules/message/message_binding.dart';
 import 'package:ucif/app/modules/message/views/list_message_view.dart';
 import 'package:ucif/app/modules/people/people_binding.dart';
@@ -57,6 +58,11 @@ class AppPages {
       name: Routes.PERFIL,
       page: () => PerfilView(),
       binding: UserBinding(),
+    ),
+    GetPage(
+      name: Routes.SIGNUP,
+      page: () => const SignUpView(),
+      binding: LoginBinding(),
     ),
   ];
 }

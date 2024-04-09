@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/models/user_type_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/auth_repository.dart';
 import 'package:ucif/app/data/repository/user_repository.dart';
@@ -50,17 +51,26 @@ class UserController extends GetxController {
   var photoUrlPath = ''.obs;
   RxString oldImagePath = ''.obs;
 
+  RxList<TypeUser> listTypeUsers = <TypeUser>[].obs;
+
   @override
-  void onInit() {
+  void onInit() async {
     if (UserStorage.existUser()) {
-      final internetStatusProvider = Get.find<InternetStatusProvider>();
-      final statusStream = internetStatusProvider.statusStream;
-      statusStream.listen((status) {
-        if (status == InternetStatus.connected) {
-          getUsers();
-        }
-      });
-      getUsers();
+      if (await ConnectionStatus.verifyConnection()) {
+        getTypeUser();
+        getUsers();
+      } else {
+        final internetStatusProvider = Get.find<InternetStatusProvider>();
+        final statusStream = internetStatusProvider.statusStream;
+        statusStream.listen(
+          (status) {
+            if (status == InternetStatus.connected) {
+              getUsers();
+              getTypeUser();
+            }
+          },
+        );
+      }
     }
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -126,6 +136,18 @@ class UserController extends GetxController {
     try {
       final token = UserStorage.getToken();
       listUsers.value = await repository.getAll("Bearer $token", page: page);
+      update();
+    } catch (e) {
+      throw Exception(e);
+    }
+    isLoading.value = false;
+  }
+
+  Future<void> getTypeUser() async {
+    isLoading.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listTypeUsers.value = await repository.getAllTypeUser("Bearer $token");
       update();
     } catch (e) {
       throw Exception(e);
@@ -334,5 +356,29 @@ class UserController extends GetxController {
     for (final controller in textControllers) {
       controller.clear();
     }
+  }
+
+  Future<Map<String, dynamic>> approveUser(int tipoUsuarioId, int idAprovacao,
+      int idMensagem, int usuarioId, int familiaId, String action) async {
+    final token = UserStorage.getToken();
+
+    if (await ConnectionStatus.verifyConnection()) {
+      mensagem = await userRepository.approveUser("Bearer $token",
+          tipoUsuarioId, idAprovacao, idMensagem, usuarioId, familiaId, action);
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe um usuário com esse e-mail!"
+          };
+        }
+      }
+    }
+
+    getUsers();
+
+    return retorno;
   }
 }

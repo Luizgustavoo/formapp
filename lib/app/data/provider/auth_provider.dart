@@ -18,7 +18,31 @@ class AuthApiClient {
         return json.decode(response.body);
       } else if (response.statusCode == 401) {
         print('Erro de autenticação: Usuário ou senha inválidos');
-        // Adicione uma lógica para tratar o erro de autenticação aqui
+      } else {
+        print('Erro - get:${response.body}');
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> getSignUp(
+      String nome, String username, String senha) async {
+    var signUpUrl = Uri.parse('$baseUrl/register');
+    try {
+      var response = await httpClient.post(signUpUrl, headers: {
+        "Accept": "application/json",
+      }, body: {
+        'nome': nome,
+        'username': username,
+        'senha': senha
+      });
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401) {
+        print('Falha: E-mail já cadastrado!');
       } else {
         print('Erro - get:${response.body}');
       }

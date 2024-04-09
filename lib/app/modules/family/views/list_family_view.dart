@@ -197,11 +197,9 @@ class FamilyView extends GetView<FamilyController> {
                                   deleteFamily: () {
                                     Get.to(const ListPeopleView());
                                   },
-                                  peopleNames: family.pessoas != null
-                                      ? family.pessoas!
-                                          .map((person) => person.nome!)
-                                          .toList()
-                                      : null,
+                                  peopleNames: family.pessoas
+                                      ?.map((person) => person.nome!)
+                                      .toList(),
                                 ),
                               ),
                             ),
