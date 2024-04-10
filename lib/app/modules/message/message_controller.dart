@@ -58,10 +58,7 @@ class MessageController extends GetxController {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
         }
       } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uma família com esse nome!"
-        };
+        retorno = {"return": 1, "message": "Já existe!"};
       }
     }
     return retorno;

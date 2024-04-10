@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
 import 'package:ucif/app/data/repository/chat_repository.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ChatController extends GetxController {
@@ -9,21 +10,29 @@ class ChatController extends GetxController {
   RxList<Chat> listChats = <Chat>[].obs;
   final repository = Get.put(ChatRepository());
   final RxInt destinatarioId = 0.obs;
+  final ScrollController scrollController = ScrollController();
+  dynamic mensagem;
 
   void getMessages() async {
-    if (UserStorage.existUser()) {
+    if (UserStorage.existUser() && await ConnectionStatus.verifyConnection()) {
       final token = UserStorage.getToken();
-      final rementeId = UserStorage.getUserId();
-      print("REMETENTE: $rementeId");
-      print("DESTINATÁRIO: ${destinatarioId.value}");
-      listChats.value = await repository.getAll(
-          "Bearer $token", rementeId, destinatarioId.value);
+
+      listChats.value =
+          await repository.getAll("Bearer $token", destinatarioId.value);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      });
     }
   }
 
-  void handleSubmitted(String text) {
-    chatController.clear();
-    // Aqui você pode adicionar a lógica para enviar a mensagem
-    print("Mensagem enviada: $text");
+  Future<void> sendChat() async {
+    final token = UserStorage.getToken();
+    final mensagem = await repository.sendChat(
+        "Bearer $token", destinatarioId.value, chatController.text);
+    if (mensagem != null && await ConnectionStatus.verifyConnection()) {
+      getMessages();
+      chatController.clear();
+    }
   }
 }

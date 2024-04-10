@@ -40,7 +40,7 @@ class UserController extends GetxController {
 
   final userRepository = Get.find<UserRepository>();
   final familyController = Get.put(FamilyController());
-  final authRepository = Get.find<AuthRepository>();
+  final authRepository = Get.put(AuthRepository());
 
   final ScrollController scrollController = ScrollController();
 

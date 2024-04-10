@@ -88,29 +88,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             size: 28,
                           ),
                         ),
-                        Obx(() => Positioned(
-                              right: 0,
-                              top: 0,
-                              child: messageController
-                                          .quantidadeMensagensNaoLidas.value >
-                                      0
-                                  ? badges.Badge(
-                                      showBadge: true,
-                                      ignorePointer: false,
-                                      onTap: () {},
-                                      badgeContent: const Icon(Icons.check,
-                                          color: Colors.white, size: 10),
-                                      badgeAnimation:
-                                          const badges.BadgeAnimation.rotation(
-                                        animationDuration: Duration(seconds: 1),
-                                        colorChangeAnimationDuration:
-                                            Duration(seconds: 1),
-                                        loopAnimation: false,
-                                        curve: Curves.easeInOut,
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                            ))
+                        Obx(
+                          () => Positioned(
+                            right: 0,
+                            top: 0,
+                            child: messageController
+                                        .quantidadeMensagensNaoLidas.value >
+                                    0
+                                ? badges.Badge(
+                                    showBadge: true,
+                                    ignorePointer: false,
+                                    onTap: () {},
+                                    badgeContent: const Icon(Icons.check,
+                                        color: Colors.white, size: 10),
+                                    badgeAnimation:
+                                        const badges.BadgeAnimation.rotation(
+                                      animationDuration: Duration(seconds: 1),
+                                      colorChangeAnimationDuration:
+                                          Duration(seconds: 1),
+                                      loopAnimation: false,
+                                      curve: Curves.easeInOut,
+                                    ),
+                                  )
+                                : const SizedBox(),
+                          ),
+                        )
                       ],
                     ),
                     if (ModalRoute.of(context)!.settings.name != '/perfil')

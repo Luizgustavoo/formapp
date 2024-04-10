@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 import '../models/message_model.dart';
 import '../models/user_model.dart';
@@ -51,20 +52,14 @@ class MessageApiClient {
 
   insertMessage(
       String token, Family? family, Message message, User? user) async {
-    final id = box.read('auth')['user']['id'];
+    final id = UserStorage.getUserId();
     try {
       var messageUrl = Uri.parse('$baseUrl/v1/mensagem/create');
-
-      // List<Map<String, dynamic>> pessoasJson = <Map<String, dynamic>>[];
-      // if (family != null) {
-      //   pessoasJson = family.pessoas!.map((pessoa) => pessoa.toJson()).toList();
-      // }
 
       var requestBody = {
         "titulo": message.titulo,
         "descricao": message.descricao,
         "usuario_remetente": id.toString(),
-        // "pessoas": jsonEncode(pessoasJson),
       };
       if (user != null) {
         requestBody['usuario_destinatario'] = user.id.toString();

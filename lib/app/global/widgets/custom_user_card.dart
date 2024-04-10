@@ -8,6 +8,7 @@ import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/user_storage.dart';
+import 'package:badges/badges.dart' as badges;
 
 class CustomUserCard extends StatelessWidget {
   CustomUserCard({
@@ -70,15 +71,41 @@ class CustomUserCard extends StatelessWidget {
                 width: 50,
                 height: 50,
               )
-            : IconButton(
-                onPressed: () async {
-                  Get.toNamed('/chat', arguments: user);
-                },
-                icon: Icon(
-                  Icons.message_outlined,
-                  size: 25,
-                  color: user.tipousuarioId == 2 ? Colors.white : Colors.green,
-                )),
+            : Stack(
+                children: [
+                  IconButton(
+                      onPressed: () async {
+                        Get.toNamed('/chat', arguments: user);
+                      },
+                      icon: Icon(
+                        Icons.message_outlined,
+                        size: 25,
+                        color: user.tipousuarioId == 2
+                            ? Colors.white
+                            : Colors.green,
+                      )),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child:
+                        messageController.quantidadeMensagensNaoLidas.value > 0
+                            ? const badges.Badge(
+                                showBadge: true,
+                                ignorePointer: false,
+                                badgeContent: Icon(Icons.check,
+                                    color: Colors.white, size: 10),
+                                badgeAnimation: badges.BadgeAnimation.rotation(
+                                  animationDuration: Duration(seconds: 1),
+                                  colorChangeAnimationDuration:
+                                      Duration(seconds: 1),
+                                  loopAnimation: false,
+                                  curve: Curves.easeInOut,
+                                ),
+                              )
+                            : const SizedBox(),
+                  ),
+                ],
+              ),
         title: Text(
           user.nome!,
           style: user.tipousuarioId == 2

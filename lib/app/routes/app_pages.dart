@@ -68,7 +68,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.CHAT,
-      page: () => const ChatView(),
+      page: () => ChatView(),
       binding: ChatBinding(),
     ),
   ];

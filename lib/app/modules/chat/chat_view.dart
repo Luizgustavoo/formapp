@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
@@ -11,13 +12,41 @@ class ChatView extends GetView<ChatController> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = Get.arguments as User;
-    controller.destinatarioId.value = user.id!;
+    final User user = Get.arguments != null ? Get.arguments as User : User();
+    if (user.id != null) {
+      controller.destinatarioId.value = user.id!;
+    }
     controller.getMessages();
+
+    void scrollToBottomIfNeeded() {
+      print("++++++++++++++++++++ SAINDO DA TELA +++++++++++++");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final RenderBox renderBox = context.findRenderObject() as RenderBox;
+        final offset = renderBox.localToGlobal(Offset.zero);
+        final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+        final screenHeight = MediaQuery.of(context).size.height;
+        final desiredOffset = screenHeight - keyboardHeight;
+        if (offset.dy < desiredOffset) {
+          final scrollController = controller.scrollController;
+          scrollController.animateTo(
+            scrollController.offset + desiredOffset - offset.dy,
+            duration: const Duration(milliseconds: 1500),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(user.nome!),
+        // leading: IconButton(
+        //     onPressed: () {
+        //       Get.offAllNamed('/list-user');
+        //     },
+        //     icon: const Icon(
+        //       Icons.arrow_back_ios_new_rounded,
+        //     )),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -32,6 +61,7 @@ class ChatView extends GetView<ChatController> {
             Expanded(
               child: Obx(
                 () => ListView.builder(
+                  controller: controller.scrollController,
                   itemCount: controller.listChats.length,
                   itemBuilder: (context, index) {
                     final chat = controller.listChats[index];
@@ -54,36 +84,48 @@ class ChatView extends GetView<ChatController> {
                 ),
               ),
             ),
-            _buildInputField(),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: Get.height * 0.2,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: controller.chatController,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              hintText: 'Digite sua mensagem...',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide:
+                                      const BorderSide(color: Colors.black)),
+                            ),
+                            textInputAction: TextInputAction.send,
+                            onSubmitted: (_) => controller.sendChat(),
+                            onTap: () {
+                              // scrollToBottomIfNeeded();
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.send),
+                    onPressed: () => controller.sendChat(),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildInputField() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        children: [
-          Flexible(
-            child: TextField(
-              controller: controller.chatController,
-              decoration: const InputDecoration.collapsed(
-                hintText: 'Digite sua mensagem...',
-              ),
-              textInputAction: TextInputAction.send,
-              onSubmitted: controller.handleSubmitted,
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () {
-              controller.handleSubmitted(controller.chatController.text);
-            },
-          ),
-        ],
       ),
     );
   }
@@ -134,14 +176,19 @@ class ChatMessageWidget extends StatelessWidget {
             ? CrossAxisAlignment.start
             : CrossAxisAlignment.end,
         children: [
-          Text(
-            chat!.mensagem!,
-            style: TextStyle(
-              fontSize: 18.0,
-              color: textColor,
-              fontWeight: (!mensagemRemetente! && chat!.lida == 'nao')
-                  ? FontWeight.bold
-                  : FontWeight.normal,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.8,
+            ),
+            child: Text(
+              chat!.mensagem!,
+              style: TextStyle(
+                fontSize: 18.0,
+                color: textColor,
+                fontWeight: (!mensagemRemetente! && chat!.lida == 'nao')
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+              ),
             ),
           ),
           Text(
