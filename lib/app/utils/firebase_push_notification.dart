@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 Future<void> handleBackgroundMessage(message) async {
@@ -40,6 +41,7 @@ class FirebaseApi {
 
   final messageController = Get.put(MessageController());
   final chatController = Get.put(ChatController());
+  final userController = Get.put(UserController());
 
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
@@ -54,6 +56,7 @@ class FirebaseApi {
 
     messageController.getMessages();
     chatController.getChat();
+    userController.getUsers();
 
     final Map<String, dynamic> data = message.data;
 
@@ -110,6 +113,7 @@ class FirebaseApi {
 
       messageController.getMessages();
       chatController.getChat();
+      userController.getUsers();
 
       _localNotifications.show(
         notification.hashCode,

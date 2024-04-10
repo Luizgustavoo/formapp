@@ -88,31 +88,31 @@ class CustomUserCard extends StatelessWidget {
                             ? Colors.white
                             : Colors.green,
                       )),
-                  Obx(() => Positioned(
-                        right: 0,
-                        top: 0,
-                        child: user.mensagens > 0
-                            ? badges.Badge(
-                                showBadge: true,
-                                ignorePointer: false,
-                                badgeContent: Text(
-                                  user.mensagens.toString(),
-                                  style: const TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 10,
-                                      color: Colors.white),
-                                ),
-                                badgeAnimation:
-                                    const badges.BadgeAnimation.rotation(
-                                  animationDuration: Duration(seconds: 1),
-                                  colorChangeAnimationDuration:
-                                      Duration(seconds: 1),
-                                  loopAnimation: false,
-                                  curve: Curves.easeInOut,
-                                ),
-                              )
-                            : const SizedBox(),
-                      )),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: user.mensagens > 0
+                        ? badges.Badge(
+                            showBadge: true,
+                            ignorePointer: false,
+                            badgeContent: Text(
+                              user.mensagens.toString(),
+                              style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 10,
+                                  color: Colors.white),
+                            ),
+                            badgeAnimation:
+                                const badges.BadgeAnimation.rotation(
+                              animationDuration: Duration(seconds: 1),
+                              colorChangeAnimationDuration:
+                                  Duration(seconds: 1),
+                              loopAnimation: false,
+                              curve: Curves.easeInOut,
+                            ),
+                          )
+                        : const SizedBox(),
+                  )
                 ],
               ),
         title: Text(

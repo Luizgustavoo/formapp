@@ -20,9 +20,12 @@ class ChatController extends GetxController {
       listChats.value =
           await repository.getAll("Bearer $token", destinatarioId.value);
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        scrollController.jumpTo(scrollController.position.maxScrollExtent);
-      });
+      // Verifica se o ScrollController está anexado a uma visualização de rolagem
+      if (scrollController.hasClients) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        });
+      }
     }
   }
 

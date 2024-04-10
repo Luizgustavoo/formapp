@@ -136,6 +136,7 @@ class UserController extends GetxController {
     try {
       final token = UserStorage.getToken();
       listUsers.value = await repository.getAll("Bearer $token", page: page);
+
       update();
     } catch (e) {
       throw Exception(e);
