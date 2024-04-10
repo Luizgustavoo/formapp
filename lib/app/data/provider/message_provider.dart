@@ -43,7 +43,9 @@ class MessageApiClient {
         box.erase();
         Get.offAllNamed('/login');
       }
-    } catch (err) {}
+    } catch (err) {
+      print(err);
+    }
     return null;
   }
 

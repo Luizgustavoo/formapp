@@ -230,8 +230,6 @@ class PeopleController extends GetxController {
       mensagem = await repository.insertPeople(
           "Bearer $token", pessoa, File(photoUrlPath.value), peopleLocal);
 
-      print(mensagem);
-
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
@@ -401,11 +399,11 @@ class PeopleController extends GetxController {
     // Verifique se o caminho da imagem local está definido
     if (photoUrlPath.value.isNotEmpty) {
       // Defina a imagem usando FileImage para exibir localmente
-      isImagePicPathSet.value = true;
+      isImagePicPathSet.value = false;
       photoUrlPath.value = selectedPeople!.foto!;
     } else {
       // Caso contrário, defina para false e exiba a imagem padrão
-      isImagePicPathSet.value = false;
+      isImagePicPathSet.value = true;
     }
   }
 

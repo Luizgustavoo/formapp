@@ -25,6 +25,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
 
   @override
   Widget build(BuildContext context) {
+    print('$urlImagem/public/storage/${controller.photoUrlPath.value}');
     return Container(
       margin: const EdgeInsets.only(top: 25),
       child: ListView(
@@ -57,32 +58,35 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Obx(
-                        () => CircleAvatar(
-                          radius: 35,
-                          backgroundImage: controller.isImagePicPathSet == true
-                              ? FileImage(File(controller.photoUrlPath.value))
-                              : (controller.photoUrlPath.value.isNotEmpty
-                                  ? NetworkImage(
-                                          '$urlImagem/public/storage/${controller.photoUrlPath.value}')
-                                      as ImageProvider<Object>?
-                                  : const AssetImage(
-                                      'assets/images/default_avatar.jpg')),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              backgroundBlendMode: BlendMode.multiply,
-                              color: Colors.grey[300],
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.camera_alt),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => CustomCameraModal(
-                                    tyContext: 'pessoa',
-                                  ),
-                                );
-                              },
+                        () => ClipOval(
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundImage: controller.isImagePicPathSet ==
+                                    true
+                                ? FileImage(File(controller.photoUrlPath.value))
+                                : (controller.photoUrlPath.value.isNotEmpty
+                                    ? NetworkImage(
+                                            '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
+                                        as ImageProvider<Object>?
+                                    : const AssetImage(
+                                        'assets/images/default_avatar.jpg')),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                backgroundBlendMode: BlendMode.multiply,
+                                color: Colors.grey[300],
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.camera_alt),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => CustomCameraModal(
+                                      tyContext: 'pessoa',
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -451,7 +455,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                                     family!, peopleLocal)
                                 : await controller.updatePeople(peopleLocal);
                             if (retorno['return'] == 0) {
-                              Get.back();
+                              Get.offAllNamed('/list-family');
                             }
                             Get.snackbar(
                               snackPosition: SnackPosition.BOTTOM,

@@ -28,7 +28,7 @@ class FormattersValidators {
   }
 
   static RxString formatPhone(String phone) {
-    final RegExp phoneRegex = RegExp(r'^(\d{2})(\d{4,5})(\d{4})$');
+    final RegExp phoneRegex = RegExp(r'^(\d{2})(\d{5})(\d{4})$');
 
     final matches = phoneRegex.allMatches(phone);
 

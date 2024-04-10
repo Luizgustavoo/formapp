@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/global/widgets/create_user_modal.dart';
-import 'package:ucif/app/global/widgets/message_modal.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
@@ -72,19 +72,7 @@ class CustomUserCard extends StatelessWidget {
               )
             : IconButton(
                 onPressed: () async {
-                  messageController.clearModalMessage();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    isDismissible: false,
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: MessageModal(
-                        user: user,
-                        titulo: 'Mensagem para ${user.nome}',
-                      ),
-                    ),
-                  );
+                  Get.toNamed('/chat', arguments: user);
                 },
                 icon: Icon(
                   Icons.message_outlined,

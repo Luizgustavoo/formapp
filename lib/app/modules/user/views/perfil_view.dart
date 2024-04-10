@@ -19,6 +19,7 @@ class PerfilView extends GetView<UserController> {
 
   @override
   Widget build(BuildContext context) {
+    print('$urlImagem/public/storage/${controller.photoUrlPath.value}');
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,

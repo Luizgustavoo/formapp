@@ -366,22 +366,25 @@ class FamilyController extends GetxController
   }
 
   void searchCEP() async {
-    final cep = cepFamiliaController.text;
-    final addressData = await ViaCEPService.getAddressFromCEP(cep);
+    bool isConnected = await ConnectionStatus.verifyConnection();
 
-    if (addressData.containsKey('error')) {
-      Get.snackbar(
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 2),
-          'Erro',
-          'Erro ao obter dados do CEP: ${addressData['error']}');
-      clearCEP();
-    } else {
-      ruaFamiliaController.text = addressData['logradouro'];
-      bairroFamiliaController.text = addressData['bairro'];
-      cidadeFamiliaController.text = addressData['localidade'];
-      uf.value = addressData['uf'];
+    if (isConnected && cepFamiliaController.text.isNotEmpty) {
+      final cep = cepFamiliaController.text;
+      final addressData = await ViaCEPService.getAddressFromCEP(cep);
+      if (addressData.containsKey('error')) {
+        Get.snackbar(
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 2),
+            'Erro',
+            'Erro ao obter dados do CEP: ${addressData['error']}');
+        clearCEP();
+      } else {
+        ruaFamiliaController.text = addressData['logradouro'];
+        bairroFamiliaController.text = addressData['bairro'];
+        cidadeFamiliaController.text = addressData['localidade'];
+        uf.value = addressData['uf'];
+      }
     }
   }
 

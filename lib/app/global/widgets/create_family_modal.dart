@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
-import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
-import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CreateFamilyModal extends StatelessWidget {
@@ -66,10 +64,7 @@ class CreateFamilyModal extends StatelessWidget {
             Focus(
               onFocusChange: (hasFocus) async {
                 if (!hasFocus) {
-                  bool isConnected = await ConnectionStatus.verifyConnection();
-                  if (isConnected) {
-                    controller.searchCEP();
-                  }
+                  controller.searchCEP();
                 }
               },
               child: TextFormField(
@@ -272,23 +267,7 @@ class CreateFamilyModal extends StatelessWidget {
                               family!.id!, family!.familyLocal!);
 
                       if (retorno['return'] == 0) {
-                        Get.back();
-                        peopleController.clearAllPeopleTextFields();
-                        Future.delayed(const Duration(seconds: 1), () {
-                          return showModalBottomSheet(
-                            isScrollControlled: true,
-                            isDismissible: false,
-                            context: context,
-                            builder: (context) => Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: AddPeopleFamilyView(
-                                peopleLocal: family!.familyLocal!,
-                                tipoOperacao: 0,
-                                family: family,
-                              ),
-                            ),
-                          );
-                        });
+                        Get.offAllNamed('/list-family');
                       }
                       Get.snackbar(
                         snackPosition: SnackPosition.BOTTOM,

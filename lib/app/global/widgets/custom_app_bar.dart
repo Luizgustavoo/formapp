@@ -83,7 +83,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             Get.toNamed('/list-message');
                           },
                           icon: const Icon(
-                            Icons.sms,
+                            Icons.notifications_rounded,
                             color: Colors.white,
                             size: 28,
                           ),

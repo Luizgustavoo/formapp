@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:ucif/app/modules/chat/chat_binding.dart';
+import 'package:ucif/app/modules/chat/chat_view.dart';
 import 'package:ucif/app/modules/family/family_binding.dart';
 import 'package:ucif/app/modules/family/views/list_family_view.dart';
 import 'package:ucif/app/modules/home/home_binding.dart';
@@ -63,6 +65,11 @@ class AppPages {
       name: Routes.SIGNUP,
       page: () => const SignUpView(),
       binding: LoginBinding(),
+    ),
+    GetPage(
+      name: Routes.CHAT,
+      page: () => const ChatView(),
+      binding: ChatBinding(),
     ),
   ];
 }
