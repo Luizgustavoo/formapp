@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
@@ -12,7 +14,18 @@ Future<void> handleBackgroundMessage(message) async {
   FirebaseMessaging.instance.getInitialMessage().then(
     (remoteMessage) {
       final Map<String, dynamic>? data = remoteMessage?.data;
+
       if (data != null &&
+          data.containsKey('click_action') &&
+          data.containsKey('user') &&
+          data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+          data['user'] != null &&
+          UserStorage.existUser()) {
+        Map<String, dynamic> jsonMap = jsonDecode(data['user']);
+        User user = User.fromJson(jsonMap);
+
+        Get.toNamed('/chat', arguments: user);
+      } else if (data != null &&
           data.containsKey('click_action') &&
           data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
           UserStorage.existUser()) {
@@ -26,6 +39,7 @@ class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
   final messageController = Get.put(MessageController());
+  final chatController = Get.put(ChatController());
 
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
@@ -39,8 +53,24 @@ class FirebaseApi {
     if (message == null || !UserStorage.existUser()) return;
 
     messageController.getMessages();
+    chatController.getChat();
 
-    Get.toNamed('/list-message');
+    final Map<String, dynamic> data = message.data;
+
+    if (data.containsKey('click_action') &&
+        data.containsKey('user') &&
+        data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+        data['user'] != null &&
+        UserStorage.existUser()) {
+      Map<String, dynamic> jsonMap = jsonDecode(data['user']);
+      User user = User.fromJson(jsonMap);
+
+      Get.toNamed('/chat', arguments: user);
+    } else if (data.containsKey('click_action') &&
+        data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+        UserStorage.existUser()) {
+      Get.toNamed('/list-message');
+    }
   }
 
   Future initLocalNotifications() async {
@@ -79,6 +109,7 @@ class FirebaseApi {
       if (notification == null) return;
 
       messageController.getMessages();
+      chatController.getChat();
 
       _localNotifications.show(
         notification.hashCode,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/global/widgets/create_user_modal.dart';
+import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
@@ -27,6 +28,7 @@ class CustomUserCard extends StatelessWidget {
   final UserController controller;
 
   final MessageController messageController;
+  final chatController = Get.put(ChatController());
   final String typeUser;
 
   @override
@@ -75,6 +77,8 @@ class CustomUserCard extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () async {
+                        chatController.destinatarioId.value = user.id!;
+                        chatController.chatChange();
                         Get.toNamed('/chat', arguments: user);
                       },
                       icon: Icon(
@@ -84,17 +88,22 @@ class CustomUserCard extends StatelessWidget {
                             ? Colors.white
                             : Colors.green,
                       )),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child:
-                        messageController.quantidadeMensagensNaoLidas.value > 0
-                            ? const badges.Badge(
+                  Obx(() => Positioned(
+                        right: 0,
+                        top: 0,
+                        child: user.mensagens > 0
+                            ? badges.Badge(
                                 showBadge: true,
                                 ignorePointer: false,
-                                badgeContent: Icon(Icons.check,
-                                    color: Colors.white, size: 10),
-                                badgeAnimation: badges.BadgeAnimation.rotation(
+                                badgeContent: Text(
+                                  user.mensagens.toString(),
+                                  style: const TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 10,
+                                      color: Colors.white),
+                                ),
+                                badgeAnimation:
+                                    const badges.BadgeAnimation.rotation(
                                   animationDuration: Duration(seconds: 1),
                                   colorChangeAnimationDuration:
                                       Duration(seconds: 1),
@@ -103,7 +112,7 @@ class CustomUserCard extends StatelessWidget {
                                 ),
                               )
                             : const SizedBox(),
-                  ),
+                      )),
                 ],
               ),
         title: Text(

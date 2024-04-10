@@ -15,7 +15,7 @@ class ChatView extends GetView<ChatController> {
     if (user.id != null) {
       controller.destinatarioId.value = user.id!;
     }
-    controller.getMessages();
+    controller.getChat();
 
     void scrollToBottomIfNeeded() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,13 +38,13 @@ class ChatView extends GetView<ChatController> {
     return Scaffold(
       appBar: AppBar(
         title: Text(user.nome ?? ""),
-        // leading: IconButton(
-        //     onPressed: () {
-        //       Get.offAllNamed('/list-user');
-        //     },
-        //     icon: const Icon(
-        //       Icons.arrow_back_ios_new_rounded,
-        //     )),
+        leading: IconButton(
+            onPressed: () {
+              Get.offAllNamed('/list-user');
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+            )),
       ),
       body: Container(
         decoration: const BoxDecoration(

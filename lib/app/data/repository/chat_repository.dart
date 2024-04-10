@@ -27,4 +27,14 @@ class ChatRepository {
       throw Exception('Erro ao enviar mensagem para a família: $e');
     }
   }
+
+  chatChange(String token, int destinatarioId) async {
+    try {
+      var response = await apiClient.chatChange(token, destinatarioId);
+
+      return response;
+    } catch (e) {
+      throw Exception('Erro ao enviar mensagem para a família: $e');
+    }
+  }
 }
