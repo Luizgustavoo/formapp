@@ -14,6 +14,8 @@ class ChatController extends GetxController {
     if (UserStorage.existUser()) {
       final token = UserStorage.getToken();
       final rementeId = UserStorage.getUserId();
+      print("REMETENTE: $rementeId");
+      print("DESTINATÁRIO: ${destinatarioId.value}");
       listChats.value = await repository.getAll(
           "Bearer $token", rementeId, destinatarioId.value);
     }
