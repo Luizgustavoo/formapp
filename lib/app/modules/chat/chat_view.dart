@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
@@ -19,7 +18,6 @@ class ChatView extends GetView<ChatController> {
     controller.getMessages();
 
     void scrollToBottomIfNeeded() {
-      print("++++++++++++++++++++ SAINDO DA TELA +++++++++++++");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final RenderBox renderBox = context.findRenderObject() as RenderBox;
         final offset = renderBox.localToGlobal(Offset.zero);
@@ -39,7 +37,7 @@ class ChatView extends GetView<ChatController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.nome!),
+        title: Text(user.nome ?? ""),
         // leading: IconButton(
         //     onPressed: () {
         //       Get.offAllNamed('/list-user');
@@ -110,7 +108,7 @@ class ChatView extends GetView<ChatController> {
                             textInputAction: TextInputAction.send,
                             onSubmitted: (_) => controller.sendChat(),
                             onTap: () {
-                              // scrollToBottomIfNeeded();
+                              scrollToBottomIfNeeded();
                             },
                           ),
                         ),
