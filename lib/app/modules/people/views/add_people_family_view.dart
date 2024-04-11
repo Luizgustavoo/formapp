@@ -454,7 +454,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                                     family!, peopleLocal)
                                 : await controller.updatePeople(peopleLocal);
                             if (retorno['return'] == 0) {
-                              Get.offAllNamed('/list-family');
+                              Get.back();
                             }
                             Get.snackbar(
                               snackPosition: SnackPosition.BOTTOM,

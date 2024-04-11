@@ -24,14 +24,21 @@ class FamilyApiClient {
       Uri familyUrl;
 
       if (UserStorage.getUserType() == 1) {
-        familyUrl = Uri.parse(
-            '$baseUrl/v1/familia/list-paginate/$search/?page=$page&limit');
+        String url = search != null
+            ? '$baseUrl/v1/familia/list-paginate/$search/?page=$page&limit'
+            : '$baseUrl/v1/familia/list-paginate/?page=$page&limit';
+        familyUrl = Uri.parse(url);
       } else if (UserStorage.getUserType() == 2) {
-        familyUrl = Uri.parse(
-            '$baseUrl/v1/familia/list-paginate/id/$id/$search/?page=$page&limit');
+        String url = search != null
+            ? '$baseUrl/v1/familia/list-paginate/id/$id/$search/?page=$page&limit'
+            : '$baseUrl/v1/familia/list-paginate/id/$id/?page=$page&limit';
+
+        familyUrl = Uri.parse(url);
       } else {
-        familyUrl = Uri.parse(
-            '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/$search/?page=$page&limit');
+        String url = search != null
+            ? '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/$search/?page=$page&limit'
+            : '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/?page=$page&limit';
+        familyUrl = Uri.parse(url);
       }
 
       var response = await httpClient.get(

@@ -267,7 +267,7 @@ class CreateFamilyModal extends StatelessWidget {
                               family!.id!, family!.familyLocal!);
 
                       if (retorno['return'] == 0) {
-                        Get.offAllNamed('/list-family');
+                        Get.back();
                       }
                       Get.snackbar(
                         snackPosition: SnackPosition.BOTTOM,
