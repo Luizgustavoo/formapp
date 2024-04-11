@@ -53,7 +53,7 @@ class UserController extends GetxController {
 
   RxList<TypeUser> listTypeUsers = <TypeUser>[].obs;
 
-  final token = UserStorage.getToken();
+  // final token = UserStorage.getToken();
 
   @override
   void onInit() async {
@@ -92,6 +92,7 @@ class UserController extends GetxController {
 
   Future<void> loadMoreUsers() async {
     try {
+      final token = UserStorage.getToken();
       isLoadingMore = true;
       final nextPage = currentPage + 1;
       final moreUsers =
@@ -116,7 +117,7 @@ class UserController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 
-  Future<void> searchUsers(String query) async {
+  void searchUsers(String query) async {
     try {
       if (query.isEmpty) {
         await getUsers();
@@ -129,13 +130,19 @@ class UserController extends GetxController {
       }
     } catch (error) {
       throw Exception('Erro ao buscar famílias: $error');
+    } finally {
+      if (query.isEmpty) {
+        loadMoreUsers(); // Carrega mais famílias quando a pesquisa é limpa
+      }
     }
   }
 
-  Future<void> getUsers({int? page}) async {
+  Future<void> getUsers({int? page, String? search}) async {
     isLoading.value = true;
+    final token = UserStorage.getToken();
     try {
-      listUsers.value = await repository.getAll("Bearer $token", page: page);
+      listUsers.value =
+          await repository.getAll("Bearer $token", page: page, search: search);
 
       update();
     } catch (e) {
@@ -147,6 +154,7 @@ class UserController extends GetxController {
   Future<void> getTypeUser() async {
     isLoading.value = true;
     try {
+      final token = UserStorage.getToken();
       listTypeUsers.value = await repository.getAllTypeUser("Bearer $token");
       update();
     } catch (e) {
@@ -216,7 +224,7 @@ class UserController extends GetxController {
           status: 1,
           usuarioId: UserStorage.getUserId(),
           familiaId: familyUser!.value);
-
+      final token = UserStorage.getToken();
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await userRepository.insertUser("Bearer $token", user);
         if (mensagem != null) {
@@ -258,6 +266,7 @@ class UserController extends GetxController {
         usuarioId: UserStorage.getUserId(),
         familiaId: familyUser?.value,
       );
+      final token = UserStorage.getToken();
 
       final mensagem = await repository.updateUser(
         "Bearer $token",
@@ -358,6 +367,7 @@ class UserController extends GetxController {
   Future<Map<String, dynamic>> approveUser(int tipoUsuarioId, int idAprovacao,
       int idMensagem, int usuarioId, int familiaId, String action) async {
     if (await ConnectionStatus.verifyConnection()) {
+      final token = UserStorage.getToken();
       mensagem = await userRepository.approveUser("Bearer $token",
           tipoUsuarioId, idAprovacao, idMensagem, usuarioId, familiaId, action);
       if (mensagem != null) {

@@ -16,17 +16,21 @@ class PeopleApiClient {
   final PeopleDatabaseHelper localDatabase = PeopleDatabaseHelper();
   final box = GetStorage('credenciado');
 
-  getAll(String token, {int? page}) async {
+  getAll(String token, {int? page, String? search}) async {
     final id = UserStorage.getUserId();
     final familiaId = box.read('auth')['user']['familia_id'];
     try {
       Uri peopleUrl;
       if (familiaId != null) {
-        peopleUrl = Uri.parse(
-            '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit');
+        String url = search != null
+            ? '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/$search/?page=1&limit'
+            : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';
+        peopleUrl = Uri.parse(url);
       } else {
-        peopleUrl = Uri.parse(
-            '$baseUrl/v1/pessoa/list-paginate/id/$id/?page=$page&limit');
+        String url = search != null
+            ? '$baseUrl/v1/pessoa/list-paginate/id/$id/$search/?page=$page&limit'
+            : '$baseUrl/v1/pessoa/list-paginate/id/$id/?page=$page&limit';
+        peopleUrl = Uri.parse(url);
       }
 
       var response = await httpClient.get(

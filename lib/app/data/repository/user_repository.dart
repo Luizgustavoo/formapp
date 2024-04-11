@@ -8,11 +8,11 @@ import 'package:ucif/app/utils/connection_service.dart';
 class UserRepository {
   final UserApiClient apiClient = UserApiClient();
 
-  getAll(String token, {int? page}) async {
+  getAll(String token, {int? page, String? search}) async {
     List<User> list = <User>[];
 
     if (await ConnectionStatus.verifyConnection()) {
-      var response = await apiClient.getAll(token, page: page);
+      var response = await apiClient.getAll(token, page: page, search: search);
       List<User> newUsers = [];
       response['data'].forEach((e) {
         User u = User.fromJson(e);

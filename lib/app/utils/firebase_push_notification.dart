@@ -30,7 +30,7 @@ Future<void> handleBackgroundMessage(message) async {
           data.containsKey('click_action') &&
           data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
           UserStorage.existUser()) {
-        Get.toNamed('/list-message');
+        Get.offAllNamed('/list-message');
       }
     },
   );
@@ -72,7 +72,7 @@ class FirebaseApi {
     } else if (data.containsKey('click_action') &&
         data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
         UserStorage.existUser()) {
-      Get.toNamed('/list-message');
+      Get.offAllNamed('/list-message');
     }
   }
 

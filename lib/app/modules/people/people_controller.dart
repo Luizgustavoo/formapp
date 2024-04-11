@@ -92,7 +92,6 @@ class PeopleController extends GetxController {
 
   int currentPage = 1;
   bool isLoadingMore = false;
-  final token = UserStorage.getToken();
 
   Widget searchChild(x) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
@@ -151,6 +150,7 @@ class PeopleController extends GetxController {
 
   Future<void> loadMorePeoples() async {
     try {
+      final token = UserStorage.getToken();
       isLoadingMore = true;
       final nextPage = currentPage + 1;
       final moreFamilies =
@@ -171,10 +171,10 @@ class PeopleController extends GetxController {
     }
   }
 
-  Future<void> searchPeople(String query) async {
+  void searchPeople(String query) async {
     try {
       if (query.isEmpty) {
-        await getPeoples(); // Aqui você deve implementar sua lógica para buscar as famílias
+        await getPeoples();
       } else {
         final filteredFamilies = listPeoples
             .where((family) =>
@@ -184,13 +184,19 @@ class PeopleController extends GetxController {
       }
     } catch (error) {
       throw Exception('Erro ao buscar famílias: $error');
+    } finally {
+      if (query.isEmpty) {
+        loadMorePeoples(); // Carrega mais famílias quando a pesquisa é limpa
+      }
     }
   }
 
-  Future<void> getPeoples({int? page}) async {
+  Future<void> getPeoples({int? page, String? search}) async {
     isLoading.value = true;
     try {
-      listPeoples.value = await repository.getAll("Bearer $token", page: page);
+      final token = UserStorage.getToken();
+      listPeoples.value =
+          await repository.getAll("Bearer $token", page: page, search: search);
       update();
     } catch (e) {
       throw Exception(e);
@@ -276,7 +282,7 @@ class PeopleController extends GetxController {
           usuarioId: UserStorage.getUserId(),
           foto: imagePath,
           familiaId: int.parse(familiaId.text));
-
+      final token = UserStorage.getToken();
       final mensagem = await repository.updatePeople("Bearer $token", pessoa,
           File(photoUrlPath.value), oldImagePath.value, peopleLocal);
 
@@ -337,6 +343,7 @@ class PeopleController extends GetxController {
 
   Future<void> getMaritalStatus() async {
     if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
       final updatedList = await maritalRepository.getAll("Bearer $token");
       listMaritalStatus.assignAll(updatedList);
     }
@@ -344,6 +351,7 @@ class PeopleController extends GetxController {
 
   Future<void> getReligion() async {
     if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
       listReligion.clear();
       final updatedList = await repositoryReligion.getAll("Bearer $token");
       listReligion.assignAll(updatedList);
@@ -352,6 +360,7 @@ class PeopleController extends GetxController {
 
   Future<void> getChurch() async {
     if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
       listChurch.clear();
       listChurch.value = await repositoryChurch.getAll("Bearer $token");
 

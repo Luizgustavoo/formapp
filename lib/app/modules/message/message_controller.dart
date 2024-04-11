@@ -18,7 +18,6 @@ class MessageController extends GetxController {
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
-  final token = UserStorage.getToken();
   dynamic mensagem;
   RxInt quantidadeMensagensNaoLidas = 0.obs;
   final box = GetStorage('credenciado');
@@ -38,6 +37,7 @@ class MessageController extends GetxController {
 
   void getMessages() async {
     if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
       listMessages.value = await repository.getAll("Bearer $token");
 
       quantidadeMensagensNaoLidas.value =

@@ -11,6 +11,7 @@ class MessageView extends GetView<MessageController> {
 
   @override
   Widget build(BuildContext context) {
+    // controller.getMessages();
     return Scaffold(
         appBar: CustomAppBar(
           showPadding: false,

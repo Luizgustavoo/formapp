@@ -31,6 +31,7 @@ class FamilyView extends GetView<FamilyController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.getFamilies();
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
@@ -40,194 +41,192 @@ class FamilyView extends GetView<FamilyController> {
             color: Colors.white,
             borderRadius: BorderRadiusDirectional.only(
                 topStart: Radius.circular(15), topEnd: Radius.circular(15))),
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      controller.getFamilies();
-                    },
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded)),
-                Expanded(
-                  child: SearchWidget(
-                    controller: controller.searchController,
-                    onSearchPressed: (context, a, query) {
-                      controller.getFamilies(
-                          search: controller.searchController.text);
-                    },
-                    onSubmitted: (context, a, query) {
-                      controller.getFamilies(
-                          search: controller.searchController.text);
-                    },
-                    isLoading: controller.isLoadingFamilies.value,
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-                child: NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (!controller.isLoadingFamilies.value &&
-                    scrollInfo.metrics.pixels >=
-                        scrollInfo.metrics.maxScrollExtent * 0.9) {
-                  controller.loadMoreFamilies();
-                }
-                return false;
-              },
-              child: Obx(() {
-                final status = Get.find<InternetStatusProvider>().status;
-                final List<Family> familiesToShow = controller.listFamilies;
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await controller.getFamilies();
+          },
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              SearchWidget(
+                controller: controller.searchController,
+                onSearchPressed: (context, a, query) {
+                  controller.getFamilies(
+                      search: controller.searchController.text);
+                },
+                onSubmitted: (context, a, query) {
+                  controller.getFamilies(
+                      search: controller.searchController.text);
+                },
+                isLoading: controller.isLoadingFamilies.value,
+              ),
+              Expanded(
+                  child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (!controller.isLoadingFamilies.value &&
+                      scrollInfo.metrics.pixels >=
+                          scrollInfo.metrics.maxScrollExtent * 0.9) {
+                    controller.loadMoreFamilies();
+                  }
+                  return false;
+                },
+                child: Obx(() {
+                  final status = Get.find<InternetStatusProvider>().status;
+                  final List<Family> familiesToShow = controller.listFamilies;
 
-                if (controller.isLoadingFamilies.value) {
-                  return ListView.builder(
-                    controller: controller.scrollController,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return const ShimmerCustomFamilyCard();
-                    },
-                  );
-                } else {
-                  return AnimationLimiter(
-                    child: ListView.builder(
+                  if (controller.isLoadingFamilies.value) {
+                    return ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      controller: controller.scrollController,
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: familiesToShow.length,
+                      // physics: const BouncingScrollPhysics(),
+                      itemCount: 5,
                       itemBuilder: (context, index) {
-                        final Family family = familiesToShow[index];
-                        String provedorCasa = "";
+                        return const ShimmerCustomFamilyCard();
+                      },
+                    );
+                  } else {
+                    return AnimationLimiter(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: familiesToShow.length,
+                        itemBuilder: (context, index) {
+                          final Family family = familiesToShow[index];
+                          String provedorCasa = "";
 
-                        if (family.pessoas != null &&
-                            family.pessoas!.isNotEmpty) {
-                          for (var p in family.pessoas!) {
-                            if (p.provedorCasa == 'sim') {
-                              provedorCasa += p.nome!;
+                          if (family.pessoas != null &&
+                              family.pessoas!.isNotEmpty) {
+                            for (var p in family.pessoas!) {
+                              if (p.provedorCasa == 'sim') {
+                                provedorCasa += p.nome!;
+                              }
                             }
                           }
-                        }
 
-                        if (status == InternetStatus.disconnected &&
-                            !family.familyLocal!) {
-                          return ListView.builder(
-                            controller: controller.scrollController,
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: 5,
-                            itemBuilder: (context, index) {
-                              return const ShimmerCustomFamilyCard();
-                            },
-                          );
-                        } else {
-                          return AnimationConfiguration.staggeredList(
-                            position: index,
-                            duration: const Duration(milliseconds: 600),
-                            child: SlideAnimation(
-                              verticalOffset: 50.0,
-                              curve: Curves.easeInOut,
-                              child: FadeInAnimation(
-                                child: CustomFamilyCard(
-                                  index: index,
-                                  local: family.familyLocal!,
-                                  family: family,
-                                  showAddMember: true,
-                                  stripe: index % 2 == 0 ? true : false,
-                                  familyName: family.nome.toString(),
-                                  provedor: "Provedor: $provedorCasa",
-                                  editFamily: () {
-                                    controller.selectedFamily = family;
+                          if (status == InternetStatus.disconnected &&
+                              !family.familyLocal!) {
+                            return ListView.builder(
+                              controller: controller.scrollController,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return const ShimmerCustomFamilyCard();
+                              },
+                            );
+                          } else {
+                            return AnimationConfiguration.staggeredList(
+                              position: index,
+                              duration: const Duration(milliseconds: 600),
+                              child: SlideAnimation(
+                                verticalOffset: 50.0,
+                                curve: Curves.easeInOut,
+                                child: FadeInAnimation(
+                                  child: CustomFamilyCard(
+                                    index: index,
+                                    local: family.familyLocal!,
+                                    family: family,
+                                    showAddMember: true,
+                                    stripe: index % 2 == 0 ? true : false,
+                                    familyName: family.nome.toString(),
+                                    provedor: "Provedor: $provedorCasa",
+                                    editFamily: () {
+                                      controller.selectedFamily = family;
 
-                                    controller.fillInFields();
+                                      controller.fillInFields();
 
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      isDismissible: false,
-                                      context: context,
-                                      builder: (context) => Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: CreateFamilyModal(
-                                          tipoOperacao: 'update',
-                                          titulo: 'Alteração da Família',
-                                          family: family,
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: CreateFamilyModal(
+                                            tipoOperacao: 'update',
+                                            titulo: 'Alteração da Família',
+                                            family: family,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  messageMember: () {
-                                    messageController.clearModalMessage();
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      isDismissible: false,
-                                      context: context,
-                                      builder: (context) => Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: MessageModal(
-                                          family: family,
-                                          titulo: 'Mensagem para a Família',
+                                      );
+                                    },
+                                    messageMember: () {
+                                      messageController.clearModalMessage();
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: MessageModal(
+                                            family: family,
+                                            titulo: 'Mensagem para a Família',
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  supportFamily: () {
-                                    peopleController.clearModalMessageService();
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      isDismissible: false,
-                                      context: context,
-                                      builder: (context) => Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: MessageServiceModal(
-                                          family: family,
-                                          showWidget: true,
-                                          tipoOperacao: 'insert',
-                                          titulo: 'Atendimento ${family.nome}',
+                                      );
+                                    },
+                                    supportFamily: () {
+                                      peopleController
+                                          .clearModalMessageService();
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: MessageServiceModal(
+                                            family: family,
+                                            showWidget: true,
+                                            tipoOperacao: 'insert',
+                                            titulo:
+                                                'Atendimento ${family.nome}',
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  addMember: () {
-                                    peopleController.clearAllPeopleTextFields();
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      isDismissible: false,
-                                      context: context,
-                                      builder: (context) => Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: AddPeopleFamilyView(
-                                          peopleLocal: family.familyLocal!,
-                                          tipoOperacao: 0,
-                                          family: family,
+                                      );
+                                    },
+                                    addMember: () {
+                                      peopleController
+                                          .clearAllPeopleTextFields();
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: AddPeopleFamilyView(
+                                            peopleLocal: family.familyLocal!,
+                                            tipoOperacao: 0,
+                                            family: family,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                  deleteFamily: () {
-                                    Get.to(const ListPeopleView());
-                                  },
-                                  peopleNames: family.pessoas
-                                      ?.map((person) => person.nome!)
-                                      .toList(),
+                                      );
+                                    },
+                                    deleteFamily: () {
+                                      Get.to(const ListPeopleView());
+                                    },
+                                    peopleNames: family.pessoas
+                                        ?.map((person) => person.nome!)
+                                        .toList(),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  );
-                }
-              }),
-            )),
-          ],
+                            );
+                          }
+                        },
+                      ),
+                    );
+                  }
+                }),
+              )),
+            ],
+          ),
         ),
       ),
       floatingActionButton: UserStorage.getUserType() < 3
