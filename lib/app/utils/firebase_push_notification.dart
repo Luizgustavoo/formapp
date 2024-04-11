@@ -25,7 +25,7 @@ Future<void> handleBackgroundMessage(message) async {
         Map<String, dynamic> jsonMap = jsonDecode(data['user']);
         User user = User.fromJson(jsonMap);
 
-        Get.toNamed('/chat', arguments: user);
+        Get.offAllNamed('/chat', arguments: user);
       } else if (data != null &&
           data.containsKey('click_action') &&
           data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
@@ -41,7 +41,7 @@ class FirebaseApi {
 
   final messageController = Get.put(MessageController());
   final chatController = Get.put(ChatController());
-  // final userController = Get.put(UserController());
+  final userController = Get.put(UserController());
 
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
@@ -56,7 +56,7 @@ class FirebaseApi {
 
     messageController.getMessages();
     chatController.getChat();
-    // userController.getUsers();
+    userController.getUsers();
 
     final Map<String, dynamic> data = message.data;
 
@@ -68,7 +68,7 @@ class FirebaseApi {
       Map<String, dynamic> jsonMap = jsonDecode(data['user']);
       User user = User.fromJson(jsonMap);
 
-      Get.toNamed('/chat', arguments: user);
+      Get.offAllNamed('/chat', arguments: user);
     } else if (data.containsKey('click_action') &&
         data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
         UserStorage.existUser()) {
@@ -113,7 +113,7 @@ class FirebaseApi {
 
       messageController.getMessages();
       chatController.getChat();
-      // userController.getUsers();
+      userController.getUsers();
 
       _localNotifications.show(
         notification.hashCode,

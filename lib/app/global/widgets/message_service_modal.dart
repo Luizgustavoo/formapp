@@ -157,8 +157,8 @@ class MessageServiceModal extends StatelessWidget {
                         ? family != null
                             ? await peopleController.saveService(family!)
                             : await peopleController.saveService(family2!)
-                        : await peopleController
-                            .updateService(familyService!.id!);
+                        : await peopleController.updateService(
+                            familyService!.id!, familyService!.pessoaId!);
 
                     if (retorno['return'] == 0) {
                       Get.back();

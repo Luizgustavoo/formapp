@@ -61,7 +61,9 @@ class CustomUserCard extends StatelessWidget {
                   );
                 },
                 icon: Icon(Icons.edit_outlined,
-                    color: user.tipousuarioId == 2 ? Colors.white : Colors.blue,
+                    color: user.tipousuarioId == 2
+                        ? Colors.white
+                        : Colors.blue.shade700,
                     size: 25),
               )
             : const CircleAvatar(
@@ -86,7 +88,7 @@ class CustomUserCard extends StatelessWidget {
                         size: 25,
                         color: user.tipousuarioId == 2
                             ? Colors.white
-                            : Colors.green,
+                            : Colors.blue.shade700,
                       )),
                   Positioned(
                     right: 0,

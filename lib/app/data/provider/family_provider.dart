@@ -17,21 +17,21 @@ class FamilyApiClient {
   final FamilyDatabaseHelper localDataBase = FamilyDatabaseHelper();
   final box = GetStorage('credenciado');
 
-  getAll(String token, {int? page}) async {
+  getAll(String token, {int? page, String? search}) async {
     final id = box.read('auth')['user']['id'];
     final familiaId = box.read('auth')['user']['familia_id'];
     try {
       Uri familyUrl;
 
       if (UserStorage.getUserType() == 1) {
-        familyUrl =
-            Uri.parse('$baseUrl/v1/familia/list-paginate/?page=$page&limit');
+        familyUrl = Uri.parse(
+            '$baseUrl/v1/familia/list-paginate/$search/?page=$page&limit');
       } else if (UserStorage.getUserType() == 2) {
         familyUrl = Uri.parse(
-            '$baseUrl/v1/familia/list-paginate/id/$id/?page=$page&limit');
+            '$baseUrl/v1/familia/list-paginate/id/$id/$search/?page=$page&limit');
       } else {
         familyUrl = Uri.parse(
-            '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/?page=$page&limit');
+            '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/$search/?page=$page&limit');
       }
 
       var response = await httpClient.get(
@@ -113,7 +113,6 @@ class FamilyApiClient {
           },
           body: requestBody,
         );
-        print(json.decode(response.body));
 
         if (response.statusCode == 200) {
           return json.decode(response.body);

@@ -43,6 +43,9 @@ class ListUserView extends GetView<UserController> {
               onSearchPressed: (context, a, query) {
                 controller.searchUsers(query);
               },
+              onSubmitted: (context, a, query) {
+                controller.searchUsers(query);
+              },
               isLoading: controller.isLoading.value,
             ),
             NotificationListener<ScrollNotification>(

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ChatView extends GetView<ChatController> {
-  const ChatView({Key? key}) : super(key: key);
-
+  ChatView({Key? key}) : super(key: key);
+  final userController = Get.find<UserController>();
   @override
   Widget build(BuildContext context) {
     final User user = Get.arguments != null ? Get.arguments as User : User();
@@ -18,6 +18,7 @@ class ChatView extends GetView<ChatController> {
       controller.destinatarioId.value = user.id!;
     }
     controller.getChat();
+    controller.chatChange();
 
     void scrollToBottomIfNeeded() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -37,106 +38,123 @@ class ChatView extends GetView<ChatController> {
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-          leadingWidth: Get.width * .25,
-          title: Text(user.nome ?? ""),
-          leading: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    Get.offAllNamed('/list-user');
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                  )),
-              CircleAvatar(
-                backgroundImage: user.foto != null
-                    ? NetworkImage('$urlImagem/storage/app/public/${user.foto}')
-                        as ImageProvider<Object>?
-                    : const AssetImage('assets/images/default_avatar.jpg'),
-              )
-            ],
-          )),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(15),
-            topEnd: Radius.circular(15),
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Role o ListView.builder para o final
+      controller.scrollController
+          .jumpTo(controller.scrollController.position.maxScrollExtent);
+    });
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        userController.getUsers();
+        Get.offAllNamed('/list-user');
+      },
+      child: Scaffold(
+        appBar: AppBar(
+            leadingWidth: Get.width * .25,
+            title: Text(user.nome ?? ""),
+            leading: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      userController.getUsers();
+                      Get.offAllNamed('/list-user');
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                    )),
+                CircleAvatar(
+                  backgroundImage: user.foto != null
+                      ? NetworkImage(
+                              '$urlImagem/storage/app/public/${user.foto}')
+                          as ImageProvider<Object>?
+                      : const AssetImage('assets/images/default_avatar.jpg'),
+                )
+              ],
+            )),
+        body: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadiusDirectional.only(
+              topStart: Radius.circular(15),
+              topEnd: Radius.circular(15),
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  controller: controller.scrollController,
-                  itemCount: controller.listChats.length,
-                  itemBuilder: (context, index) {
-                    final chat = controller.listChats[index];
-                    var mensagemRemetente =
-                        chat.remetenteId == UserStorage.getUserId();
-                    return Row(
-                      mainAxisAlignment: mensagemRemetente
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
-                      children: [
-                        ChatMessageWidget(
-                          mensagemRemetente: mensagemRemetente,
-                          chat: chat,
-                          remetenteId: UserStorage.getUserId(),
-                          user: user,
-                        ),
-                      ],
-                    );
-                  },
+          child: Column(
+            children: [
+              Obx(
+                () => Expanded(
+                  child: SingleChildScrollView(
+                    controller: controller.scrollController,
+                    child: Column(
+                      children:
+                          List.generate(controller.listChats.length, (index) {
+                        final chat = controller.listChats[index];
+                        final mensagemRemetente =
+                            chat.remetenteId == UserStorage.getUserId();
+                        return Row(
+                          mainAxisAlignment: mensagemRemetente
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            ChatMessageWidget(
+                              mensagemRemetente: mensagemRemetente,
+                              chat: chat,
+                              remetenteId: UserStorage.getUserId(),
+                              user: user,
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Flexible(
-                    child: SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: Get.height * 0.2,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: controller.chatController,
-                            maxLines: null,
-                            decoration: InputDecoration(
-                              hintText: 'Digite sua mensagem...',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide:
-                                      const BorderSide(color: Colors.black)),
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: Get.height * 0.2,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: controller.chatController,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                hintText: 'Digite sua mensagem...',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.black)),
+                              ),
+                              textInputAction: TextInputAction.send,
+                              onSubmitted: (_) => controller.sendChat(),
+                              onTap: () {
+                                scrollToBottomIfNeeded();
+                              },
                             ),
-                            textInputAction: TextInputAction.send,
-                            onSubmitted: (_) => controller.sendChat(),
-                            onTap: () {
-                              scrollToBottomIfNeeded();
-                            },
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: () => controller.sendChat(),
-                  ),
-                ],
-              ),
-            )
-          ],
+                    IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () => controller.sendChat(),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

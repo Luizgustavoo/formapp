@@ -53,6 +53,8 @@ class UserController extends GetxController {
 
   RxList<TypeUser> listTypeUsers = <TypeUser>[].obs;
 
+  final token = UserStorage.getToken();
+
   @override
   void onInit() async {
     if (UserStorage.existUser()) {
@@ -91,7 +93,6 @@ class UserController extends GetxController {
   Future<void> loadMoreUsers() async {
     try {
       isLoadingMore = true;
-      final token = UserStorage.getToken();
       final nextPage = currentPage + 1;
       final moreUsers =
           await repository.getAll("Bearer $token", page: nextPage);
@@ -134,7 +135,6 @@ class UserController extends GetxController {
   Future<void> getUsers({int? page}) async {
     isLoading.value = true;
     try {
-      final token = UserStorage.getToken();
       listUsers.value = await repository.getAll("Bearer $token", page: page);
 
       update();
@@ -147,7 +147,6 @@ class UserController extends GetxController {
   Future<void> getTypeUser() async {
     isLoading.value = true;
     try {
-      final token = UserStorage.getToken();
       listTypeUsers.value = await repository.getAllTypeUser("Bearer $token");
       update();
     } catch (e) {
@@ -218,8 +217,6 @@ class UserController extends GetxController {
           usuarioId: UserStorage.getUserId(),
           familiaId: familyUser!.value);
 
-      final token = UserStorage.getToken();
-
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await userRepository.insertUser("Bearer $token", user);
         if (mensagem != null) {
@@ -261,8 +258,6 @@ class UserController extends GetxController {
         usuarioId: UserStorage.getUserId(),
         familiaId: familyUser?.value,
       );
-
-      final token = UserStorage.getToken();
 
       final mensagem = await repository.updateUser(
         "Bearer $token",
@@ -362,8 +357,6 @@ class UserController extends GetxController {
 
   Future<Map<String, dynamic>> approveUser(int tipoUsuarioId, int idAprovacao,
       int idMensagem, int usuarioId, int familiaId, String action) async {
-    final token = UserStorage.getToken();
-
     if (await ConnectionStatus.verifyConnection()) {
       mensagem = await userRepository.approveUser("Bearer $token",
           tipoUsuarioId, idAprovacao, idMensagem, usuarioId, familiaId, action);

@@ -53,7 +53,7 @@ class PeopleController extends GetxController {
   RxString parentesco = 'Pai'.obs;
   RxString oldImagePath = ''.obs;
 
-  int? idPeopleSelected;
+  // int? idPeopleSelected;
   int? idFamilySelected;
 
   RxList<People> listPeoples = <People>[].obs;
@@ -92,6 +92,7 @@ class PeopleController extends GetxController {
 
   int currentPage = 1;
   bool isLoadingMore = false;
+  final token = UserStorage.getToken();
 
   Widget searchChild(x) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
@@ -101,6 +102,8 @@ class PeopleController extends GetxController {
 
   @override
   void onInit() async {
+    // print(
+    //     '======================================================controller PEOPLE==============');
     if (UserStorage.existUser()) {
       bool isConnected = await ConnectionStatus.verifyConnection();
       if (isConnected) {
@@ -149,7 +152,6 @@ class PeopleController extends GetxController {
   Future<void> loadMorePeoples() async {
     try {
       isLoadingMore = true;
-      final token = UserStorage.getToken();
       final nextPage = currentPage + 1;
       final moreFamilies =
           await repository.getAll("Bearer $token", page: nextPage);
@@ -188,7 +190,6 @@ class PeopleController extends GetxController {
   Future<void> getPeoples({int? page}) async {
     isLoading.value = true;
     try {
-      final token = UserStorage.getToken();
       listPeoples.value = await repository.getAll("Bearer $token", page: page);
       update();
     } catch (e) {
@@ -276,8 +277,6 @@ class PeopleController extends GetxController {
           foto: imagePath,
           familiaId: int.parse(familiaId.text));
 
-      final token = UserStorage.getToken();
-
       final mensagem = await repository.updatePeople("Bearer $token", pessoa,
           File(photoUrlPath.value), oldImagePath.value, peopleLocal);
 
@@ -338,7 +337,6 @@ class PeopleController extends GetxController {
 
   Future<void> getMaritalStatus() async {
     if (UserStorage.existUser()) {
-      final token = UserStorage.getToken();
       final updatedList = await maritalRepository.getAll("Bearer $token");
       listMaritalStatus.assignAll(updatedList);
     }
@@ -347,7 +345,6 @@ class PeopleController extends GetxController {
   Future<void> getReligion() async {
     if (UserStorage.existUser()) {
       listReligion.clear();
-      final token = UserStorage.getToken();
       final updatedList = await repositoryReligion.getAll("Bearer $token");
       listReligion.assignAll(updatedList);
     }
@@ -356,7 +353,6 @@ class PeopleController extends GetxController {
   Future<void> getChurch() async {
     if (UserStorage.existUser()) {
       listChurch.clear();
-      final token = UserStorage.getToken();
       listChurch.value = await repositoryChurch.getAll("Bearer $token");
 
       suggestions.clear();
@@ -516,7 +512,8 @@ class PeopleController extends GetxController {
     return retorno;
   }
 
-  Future<Map<String, dynamic>> updateService(int id) async {
+  Future<Map<String, dynamic>> updateService(
+      int id, int idPeopleSelected) async {
     FamilyService familyService = FamilyService(
       descricao: messageController.text,
       assunto: subjectController.text,
@@ -552,7 +549,7 @@ class PeopleController extends GetxController {
     messageController.value = TextEditingValue.empty;
     selectedDate.value = null;
     idFamilySelected = null;
-    idPeopleSelected = null;
+    // idPeopleSelected = null;
   }
 
   void fillInFieldsServicePerson() {

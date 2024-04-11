@@ -30,11 +30,13 @@ class ChatController extends GetxController {
   }
 
   Future<void> sendChat() async {
-    final mensagem = await repository.sendChat(
-        "Bearer $token", destinatarioId.value, chatController.text);
-    if (mensagem != null && await ConnectionStatus.verifyConnection()) {
-      getChat();
-      chatController.clear();
+    if (chatController.text.isNotEmpty) {
+      final mensagem = await repository.sendChat(
+          "Bearer $token", destinatarioId.value, chatController.text);
+      if (mensagem != null && await ConnectionStatus.verifyConnection()) {
+        getChat();
+        chatController.clear();
+      }
     }
   }
 

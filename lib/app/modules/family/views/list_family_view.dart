@@ -43,12 +43,28 @@ class FamilyView extends GetView<FamilyController> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            SearchWidget(
-              controller: controller.searchController,
-              onSearchPressed: (context, a, query) {
-                controller.searchFamily(query);
-              },
-              isLoading: controller.isLoadingFamilies.value,
+            Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      controller.getFamilies();
+                    },
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded)),
+                Expanded(
+                  child: SearchWidget(
+                    controller: controller.searchController,
+                    onSearchPressed: (context, a, query) {
+                      controller.getFamilies(
+                          search: controller.searchController.text);
+                    },
+                    onSubmitted: (context, a, query) {
+                      controller.getFamilies(
+                          search: controller.searchController.text);
+                    },
+                    isLoading: controller.isLoadingFamilies.value,
+                  ),
+                ),
+              ],
             ),
             Expanded(
                 child: NotificationListener<ScrollNotification>(

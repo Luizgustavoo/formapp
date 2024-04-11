@@ -27,6 +27,9 @@ class FamilyListModal extends StatelessWidget {
             onSearchPressed: (context, a, query) {
               controller.searchFamily(query);
             },
+            onSubmitted: (context, a, query) {
+              controller.searchFamily(query);
+            },
             isLoading: controller.isLoadingFamilies.value,
           ),
           Expanded(

@@ -34,6 +34,9 @@ class ListPeopleView extends GetView<PeopleController> {
               onSearchPressed: (context, a, query) {
                 controller.searchPeople(query);
               },
+              onSubmitted: (context, a, query) {
+                controller.searchPeople(query);
+              },
               isLoading: controller.isLoading.value,
             ),
             Expanded(

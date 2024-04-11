@@ -71,7 +71,7 @@ class FamilyServiceApiClient {
         "pessoa_id": familyService.pessoaId.toString()
       };
 
-      var response = await httpClient.put(
+      var response = await httpClient.patch(
         serviceUrlUpdate,
         headers: {
           "Accept": "application/json",

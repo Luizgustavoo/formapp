@@ -286,7 +286,7 @@ class CustomFamilyCard extends StatelessWidget {
                           ),
                         ),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             IconButton(
                               onPressed: () {

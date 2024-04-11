@@ -72,6 +72,7 @@ class FamilyController extends GetxController
 
   int currentPage = 1;
   bool isLoadingMore = false;
+  final token = UserStorage.getToken();
 
   @override
   void onInit() {
@@ -101,7 +102,6 @@ class FamilyController extends GetxController
   Future<void> loadMoreFamilies() async {
     try {
       isLoadingMore = true;
-      final token = UserStorage.getToken();
       final nextPage = currentPage + 1;
       final moreFamilies =
           await repository.getAll("Bearer $token", page: nextPage);
@@ -121,7 +121,7 @@ class FamilyController extends GetxController
     }
   }
 
-  Future<void> searchFamily(String query) async {
+  void searchFamily(String query) async {
     try {
       if (query.isEmpty) {
         await getFamilies();
@@ -134,6 +134,10 @@ class FamilyController extends GetxController
       }
     } catch (error) {
       throw Exception('Erro ao buscar famílias: $error');
+    } finally {
+      if (query.isEmpty) {
+        loadMoreFamilies(); // Carrega mais famílias quando a pesquisa é limpa
+      }
     }
   }
 
@@ -190,8 +194,6 @@ class FamilyController extends GetxController
         usuarioId: UserStorage.getUserId(),
       );
 
-      final token = UserStorage.getToken();
-
       mensagem = await repository.insertFamily("Bearer $token", family);
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -230,8 +232,6 @@ class FamilyController extends GetxController
         usuarioId: UserStorage.getUserId(),
       );
 
-      final token = UserStorage.getToken();
-
       final mensagem =
           await repository.updateFamily("Bearer $token", family, familyLocal);
 
@@ -261,8 +261,6 @@ class FamilyController extends GetxController
       id: id,
     );
 
-    final token = UserStorage.getToken();
-
     mensagem =
         await repository.deleteFamily("Bearer $token", family, familyLocal);
 
@@ -285,14 +283,12 @@ class FamilyController extends GetxController
   Future<Map<String, dynamic>> sendFamilyToAPIOffline(Family family) async {
     try {
       if (await ConnectionStatus.verifyConnection()) {
-        final token = UserStorage.getToken();
         var mensagem =
             await repository.insertFamilyLocalToAPi("Bearer $token", family);
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
             deleteFamily(family.id!, true);
-
             retorno = {
               "return": 0,
               "message": "Operação realizada com sucesso!"
@@ -319,11 +315,11 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<void> getFamilies({int? page}) async {
+  Future<void> getFamilies({int? page, String? search}) async {
     isLoadingFamilies.value = true;
     try {
-      final token = UserStorage.getToken();
-      listFamilies.value = await repository.getAll("Bearer $token", page: page);
+      listFamilies.value =
+          await repository.getAll("Bearer $token", page: page, search: search);
       update();
     } catch (e) {
       throw Exception(e);

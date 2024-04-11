@@ -8,7 +8,7 @@ class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
   final DatabaseHelper localDatabase = DatabaseHelper();
 
-  getAll(String token, {int? page}) async {
+  getAll(String token, {int? page, String? search}) async {
     List<Family> list = <Family>[];
 
     var responseLocal = await getFamiliesWithPeopleLocal();
@@ -19,7 +19,7 @@ class FamilyRepository {
     }
 
     if (await ConnectionStatus.verifyConnection()) {
-      var response = await apiClient.getAll(token, page: page);
+      var response = await apiClient.getAll(token, page: page, search: search);
       List<Family> newFamilies = [];
       response['data'].forEach((e) {
         Family f = Family.fromJson(e);

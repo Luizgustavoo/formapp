@@ -25,7 +25,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
 
   @override
   Widget build(BuildContext context) {
-    print('$urlImagem/public/storage/${controller.photoUrlPath.value}');
     return Container(
       margin: const EdgeInsets.only(top: 25),
       child: ListView(
