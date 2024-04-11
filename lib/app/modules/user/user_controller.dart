@@ -345,6 +345,7 @@ class UserController extends GetxController {
     nameController.text = UserStorage.getUserName();
     usernameController.text = UserStorage.getUserLogin();
     passwordController.text = '';
+    isImagePicPathSet.value = false;
     photoUrlPath.value = UserStorage.getUserPhoto();
   }
 

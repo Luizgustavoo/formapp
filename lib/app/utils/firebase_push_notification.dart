@@ -41,7 +41,7 @@ class FirebaseApi {
 
   final messageController = Get.put(MessageController());
   final chatController = Get.put(ChatController());
-  final userController = Get.put(UserController());
+  // final userController = Get.put(UserController());
 
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
@@ -56,7 +56,7 @@ class FirebaseApi {
 
     messageController.getMessages();
     chatController.getChat();
-    userController.getUsers();
+    // userController.getUsers();
 
     final Map<String, dynamic> data = message.data;
 
@@ -113,7 +113,7 @@ class FirebaseApi {
 
       messageController.getMessages();
       chatController.getChat();
-      userController.getUsers();
+      // userController.getUsers();
 
       _localNotifications.show(
         notification.hashCode,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
@@ -37,15 +39,27 @@ class ChatView extends GetView<ChatController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.nome ?? ""),
-        leading: IconButton(
-            onPressed: () {
-              Get.offAllNamed('/list-user');
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-            )),
-      ),
+          leadingWidth: Get.width * .25,
+          title: Text(user.nome ?? ""),
+          leading: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Get.offAllNamed('/list-user');
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                  )),
+              CircleAvatar(
+                backgroundImage: user.foto != null
+                    ? NetworkImage('$urlImagem/storage/app/public/${user.foto}')
+                        as ImageProvider<Object>?
+                    : const AssetImage('assets/images/default_avatar.jpg'),
+              )
+            ],
+          )),
       body: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
