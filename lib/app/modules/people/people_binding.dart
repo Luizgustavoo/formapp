@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ucif/app/data/provider/people_provider.dart';
-import 'package:ucif/app/data/repository/family_service_repository.dart';
 import 'package:ucif/app/data/repository/people_repository.dart';
-import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 
 class PeopleBinding implements Bindings {

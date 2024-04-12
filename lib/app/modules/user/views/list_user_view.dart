@@ -8,7 +8,6 @@ import 'package:ucif/app/global/shimmer/shimmer_custom_user_card.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_user_card.dart';
 import 'package:ucif/app/global/widgets/search_widget.dart';
-import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
@@ -19,7 +18,6 @@ class ListUserView extends GetView<UserController> {
   final box = GetStorage('credenciado');
 
   final messageController = Get.put(MessageController());
-  //final familyController = Get.put(FamilyController());
   @override
   Widget build(BuildContext context) {
     var idUserLogged = box.read('auth')['user']['id'];

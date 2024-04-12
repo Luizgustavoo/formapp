@@ -9,7 +9,6 @@ import 'package:ucif/app/data/models/user_type_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/auth_repository.dart';
 import 'package:ucif/app/data/repository/user_repository.dart';
-import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';

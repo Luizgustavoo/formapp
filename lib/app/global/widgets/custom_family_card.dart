@@ -276,68 +276,83 @@ class CustomFamilyCard extends StatelessWidget {
                       family.pessoas != null ? family.pessoas!.length : 0,
                   itemBuilder: (context, index) {
                     return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            PopupMenuButton<int>(
+                                iconColor: const Color(0xFF1C6399),
+                                onSelected: (value) {
+                                  switch (value) {
+                                    case 0: // Edit option
+                                      peopleController.selectedPeople =
+                                          family.pessoas![index];
+                                      peopleController
+                                          .fillInFieldsForEditPerson();
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: AddPeopleFamilyView(
+                                            peopleLocal: family.familyLocal!,
+                                            tipoOperacao: 1,
+                                            family: family,
+                                          ),
+                                        ),
+                                      );
+                                      break;
+                                    case 1: // Support option
+                                      peopleController
+                                          .clearModalMessageService();
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: MessageServiceModal(
+                                            people: family.pessoas![index],
+                                            showWidget: true,
+                                            titulo:
+                                                'Atendimento ${peopleNames![index]}',
+                                          ),
+                                        ),
+                                      );
+                                      break;
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) =>
+                                    <PopupMenuEntry<int>>[
+                                      const PopupMenuItem<int>(
+                                        value: 0,
+                                        child: ListTile(
+                                          leading: Icon(Icons.edit_outlined),
+                                          title: Text('Editar'),
+                                        ),
+                                      ),
+                                      if (familiaId == null)
+                                        PopupMenuItem<int>(
+                                          value: 1,
+                                          child: ListTile(
+                                            leading: const Icon(
+                                                Icons.support_agent_rounded),
+                                            title: Text(
+                                                'Atendimento ${peopleNames![index]}'),
+                                          ),
+                                        ),
+                                    ])
+                          ],
+                        ),
                         Flexible(
                           child: Text(
                             family.pessoas![index].nome!,
                             overflow: TextOverflow.clip,
                             style: CustomTextStyle.subtitle(context),
                           ),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                peopleController.selectedPeople =
-                                    family.pessoas![index];
-
-                                peopleController.fillInFieldsForEditPerson();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: AddPeopleFamilyView(
-                                      peopleLocal: family.familyLocal!,
-                                      tipoOperacao: 1,
-                                      family: family,
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.edit_outlined,
-                                size: 22,
-                              ),
-                            ),
-                            if (familiaId == null) ...[
-                              IconButton(
-                                iconSize: 22,
-                                onPressed: () {
-                                  peopleController.clearModalMessageService();
-                                  showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    isDismissible: false,
-                                    context: context,
-                                    builder: (context) => Padding(
-                                      padding:
-                                          MediaQuery.of(context).viewInsets,
-                                      child: MessageServiceModal(
-                                        people: family.pessoas![index],
-                                        showWidget: true,
-                                        titulo:
-                                            'Atendimento ${peopleNames![index]}',
-                                      ),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.support_agent_rounded),
-                              ),
-                            ]
-                          ],
                         ),
                       ],
                     );
