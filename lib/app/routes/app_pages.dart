@@ -58,7 +58,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.PERFIL,
-      page: () => PerfilView(),
+      page: () => const PerfilView(),
       binding: UserBinding(),
     ),
     GetPage(

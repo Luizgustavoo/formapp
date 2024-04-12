@@ -39,6 +39,20 @@ class FamilyRepository {
     return list;
   }
 
+  getAllDropDown(String token) async {
+    List<Family> list = <Family>[];
+
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAllDropDown(token);
+
+      response.forEach((e) {
+        Family f = Family.fromJson(e);
+        list.add(f);
+      });
+    }
+    return list;
+  }
+
   insertFamily(String token, Family family) async {
     try {
       var response = await apiClient.insertFamily(token, family);

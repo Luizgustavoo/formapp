@@ -9,6 +9,7 @@ import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/global/widgets/custom_camera_modal.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/format_validator.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
   const AddPeopleFamilyView({
@@ -191,7 +192,10 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           onChanged: (value) =>
                               controller.onNascimentoChanged(value),
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !FormattersValidators.validateDateSubmited(
+                                    value)) {
                               return 'Data inválida';
                             }
                             return null;
@@ -215,7 +219,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               'Companheiro(a)',
                               'Cunhado(a)',
                               'Filho(a)',
-                              'Madrasta',
                               'Mãe',
                               'Outro',
                               'Padrasto',
@@ -447,29 +450,41 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                             style: CustomTextStyle.button2(context),
                           )),
                       ElevatedButton(
-                          onPressed: () async {
-                            Map<String, dynamic> retorno = tipoOperacao == 0
-                                ? await controller.savePeople(
-                                    family!, peopleLocal)
-                                : await controller.updatePeople(peopleLocal);
-                            if (retorno['return'] == 0) {
-                              Get.offAllNamed('/list-family');
-                            }
-                            Get.snackbar(
-                              snackPosition: SnackPosition.BOTTOM,
-                              duration: const Duration(milliseconds: 1500),
-                              retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                              retorno['message'],
-                              backgroundColor: retorno['return'] == 0
-                                  ? Colors.green
-                                  : Colors.red,
-                              colorText: Colors.white,
-                            );
-                          },
-                          child: Text(
-                            tipoOperacao == 0 ? "ADICIONAR" : "ALTERAR",
-                            style: CustomTextStyle.button(context),
-                          )),
+                          onPressed: controller.isSaving.value
+                              ? null
+                              : () async {
+                                  Map<String, dynamic> retorno =
+                                      tipoOperacao == 0
+                                          ? await controller.savePeople(
+                                              family!, peopleLocal)
+                                          : await controller
+                                              .updatePeople(peopleLocal);
+                                  if (retorno['return'] == 0) {
+                                    Get.offAllNamed('/list-family');
+                                  }
+                                  Get.snackbar(
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    duration:
+                                        const Duration(milliseconds: 1500),
+                                    retorno['return'] == 0
+                                        ? 'Sucesso'
+                                        : "Falha",
+                                    retorno['message'],
+                                    backgroundColor: retorno['return'] == 0
+                                        ? Colors.green
+                                        : Colors.red,
+                                    colorText: Colors.white,
+                                  );
+                                },
+                          child: controller.isSaving.value
+                              ? const CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFF1C6399)),
+                                )
+                              : Text(
+                                  tipoOperacao == 0 ? "ADICIONAR" : "ALTERAR",
+                                  style: CustomTextStyle.button(context),
+                                )),
                     ],
                   )
                 ],

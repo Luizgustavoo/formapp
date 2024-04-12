@@ -49,6 +49,43 @@ class FamilyApiClient {
           "Authorization": token,
         },
       );
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  //*APENAS PARA O DROPDOWN*/
+  getAllDropDown(String token) async {
+    try {
+      Uri familyUrl = Uri.parse('$baseUrl/v1/familia/list');
+
+      var response = await httpClient.get(
+        familyUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&

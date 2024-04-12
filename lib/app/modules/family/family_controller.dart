@@ -16,6 +16,7 @@ import 'package:ucif/app/utils/user_storage.dart';
 class FamilyController extends GetxController
     with GetSingleTickerProviderStateMixin {
   TextEditingController searchController = TextEditingController();
+  TextEditingController searchControllerModal = TextEditingController();
   TextEditingController idFamiliaController = TextEditingController();
   TextEditingController nomeFamiliaController = TextEditingController();
   TextEditingController cepFamiliaController = TextEditingController();
@@ -37,6 +38,7 @@ class FamilyController extends GetxController
   List<People>? listPessoas = [];
 
   RxList<Family> listFamilies = <Family>[].obs;
+  RxList<Family> listFamiliesDropDown = <Family>[].obs;
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
 
   RxBool residenceOwn = false.obs;
@@ -63,6 +65,7 @@ class FamilyController extends GetxController
   Rx<Color> corFundoScaffold = Colors.white.obs;
 
   final ScrollController scrollController = ScrollController();
+  final ScrollController scrollControllerModal = ScrollController();
 
   int currentPage = 1;
   bool isLoadingMore = false;
@@ -87,17 +90,37 @@ class FamilyController extends GetxController
         }
       }
     });
+    scrollControllerModal.addListener(() {
+      if (scrollControllerModal.position.pixels ==
+          scrollControllerModal.position.maxScrollExtent) {
+        if (!isLoadingMore) {
+          loadMoreFamilies().then((value) => isLoadingFamilies.value = false);
+        }
+      }
+    });
 
     super.onInit();
   }
 
+  // @override
+  // void onClose() {
+  //   searchController.text = '';
+  //   super.onClose();
+  // }
+
   Future<void> loadMoreFamilies() async {
     try {
+      String? search;
+      if (searchController.text.isNotEmpty) {
+        search = searchController.text;
+      } else if (searchControllerModal.text.isNotEmpty) {
+        search = searchControllerModal.text;
+      }
       final token = UserStorage.getToken();
       isLoadingMore = true;
       final nextPage = currentPage + 1;
-      final moreFamilies =
-          await repository.getAll("Bearer $token", page: nextPage);
+      final moreFamilies = await repository.getAll("Bearer $token",
+          page: nextPage, search: search);
       if (moreFamilies.isNotEmpty) {
         for (final family in moreFamilies) {
           if (!listFamilies
@@ -140,6 +163,19 @@ class FamilyController extends GetxController
       final token = UserStorage.getToken();
       listFamilies.value =
           await repository.getAll("Bearer $token", page: page, search: search);
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingFamilies.value = false;
+  }
+
+  Future<void> getFamiliesDropDown() async {
+    isLoadingFamilies.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listFamiliesDropDown.value =
+          await repository.getAllDropDown("Bearer $token");
       update();
     } catch (e) {
       ErrorHandler.showError(e);

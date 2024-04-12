@@ -9,14 +9,15 @@ import 'package:ucif/app/utils/user_storage.dart';
 import '../../modules/user/user_controller.dart';
 
 class AproveUserModal extends GetView<UserController> {
-  final familyController = Get.put(FamilyController());
   final User? user;
   final int? idMensagem;
+  final familyController = Get.put(FamilyController());
   final int? idAprovacao;
 
   AproveUserModal({super.key, this.user, this.idMensagem, this.idAprovacao});
   @override
   Widget build(BuildContext context) {
+    familyController.getFamiliesDropDown();
     RxInt typeUserSelected = 1.obs;
     RxInt? familyUser = 0.obs;
     controller.getTypeUser();
@@ -78,15 +79,15 @@ class AproveUserModal extends GetView<UserController> {
                       isDense: true,
                       menuMaxHeight: Get.size.height / 2,
                       value: user?.familiaId ??
-                          (familyController.listFamilies.isNotEmpty
-                              ? familyController.listFamilies.first.id
+                          (familyController.listFamiliesDropDown.isNotEmpty
+                              ? familyController.listFamiliesDropDown.first.id
                               : null),
                       onChanged: (int? value) {
                         if (value != null) {
                           familyUser.value = value;
                         }
                       },
-                      items: familyController.listFamilies
+                      items: familyController.listFamiliesDropDown
                           .map<DropdownMenuItem<int>>((Family family) {
                         return DropdownMenuItem<int>(
                           value: family.id,

@@ -12,7 +12,6 @@ class ChatController extends GetxController {
   final RxInt destinatarioId = 0.obs;
   final ScrollController scrollController = ScrollController();
   dynamic mensagem;
-  final token = UserStorage.getToken();
   void getChat() async {
     if (UserStorage.existUser() && await ConnectionStatus.verifyConnection()) {
       final token = UserStorage.getToken();
@@ -31,6 +30,7 @@ class ChatController extends GetxController {
 
   Future<void> sendChat() async {
     if (chatController.text.isNotEmpty) {
+      final token = UserStorage.getToken();
       final mensagem = await repository.sendChat(
           "Bearer $token", destinatarioId.value, chatController.text);
       if (mensagem != null && await ConnectionStatus.verifyConnection()) {
@@ -42,6 +42,7 @@ class ChatController extends GetxController {
 
   Future<void> chatChange() async {
     if (await ConnectionStatus.verifyConnection()) {
+      final token = UserStorage.getToken();
       mensagem =
           await repository.chatChange("Bearer $token", destinatarioId.value);
       if (mensagem != null && await ConnectionStatus.verifyConnection()) {

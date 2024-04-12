@@ -20,6 +20,7 @@ class ListPeopleView extends GetView<PeopleController> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
+          controller.searchController.clear();
           await controller.getPeoples();
         },
         child: Container(

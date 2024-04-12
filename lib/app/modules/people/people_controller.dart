@@ -86,6 +86,8 @@ class PeopleController extends GetxController {
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
+  RxBool isSaving = false.obs;
+
   dynamic mensagem;
 
   final status = Get.find<InternetStatusProvider>().status;
@@ -150,13 +152,21 @@ class PeopleController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    searchController.text = '';
+    super.onClose();
+  }
+
   Future<void> loadMorePeoples() async {
     try {
       final token = UserStorage.getToken();
       isLoadingMore = true;
       final nextPage = currentPage + 1;
-      final morePeoples =
-          await repository.getAll("Bearer $token", page: nextPage);
+      final morePeoples = await repository.getAll("Bearer $token",
+          page: nextPage,
+          search:
+              searchController.text.isNotEmpty ? searchController.text : null);
       if (morePeoples.isNotEmpty) {
         for (final people in morePeoples) {
           if (!listPeoples

@@ -22,7 +22,7 @@ class PeopleApiClient {
     final familiaId = box.read('auth')['user']['familia_id'];
     try {
       Uri peopleUrl;
-      if (familiaId != null) {
+      if (familiaId != null && UserStorage.getUserType() == 3) {
         String url = search != null
             ? '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/$search/?page=1&limit'
             : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';

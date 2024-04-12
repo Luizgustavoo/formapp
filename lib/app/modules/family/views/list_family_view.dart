@@ -42,6 +42,7 @@ class FamilyView extends GetView<FamilyController> {
                 topStart: Radius.circular(15), topEnd: Radius.circular(15))),
         child: RefreshIndicator(
           onRefresh: () async {
+            controller.searchController.clear();
             Get.offAllNamed('/list-family');
           },
           child: Column(

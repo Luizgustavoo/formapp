@@ -10,6 +10,7 @@ import 'package:ucif/app/global/widgets/custom_user_card.dart';
 import 'package:ucif/app/global/widgets/search_widget.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ListUserView extends GetView<UserController> {
@@ -37,6 +38,7 @@ class ListUserView extends GetView<UserController> {
         ),
         child: RefreshIndicator(
           onRefresh: () async {
+            controller.searchController.clear();
             Get.offAllNamed('/list-user');
           },
           child: Column(
@@ -239,7 +241,10 @@ class ListUserView extends GetView<UserController> {
               colorText: Colors.white,
             );
           },
-          child: const Text("Confirmar"),
+          child: Text(
+            "Confirmar",
+            style: CustomTextStyle.button(context),
+          ),
         ),
       ],
     );

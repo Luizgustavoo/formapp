@@ -28,7 +28,6 @@ class _SearchWidgetState extends State<SearchWidget> {
         textInputAction: TextInputAction.send,
         onSubmitted: (query) {
           widget.onSearchPressed(context, 1, widget.controller.text);
-          widget.controller.clear();
         },
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
@@ -43,7 +42,6 @@ class _SearchWidgetState extends State<SearchWidget> {
               // Verificar se não está carregando para evitar múltiplas pesquisas
 
               widget.onSearchPressed(context, 1, widget.controller.text);
-              widget.controller.clear();
             },
             icon: const Icon(
               Icons.search,

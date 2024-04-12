@@ -23,55 +23,68 @@ class FamilyListModal extends StatelessWidget {
       body: Column(
         children: [
           SearchWidget(
-            controller: controller.searchController,
+            controller: controller.searchControllerModal,
             onSearchPressed: (context, a, query) {
-              controller.searchFamily(query);
+              controller.getFamilies(
+                  search: controller.searchControllerModal.text);
             },
             onSubmitted: (context, a, query) {
-              controller.searchFamily(query);
+              controller.getFamilies(
+                  search: controller.searchControllerModal.text);
             },
             isLoading: controller.isLoadingFamilies.value,
           ),
           Expanded(
-              child: Obx(
-            () => ListView.builder(
-              itemCount: controller.listFamilies.length,
-              itemBuilder: (context, index) {
-                final family = controller.listFamilies[index];
-                return Card(
-                  color: family.id == people!.familiaId
-                      ? Colors.orange
-                      : Colors.white,
-                  child: ListTile(
-                    title: Text(family.nome!,
-                        style: CustomTextStyle.subtitleNegrit(context)),
-                    subtitle: Text(
-                      'Endereço: ${family.endereco}, ${family.cidade}',
-                      style: CustomTextStyle.button2(context),
-                    ),
-                    onTap: () async {
-                      if (family.id == people!.familiaId) {
-                        Get.defaultDialog(
-                          titlePadding: const EdgeInsets.all(16),
-                          contentPadding: const EdgeInsets.all(16),
-                          title: "Atenção",
-                          titleStyle: CustomTextStyle.titleSplash(context),
-                          content: Text(
-                            textAlign: TextAlign.center,
-                            "${people!.nome} já pertence à ${family.nome}!",
-                            style: const TextStyle(
-                              fontFamily: 'Poppinss',
-                              fontSize: 18,
+              child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (!controller.isLoadingFamilies.value &&
+                  scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent * 0.9) {
+                controller.loadMoreFamilies();
+              }
+              return false;
+            },
+            child: Obx(
+              () => ListView.builder(
+                controller: controller.scrollControllerModal,
+                itemCount: controller.listFamilies.length,
+                itemBuilder: (context, index) {
+                  final family = controller.listFamilies[index];
+                  return Card(
+                    color: family.id == people!.familiaId
+                        ? Colors.orange
+                        : Colors.white,
+                    child: ListTile(
+                      title: Text(family.nome!,
+                          style: CustomTextStyle.subtitleNegrit(context)),
+                      subtitle: Text(
+                        'Endereço: ${family.endereco}, ${family.cidade}',
+                        style: CustomTextStyle.button2(context),
+                      ),
+                      onTap: () async {
+                        if (family.id == people!.familiaId) {
+                          Get.defaultDialog(
+                            titlePadding: const EdgeInsets.all(16),
+                            contentPadding: const EdgeInsets.all(16),
+                            title: "Atenção",
+                            titleStyle: CustomTextStyle.titleSplash(context),
+                            content: Text(
+                              textAlign: TextAlign.center,
+                              "${people!.nome} já pertence à ${family.nome}!",
+                              style: const TextStyle(
+                                fontFamily: 'Poppinss',
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        showDialog(context, family);
-                      }
-                    },
-                  ),
-                );
-              },
+                          );
+                        } else {
+                          showDialog(context, family);
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           )),
         ],

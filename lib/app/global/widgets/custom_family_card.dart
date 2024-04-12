@@ -53,7 +53,6 @@ class CustomFamilyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RxBool isExpanded = false.obs;
-    final familiaId = familyController.box.read('auth')['user']['familia_id'];
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Card(
@@ -305,14 +304,14 @@ class CustomFamilyCard extends StatelessWidget {
                                                 title: Text('Editar'),
                                               ),
                                             ),
-                                            if (familiaId == null)
-                                              PopupMenuItem<int>(
+                                            if (UserStorage.getUserType() < 3 &&
+                                                !local)
+                                              const PopupMenuItem<int>(
                                                 value: 1,
                                                 child: ListTile(
-                                                  leading: const Icon(Icons
+                                                  leading: Icon(Icons
                                                       .support_agent_rounded),
-                                                  title: Text(
-                                                      'Atendimento ${peopleNames![index]}'),
+                                                  title: Text('Atendimento'),
                                                 ),
                                               ),
                                           ])

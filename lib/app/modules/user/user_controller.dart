@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -54,8 +55,6 @@ class UserController extends GetxController {
 
   RxList<TypeUser> listTypeUsers = <TypeUser>[].obs;
 
-  // final token = UserStorage.getToken();
-
   @override
   void onInit() async {
     if (UserStorage.existUser()) {
@@ -87,7 +86,14 @@ class UserController extends GetxController {
     super.onInit();
   }
 
-  void logout() {
+  @override
+  void onClose() {
+    searchController.text = '';
+    super.onClose();
+  }
+
+  void logout() async {
+    await FirebaseMessaging.instance.deleteToken();
     authRepository.getLogout();
   }
 
@@ -96,8 +102,10 @@ class UserController extends GetxController {
       final token = UserStorage.getToken();
       isLoadingMore = true;
       final nextPage = currentPage + 1;
-      final moreUsers =
-          await repository.getAll("Bearer $token", page: nextPage);
+      final moreUsers = await repository.getAll("Bearer $token",
+          page: nextPage,
+          search:
+              searchController.text.isNotEmpty ? searchController.text : null);
       if (moreUsers.isNotEmpty) {
         for (final user in moreUsers) {
           if (!listUsers
