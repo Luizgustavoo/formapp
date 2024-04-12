@@ -28,10 +28,17 @@ class PeopleApiClient {
             : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';
         peopleUrl = Uri.parse(url);
       } else {
-        String url = search != null
-            ? '$baseUrl/v1/pessoa/list-paginate/id/$id/$search/?page=$page&limit'
-            : '$baseUrl/v1/pessoa/list-paginate/id/$id/?page=$page&limit';
-        peopleUrl = Uri.parse(url);
+        if (UserStorage.getUserType() == 1) {
+          String url = search != null
+              ? '$baseUrl/v1/pessoa/list-paginate-adm/$search/?page=$page&limit'
+              : '$baseUrl/v1/pessoa/list-paginate-adm/?page=$page&limit';
+          peopleUrl = Uri.parse(url);
+        } else {
+          String url = search != null
+              ? '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/$search/?page=$page&limit'
+              : '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/?page=$page&limit';
+          peopleUrl = Uri.parse(url);
+        }
       }
 
       var response = await httpClient.get(

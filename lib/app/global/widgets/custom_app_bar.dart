@@ -14,7 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    double factor = 0.20; // Ajuste esse fator conforme necessário
+    double factor = 0.22; // Ajuste esse fator conforme necessário
     if (showPadding == false) {
       factor = 0.15; // Ajuste esse fator conforme necessário
     }
@@ -46,7 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           Padding(
             padding: showPadding == false
-                ? const EdgeInsets.only(right: 20, top: 60)
+                ? const EdgeInsets.only(right: 20)
                 : const EdgeInsets.only(left: 20, right: 20, top: 22),
             child: Column(
               children: [

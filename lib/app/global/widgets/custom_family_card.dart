@@ -221,104 +221,115 @@ class CustomFamilyCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Obx(() => isExpanded.value
-                      ? const Divider(
-                          height: 3,
-                          thickness: 2,
-                          color: Color(0xFF1C6399),
-                        )
-                      : const SizedBox()),
                 ],
               ),
               children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount:
-                      family.pessoas != null ? family.pessoas!.length : 0,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            PopupMenuButton<int>(
-                                iconColor: const Color(0xFF1C6399),
-                                onSelected: (value) {
-                                  switch (value) {
-                                    case 0: // Edit option
-                                      peopleController.selectedPeople =
-                                          family.pessoas![index];
-                                      peopleController
-                                          .fillInFieldsForEditPerson();
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        isDismissible: false,
-                                        context: context,
-                                        builder: (context) => Padding(
-                                          padding:
-                                              MediaQuery.of(context).viewInsets,
-                                          child: AddPeopleFamilyView(
-                                            peopleLocal: family.familyLocal!,
-                                            tipoOperacao: 1,
-                                            family: family,
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                    case 1: // Support option
-                                      peopleController
-                                          .clearModalMessageService();
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        isDismissible: false,
-                                        context: context,
-                                        builder: (context) => Padding(
-                                          padding:
-                                              MediaQuery.of(context).viewInsets,
-                                          child: MessageServiceModal(
-                                            people: family.pessoas![index],
-                                            showWidget: true,
-                                            titulo:
-                                                'Atendimento ${peopleNames![index]}',
-                                          ),
-                                        ),
-                                      );
-                                      break;
-                                  }
-                                },
-                                itemBuilder: (BuildContext context) =>
-                                    <PopupMenuEntry<int>>[
-                                      const PopupMenuItem<int>(
-                                        value: 0,
-                                        child: ListTile(
-                                          leading: Icon(Icons.edit_outlined),
-                                          title: Text('Editar'),
-                                        ),
-                                      ),
-                                      if (familiaId == null)
-                                        PopupMenuItem<int>(
-                                          value: 1,
-                                          child: ListTile(
-                                            leading: const Icon(
-                                                Icons.support_agent_rounded),
-                                            title: Text(
-                                                'Atendimento ${peopleNames![index]}'),
-                                          ),
-                                        ),
-                                    ])
-                          ],
-                        ),
-                        Flexible(
-                          child: Text(
-                            family.pessoas![index].nome!,
-                            overflow: TextOverflow.clip,
-                            style: CustomTextStyle.subtitle(context),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                Obx(() => isExpanded.value
+                    ? const Divider(
+                        height: 3,
+                        thickness: 2,
+                        color: Color(0xFF1C6399),
+                      )
+                    : const SizedBox()),
+                const SizedBox(height: 10),
+                family.pessoas!.isEmpty
+                    ? const Center(
+                        child: Text(
+                        'Não há pessoas cadastradas na família',
+                        style: TextStyle(
+                            fontFamily: 'Poppinss', color: Colors.red),
+                      ))
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            family.pessoas != null ? family.pessoas!.length : 0,
+                        itemBuilder: (context, index) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  PopupMenuButton<int>(
+                                      iconColor: const Color(0xFF1C6399),
+                                      onSelected: (value) {
+                                        switch (value) {
+                                          case 0: // Edit option
+                                            peopleController.selectedPeople =
+                                                family.pessoas![index];
+                                            peopleController
+                                                .fillInFieldsForEditPerson();
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              isDismissible: false,
+                                              context: context,
+                                              builder: (context) => Padding(
+                                                padding: MediaQuery.of(context)
+                                                    .viewInsets,
+                                                child: AddPeopleFamilyView(
+                                                  peopleLocal:
+                                                      family.familyLocal!,
+                                                  tipoOperacao: 1,
+                                                  family: family,
+                                                ),
+                                              ),
+                                            );
+                                            break;
+                                          case 1: // Support option
+                                            peopleController
+                                                .clearModalMessageService();
+                                            showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              isDismissible: false,
+                                              context: context,
+                                              builder: (context) => Padding(
+                                                padding: MediaQuery.of(context)
+                                                    .viewInsets,
+                                                child: MessageServiceModal(
+                                                  people:
+                                                      family.pessoas![index],
+                                                  showWidget: true,
+                                                  titulo:
+                                                      'Atendimento ${peopleNames![index]}',
+                                                ),
+                                              ),
+                                            );
+                                            break;
+                                        }
+                                      },
+                                      itemBuilder: (BuildContext context) =>
+                                          <PopupMenuEntry<int>>[
+                                            const PopupMenuItem<int>(
+                                              value: 0,
+                                              child: ListTile(
+                                                leading:
+                                                    Icon(Icons.edit_outlined),
+                                                title: Text('Editar'),
+                                              ),
+                                            ),
+                                            if (familiaId == null)
+                                              PopupMenuItem<int>(
+                                                value: 1,
+                                                child: ListTile(
+                                                  leading: const Icon(Icons
+                                                      .support_agent_rounded),
+                                                  title: Text(
+                                                      'Atendimento ${peopleNames![index]}'),
+                                                ),
+                                              ),
+                                          ])
+                                ],
+                              ),
+                              Flexible(
+                                child: Text(
+                                  family.pessoas![index].nome!,
+                                  overflow: TextOverflow.clip,
+                                  style: CustomTextStyle.subtitle(context),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
               ],
             )),
       ),

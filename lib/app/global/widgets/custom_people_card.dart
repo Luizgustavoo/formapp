@@ -104,7 +104,9 @@ class CustomPeopleCard extends StatelessWidget {
                         children: [
                           Text("Nascimento: ${people.dataNascimento!}",
                               style: CustomTextStyle.subtitle(context)),
-                          Text("Família: ",
+                          Text("Família: ${people.family!.nome}",
+                              style: CustomTextStyle.subtitle(context)),
+                          Text('Atendimentos: ${people.atendimentos!.length}',
                               style: CustomTextStyle.subtitle(context))
                         ],
                       ),
@@ -112,80 +114,82 @@ class CustomPeopleCard extends StatelessWidget {
                   ],
                 ),
                 children: [
-                  if (people.atendimentos!.isNotEmpty) ...[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Atendimentos:",
-                          style: CustomTextStyle.subtitleNegrit(context),
-                        ),
-                        const Divider(
+                  Obx(() => isExpanded.value
+                      ? const Divider(
                           height: 3,
                           thickness: 2,
                           color: Color(0xFF1C6399),
-                        ),
-                      ],
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: people.atendimentos != null
-                          ? people.atendimentos!.length
-                          : 0,
-                      itemBuilder: (context, index) {
-                        FamilyService atendimento = people.atendimentos![index];
+                        )
+                      : const SizedBox()),
+                  const SizedBox(height: 10),
+                  people.atendimentos!.isEmpty
+                      ? const Center(
+                          child: Text(
+                          'Não há atendimentos para essa pessoa',
+                          style: TextStyle(
+                              fontFamily: 'Poppinss', color: Colors.red),
+                        ))
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: people.atendimentos != null
+                              ? people.atendimentos!.length
+                              : 0,
+                          itemBuilder: (context, index) {
+                            FamilyService atendimento =
+                                people.atendimentos![index];
 
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                atendimento.assunto!,
-                                overflow: TextOverflow.clip,
-                                style: CustomTextStyle.subtitle(context),
-                              ),
-                            ),
-                            Row(
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  onPressed: () {
-                                    controller.selectedService = atendimento;
-                                    controller.fillInFieldsServicePerson();
+                                Flexible(
+                                  child: Text(
+                                    atendimento.assunto!,
+                                    overflow: TextOverflow.clip,
+                                    style: CustomTextStyle.subtitle(context),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        controller.selectedService =
+                                            atendimento;
+                                        controller.fillInFieldsServicePerson();
 
-                                    showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      isDismissible: false,
-                                      context: context,
-                                      builder: (context) => Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: MessageServiceModal(
-                                          familyService: atendimento,
-                                          showWidget: true,
-                                          tipoOperacao: 'update',
-                                          titulo: 'Alteração do Atendimento',
-                                          people: people,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  icon: familiaId != null
-                                      ? const Icon(
-                                          Icons.search_outlined,
-                                          size: 22,
-                                        )
-                                      : const Icon(
-                                          Icons.edit_outlined,
-                                          size: 22,
-                                        ),
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          isDismissible: false,
+                                          context: context,
+                                          builder: (context) => Padding(
+                                            padding: MediaQuery.of(context)
+                                                .viewInsets,
+                                            child: MessageServiceModal(
+                                              familyService: atendimento,
+                                              showWidget: true,
+                                              tipoOperacao: 'update',
+                                              titulo:
+                                                  'Alteração do Atendimento',
+                                              people: people,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      icon: familiaId != null
+                                          ? const Icon(
+                                              Icons.search_outlined,
+                                              size: 22,
+                                            )
+                                          : const Icon(
+                                              Icons.edit_outlined,
+                                              size: 22,
+                                            ),
+                                    ),
+                                  ],
                                 ),
                               ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ]
+                            );
+                          },
+                        ),
                 ],
               )),
         ),
