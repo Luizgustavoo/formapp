@@ -8,6 +8,7 @@ import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class FamilyServiceApiClient {
   final http.Client httpClient = http.Client();
@@ -53,7 +54,7 @@ class FamilyServiceApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -97,7 +98,7 @@ class FamilyServiceApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }

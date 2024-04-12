@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeApiClient {
@@ -23,25 +24,7 @@ class HomeApiClient {
         return json.decode(response.body);
       }
     } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      ErrorHandler.showError("Sem conexão! Tente novamente mais tarde.");
     }
     return null;
   }

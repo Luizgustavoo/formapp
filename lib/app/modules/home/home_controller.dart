@@ -5,6 +5,7 @@ import 'package:ucif/app/data/models/count_families_and_people.dart';
 import 'package:ucif/app/data/models/genre_model.dart';
 import 'package:ucif/app/data/repository/home_repository.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeController extends GetxController
@@ -71,7 +72,7 @@ class HomeController extends GetxController
       List<Genre> genre = await homeRepository.getCountGenre();
       genres.assignAll(genre);
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
   }
 
@@ -87,7 +88,7 @@ class HomeController extends GetxController
         totalPeoples.value = resposta.peopleUser;
       }
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
   }
 

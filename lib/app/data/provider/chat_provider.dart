@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ChatApiClient {
@@ -39,7 +40,7 @@ class ChatApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception('Erro ao buscar dados: $err');
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -80,7 +81,7 @@ class ChatApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -119,7 +120,7 @@ class ChatApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }

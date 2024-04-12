@@ -9,6 +9,7 @@ import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/people_database_helper.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class PeopleApiClient {
@@ -55,25 +56,7 @@ class PeopleApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      //
     }
     return null;
   }
@@ -165,7 +148,7 @@ class PeopleApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -257,7 +240,7 @@ class PeopleApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -296,7 +279,7 @@ class PeopleApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }

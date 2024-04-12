@@ -19,7 +19,7 @@ class ListUserView extends GetView<UserController> {
   final box = GetStorage('credenciado');
 
   final messageController = Get.put(MessageController());
-  final familyController = Get.put(FamilyController());
+  //final familyController = Get.put(FamilyController());
   @override
   Widget build(BuildContext context) {
     var idUserLogged = box.read('auth')['user']['id'];

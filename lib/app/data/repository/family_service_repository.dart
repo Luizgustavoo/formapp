@@ -1,6 +1,7 @@
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
 import 'package:ucif/app/data/provider/family_service_provider.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class FamilyServiceRepository {
   final FamilyServiceApiClient apiClient = FamilyServiceApiClient();
@@ -13,7 +14,7 @@ class FamilyServiceRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao inserir o atendimento: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -23,7 +24,7 @@ class FamilyServiceRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao atualizar a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 }

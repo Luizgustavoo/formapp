@@ -4,6 +4,7 @@ import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/models/user_type_model.dart';
 import 'package:ucif/app/data/provider/user_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class UserRepository {
   final UserApiClient apiClient = UserApiClient();
@@ -36,7 +37,7 @@ class UserRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao inserir a usuário: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -52,7 +53,7 @@ class UserRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao editar o usuário: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -62,7 +63,7 @@ class UserRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao atualizar a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -73,7 +74,7 @@ class UserRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao atualizar a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -99,7 +100,7 @@ class UserRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao aprovar a usuário: $e');
+      ErrorHandler.showError(e);
     }
   }
 }

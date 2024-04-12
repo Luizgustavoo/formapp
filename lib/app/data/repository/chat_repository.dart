@@ -1,5 +1,6 @@
 import 'package:ucif/app/data/models/chat_model.dart';
 import 'package:ucif/app/data/provider/chat_provider.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class ChatRepository {
   final ChatApiClient apiClient = ChatApiClient();
@@ -24,7 +25,7 @@ class ChatRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao enviar mensagem para a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -34,7 +35,7 @@ class ChatRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao enviar mensagem para a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 }

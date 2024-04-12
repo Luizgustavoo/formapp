@@ -10,6 +10,7 @@ import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/provider/via_cep.dart';
 import 'package:ucif/app/data/repository/family_repository.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
@@ -115,7 +116,7 @@ class FamilyController extends GetxController
         currentPage = nextPage;
       } else {}
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     } finally {
       isLoadingMore = false;
     }
@@ -133,7 +134,7 @@ class FamilyController extends GetxController
         listFamilies.assignAll(filteredFamilies);
       }
     } catch (error) {
-      throw Exception('Erro ao buscar famílias: $error');
+      ErrorHandler.showError(error);
     } finally {
       if (query.isEmpty) {
         loadMoreFamilies(); // Carrega mais famílias quando a pesquisa é limpa
@@ -149,7 +150,7 @@ class FamilyController extends GetxController
           await repository.getAll("Bearer $token", page: page, search: search);
       update();
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
     isLoadingFamilies.value = false;
   }
@@ -319,7 +320,7 @@ class FamilyController extends GetxController
         getFamilies();
       }
     } catch (e) {
-      throw Exception('Erro ao enviar dados da família para a API: $e');
+      ErrorHandler.showError(e);
     }
     return retorno;
   }

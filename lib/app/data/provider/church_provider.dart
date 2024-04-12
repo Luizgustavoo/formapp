@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class ChurchApiClient {
   final http.Client httpClient = http.Client();
@@ -33,7 +34,7 @@ class ChurchApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception('Erro ao buscar dados: $err');
+      ErrorHandler.showError(err);
     }
     return null;
   }

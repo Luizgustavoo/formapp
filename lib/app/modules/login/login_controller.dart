@@ -10,6 +10,7 @@ import 'package:ucif/app/data/repository/marital_status_repository.dart';
 import 'package:ucif/app/data/repository/religion_repository.dart';
 import 'package:ucif/app/global/storage_manager.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class LoginController extends GetxController {
@@ -196,7 +197,7 @@ class LoginController extends GetxController {
         }
       }
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
     return retorno;
   }

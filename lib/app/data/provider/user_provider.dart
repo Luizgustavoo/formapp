@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class UserApiClient {
@@ -41,25 +42,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      //
     }
     return null;
   }
@@ -103,7 +86,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -196,7 +179,7 @@ class UserApiClient {
         }
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -225,7 +208,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -264,7 +247,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -294,7 +277,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception('Erro ao buscar dados: $err');
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -341,7 +324,7 @@ class UserApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }

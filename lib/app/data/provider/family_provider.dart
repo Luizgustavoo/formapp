@@ -10,6 +10,7 @@ import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/family_database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class FamilyApiClient {
@@ -67,25 +68,7 @@ class FamilyApiClient {
         );
       }
     } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -316,7 +299,7 @@ class FamilyApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      throw Exception('Erro ao buscar dados: $err');
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -394,7 +377,7 @@ class FamilyApiClient {
             imageFile.path, // Caminho do arquivo da imagem
           ));
         } else {
-          throw Exception('Arquivo de imagem não encontrado: ${person.foto}');
+          ErrorHandler.showError("Arquivo de imagem não encontrado!");
         }
       }
     }

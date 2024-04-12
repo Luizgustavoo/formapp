@@ -11,6 +11,7 @@ import 'package:ucif/app/data/repository/auth_repository.dart';
 import 'package:ucif/app/data/repository/user_repository.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class UserController extends GetxController {
@@ -39,7 +40,7 @@ class UserController extends GetxController {
   dynamic mensagem;
 
   final userRepository = Get.find<UserRepository>();
-  final familyController = Get.put(FamilyController());
+  // final familyController = Get.put(FamilyController());
   final authRepository = Get.put(AuthRepository());
 
   final ScrollController scrollController = ScrollController();
@@ -107,7 +108,7 @@ class UserController extends GetxController {
         currentPage = nextPage;
       } else {}
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     } finally {
       isLoadingMore = false;
     }
@@ -129,7 +130,7 @@ class UserController extends GetxController {
         listUsers.assignAll(filteredFamilies);
       }
     } catch (error) {
-      throw Exception('Erro ao buscar famílias: $error');
+      ErrorHandler.showError(error);
     } finally {
       if (query.isEmpty) {
         loadMoreUsers(); // Carrega mais famílias quando a pesquisa é limpa
@@ -146,7 +147,7 @@ class UserController extends GetxController {
 
       update();
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
     isLoading.value = false;
   }
@@ -158,7 +159,7 @@ class UserController extends GetxController {
       listTypeUsers.value = await repository.getAllTypeUser("Bearer $token");
       update();
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
     isLoading.value = false;
   }
@@ -342,7 +343,7 @@ class UserController extends GetxController {
     nameController.text = selectedUser!.nome.toString();
     usernameController.text = selectedUser!.username.toString();
     passwordController.text = '';
-    familyController.selectedFamily = selectedUser!.family;
+    //familyController.selectedFamily = selectedUser!.family;
   }
 
   void fillInPerfilFields() {

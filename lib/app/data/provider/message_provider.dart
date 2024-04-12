@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 import '../models/message_model.dart';
@@ -93,7 +94,7 @@ class MessageApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -132,7 +133,7 @@ class MessageApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      throw Exception("$err");
+      ErrorHandler.showError(err);
     }
     return null;
   }

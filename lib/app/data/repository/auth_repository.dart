@@ -1,5 +1,6 @@
 import 'package:ucif/app/data/models/auth_model.dart';
 import 'package:ucif/app/data/provider/auth_provider.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class AuthRepository {
   final AuthApiClient apiClient = AuthApiClient();
@@ -28,7 +29,7 @@ class AuthRepository {
     try {
       await apiClient.getLogout();
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
   }
 
@@ -37,7 +38,7 @@ class AuthRepository {
       var response = await apiClient.forgotPassword(username);
       if (response != null) return response;
     } catch (e) {
-      throw Exception(e);
+      // Exception(e);
     }
     return;
   }

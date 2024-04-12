@@ -19,6 +19,7 @@ import 'package:ucif/app/data/repository/people_repository.dart';
 import 'package:ucif/app/data/repository/religion_repository.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
@@ -165,7 +166,7 @@ class PeopleController extends GetxController {
         currentPage = nextPage;
       } else {}
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     } finally {
       isLoadingMore = false;
     }
@@ -183,7 +184,7 @@ class PeopleController extends GetxController {
         listPeoples.assignAll(filteredFamilies);
       }
     } catch (error) {
-      throw Exception('Erro ao buscar famílias: $error');
+      ErrorHandler.showError(error);
     } finally {
       if (query.isEmpty) {
         loadMorePeoples(); // Carrega mais famílias quando a pesquisa é limpa
@@ -199,7 +200,7 @@ class PeopleController extends GetxController {
           await repository.getAll("Bearer $token", page: page, search: search);
       update();
     } catch (e) {
-      throw Exception(e);
+      ErrorHandler.showError(e);
     }
     isLoading.value = false;
   }
@@ -240,7 +241,7 @@ class PeopleController extends GetxController {
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-          familyController.getFamilies();
+          familyController.getFamilies(page: 1);
         }
       } else if (mensagem['message'] == 'ja_existe') {
         retorno = {
@@ -297,7 +298,7 @@ class PeopleController extends GetxController {
         }
       }
 
-      familyController.getFamilies();
+      familyController.getFamilies(page: 1);
     } else {
       retorno = {
         "return": 1,

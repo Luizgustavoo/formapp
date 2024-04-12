@@ -3,6 +3,7 @@ import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/provider/family_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
@@ -44,7 +45,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao inserir a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -54,7 +55,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao inserir a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -64,7 +65,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao atualizar a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -74,7 +75,7 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao atualizar a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/provider/people_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class PeopleRepository {
   final PeopleApiClient apiClient = PeopleApiClient();
@@ -37,7 +38,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao inserir a pessoa: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -49,7 +50,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao editar a pessoa: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -58,7 +59,7 @@ class PeopleRepository {
       var response = await apiClient.savePeopleLocal(people);
       return response;
     } catch (e) {
-      throw Exception('Erro ao salvar a pessoa local: $e');
+      ErrorHandler.showError(e);
     }
   }
 
@@ -68,7 +69,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      throw Exception('Erro ao inserir a família: $e');
+      ErrorHandler.showError(e);
     }
   }
 }
