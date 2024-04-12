@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ShimmerCustomFamilyCard extends StatelessWidget {
-  const ShimmerCustomFamilyCard({super.key});
+class CustomShimmerFamilyCard extends StatelessWidget {
+  final bool stripe;
+
+  const CustomShimmerFamilyCard({super.key, this.stripe = false});
 
   @override
   Widget build(BuildContext context) {
@@ -10,84 +12,78 @@ class ShimmerCustomFamilyCard extends StatelessWidget {
       padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
       child: Card(
         elevation: 3,
-        color: Colors.grey[300], // Shimmer color
+        color: stripe ? Colors.grey.shade300 : Colors.white,
         child: Padding(
-          padding: const EdgeInsets.only(right: 12),
+          padding: const EdgeInsets.all(12),
           child: Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 22,
-                  ),
-                  title: Container(
-                    height: 16,
-                    color: Colors.white,
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 12,
-                        width: 200,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        height: 12,
-                        width: 150,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        height: 12,
-                        width: 200,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    _buildShimmerAvatar(),
+                    const SizedBox(width: 10),
+                    Expanded(child: _buildShimmerTitle()),
+                  ],
                 ),
-                const Divider(
-                  height: 3,
-                  thickness: 2,
-                  color: Color(0xFF123d68),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        height: 32,
-                        width: 32,
-                        color: Colors.white,
-                      ),
-                      Container(
-                        height: 32,
-                        width: 32,
-                        color: Colors.white,
-                      ),
-                      Container(
-                        height: 32,
-                        width: 32,
-                        color: Colors.white,
-                      ),
-                      Container(
-                        height: 32,
-                        width: 32,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
+                const SizedBox(height: 10),
+                _buildShimmerSubtitle(),
+                const SizedBox(height: 10),
+                _buildShimmerContent(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildShimmerAvatar() {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.grey[300],
+      ),
+    );
+  }
+
+  Widget _buildShimmerTitle() {
+    return Container(
+      height: 20,
+      color: Colors.grey[300],
+    );
+  }
+
+  Widget _buildShimmerSubtitle() {
+    return Container(
+      height: 16,
+      width: double.infinity,
+      color: Colors.grey[300],
+    );
+  }
+
+  Widget _buildShimmerContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 20,
+          child: _buildShimmerLine(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildShimmerLine() {
+    return Container(
+      height: 10,
+      width: double.infinity,
+      color: Colors.grey[300],
+      margin: const EdgeInsets.symmetric(vertical: 3),
     );
   }
 }

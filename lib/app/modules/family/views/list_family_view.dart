@@ -10,7 +10,6 @@ import 'package:ucif/app/global/widgets/custom_family_card.dart';
 import 'package:ucif/app/global/widgets/message_modal.dart';
 import 'package:ucif/app/global/widgets/message_service_modal.dart';
 import 'package:ucif/app/global/widgets/search_widget.dart';
-import 'package:ucif/app/global/widgets/show_case.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
@@ -83,7 +82,7 @@ class FamilyView extends GetView<FamilyController> {
                       // physics: const BouncingScrollPhysics(),
                       itemCount: 5,
                       itemBuilder: (context, index) {
-                        return const ShimmerCustomFamilyCard();
+                        return const CustomShimmerFamilyCard();
                       },
                     );
                   } else {
@@ -115,7 +114,7 @@ class FamilyView extends GetView<FamilyController> {
                               physics: const AlwaysScrollableScrollPhysics(),
                               itemCount: 5,
                               itemBuilder: (context, index) {
-                                return const ShimmerCustomFamilyCard();
+                                return const CustomShimmerFamilyCard();
                               },
                             );
                           } else {
@@ -248,15 +247,9 @@ class FamilyView extends GetView<FamilyController> {
                   ),
                 );
               },
-              child: ShowCaseView(
-                title: 'ADICONAR FAMÍLIA',
-                description: 'Adicione famílias.',
-                border: const CircleBorder(),
-                globalKey: controller.addFamily,
-                child: const Icon(
-                  Icons.add_rounded,
-                  color: Colors.white,
-                ),
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
               ),
             )
           : const SizedBox(),

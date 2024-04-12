@@ -288,8 +288,7 @@ class CustomFamilyCard extends StatelessWidget {
                                                   people:
                                                       family.pessoas![index],
                                                   showWidget: true,
-                                                  titulo:
-                                                      'Atendimento ${peopleNames![index]}',
+                                                  titulo: 'Atendimento',
                                                 ),
                                               ),
                                             );

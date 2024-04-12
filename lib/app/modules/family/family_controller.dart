@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
@@ -52,12 +51,6 @@ class FamilyController extends GetxController
   AnimationController? animationController;
   dynamic mensagem;
 
-  GlobalKey editFamily = GlobalKey();
-  GlobalKey addFamily = GlobalKey();
-  GlobalKey supportFamily = GlobalKey();
-  GlobalKey addMember = GlobalKey();
-  GlobalKey disableFamily = GlobalKey();
-
   final DatabaseHelper localDatabase = DatabaseHelper();
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
@@ -85,7 +78,6 @@ class FamilyController extends GetxController
         }
       });
       getFamilies();
-      checkShowcase();
     }
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -163,33 +155,6 @@ class FamilyController extends GetxController
             .toList());
       });
     }
-  }
-
-  void checkShowcase() {
-    final userId = getUserId();
-    final shown = box.read('showcaseShown_$userId') ?? false;
-    if (!shown) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(Get.context!).startShowCase([
-          addFamily,
-          editFamily,
-          supportFamily,
-          addMember,
-          disableFamily,
-        ]);
-      });
-      box.write('showcaseShown_$userId', true);
-    }
-  }
-
-  int getUserId() {
-    final userId = box.read('userId');
-    return userId ?? 0;
-  }
-
-  void clearShowcase() {
-    final userId = getUserId();
-    box.remove('showcaseShown_$userId');
   }
 
   Future<Map<String, dynamic>> saveFamily() async {
