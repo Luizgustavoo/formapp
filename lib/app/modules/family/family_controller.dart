@@ -93,8 +93,8 @@ class FamilyController extends GetxController
 
   Future<void> loadMoreFamilies() async {
     try {
-      isLoadingMore = true;
       final token = UserStorage.getToken();
+      isLoadingMore = true;
       final nextPage = currentPage + 1;
       final moreFamilies =
           await repository.getAll("Bearer $token", page: nextPage);

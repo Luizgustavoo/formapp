@@ -22,6 +22,7 @@ class UserController extends GetxController {
 
   User? selectedUser;
   RxInt? familyUser = 0.obs;
+  RxBool isSaving = false.obs;
 
   final GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> perfilFormKey = GlobalKey<FormState>();

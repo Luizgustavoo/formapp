@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:ucif/app/data/models/church_model.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
@@ -154,13 +155,13 @@ class PeopleController extends GetxController {
       final token = UserStorage.getToken();
       isLoadingMore = true;
       final nextPage = currentPage + 1;
-      final moreFamilies =
+      final morePeoples =
           await repository.getAll("Bearer $token", page: nextPage);
-      if (moreFamilies.isNotEmpty) {
-        for (final family in moreFamilies) {
+      if (morePeoples.isNotEmpty) {
+        for (final people in morePeoples) {
           if (!listPeoples
-              .any((existingFamily) => existingFamily.id == family.id)) {
-            listPeoples.add(family);
+              .any((existingFamily) => existingFamily.id == people.id)) {
+            listPeoples.add(people);
           }
         }
         currentPage = nextPage;
@@ -376,7 +377,10 @@ class PeopleController extends GetxController {
   void fillInFieldsForEditPerson() {
     idPessoaController.text = selectedPeople!.id.toString();
     nomePessoaController.text = selectedPeople!.nome.toString();
-    nascimentoPessoaController.text = selectedPeople!.dataNascimento.toString();
+    final DateTime data =
+        DateTime.parse(selectedPeople!.dataNascimento.toString());
+    final String dataFormatada = DateFormat('dd/MM/yyyy').format(data);
+    nascimentoPessoaController.text = dataFormatada.toString();
     cpfPessoaController.text = selectedPeople!.cpf.toString();
     tituloEleitoralPessoaController.text =
         selectedPeople!.tituloEleitor.toString();

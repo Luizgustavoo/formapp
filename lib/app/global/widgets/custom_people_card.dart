@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
@@ -29,6 +30,8 @@ class CustomPeopleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DateTime data = DateTime.parse('${people.dataNascimento}');
+    final String dataFormatada = DateFormat('dd/MM/yyyy').format(data);
     final familiaId = controller.box.read('auth')['user']['familia_id'];
     RxBool isExpanded = false.obs;
 
@@ -102,7 +105,7 @@ class CustomPeopleCard extends StatelessWidget {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Nascimento: ${people.dataNascimento!}",
+                          Text("Nascimento: $dataFormatada",
                               style: CustomTextStyle.subtitle(context)),
                           Text("Família: ${people.family!.nome}",
                               style: CustomTextStyle.subtitle(context)),
