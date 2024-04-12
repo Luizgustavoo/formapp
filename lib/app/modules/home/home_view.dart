@@ -19,6 +19,7 @@ class HomeView extends GetView<HomeController> {
       appBar: CustomAppBar(
         userName: user[0],
         showPadding: true,
+        title: '',
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,

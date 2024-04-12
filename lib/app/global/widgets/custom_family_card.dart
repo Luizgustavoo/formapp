@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/global/widgets/message_service_modal.dart';
-import 'package:ucif/app/global/widgets/show_case.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
@@ -65,6 +64,95 @@ class CustomFamilyCard extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(right: 12),
             child: ExpansionTile(
+              trailing: PopupMenuButton<int>(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    padding: EdgeInsets.zero,
+                    value: 0,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          splashColor: const Color.fromARGB(255, 160, 206, 241),
+                          onTap: editFamily,
+                          child: const ListTile(
+                            splashColor: Colors.transparent,
+                            contentPadding:
+                                EdgeInsets.only(left: 15, right: 15),
+                            hoverColor: Colors.transparent,
+                            leading: Icon(Icons.edit_outlined,
+                                color: Color(0xFF1C6399)),
+                            title: Text('Editar',
+                                style: TextStyle(fontFamily: 'Poppinss')),
+                          ),
+                        ),
+                        if (UserStorage.getUserType() < 3) ...[
+                          if (!local) ...[
+                            InkWell(
+                              onTap: () async {
+                                peopleController.clearModalMessageService();
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  isDismissible: false,
+                                  context: context,
+                                  builder: (context) => Padding(
+                                    padding: MediaQuery.of(context).viewInsets,
+                                    child: MessageServiceModal(
+                                      family: family,
+                                      showWidget: true,
+                                      titulo: 'Atendimento ${family.nome}',
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const ListTile(
+                                splashColor: Colors.transparent,
+                                contentPadding:
+                                    EdgeInsets.only(left: 15, right: 15),
+                                hoverColor: Colors.transparent,
+                                leading: Icon(Icons.support_agent_rounded,
+                                    color: Color(0xFF1C6399)),
+                                title: Text('Atendimento',
+                                    style: TextStyle(fontFamily: 'Poppinss')),
+                              ),
+                            ),
+                          ],
+                          if (showAddMember)
+                            InkWell(
+                              onTap: addMember,
+                              child: const ListTile(
+                                splashColor: Colors.transparent,
+                                contentPadding:
+                                    EdgeInsets.only(left: 15, right: 15),
+                                hoverColor: Colors.transparent,
+                                leading: Icon(Icons.add_rounded,
+                                    color: Color(0xFF1C6399)),
+                                title: Text('Adicionar',
+                                    style: TextStyle(fontFamily: 'Poppinss')),
+                              ),
+                            ),
+                          InkWell(
+                            onTap: () {
+                              showDialog(context, family);
+                            },
+                            child: const ListTile(
+                              splashColor: Colors.transparent,
+                              contentPadding:
+                                  EdgeInsets.only(left: 15, right: 15),
+                              hoverColor: Colors.transparent,
+                              leading: Icon(Icons.delete_outlined,
+                                  color: Color(0xFF1C6399)),
+                              title: Text('Excluir',
+                                  style: TextStyle(fontFamily: 'Poppinss')),
+                            ),
+                          ),
+                        ]
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               childrenPadding:
@@ -133,140 +221,13 @@ class CustomFamilyCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Divider(
-                    height: 3,
-                    thickness: 2,
-                    color: Color(0xFF1C6399),
-                  ),
-                  Obx(() => Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            if (!isExpanded.value) ...[
-                              index == 0
-                                  ? ShowCaseView(
-                                      border: const CircleBorder(),
-                                      description:
-                                          'Aqui você pode editar as informações da família.',
-                                      globalKey: familyController.editFamily,
-                                      title: 'EDIÇÃO',
-                                      child: IconButton(
-                                        iconSize: 22,
-                                        onPressed: editFamily,
-                                        icon: const Icon(Icons.edit_outlined),
-                                      ),
-                                    )
-                                  : IconButton(
-                                      iconSize: 22,
-                                      onPressed: editFamily,
-                                      icon: const Icon(Icons.edit_outlined),
-                                    ),
-                              if (UserStorage.getUserType() < 3) ...[
-                                if (!local) ...[
-                                  index == 0
-                                      ? ShowCaseView(
-                                          title: 'ATENDIMENTO',
-                                          description:
-                                              'Aqui você pode realizar atendimento para a família.',
-                                          border: const CircleBorder(),
-                                          globalKey:
-                                              familyController.supportFamily,
-                                          child: IconButton(
-                                            iconSize: 22,
-                                            onPressed: () async {
-                                              peopleController
-                                                  .clearModalMessageService();
-                                              showModalBottomSheet(
-                                                isScrollControlled: true,
-                                                isDismissible: false,
-                                                context: context,
-                                                builder: (context) => Padding(
-                                                  padding:
-                                                      MediaQuery.of(context)
-                                                          .viewInsets,
-                                                  child: MessageServiceModal(
-                                                    family: family,
-                                                    showWidget: true,
-                                                    titulo:
-                                                        'Atendimento ${family.nome}',
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            icon: const Icon(
-                                                Icons.support_agent_rounded),
-                                          ),
-                                        )
-                                      : IconButton(
-                                          iconSize: 22,
-                                          onPressed: () async {
-                                            peopleController
-                                                .clearModalMessageService();
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              isDismissible: false,
-                                              context: context,
-                                              builder: (context) => Padding(
-                                                padding: MediaQuery.of(context)
-                                                    .viewInsets,
-                                                child: MessageServiceModal(
-                                                  family: family,
-                                                  showWidget: true,
-                                                  titulo:
-                                                      'Atendimento ${family.nome}',
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          icon: const Icon(
-                                              Icons.support_agent_rounded),
-                                        )
-                                ],
-                                if (showAddMember)
-                                  index == 0
-                                      ? ShowCaseView(
-                                          title: 'ADICIONAR',
-                                          description:
-                                              'Aqui você pode adicionar membros à família.',
-                                          border: const CircleBorder(),
-                                          globalKey: familyController.addMember,
-                                          child: IconButton(
-                                            iconSize: 22,
-                                            onPressed: addMember,
-                                            icon: const Icon(Icons.add_rounded),
-                                          ),
-                                        )
-                                      : IconButton(
-                                          iconSize: 22,
-                                          onPressed: addMember,
-                                          icon: const Icon(Icons.add_rounded),
-                                        ),
-                                index == 0
-                                    ? ShowCaseView(
-                                        title: 'EXCLUIR',
-                                        description:
-                                            'Aqui você poderá excluir os dados da família, lembrando que você perderá todos os dados que já cadastrou.',
-                                        border: const CircleBorder(),
-                                        globalKey:
-                                            familyController.disableFamily,
-                                        child: IconButton(
-                                          iconSize: 22,
-                                          onPressed: () {
-                                            showDialog(context, family);
-                                          },
-                                          icon:
-                                              const Icon(Icons.delete_outlined),
-                                        ),
-                                      )
-                                    : IconButton(
-                                        iconSize: 22,
-                                        onPressed: () {
-                                          showDialog(context, family);
-                                        },
-                                        icon: const Icon(Icons.delete_outlined),
-                                      ),
-                              ]
-                            ]
-                          ]))
+                  Obx(() => isExpanded.value
+                      ? const Divider(
+                          height: 3,
+                          thickness: 2,
+                          color: Color(0xFF1C6399),
+                        )
+                      : const SizedBox()),
                 ],
               ),
               children: [

@@ -22,6 +22,7 @@ class PerfilView extends GetView<UserController> {
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
+        title: 'Perfil',
       ),
       body: Container(
           decoration: const BoxDecoration(

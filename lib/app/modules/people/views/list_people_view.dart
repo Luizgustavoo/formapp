@@ -16,6 +16,7 @@ class ListPeopleView extends GetView<PeopleController> {
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
+        title: 'Pessoas',
       ),
       body: RefreshIndicator(
         onRefresh: () async {

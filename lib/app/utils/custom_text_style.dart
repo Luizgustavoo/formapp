@@ -9,6 +9,14 @@ class CustomTextStyle {
         overflow: TextOverflow.ellipsis);
   }
 
+  static TextStyle? titleWhite(BuildContext context) {
+    return const TextStyle(
+        fontSize: 23,
+        color: Colors.white,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.ellipsis);
+  }
+
   static TextStyle? appBarTitle(BuildContext context) {
     return const TextStyle(
       fontSize: 30,

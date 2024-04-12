@@ -25,6 +25,7 @@ class ListUserView extends GetView<UserController> {
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
+        title: 'Usuários',
       ),
       body: Container(
         decoration: const BoxDecoration(

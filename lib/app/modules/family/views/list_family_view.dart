@@ -34,6 +34,7 @@ class FamilyView extends GetView<FamilyController> {
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
+        title: 'Famílias',
       ),
       body: Container(
         decoration: const BoxDecoration(

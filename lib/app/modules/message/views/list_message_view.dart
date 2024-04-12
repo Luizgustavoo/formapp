@@ -15,6 +15,7 @@ class MessageView extends GetView<MessageController> {
     return Scaffold(
         appBar: CustomAppBar(
           showPadding: false,
+          title: 'Notificações',
         ),
         body: Container(
           decoration: const BoxDecoration(
