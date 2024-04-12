@@ -38,7 +38,7 @@ class ListUserView extends GetView<UserController> {
         ),
         child: RefreshIndicator(
           onRefresh: () async {
-            await controller.getUsers();
+            Get.offAllNamed('/list-user');
           },
           child: Column(
             children: [

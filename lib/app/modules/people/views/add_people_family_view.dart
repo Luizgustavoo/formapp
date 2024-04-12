@@ -214,8 +214,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               'Bisavô(ó)',
                               'Companheiro(a)',
                               'Cunhado(a)',
-                              'Irmã',
-                              'Irmão',
+                              'Filho(a)',
                               'Madrasta',
                               'Mãe',
                               'Outro',
@@ -454,7 +453,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                                     family!, peopleLocal)
                                 : await controller.updatePeople(peopleLocal);
                             if (retorno['return'] == 0) {
-                              Get.back();
+                              Get.offAllNamed('/list-family');
                             }
                             Get.snackbar(
                               snackPosition: SnackPosition.BOTTOM,

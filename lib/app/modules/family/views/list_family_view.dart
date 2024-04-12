@@ -31,7 +31,6 @@ class FamilyView extends GetView<FamilyController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.getFamilies();
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
@@ -43,7 +42,7 @@ class FamilyView extends GetView<FamilyController> {
                 topStart: Radius.circular(15), topEnd: Radius.circular(15))),
         child: RefreshIndicator(
           onRefresh: () async {
-            await controller.getFamilies();
+            Get.offAllNamed('/list-family');
           },
           child: Column(
             children: [
