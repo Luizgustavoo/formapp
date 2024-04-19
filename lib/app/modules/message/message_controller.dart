@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/message_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/data/repository/message_repository.dart';
-import 'package:formapp/app/utils/connection_service.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/message_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/repository/message_repository.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class MessageController extends GetxController {
   TextEditingController subjectController = TextEditingController();
@@ -15,7 +17,9 @@ class MessageController extends GetxController {
   final repository = Get.put(MessageRepository());
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
+
   dynamic mensagem;
+  RxInt quantidadeMensagensNaoLidas = 0.obs;
   final box = GetStorage('credenciado');
   var message = Message().obs;
 
@@ -32,8 +36,13 @@ class MessageController extends GetxController {
   }
 
   void getMessages() async {
-    final token = box.read('auth')['access_token'];
-    listMessages.value = await repository.getAll("Bearer $token");
+    if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
+      listMessages.value = await repository.getAll("Bearer $token");
+
+      quantidadeMensagensNaoLidas.value =
+          listMessages.where((message) => message.lida == 'nao').length;
+    }
   }
 
   Future<Map<String, dynamic>> saveMessage({Family? family, User? user}) async {
@@ -50,10 +59,7 @@ class MessageController extends GetxController {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
         }
       } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uma família com esse nome!"
-        };
+        retorno = {"return": 1, "message": "Já existe!"};
       }
     }
     return retorno;

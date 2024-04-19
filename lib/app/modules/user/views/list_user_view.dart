@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/global/widgets/message_modal.dart';
-import 'package:formapp/app/global/widgets/search_widget.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/global/widgets/create_user_modal.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/global/shimmer/shimmer_custom_user_card.dart';
+import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_user_card.dart';
+import 'package:ucif/app/global/widgets/search_widget.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class ListUserView extends GetView<UserController> {
   ListUserView({super.key});
@@ -16,191 +19,184 @@ class ListUserView extends GetView<UserController> {
   final box = GetStorage('credenciado');
 
   final messageController = Get.put(MessageController());
-  final familyController = Get.put(FamilyController());
-
   @override
   Widget build(BuildContext context) {
     var idUserLogged = box.read('auth')['user']['id'];
-    final familiaId = controller.box.read('auth')['user']['familia_id'];
+    controller.getUsers();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Listagem de Usuários'),
-        actions: [
-          if (familiaId == null) ...[
-            IconButton(
-                onPressed: () {
-                  controller.clearAllUserTextFields();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    isDismissible: false,
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: CreateUserModal(
-                        tipoOperacao: 'insert',
-                        titulo: 'Cadastro de Usuário',
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.add_rounded))
-          ]
-        ],
+      appBar: CustomAppBar(
+        showPadding: false,
+        title: 'Usuários',
       ),
-      body: Column(
-        children: [
-          SearchWidget(
-              controller: controller.searchController,
-              onSearchPressed: (context, a, query) {
-                controller.searchUsers(query);
-              }),
-          Obx(() => Expanded(
-                child: ListView.builder(
-                    itemCount: controller.listUsers.length,
-                    itemBuilder: (context, index) {
-                      User user = controller.listUsers[index];
-                      return Padding(
-                        padding:
-                            const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-                        child: Dismissible(
-                          key: UniqueKey(),
-                          direction: familiaId != null
-                              ? DismissDirection.none
-                              : DismissDirection.endToStart,
-                          confirmDismiss: (DismissDirection direction) async {
-                            if (direction == DismissDirection.endToStart) {
-                              showDialog(context, user);
-                            }
-                            return false;
-                          },
-                          background: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: user.status == 1
-                                  ? Colors.red.shade500
-                                  : Colors.green,
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      user.status == 1
-                                          ? const Icon(Icons.delete_outline,
-                                              color: Colors.white, size: 25)
-                                          : const Icon(
-                                              Icons.check_rounded,
-                                              size: 25,
-                                              color: Colors.white,
-                                            ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          child: Card(
-                            child: ListTile(
-                              leading: user.status == 1 &&
-                                      familiaId != null &&
-                                      idUserLogged == user.id
-                                  ? IconButton(
-                                      onPressed: () {
-                                        controller.selectedUser = user;
-                                        controller.fillInUserFields();
-                                        showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          isDismissible: false,
-                                          context: context,
-                                          builder: (context) => Padding(
-                                            padding: MediaQuery.of(context)
-                                                .viewInsets,
-                                            child: CreateUserModal(
-                                              tipoOperacao: 'update',
-                                              titulo: 'Alteração de Usuário',
-                                              user: user,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(Icons.edit_outlined,
-                                          color: Colors.blue, size: 25))
-                                  : user.status == 1 && familiaId == null
-                                      ? IconButton(
-                                          onPressed: () {
-                                            controller.selectedUser = user;
-                                            controller.fillInUserFields();
-                                            print(user.family);
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              isDismissible: false,
-                                              context: context,
-                                              builder: (context) => Padding(
-                                                padding: MediaQuery.of(context)
-                                                    .viewInsets,
-                                                child: CreateUserModal(
-                                                  tipoOperacao: 'update',
-                                                  titulo:
-                                                      'Alteração de Usuário',
-                                                  user: user,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          icon: const Icon(Icons.edit_outlined,
-                                              color: Colors.blue, size: 25))
-                                      : const CircleAvatar(
-                                          radius: 25,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/default_avatar.jpg'),
-                                        ),
-                              trailing: idUserLogged == user.id
-                                  ? const SizedBox(
-                                      width: 50,
-                                      height: 50,
-                                    )
-                                  : IconButton(
-                                      onPressed: () async {
-                                        messageController.clearModalMessage();
-                                        showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          isDismissible: false,
-                                          context: context,
-                                          builder: (context) => Padding(
-                                            padding: MediaQuery.of(context)
-                                                .viewInsets,
-                                            child: MessageModal(
-                                              user: user,
-                                              titulo:
-                                                  'Mensagem para ${user.nome}',
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.message_outlined,
-                                        size: 25,
-                                        color: Colors.green,
-                                      )),
-                              title: Text(
-                                user.nome!,
-                                style: CustomTextStyle.subtitleNegrit(context),
-                              ),
-                              subtitle: Text(
-                                user.username!,
-                                style: CustomTextStyle.form(context),
-                              ),
-                            ),
-                          ),
-                        ),
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadiusDirectional.only(
+            topStart: Radius.circular(15),
+            topEnd: Radius.circular(15),
+          ),
+        ),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            controller.searchController.clear();
+            await Get.offAllNamed('/list-user');
+          },
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              SearchWidget(
+                controller: controller.searchController,
+                onSearchPressed: (context, a, query) {
+                  controller.getUsers(search: controller.searchController.text);
+                },
+                onSubmitted: (context, a, query) {
+                  controller.getUsers(search: controller.searchController.text);
+                },
+                isLoading: controller.isLoading.value,
+              ),
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (!controller.isLoading.value &&
+                        scrollInfo.metrics.pixels >=
+                            scrollInfo.metrics.maxScrollExtent * 0.9) {
+                      controller.loadMoreUsers();
+                    }
+                    return false;
+                  },
+                  child: Obx(() {
+                    final status = Get.find<InternetStatusProvider>().status;
+
+                    if (status == InternetStatus.disconnected) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return const ShimmerCustomUserCard();
+                        },
                       );
-                    }),
-              ))
-        ],
+                    } else {
+                      return controller.isLoading.value
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: 15,
+                              itemBuilder: (context, index) {
+                                return const ShimmerCustomUserCard();
+                              },
+                            )
+                          : AnimationLimiter(
+                              child: ListView.builder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: controller.listUsers.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  User user = controller.listUsers[index];
+
+                                  String typeUser = user.tipousuarioId == 1
+                                      ? "Master"
+                                      : (user.tipousuarioId == 2
+                                          ? "Lider"
+                                          : "Familiar");
+
+                                  bool desativaMaster =
+                                      UserStorage.getUserType() == 1;
+                                  bool desativaLider =
+                                      UserStorage.getUserType() == 1 ||
+                                          user.id == UserStorage.getUserId();
+                                  bool desativaFamiliar =
+                                      user.id == UserStorage.getUserId() ||
+                                          desativaMaster ||
+                                          desativaLider;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 5, bottom: 5),
+                                    child: Dismissible(
+                                      key: UniqueKey(),
+                                      direction: (!desativaMaster &&
+                                              !desativaLider &&
+                                              !desativaFamiliar)
+                                          ? DismissDirection.none
+                                          : DismissDirection.endToStart,
+                                      confirmDismiss:
+                                          (DismissDirection direction) async {
+                                        if (direction ==
+                                            DismissDirection.endToStart) {
+                                          showDialog(context, user);
+                                        }
+                                        return false;
+                                      },
+                                      background: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: user.status == 1
+                                              ? Colors.red.shade500
+                                              : Colors.green,
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  user.status == 1
+                                                      ? const Icon(
+                                                          Icons.delete_outline,
+                                                          color: Colors.white,
+                                                          size: 25)
+                                                      : const Icon(
+                                                          Icons.check_rounded,
+                                                          size: 25,
+                                                          color: Colors.white,
+                                                        ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      child:
+                                          AnimationConfiguration.staggeredList(
+                                        position: index,
+                                        duration:
+                                            const Duration(milliseconds: 600),
+                                        child: SlideAnimation(
+                                          verticalOffset: 50.0,
+                                          curve: Curves.easeInOut,
+                                          child: FadeInAnimation(
+                                            child: CustomUserCard(
+                                                user: user,
+                                                familiaId:
+                                                    UserStorage.getFamilyId(),
+                                                idUserLogged: idUserLogged,
+                                                controller: controller,
+                                                messageController:
+                                                    messageController,
+                                                typeUser: typeUser),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                    }
+                  }),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -210,7 +206,6 @@ class ListUserView extends GetView<UserController> {
       titlePadding: const EdgeInsets.all(16),
       contentPadding: const EdgeInsets.all(16),
       title: "Confirmação",
-      titleStyle: CustomTextStyle.titleSplash(context),
       content: Text(
         textAlign: TextAlign.center,
         user.status == 0
@@ -226,10 +221,7 @@ class ListUserView extends GetView<UserController> {
           onPressed: () {
             Get.back();
           },
-          child: Text(
-            "Cancelar",
-            style: CustomTextStyle.button2(context),
-          ),
+          child: const Text("Cancelar"),
         ),
         ElevatedButton(
           onPressed: () async {

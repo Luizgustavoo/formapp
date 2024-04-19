@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/modules/people/views/add_people_family_view.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
+
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CreateFamilyModal extends StatelessWidget {
   CreateFamilyModal({
@@ -36,12 +36,12 @@ class CreateFamilyModal extends StatelessWidget {
               titulo!,
               style: CustomTextStyle.title(context),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 5),
+            const Padding(
+              padding: EdgeInsets.only(right: 5),
               child: Divider(
                 height: 5,
                 thickness: 3,
-                color: Colors.orange.shade500,
+                color: Color(0xFF1C6399),
               ),
             ),
             const SizedBox(
@@ -62,7 +62,7 @@ class CreateFamilyModal extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Focus(
-              onFocusChange: (hasFocus) {
+              onFocusChange: (hasFocus) async {
                 if (!hasFocus) {
                   controller.searchCEP();
                 }
@@ -235,9 +235,9 @@ class CreateFamilyModal extends StatelessWidget {
                   style: TextStyle(),
                 ),
                 Obx(() => Switch(
-                      activeColor: Colors.orange.shade700,
-                      inactiveThumbColor: Colors.orange.shade500,
-                      inactiveTrackColor: Colors.orange.shade100,
+                      activeColor: Colors.blue.shade700,
+                      inactiveThumbColor: Colors.blue.shade500,
+                      inactiveTrackColor: Colors.blue.shade100,
                       value: controller.residenceOwn.value,
                       onChanged: (value) {
                         controller.residenceOwn.value = value;
@@ -263,26 +263,11 @@ class CreateFamilyModal extends StatelessWidget {
                     onPressed: () async {
                       Map<String, dynamic> retorno = tipoOperacao == 'insert'
                           ? await controller.saveFamily()
-                          : await controller.updateFamily(family!.id!);
+                          : await controller.updateFamily(
+                              family!.id!, family!.familyLocal!);
 
                       if (retorno['return'] == 0) {
                         Get.back();
-                        peopleController.clearAllPeopleTextFields();
-                        Future.delayed(const Duration(seconds: 1), () {
-                          return showModalBottomSheet(
-                            isScrollControlled: true,
-                            isDismissible: false,
-                            context: context,
-                            builder: (context) => Padding(
-                              padding: MediaQuery.of(context).viewInsets,
-                              child: AddPeopleFamilyView(
-                                peopleLocal: family!.familyLocal!,
-                                tipoOperacao: 0,
-                                family: family,
-                              ),
-                            ),
-                          );
-                        });
                       }
                       Get.snackbar(
                         snackPosition: SnackPosition.BOTTOM,

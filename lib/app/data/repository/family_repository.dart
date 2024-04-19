@@ -1,33 +1,72 @@
-import 'package:formapp/app/data/database_helper.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/provider/family_provider.dart';
-import 'package:formapp/app/utils/connection_service.dart';
+import 'package:ucif/app/data/database_helper.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/family_provider.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class FamilyRepository {
   final FamilyApiClient apiClient = FamilyApiClient();
   final DatabaseHelper localDatabase = DatabaseHelper();
 
-  getAll(String token) async {
+  getAll(String token, {int? page, String? search}) async {
     List<Family> list = <Family>[];
 
     var responseLocal = await getFamiliesWithPeopleLocal();
 
     for (Family familyLocal in responseLocal) {
       familyLocal.familyLocal = true;
-
       list.add(familyLocal);
     }
 
     if (await ConnectionStatus.verifyConnection()) {
-      var response = await apiClient.getAll(token);
-      response.forEach((e) {
+      var response = await apiClient.getAll(token, page: page, search: search);
+      List<Family> newFamilies = [];
+      response['data'].forEach((e) {
         Family f = Family.fromJson(e);
         f.familyLocal = false;
+        newFamilies.add(f);
+      });
+      if (page == 1) {
+        list.clear();
+      }
+      for (var family in newFamilies) {
+        if (!list.contains(family)) {
+          list.add(family);
+        }
+      }
+    }
+    return list;
+  }
+
+  getAllDropDown(String token) async {
+    List<Family> list = <Family>[];
+
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAllDropDown(token);
+
+      response.forEach((e) {
+        Family f = Family.fromJson(e);
         list.add(f);
       });
     }
     return list;
+  }
+
+  getAllFilter(String token, String search, User lider) async {
+    // List<Family> list = <Family>[];
+
+    if (await ConnectionStatus.verifyConnection()) {
+      var response =
+          await apiClient.getAllFilter(token, search: search, lider: lider);
+
+      // response['data'].forEach((e) {
+      //   Family f = Family.fromJson(e);
+      //   list.add(f);
+      // });
+      return response;
+    }
   }
 
   insertFamily(String token, Family family) async {
@@ -36,30 +75,37 @@ class FamilyRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 
-  updateFamily(String token, Family family) async {
+  insertFamilyLocalToAPi(String token, Family family) async {
     try {
-      var response = await apiClient.updateFamily(token, family);
+      var response = await apiClient.insertFamilyLocalForApi(token, family);
 
       return response;
     } catch (e) {
-      print('Erro ao atualizar a família: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 
-  deleteFamily(String token, Family family) async {
+  updateFamily(String token, Family family, bool familyLocal) async {
     try {
-      var response = await apiClient.deleteFamily(token, family);
+      var response = await apiClient.updateFamily(token, family, familyLocal);
 
       return response;
     } catch (e) {
-      print('Erro ao atualizar a família: $e');
-      rethrow;
+      ErrorHandler.showError(e);
+    }
+  }
+
+  deleteFamily(String token, Family family, bool familyLocal) async {
+    try {
+      var response = await apiClient.deleteFamily(token, family, familyLocal);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
     }
   }
 
@@ -109,7 +155,7 @@ class FamilyRepository {
       final statusPeople = row['status_people'] as String?;
       final dataCadastroPeople = row['data_cadastro_people'] as String?;
       final dataUpdatePeople = row['data_update_people'] as String?;
-      final familiaIdPeople = row['familia_id_people'] as int?;
+      // final familiaIdPeople = row['familia_id_people'] as int?;
       final parentescoPeople = row['parentesco_people'] as String?;
 
       if (currentFamilyId != idFamilia) {
@@ -131,35 +177,36 @@ class FamilyRepository {
           pessoas: [],
         );
 
-        if (idPeople != null && nomePeople != null) {
-          currentFamily.pessoas?.add(People(
-            id: idPeople,
-            nome: nomePeople,
-            foto: fotoPeople,
-            sexo: sexoPeople,
-            cpf: cpfPeople,
-            dataNascimento: dataNascimentoPeople,
-            estadoCivilId: estadocivilIdPeople,
-            tituloEleitor: tituloEleitorPeople,
-            zonaEleitoral: zonaEleitoralPeople,
-            telefone: telefonePeople,
-            redeSocial: redeSocialPeople,
-            provedorCasa: provedorCasaPeople,
-            igrejaId: igrejaIdPeople,
-            localTrabalho: localTrabalhoPeople,
-            cargoTrabalho: cargoTrabalhoPeople,
-            religiaoId: religiaoIdPeople,
-            funcaoIgreja: funcaoIgrejaPeople,
-            usuarioId: usuarioIdPeople,
-            status: int.parse(statusPeople.toString()),
-            dataCadastro: dataCadastroPeople,
-            dataUpdate: dataUpdatePeople,
-            familiaId: idFamilia,
-            parentesco: parentescoPeople,
-          ));
-        }
-        families.add(currentFamily);
         currentFamilyId = idFamilia;
+        families.add(currentFamily);
+      }
+
+      if (idPeople != null && nomePeople != null) {
+        currentFamily?.pessoas?.add(People(
+          id: idPeople,
+          nome: nomePeople,
+          foto: fotoPeople,
+          sexo: sexoPeople,
+          cpf: cpfPeople,
+          dataNascimento: dataNascimentoPeople,
+          estadoCivilId: estadocivilIdPeople,
+          tituloEleitor: tituloEleitorPeople,
+          zonaEleitoral: zonaEleitoralPeople,
+          telefone: telefonePeople,
+          redeSocial: redeSocialPeople,
+          provedorCasa: provedorCasaPeople,
+          igrejaId: igrejaIdPeople,
+          localTrabalho: localTrabalhoPeople,
+          cargoTrabalho: cargoTrabalhoPeople,
+          religiaoId: religiaoIdPeople,
+          funcaoIgreja: funcaoIgrejaPeople,
+          usuarioId: usuarioIdPeople,
+          status: int.parse(statusPeople.toString()),
+          dataCadastro: dataCadastroPeople,
+          dataUpdate: dataUpdatePeople,
+          familiaId: idFamilia,
+          parentesco: parentescoPeople,
+        ));
       }
     }
 

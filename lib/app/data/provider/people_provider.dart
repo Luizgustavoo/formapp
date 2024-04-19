@@ -1,29 +1,44 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/database_helper.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/people_database_helper.dart';
-import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/database_helper.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/people_database_helper.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class PeopleApiClient {
   final http.Client httpClient = http.Client();
   final PeopleDatabaseHelper localDatabase = PeopleDatabaseHelper();
   final box = GetStorage('credenciado');
 
-  getAll(String token) async {
-    final id = box.read('auth')['user']['id'];
+  getAll(String token, {int? page, String? search}) async {
+    final id = UserStorage.getUserId();
     final familiaId = box.read('auth')['user']['familia_id'];
     try {
       Uri peopleUrl;
-      if (familiaId != null) {
-        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list-familiar/id/$familiaId');
+      if (familiaId != null && UserStorage.getUserType() == 3) {
+        String url = search != null
+            ? '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/$search/?page=1&limit'
+            : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';
+        peopleUrl = Uri.parse(url);
       } else {
-        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list/id/$id');
+        if (UserStorage.getUserType() == 1) {
+          String url = search != null
+              ? '$baseUrl/v1/pessoa/list-paginate-adm/$search/?page=$page&limit'
+              : '$baseUrl/v1/pessoa/list-paginate-adm/?page=$page&limit';
+          peopleUrl = Uri.parse(url);
+        } else {
+          String url = search != null
+              ? '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/$search/?page=$page&limit'
+              : '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/?page=$page&limit';
+          peopleUrl = Uri.parse(url);
+        }
       }
 
       var response = await httpClient.get(
@@ -46,32 +61,9 @@ class PeopleApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      //
     }
     return null;
   }
@@ -79,7 +71,8 @@ class PeopleApiClient {
   insertPeople(
       String token, People pessoa, File imageFile, bool peopleLocal) async {
     try {
-      if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/create');
 
         var request = http.MultipartRequest('POST', pessoaUrl);
@@ -108,15 +101,14 @@ class PeopleApiClient {
 
         if (imageFile.path.isNotEmpty) {
           request.files.add(await http.MultipartFile.fromPath(
-            'foto', // Nome do campo que a API espera para a imagem
-            imageFile.path, // Caminho do arquivo da imagem
+            'foto',
+            imageFile.path,
           ));
         }
 
         request.headers.addAll({
           'Accept': 'application/json',
           'Authorization': token,
-          // Adicione outros cabeçalhos conforme necessário
         });
 
         var response = await request.send();
@@ -139,15 +131,8 @@ class PeopleApiClient {
           var box = GetStorage('credenciado');
           box.erase();
           Get.offAllNamed('/login');
-        } else {
-          Get.defaultDialog(
-            title: "Error",
-            content: const Text('erro'),
-          );
         }
       } else {
-        //SALVANDO DADOS LOCALMENTE
-
         final dbHelper = DatabaseHelper();
         dynamic retorno = await dbHelper.insertPeople(pessoa);
 
@@ -165,18 +150,12 @@ class PeopleApiClient {
           };
         }
 
-        // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
-
-        print(json.decode(jsonResponse));
 
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -213,8 +192,8 @@ class PeopleApiClient {
 
         if (imageFile.path.isNotEmpty && imageFile.path != oldImagePath) {
           request.files.add(await http.MultipartFile.fromPath(
-            'foto', // Nome do campo que a API espera para a imagem
-            imageFile.path, // Caminho do arquivo da imagem
+            'foto',
+            imageFile.path,
           ));
         }
 
@@ -222,7 +201,6 @@ class PeopleApiClient {
           "Content-Type": "multipart/form-data",
           'Accept': 'application/json',
           'Authorization': token,
-          // Adicione outros cabeçalhos conforme necessário
         });
 
         var response = await request.send();
@@ -245,17 +223,10 @@ class PeopleApiClient {
           var box = GetStorage('credenciado');
           box.erase();
           Get.offAllNamed('/login');
-        } else {
-          Get.defaultDialog(
-            title: "Error",
-            content: const Text('erro'),
-          );
         }
       } else {
-        //alterando a pessoa local
-
         final dbHelper = DatabaseHelper();
-        dynamic retorno = await dbHelper.insertPeople(pessoa);
+        dynamic retorno = await dbHelper.updatePeople(pessoa);
 
         Map<String, dynamic> responseData = {};
 
@@ -271,18 +242,12 @@ class PeopleApiClient {
           };
         }
 
-        // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
-
-        print(json.decode(jsonResponse));
 
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -319,17 +284,9 @@ class PeopleApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -365,19 +322,5 @@ class PeopleApiClient {
     );
 
     return await localDatabase.insertPeople(peopleData);
-  }
-
-  Future<void> deletePeopleLocally(People people) async {
-    try {
-      if (people.id != null) {
-        //await localDatabase.delete(people.id!, 'family_table');
-        print('Família excluída localmente com sucesso');
-      } else {
-        print('ID da família é nulo. Não é possível excluir.');
-      }
-    } catch (e) {
-      print('Erro ao excluir família localmente: $e');
-      rethrow;
-    }
   }
 }

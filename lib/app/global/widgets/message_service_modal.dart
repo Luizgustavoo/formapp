@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/family_service_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class MessageServiceModal extends StatelessWidget {
   MessageServiceModal(
@@ -45,12 +45,12 @@ class MessageServiceModal extends StatelessWidget {
                   titulo!,
                   style: CustomTextStyle.title(context),
                 ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5, bottom: 10),
+          const Padding(
+            padding: EdgeInsets.only(right: 5, bottom: 10),
             child: Divider(
               height: 5,
               thickness: 3,
-              color: Colors.orange.shade500,
+              color: Color(0xFF1C6399),
             ),
           ),
           showWidget
@@ -157,8 +157,8 @@ class MessageServiceModal extends StatelessWidget {
                         ? family != null
                             ? await peopleController.saveService(family!)
                             : await peopleController.saveService(family2!)
-                        : await peopleController
-                            .updateService(familyService!.id!);
+                        : await peopleController.updateService(
+                            familyService!.id!, familyService!.pessoaId!);
 
                     if (retorno['return'] == 0) {
                       Get.back();

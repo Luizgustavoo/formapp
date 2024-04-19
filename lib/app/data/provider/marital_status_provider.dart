@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
-import 'package:formapp/app/data/base_url.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class MaritalStatusApiClient {
   final http.Client httpClient = http.Client();
@@ -19,8 +20,6 @@ class MaritalStatusApiClient {
         },
       );
 
-      print(json.decode(response.body));
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -33,17 +32,9 @@ class MaritalStatusApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Errorrrrrr",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Error",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }

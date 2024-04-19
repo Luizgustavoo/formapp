@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/global/widgets/search_widget.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/global/widgets/search_widget.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class FamilyListModal extends StatelessWidget {
   FamilyListModal({super.key, required this.people});
@@ -16,56 +16,75 @@ class FamilyListModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white.withAlpha(190),
       appBar: AppBar(
         title: const Text('Listagem de Famílias'),
       ),
       body: Column(
         children: [
           SearchWidget(
-              controller: controller.searchController,
-              onSearchPressed: (context, a, query) {
-                controller.searchFamily(query);
-              }),
+            controller: controller.searchControllerModal,
+            onSearchPressed: (context, a, query) {
+              controller.getFamilies(
+                  search: controller.searchControllerModal.text);
+            },
+            onSubmitted: (context, a, query) {
+              controller.getFamilies(
+                  search: controller.searchControllerModal.text);
+            },
+            isLoading: controller.isLoadingFamilies.value,
+          ),
           Expanded(
-              child: Obx(
-            () => ListView.builder(
-              itemCount: controller.listFamilies.length,
-              itemBuilder: (context, index) {
-                final family = controller.listFamilies[index];
-                return Card(
-                  color: family.id == people!.familiaId
-                      ? Colors.orange
-                      : Colors.white,
-                  child: ListTile(
-                    title: Text(family.nome!,
-                        style: CustomTextStyle.subtitleNegrit(context)),
-                    subtitle: Text(
-                      'Endereço: ${family.endereco}, ${family.cidade}',
-                      style: CustomTextStyle.button2(context),
-                    ),
-                    onTap: () async {
-                      if (family.id == people!.familiaId) {
-                        Get.defaultDialog(
-                          titlePadding: const EdgeInsets.all(16),
-                          contentPadding: const EdgeInsets.all(16),
-                          title: "Atenção",
-                          titleStyle: CustomTextStyle.titleSplash(context),
-                          content: Text(
-                            textAlign: TextAlign.center,
-                            "${people!.nome} já pertence à ${family.nome}!",
-                            style: const TextStyle(
-                              fontFamily: 'Poppinss',
-                              fontSize: 18,
+              child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (!controller.isLoadingFamilies.value &&
+                  scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent * 0.9) {
+                controller.loadMoreFamilies();
+              }
+              return false;
+            },
+            child: Obx(
+              () => ListView.builder(
+                controller: controller.scrollControllerModal,
+                itemCount: controller.listFamilies.length,
+                itemBuilder: (context, index) {
+                  final family = controller.listFamilies[index];
+                  return Card(
+                    color: family.id == people!.familiaId
+                        ? Colors.orange
+                        : Colors.white,
+                    child: ListTile(
+                      title: Text(family.nome!,
+                          style: CustomTextStyle.subtitleNegrit(context)),
+                      subtitle: Text(
+                        'Endereço: ${family.endereco}, ${family.cidade}',
+                        style: CustomTextStyle.button2(context),
+                      ),
+                      onTap: () async {
+                        if (family.id == people!.familiaId) {
+                          Get.defaultDialog(
+                            titlePadding: const EdgeInsets.all(16),
+                            contentPadding: const EdgeInsets.all(16),
+                            title: "Atenção",
+                            titleStyle: CustomTextStyle.titleSplash(context),
+                            content: Text(
+                              textAlign: TextAlign.center,
+                              "${people!.nome} já pertence à ${family.nome}!",
+                              style: const TextStyle(
+                                fontFamily: 'Poppinss',
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        showDialog(context, family);
-                      }
-                    },
-                  ),
-                );
-              },
+                          );
+                        } else {
+                          showDialog(context, family);
+                        }
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           )),
         ],

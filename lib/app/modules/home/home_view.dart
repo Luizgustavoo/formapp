@@ -1,101 +1,230 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:get/get.dart';
 
-import 'package:formapp/app/global/widgets/custom_card.dart';
-import 'package:formapp/app/global/widgets/custom_drawer.dart';
+import 'package:get/get.dart';
+import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_card.dart';
+import 'package:ucif/app/global/widgets/custom_graphic.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({super.key});
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final List<String> user = UserStorage.getUserName().split(' ');
+
     return Scaffold(
-      appBar: AppBar(),
-      drawer: const CustomDrawer(),
-      body: Column(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: CustomAppBar(
+        userName: user[0],
+        showPadding: true,
+        title: '',
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadiusDirectional.only(
+            topStart: Radius.circular(15),
+            topEnd: Radius.circular(15),
+          ),
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 20,
-              ),
               Container(
-                margin: const EdgeInsets.only(left: 12),
-                child: const Text(
-                  'Serviços',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontFamily: 'Poppins',
-                    fontSize: 20,
-                  ),
+                margin: const EdgeInsets.only(top: 20, bottom: 15),
+                child: Text(
+                  'Cadastros',
+                  style: CustomTextStyle.title(context),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12),
-                child: Divider(
-                  height: 5,
-                  thickness: 3,
-                  color: Colors.orange.shade500,
+              const CategoryItems(),
+              if (UserStorage.getUserType() <= 2) ...[
+                const Divider(
+                  endIndent: 20,
+                  indent: 20,
+                  height: 3,
+                  thickness: 2,
+                  color: Color(0xfffc9805),
                 ),
-              ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 200,
+                      child: GraphicWidget(),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed("/list-family");
+                          },
+                          child: Card(
+                            elevation: 10,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: const BorderSide(
+                                color: Color(0xFF123d68),
+                                width: 1,
+                              ),
+                            ),
+                            shadowColor: const Color(0xFF123d68),
+                            semanticContainer: true,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 12,
+                                right: 12,
+                                bottom: 10,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Obx(() => Text(
+                                        textAlign: TextAlign.center,
+                                        controller.counter.value.toString(),
+                                        style: const TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 40,
+                                            color: Color(0xfffc9805)),
+                                      )),
+                                  Text(
+                                    'Famílias\ncadastradas',
+                                    textAlign: TextAlign.center,
+                                    style: CustomTextStyle.homeCount(context),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed("/list-people");
+                          },
+                          child: Card(
+                            shadowColor: const Color(0xFF123d68),
+                            elevation: 10,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: const BorderSide(
+                                color: Color(0xFF123d68),
+                                width: 1,
+                              ),
+                            ),
+                            semanticContainer: true,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 12,
+                                right: 12,
+                                bottom: 10,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Obx(() => Text(
+                                        textAlign: TextAlign.center,
+                                        controller.counter2.value.toString(),
+                                        style: const TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontSize: 40,
+                                            color: Color(0xfffc9805)),
+                                      )),
+                                  Text(
+                                    'Pessoas\ncadastradas',
+                                    textAlign: TextAlign.center,
+                                    style: CustomTextStyle.homeCount(context),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ]
             ],
           ),
-          const Expanded(child: CategoryItems())
-        ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.only(top: 5),
+        width: 75,
+        height: 75,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Copyright © ${DateTime.now().year} Adbras - Todos os direitos reservados',
+              style: const TextStyle(
+                fontSize: 12,
+                fontFamily: 'Poppins',
+                color: Colors.black54,
+              ),
+            ),
+            Image.asset(
+              'assets/images/logo-wip.png',
+              width: 50,
+              height: 50,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class CategoryItems extends StatelessWidget {
-  const CategoryItems({
-    super.key,
-  });
+  const CategoryItems({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(top: 5),
-      child: GridView.count(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        childAspectRatio: 1,
-        scrollDirection: Axis.vertical,
-        crossAxisCount: 3,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
-        padding: const EdgeInsets.all(8),
-        children: [
-          CustomCard(
-              title: 'Famílias',
-              ontap: () {
-                Get.toNamed("/list-family");
-              },
-              imageUrl: 'assets/images/users.png'),
-          CustomCard(
-              title: 'Pessoas',
-              ontap: () {
-                Get.toNamed('/list-people');
-              },
-              imageUrl: 'assets/images/atendimento.png'),
-          CustomCard(
-              title: 'Usuários',
-              ontap: () {
-                Get.toNamed('/list-user');
-              },
-              imageUrl: 'assets/images/user.png'),
-          CustomCard(
-              title: 'Mensagens',
-              ontap: () {
-                Get.toNamed('/list-message');
-              },
-              imageUrl: 'assets/images/mensage.png'),
-        ],
-      ),
+    return GridView.count(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      crossAxisCount: 3,
+      crossAxisSpacing: 2,
+      mainAxisSpacing: 2,
+      padding: const EdgeInsets.all(8),
+      children: [
+        CustomCard(
+          onTap: () {
+            Get.toNamed("/list-family");
+          },
+          title: 'Famílias',
+          imageUrl: 'assets/images/familia_icon.png',
+        ),
+        CustomCard(
+          onTap: () {
+            Get.toNamed('/list-people');
+          },
+          title: 'Pessoas',
+          imageUrl: 'assets/images/pessoa_icon.png',
+        ),
+        CustomCard(
+          onTap: () {
+            Get.toNamed('/list-user');
+          },
+          title: 'Liderança',
+          imageUrl: 'assets/images/lider_icon.png',
+        ),
+      ],
     );
   }
 }

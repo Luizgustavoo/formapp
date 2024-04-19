@@ -1,21 +1,32 @@
 import 'dart:io';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/provider/people_provider.dart';
+
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/provider/people_provider.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class PeopleRepository {
   final PeopleApiClient apiClient = PeopleApiClient();
 
-  getAll(String token) async {
+  getAll(String token, {int? page, String? search}) async {
     List<People> list = <People>[];
 
-    var response = await apiClient.getAll(token);
-
-    if (response != null) {
-      response.forEach((e) {
-        list.add(People.fromJson(e));
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAll(token, page: page, search: search);
+      List<People> newPeoples = [];
+      response['data'].forEach((e) {
+        People p = People.fromJson(e);
+        newPeoples.add(p);
       });
+      if (page == 1) {
+        list.clear();
+      }
+      for (var family in newPeoples) {
+        if (!list.contains(family)) {
+          list.add(family);
+        }
+      }
     }
-
     return list;
   }
 
@@ -27,8 +38,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a pessoa: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 
@@ -40,8 +50,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao editar a pessoa: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 
@@ -50,8 +59,7 @@ class PeopleRepository {
       var response = await apiClient.savePeopleLocal(people);
       return response;
     } catch (e) {
-      print('Erro ao salvar a pessoa local: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 
@@ -61,8 +69,7 @@ class PeopleRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao inserir a família: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 }

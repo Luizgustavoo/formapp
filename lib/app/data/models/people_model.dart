@@ -1,5 +1,6 @@
-import 'package:formapp/app/data/models/family_service_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 
 class People {
   int? id;
@@ -27,34 +28,35 @@ class People {
   String? parentesco;
   List<FamilyService>? atendimentos;
   User? user;
+  Family? family;
 
-  People({
-    this.id,
-    this.nome,
-    this.foto,
-    this.sexo,
-    this.cpf,
-    this.dataNascimento,
-    this.estadoCivilId,
-    this.tituloEleitor,
-    this.zonaEleitoral,
-    this.telefone,
-    this.redeSocial,
-    this.provedorCasa,
-    this.igrejaId,
-    this.localTrabalho,
-    this.cargoTrabalho,
-    this.religiaoId,
-    this.funcaoIgreja,
-    this.usuarioId,
-    this.status,
-    this.dataCadastro,
-    this.dataUpdate,
-    this.familiaId,
-    this.parentesco,
-    this.atendimentos,
-    this.user,
-  });
+  People(
+      {this.id,
+      this.nome,
+      this.foto,
+      this.sexo,
+      this.cpf,
+      this.dataNascimento,
+      this.estadoCivilId,
+      this.tituloEleitor,
+      this.zonaEleitoral,
+      this.telefone,
+      this.redeSocial,
+      this.provedorCasa,
+      this.igrejaId,
+      this.localTrabalho,
+      this.cargoTrabalho,
+      this.religiaoId,
+      this.funcaoIgreja,
+      this.usuarioId,
+      this.status,
+      this.dataCadastro,
+      this.dataUpdate,
+      this.familiaId,
+      this.parentesco,
+      this.atendimentos,
+      this.user,
+      this.family});
 
   People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -87,6 +89,7 @@ class People {
         atendimentos!.add(FamilyService.fromJson(v));
       });
     }
+    family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
   }
 
   Map<String, dynamic> toJson() {

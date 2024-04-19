@@ -2,14 +2,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/models/family_model.dart';
 import 'package:get/get.dart';
-import 'package:searchfield/searchfield.dart';
 
-import 'package:formapp/app/global/widgets/custom_bottomsheet_file.dart';
-import 'package:formapp/app/modules/people/people_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/global/widgets/custom_camera_modal.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/format_validator.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
   const AddPeopleFamilyView({
@@ -58,30 +58,35 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Obx(
-                        () => CircleAvatar(
-                          radius: 35,
-                          backgroundImage: controller.isImagePicPathSet == true
-                              ? FileImage(File(controller.photoUrlPath.value))
-                              : (controller.photoUrlPath.value.isNotEmpty
-                                  ? NetworkImage(
-                                          '$urlImagem/public/storage/${controller.photoUrlPath.value}')
-                                      as ImageProvider<Object>?
-                                  : const AssetImage(
-                                      'assets/images/default_avatar.jpg')),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              backgroundBlendMode: BlendMode.multiply,
-                              color: Colors.grey[300],
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.camera_alt),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => CustomBottomSheet(),
-                                );
-                              },
+                        () => ClipOval(
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundImage: controller.isImagePicPathSet ==
+                                    true
+                                ? FileImage(File(controller.photoUrlPath.value))
+                                : (controller.photoUrlPath.value.isNotEmpty
+                                    ? NetworkImage(
+                                            '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
+                                        as ImageProvider<Object>?
+                                    : const AssetImage(
+                                        'assets/images/default_avatar.jpg')),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                backgroundBlendMode: BlendMode.multiply,
+                                color: Colors.grey[300],
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.camera_alt),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => CustomCameraModal(
+                                      tyContext: 'pessoa',
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -187,7 +192,10 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           onChanged: (value) =>
                               controller.onNascimentoChanged(value),
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !FormattersValidators.validateDateSubmited(
+                                    value)) {
                               return 'Data inválida';
                             }
                             return null;
@@ -210,9 +218,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               'Bisavô(ó)',
                               'Companheiro(a)',
                               'Cunhado(a)',
-                              'Irmã',
-                              'Irmão',
-                              'Madrasta',
+                              'Filho(a)',
                               'Mãe',
                               'Outro',
                               'Padrasto',
@@ -253,6 +259,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           maxLength: 15,
                           controller: controller.celularPessoaController,
                           decoration: const InputDecoration(
@@ -289,13 +296,13 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                               counterText: "",
                               border: OutlineInputBorder(),
                               labelText: 'Título de Eleitor'),
-                          onChanged: (value) {},
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         flex: 2,
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: controller.zonaEleitoralPessoaController,
                           maxLength: 3,
                           decoration: const InputDecoration(
@@ -330,58 +337,85 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  GestureDetector(
+                  TextFormField(
+                    controller: controller.igrejaPessoaController,
+                    readOnly: true,
                     onTap: () async {
-                      controller.getChurch();
+                      final selectedChurch = await showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Selecione uma Igreja'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: controller.suggestions
+                                    .map(
+                                      (e) => ListTile(
+                                        title: Text(e),
+                                        onTap: () {
+                                          Navigator.of(context).pop(e);
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+
+                      if (selectedChurch != null) {
+                        controller.igrejaPessoaController.text = selectedChurch;
+                      }
                     },
-                    child: SearchField(
-                      suggestionDirection: SuggestionDirection.flex,
-                      controller: controller.igrejaPessoaController,
-                      onSearchTextChanged: (query) {
-                        final filter = controller.suggestions
-                            .where((element) => element
-                                .toLowerCase()
-                                .contains(query.toLowerCase()))
-                            .toList();
-                        return filter
-                            .map((e) => SearchFieldListItem<String>(e,
-                                child: controller.searchChild(e)))
-                            .toList();
-                      },
-                      onTap: () {},
-                      key: const Key('searchfield'),
-                      hint: 'Selecione uma Igreja',
-                      itemHeight: 50,
-                      scrollbarDecoration: ScrollbarDecoration(),
-                      onTapOutside: (x) {
-                        controller.focus.unfocus();
-                      },
-                      suggestionStyle:
-                          const TextStyle(fontSize: 18, color: Colors.black),
-                      searchStyle:
-                          const TextStyle(fontSize: 18, color: Colors.black),
-                      searchInputDecoration: const InputDecoration(
-                        hintStyle: TextStyle(fontSize: 18, color: Colors.black),
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: 'Igreja',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.arrow_drop_down),
+                        onPressed: () async {
+                          final selectedChurch = await showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text(
+                                  'Selecione uma Igreja',
+                                ),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: controller.suggestions
+                                        .map(
+                                          (e) => ListTile(
+                                            title: Text(
+                                              e,
+                                              style:
+                                                  const TextStyle(fontSize: 30),
+                                            ),
+                                            onTap: () {
+                                              Navigator.of(context).pop(e);
+                                            },
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+
+                          if (selectedChurch != null) {
+                            controller.igrejaPessoaController.text =
+                                selectedChurch;
+                          }
+                        },
                       ),
-                      suggestionsDecoration: SuggestionDecoration(
-                        color: Colors.grey.shade300,
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      suggestions: controller.suggestions
-                          .map((e) => SearchFieldListItem<String>(e,
-                              child: controller.searchChild(e)))
-                          .toList(),
-                      focusNode: controller.focus,
-                      suggestionState: Suggestion.expand,
-                      onSuggestionTap: (SearchFieldListItem<String> x) {
-                        controller.focus.unfocus();
-                      },
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Selecione uma igreja';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -389,7 +423,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Função/Igreja'),
-                    onChanged: (value) {},
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -417,29 +450,41 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                             style: CustomTextStyle.button2(context),
                           )),
                       ElevatedButton(
-                          onPressed: () async {
-                            Map<String, dynamic> retorno = tipoOperacao == 0
-                                ? await controller.savePeople(
-                                    family!, peopleLocal)
-                                : await controller.updatePeople(peopleLocal);
-                            if (retorno['return'] == 0) {
-                              Get.back();
-                            }
-                            Get.snackbar(
-                              snackPosition: SnackPosition.BOTTOM,
-                              duration: const Duration(milliseconds: 1500),
-                              retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                              retorno['message'],
-                              backgroundColor: retorno['return'] == 0
-                                  ? Colors.green
-                                  : Colors.red,
-                              colorText: Colors.white,
-                            );
-                          },
-                          child: Text(
-                            tipoOperacao == 0 ? "ADICIONAR" : "ALTERAR",
-                            style: CustomTextStyle.button(context),
-                          )),
+                          onPressed: controller.isSaving.value
+                              ? null
+                              : () async {
+                                  Map<String, dynamic> retorno =
+                                      tipoOperacao == 0
+                                          ? await controller.savePeople(
+                                              family!, peopleLocal)
+                                          : await controller
+                                              .updatePeople(peopleLocal);
+                                  if (retorno['return'] == 0) {
+                                    Get.offAllNamed('/list-family');
+                                  }
+                                  Get.snackbar(
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    duration:
+                                        const Duration(milliseconds: 1500),
+                                    retorno['return'] == 0
+                                        ? 'Sucesso'
+                                        : "Falha",
+                                    retorno['message'],
+                                    backgroundColor: retorno['return'] == 0
+                                        ? Colors.green
+                                        : Colors.red,
+                                    colorText: Colors.white,
+                                  );
+                                },
+                          child: controller.isSaving.value
+                              ? const CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFF1C6399)),
+                                )
+                              : Text(
+                                  tipoOperacao == 0 ? "ADICIONAR" : "ALTERAR",
+                                  style: CustomTextStyle.button(context),
+                                )),
                     ],
                   )
                 ],

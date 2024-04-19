@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
-import 'package:formapp/app/data/base_url.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class ReligionApiClient {
   final http.Client httpClient = http.Client();
@@ -31,17 +32,9 @@ class ReligionApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Errooooor",
-          content: Text(json.decode(response.body).toString()),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Error",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }

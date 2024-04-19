@@ -1,7 +1,8 @@
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/message_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/data/provider/message_provider.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/message_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/message_provider.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class MessageRepository {
   final MessageApiClient apiClient = MessageApiClient();
@@ -28,8 +29,7 @@ class MessageRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao enviar mensagem para a família: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 
@@ -39,8 +39,7 @@ class MessageRepository {
 
       return response;
     } catch (e) {
-      print('Erro ao enviar mensagem para a família: $e');
-      rethrow;
+      ErrorHandler.showError(e);
     }
   }
 }

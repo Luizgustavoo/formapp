@@ -3,10 +3,34 @@ import 'package:flutter/material.dart';
 class CustomTextStyle {
   static TextStyle? title(BuildContext context) {
     return const TextStyle(
-      fontSize: 20,
-      color: Colors.black87,
+        fontSize: 20,
+        color: Colors.black87,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.ellipsis);
+  }
+
+  static TextStyle? titleWhite(BuildContext context) {
+    return const TextStyle(
+        fontSize: 23,
+        color: Colors.white,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.ellipsis);
+  }
+
+  static TextStyle? appBarTitle(BuildContext context) {
+    return const TextStyle(
+      fontSize: 30,
+      color: Colors.white,
       fontFamily: 'Poppins',
     );
+  }
+
+  static TextStyle? appBarSubtitle(BuildContext context) {
+    return const TextStyle(
+        fontSize: 15,
+        color: Colors.white,
+        fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
   }
 
   static TextStyle? dateRegular(BuildContext context) {
@@ -49,10 +73,26 @@ class CustomTextStyle {
         overflow: TextOverflow.clip);
   }
 
+  static TextStyle? homeCount(BuildContext context) {
+    return const TextStyle(
+        fontSize: 14,
+        color: Color(0xFF1C6399),
+        fontFamily: 'Poppinss',
+        overflow: TextOverflow.clip);
+  }
+
   static TextStyle? subtitleNegrit(BuildContext context) {
     return const TextStyle(
         fontSize: 16,
         color: Colors.black87,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.clip);
+  }
+
+  static TextStyle? subtitleWhite(BuildContext context) {
+    return const TextStyle(
+        fontSize: 16,
+        color: Colors.white,
         fontFamily: 'Poppins',
         overflow: TextOverflow.clip);
   }
@@ -78,6 +118,16 @@ class CustomTextStyle {
       fontSize: 14,
       color: Colors.black87,
       fontFamily: 'Poppinss',
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  static TextStyle? formWhite(BuildContext context) {
+    return const TextStyle(
+      fontSize: 14,
+      color: Colors.white,
+      fontFamily: 'Poppinss',
+      overflow: TextOverflow.ellipsis,
     );
   }
 
@@ -103,5 +153,20 @@ class CustomTextStyle {
         color: Colors.grey.shade700,
         fontFamily: 'Poppins',
         overflow: TextOverflow.clip);
+  }
+
+  static TextStyle? buttonSignUp(BuildContext context) {
+    return const TextStyle(
+        fontSize: 15,
+        color: Color(0xFF1C6399),
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.clip);
+  }
+
+  static TextStyle? textFormFieldStyle(BuildContext context) {
+    return const TextStyle(
+      color: Colors.black54,
+      fontFamily: 'Poppins',
+    );
   }
 }

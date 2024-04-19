@@ -1,4 +1,4 @@
-import 'package:formapp/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_model.dart';
 
 class User {
   int? id;
@@ -14,22 +14,25 @@ class User {
   String? tokenFirebase;
   dynamic familiaId;
   Family? family;
+  dynamic foto;
+  dynamic mensagens;
 
-  User({
-    this.id,
-    this.nome,
-    this.username,
-    this.tipousuarioId,
-    this.status,
-    this.dataCadastro,
-    this.dataUpdate,
-    this.user,
-    this.usuarioId,
-    this.senha,
-    this.tokenFirebase,
-    this.familiaId,
-    this.family,
-  });
+  User(
+      {this.id,
+      this.nome,
+      this.username,
+      this.tipousuarioId,
+      this.status,
+      this.dataCadastro,
+      this.dataUpdate,
+      this.user,
+      this.usuarioId,
+      this.senha,
+      this.tokenFirebase,
+      this.familiaId,
+      this.family,
+      this.foto,
+      this.mensagens});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,6 +48,8 @@ class User {
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     familiaId = json['familia_id'] as dynamic;
     family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
+    foto = json['foto'];
+    mensagens = json['mensagens'];
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +68,8 @@ class User {
       data['usuario'] = user!.toJson();
     }
     data['familia_id'] = familiaId;
+    data['foto'] = foto;
+    data['mensagens'] = mensagens;
     return data;
   }
 }

@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/database_helper.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/family_service_model.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/database_helper.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 
 class FamilyServiceApiClient {
   final http.Client httpClient = http.Client();
@@ -51,17 +52,9 @@ class FamilyServiceApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -79,7 +72,7 @@ class FamilyServiceApiClient {
         "pessoa_id": familyService.pessoaId.toString()
       };
 
-      var response = await httpClient.put(
+      var response = await httpClient.patch(
         serviceUrlUpdate,
         headers: {
           "Accept": "application/json",
@@ -103,17 +96,9 @@ class FamilyServiceApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
