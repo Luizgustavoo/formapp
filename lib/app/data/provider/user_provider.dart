@@ -328,4 +328,23 @@ class UserApiClient {
     }
     return null;
   }
+
+  deleteAccount(String token, String password) async {
+    final id = UserStorage.getUserId();
+    var loginUrl = Uri.parse('$baseUrl/v1/usuario/remove/$id');
+
+    try {
+      var response = await httpClient.post(loginUrl, headers: {
+        "Accept": "application/json",
+        "Authorization": token,
+      }, body: {
+        'senha': password
+      });
+
+      return json.decode(response.body);
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 }

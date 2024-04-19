@@ -187,6 +187,96 @@ class PerfilView extends GetView<UserController> {
                                 icon: const Icon(Icons.exit_to_app_rounded),
                                 label: const Text('SAIR'),
                               ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red.shade400),
+                                    onPressed: () {
+                                      controller.deletePassword.text = "";
+                                      Get.defaultDialog(
+                                        title: 'Confirmar exclusão',
+                                        content: Form(
+                                          key: controller.deleteAccountKey,
+                                          child: Column(
+                                            children: [
+                                              const Text(
+                                                  'Tem certeza que deseja excluir sua conta?'),
+                                              const SizedBox(height: 10),
+                                              TextFormField(
+                                                decoration:
+                                                    const InputDecoration(
+                                                        labelText:
+                                                            'Digite sua senha'),
+                                                obscureText: true,
+                                                controller:
+                                                    controller.deletePassword,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Campo obrigatório';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        confirmTextColor: Colors
+                                            .white, // Cor do texto do botão de confirmar
+                                        cancelTextColor: Colors
+                                            .black, // Cor do texto do botão de cancelar
+                                        buttonColor: Colors.blue.shade400,
+                                        textCancel: 'Cancelar',
+                                        textConfirm: 'Confirmar',
+                                        onCancel: () => Get.back(),
+                                        onConfirm: () async {
+                                          if (controller
+                                              .deleteAccountKey.currentState!
+                                              .validate()) {
+                                            var mensagem = await controller
+                                                .deleteAccount();
+
+                                            if (mensagem == null) {
+                                              Get.snackbar(
+                                                  snackPosition:
+                                                      SnackPosition.BOTTOM,
+                                                  "Falha",
+                                                  mensagem['message'],
+                                                  backgroundColor: Colors.red);
+                                            } else {
+                                              if (mensagem["code"] == 0) {
+                                                controller.logout();
+                                                Get.snackbar(
+                                                    snackPosition:
+                                                        SnackPosition.BOTTOM,
+                                                    "Sucesso",
+                                                    mensagem['message'],
+                                                    backgroundColor:
+                                                        Colors.green);
+                                              } else {
+                                                Get.snackbar(
+                                                    snackPosition:
+                                                        SnackPosition.BOTTOM,
+                                                    "Falha",
+                                                    "Usuário e/ou senha inválidas!",
+                                                    backgroundColor:
+                                                        Colors.red);
+                                              }
+                                            }
+                                          }
+                                        },
+                                      );
+                                    },
+                                    child: const Text(
+                                      "Deletar minha conta",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'Poppinss',
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    )),
+                              )
                             ],
                           ),
                         ),

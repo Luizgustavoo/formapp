@@ -103,4 +103,10 @@ class UserRepository {
       ErrorHandler.showError(e);
     }
   }
+
+  deleteAccount(String token, String password) async {
+    Map<String, dynamic>? json = await apiClient.deleteAccount(token, password);
+
+    return json;
+  }
 }

@@ -28,9 +28,13 @@ class UserController extends GetxController {
   final GlobalKey<FormState> userFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> perfilFormKey = GlobalKey<FormState>();
 
+  final GlobalKey<FormState> deleteAccountKey = GlobalKey<FormState>();
+
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  TextEditingController deletePassword = TextEditingController();
 
   RxBool isLoading = true.obs;
 
@@ -394,5 +398,15 @@ class UserController extends GetxController {
     getUsers();
 
     return retorno;
+  }
+
+  deleteAccount() async {
+    if (await ConnectionStatus.verifyConnection()) {
+      final token = UserStorage.getToken();
+      mensagem = await userRepository.deleteAccount(
+          "Bearer $token", deletePassword.text);
+    }
+
+    return mensagem;
   }
 }
