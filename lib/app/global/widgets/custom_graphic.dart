@@ -46,14 +46,12 @@ class GraphicWidget extends GetView<HomeController> {
   }
 
   List<PieChartSectionData> showingSections(List<Genre> genres) {
-    final List<Color> sectionColors = [
-      Colors.red,
-      Colors.blue,
-    ];
+    final List<Color> sectionColors = [Colors.red, Colors.blue, Colors.amber];
 
     final List<String> sectionImages = [
       'assets/images/female.svg',
       'assets/images/male.svg',
+      'assets/images/other.svg'
     ];
 
     return genres.asMap().entries.map((entry) {

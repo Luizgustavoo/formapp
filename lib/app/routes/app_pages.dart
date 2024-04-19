@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:ucif/app/modules/chat/chat_binding.dart';
 import 'package:ucif/app/modules/chat/chat_view.dart';
 import 'package:ucif/app/modules/family/family_binding.dart';
+import 'package:ucif/app/modules/family/views/list_family_filter_view.dart';
 import 'package:ucif/app/modules/family/views/list_family_view.dart';
 import 'package:ucif/app/modules/home/home_binding.dart';
 import 'package:ucif/app/modules/home/home_view.dart';
@@ -39,6 +40,11 @@ class AppPages {
     GetPage(
       name: Routes.LIST_FAMILY,
       page: () => FamilyView(),
+      binding: FamilyBinding(),
+    ),
+    GetPage(
+      name: Routes.FILTERED_FAMILY,
+      page: () => FamilyFilterView(),
       binding: FamilyBinding(),
     ),
     GetPage(

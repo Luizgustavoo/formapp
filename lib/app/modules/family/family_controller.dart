@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/provider/via_cep.dart';
 import 'package:ucif/app/data/repository/family_repository.dart';
@@ -38,6 +39,7 @@ class FamilyController extends GetxController
   List<People>? listPessoas = [];
 
   RxList<Family> listFamilies = <Family>[].obs;
+  RxList<Family> listFamilyPeoples = <Family>[].obs;
   RxList<Family> listFamiliesDropDown = <Family>[].obs;
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
 
@@ -58,6 +60,7 @@ class FamilyController extends GetxController
 
   final status = Get.find<InternetStatusProvider>().status;
 
+  User? selectedUser;
   final showCaseViewShown = false.obs;
 
   RxBool isLoadingFamilies = false.obs;
@@ -66,9 +69,17 @@ class FamilyController extends GetxController
 
   final ScrollController scrollController = ScrollController();
   final ScrollController scrollControllerModal = ScrollController();
+  final ScrollController scrollFilterFamily = ScrollController();
 
   int currentPage = 1;
   bool isLoadingMore = false;
+
+  User userSelected = User();
+  RxString totalFamily = ''.obs;
+  RxString totalPeoples = ''.obs;
+  RxString totalMale = ''.obs;
+  RxString totalFemale = ''.obs;
+  RxString totalNoSex = ''.obs;
 
   @override
   void onInit() {
@@ -101,12 +112,6 @@ class FamilyController extends GetxController
 
     super.onInit();
   }
-
-  // @override
-  // void onClose() {
-  //   searchController.text = '';
-  //   super.onClose();
-  // }
 
   Future<void> loadMoreFamilies() async {
     try {
@@ -176,6 +181,29 @@ class FamilyController extends GetxController
       final token = UserStorage.getToken();
       listFamiliesDropDown.value =
           await repository.getAllDropDown("Bearer $token");
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingFamilies.value = false;
+  }
+
+  Future<void> getFamiliesFilter(String search, User lider) async {
+    isLoadingFamilies.value = true;
+    try {
+      final token = UserStorage.getToken();
+      var response =
+          await repository.getAllFilter("Bearer $token", search, lider);
+      listFamilyPeoples.value = (response['familias']['data'] as List)
+          .map((familiaJson) => Family.fromJson(familiaJson))
+          .toList();
+
+      totalFamily.value = response['total_familias'].toString();
+      totalPeoples.value = response['total_pessoas'].toString();
+      totalMale.value = response['total_masculino'].toString();
+      totalFemale.value = response['total_feminino'].toString();
+      totalNoSex.value = response['total_sem_sexo'].toString();
+
       update();
     } catch (e) {
       ErrorHandler.showError(e);

@@ -9,6 +9,7 @@ import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/family_database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
@@ -41,6 +42,45 @@ class FamilyApiClient {
             : '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/?page=$page&limit';
         familyUrl = Uri.parse(url);
       }
+
+      var response = await httpClient.get(
+        familyUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  getAllFilter(String token, {int? page, String? search, User? lider}) async {
+    try {
+      Uri familyUrl;
+      search = search ?? 'null';
+      String url =
+          '$baseUrl/v1/familia/list-paginate-lider/$search/${lider!.id}/?page=$page&limit';
+      familyUrl = Uri.parse(url);
 
       var response = await httpClient.get(
         familyUrl,

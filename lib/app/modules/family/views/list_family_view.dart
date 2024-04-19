@@ -77,7 +77,7 @@ class FamilyView extends GetView<FamilyController> {
                   if (controller.isLoadingFamilies.value) {
                     return ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      controller: controller.scrollController,
+                      controller: controller.scrollFilterFamily,
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       // physics: const BouncingScrollPhysics(),
@@ -109,7 +109,7 @@ class FamilyView extends GetView<FamilyController> {
                           if (status == InternetStatus.disconnected &&
                               !family.familyLocal!) {
                             return ListView.builder(
-                              controller: controller.scrollController,
+                              controller: controller.scrollFilterFamily,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               physics: const AlwaysScrollableScrollPhysics(),
@@ -127,6 +127,7 @@ class FamilyView extends GetView<FamilyController> {
                                 curve: Curves.easeInOut,
                                 child: FadeInAnimation(
                                   child: CustomFamilyCard(
+                                    showMenu: true,
                                     index: index,
                                     local: family.familyLocal!,
                                     family: family,

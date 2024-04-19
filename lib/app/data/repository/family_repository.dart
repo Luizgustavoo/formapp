@@ -1,6 +1,7 @@
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/family_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
@@ -51,6 +52,21 @@ class FamilyRepository {
       });
     }
     return list;
+  }
+
+  getAllFilter(String token, String search, User lider) async {
+    // List<Family> list = <Family>[];
+
+    if (await ConnectionStatus.verifyConnection()) {
+      var response =
+          await apiClient.getAllFilter(token, search: search, lider: lider);
+
+      // response['data'].forEach((e) {
+      //   Family f = Family.fromJson(e);
+      //   list.add(f);
+      // });
+      return response;
+    }
   }
 
   insertFamily(String token, Family family) async {

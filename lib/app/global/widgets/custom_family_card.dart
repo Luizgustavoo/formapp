@@ -30,6 +30,7 @@ class CustomFamilyCard extends StatelessWidget {
   PeopleController peopleController = Get.find();
   Family family;
   final messageController = Get.find<MessageController>();
+  final bool showMenu;
 
   final int? index;
 
@@ -47,6 +48,7 @@ class CustomFamilyCard extends StatelessWidget {
       required this.index,
       this.peopleNames,
       this.local = false,
+      required this.showMenu,
       this.showAddMember = false})
       : super(key: key);
 
@@ -63,95 +65,104 @@ class CustomFamilyCard extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(right: 12),
             child: ExpansionTile(
-              trailing: PopupMenuButton<int>(
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    padding: EdgeInsets.zero,
-                    value: 0,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          splashColor: const Color.fromARGB(255, 160, 206, 241),
-                          onTap: editFamily,
-                          child: const ListTile(
-                            splashColor: Colors.transparent,
-                            contentPadding:
-                                EdgeInsets.only(left: 15, right: 15),
-                            hoverColor: Colors.transparent,
-                            leading: Icon(Icons.edit_outlined,
-                                color: Color(0xFF1C6399)),
-                            title: Text('Editar',
-                                style: TextStyle(fontFamily: 'Poppinss')),
-                          ),
-                        ),
-                        if (UserStorage.getUserType() < 3) ...[
-                          if (!local) ...[
-                            InkWell(
-                              onTap: () async {
-                                peopleController.clearModalMessageService();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: false,
-                                  context: context,
-                                  builder: (context) => Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: MessageServiceModal(
-                                      family: family,
-                                      showWidget: true,
-                                      titulo: 'Atendimento ${family.nome}',
+              trailing: showMenu
+                  ? PopupMenuButton<int>(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          padding: EdgeInsets.zero,
+                          value: 0,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                splashColor:
+                                    const Color.fromARGB(255, 160, 206, 241),
+                                onTap: editFamily,
+                                child: const ListTile(
+                                  splashColor: Colors.transparent,
+                                  contentPadding:
+                                      EdgeInsets.only(left: 15, right: 15),
+                                  hoverColor: Colors.transparent,
+                                  leading: Icon(Icons.edit_outlined,
+                                      color: Color(0xFF1C6399)),
+                                  title: Text('Editar',
+                                      style: TextStyle(fontFamily: 'Poppinss')),
+                                ),
+                              ),
+                              if (UserStorage.getUserType() < 3) ...[
+                                if (!local) ...[
+                                  InkWell(
+                                    onTap: () async {
+                                      peopleController
+                                          .clearModalMessageService();
+                                      showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        isDismissible: false,
+                                        context: context,
+                                        builder: (context) => Padding(
+                                          padding:
+                                              MediaQuery.of(context).viewInsets,
+                                          child: MessageServiceModal(
+                                            family: family,
+                                            showWidget: true,
+                                            titulo:
+                                                'Atendimento ${family.nome}',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const ListTile(
+                                      splashColor: Colors.transparent,
+                                      contentPadding:
+                                          EdgeInsets.only(left: 15, right: 15),
+                                      hoverColor: Colors.transparent,
+                                      leading: Icon(Icons.support_agent_rounded,
+                                          color: Color(0xFF1C6399)),
+                                      title: Text('Atendimento',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppinss')),
                                     ),
                                   ),
-                                );
-                              },
-                              child: const ListTile(
-                                splashColor: Colors.transparent,
-                                contentPadding:
-                                    EdgeInsets.only(left: 15, right: 15),
-                                hoverColor: Colors.transparent,
-                                leading: Icon(Icons.support_agent_rounded,
-                                    color: Color(0xFF1C6399)),
-                                title: Text('Atendimento',
-                                    style: TextStyle(fontFamily: 'Poppinss')),
-                              ),
-                            ),
-                          ],
-                          if (showAddMember)
-                            InkWell(
-                              onTap: addMember,
-                              child: const ListTile(
-                                splashColor: Colors.transparent,
-                                contentPadding:
-                                    EdgeInsets.only(left: 15, right: 15),
-                                hoverColor: Colors.transparent,
-                                leading: Icon(Icons.add_rounded,
-                                    color: Color(0xFF1C6399)),
-                                title: Text('Adicionar',
-                                    style: TextStyle(fontFamily: 'Poppinss')),
-                              ),
-                            ),
-                          InkWell(
-                            onTap: () {
-                              showDialog(context, family);
-                            },
-                            child: const ListTile(
-                              splashColor: Colors.transparent,
-                              contentPadding:
-                                  EdgeInsets.only(left: 15, right: 15),
-                              hoverColor: Colors.transparent,
-                              leading: Icon(Icons.delete_outlined,
-                                  color: Color(0xFF1C6399)),
-                              title: Text('Excluir',
-                                  style: TextStyle(fontFamily: 'Poppinss')),
-                            ),
+                                ],
+                                if (showAddMember)
+                                  InkWell(
+                                    onTap: addMember,
+                                    child: const ListTile(
+                                      splashColor: Colors.transparent,
+                                      contentPadding:
+                                          EdgeInsets.only(left: 15, right: 15),
+                                      hoverColor: Colors.transparent,
+                                      leading: Icon(Icons.add_rounded,
+                                          color: Color(0xFF1C6399)),
+                                      title: Text('Adicionar',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppinss')),
+                                    ),
+                                  ),
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(context, family);
+                                  },
+                                  child: const ListTile(
+                                    splashColor: Colors.transparent,
+                                    contentPadding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    hoverColor: Colors.transparent,
+                                    leading: Icon(Icons.delete_outlined,
+                                        color: Color(0xFF1C6399)),
+                                    title: Text('Excluir',
+                                        style:
+                                            TextStyle(fontFamily: 'Poppinss')),
+                                  ),
+                                ),
+                              ]
+                            ],
                           ),
-                        ]
+                        ),
                       ],
-                    ),
-                  ),
-                ],
-              ),
+                    )
+                  : const SizedBox(),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               childrenPadding:
@@ -248,73 +259,86 @@ class CustomFamilyCard extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  PopupMenuButton<int>(
-                                      iconColor: const Color(0xFF1C6399),
-                                      onSelected: (value) {
-                                        switch (value) {
-                                          case 0: // Edit option
-                                            peopleController.selectedPeople =
-                                                family.pessoas![index];
-                                            peopleController
-                                                .fillInFieldsForEditPerson();
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              isDismissible: false,
-                                              context: context,
-                                              builder: (context) => Padding(
-                                                padding: MediaQuery.of(context)
-                                                    .viewInsets,
-                                                child: AddPeopleFamilyView(
-                                                  peopleLocal:
-                                                      family.familyLocal!,
-                                                  tipoOperacao: 1,
-                                                  family: family,
+                                  showMenu
+                                      ? PopupMenuButton<int>(
+                                          iconColor: const Color(0xFF1C6399),
+                                          onSelected: (value) {
+                                            switch (value) {
+                                              case 0: // Edit option
+                                                peopleController
+                                                        .selectedPeople =
+                                                    family.pessoas![index];
+                                                peopleController
+                                                    .fillInFieldsForEditPerson();
+                                                showModalBottomSheet(
+                                                  isScrollControlled: true,
+                                                  isDismissible: false,
+                                                  context: context,
+                                                  builder: (context) => Padding(
+                                                    padding:
+                                                        MediaQuery.of(context)
+                                                            .viewInsets,
+                                                    child: AddPeopleFamilyView(
+                                                      peopleLocal:
+                                                          family.familyLocal!,
+                                                      tipoOperacao: 1,
+                                                      family: family,
+                                                    ),
+                                                  ),
+                                                );
+                                                break;
+                                              case 1: // Support option
+                                                peopleController
+                                                    .clearModalMessageService();
+                                                showModalBottomSheet(
+                                                  isScrollControlled: true,
+                                                  isDismissible: false,
+                                                  context: context,
+                                                  builder: (context) => Padding(
+                                                    padding:
+                                                        MediaQuery.of(context)
+                                                            .viewInsets,
+                                                    child: MessageServiceModal(
+                                                      people: family
+                                                          .pessoas![index],
+                                                      showWidget: true,
+                                                      titulo: 'Atendimento',
+                                                    ),
+                                                  ),
+                                                );
+                                                break;
+                                            }
+                                          },
+                                          itemBuilder: (BuildContext context) =>
+                                              <PopupMenuEntry<int>>[
+                                                const PopupMenuItem<int>(
+                                                  value: 0,
+                                                  child: ListTile(
+                                                    leading: Icon(
+                                                        Icons.edit_outlined),
+                                                    title: Text('Editar'),
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                            break;
-                                          case 1: // Support option
-                                            peopleController
-                                                .clearModalMessageService();
-                                            showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              isDismissible: false,
-                                              context: context,
-                                              builder: (context) => Padding(
-                                                padding: MediaQuery.of(context)
-                                                    .viewInsets,
-                                                child: MessageServiceModal(
-                                                  people:
-                                                      family.pessoas![index],
-                                                  showWidget: true,
-                                                  titulo: 'Atendimento',
-                                                ),
-                                              ),
-                                            );
-                                            break;
-                                        }
-                                      },
-                                      itemBuilder: (BuildContext context) =>
-                                          <PopupMenuEntry<int>>[
-                                            const PopupMenuItem<int>(
-                                              value: 0,
-                                              child: ListTile(
-                                                leading:
-                                                    Icon(Icons.edit_outlined),
-                                                title: Text('Editar'),
-                                              ),
-                                            ),
-                                            if (UserStorage.getUserType() < 3 &&
-                                                !local)
-                                              const PopupMenuItem<int>(
-                                                value: 1,
-                                                child: ListTile(
-                                                  leading: Icon(Icons
-                                                      .support_agent_rounded),
-                                                  title: Text('Atendimento'),
-                                                ),
-                                              ),
-                                          ])
+                                                if (UserStorage.getUserType() <
+                                                        3 &&
+                                                    !local)
+                                                  const PopupMenuItem<int>(
+                                                    value: 1,
+                                                    child: ListTile(
+                                                      leading: Icon(Icons
+                                                          .support_agent_rounded),
+                                                      title:
+                                                          Text('Atendimento'),
+                                                    ),
+                                                  ),
+                                              ])
+                                      : const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Icon(
+                                            Icons.people,
+                                            color: Color(0xFF1C6399),
+                                          ),
+                                        )
                                 ],
                               ),
                               Flexible(
