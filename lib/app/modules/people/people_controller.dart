@@ -12,6 +12,7 @@ import 'package:ucif/app/data/models/family_service_model.dart';
 import 'package:ucif/app/data/models/marital_status_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
 import 'package:ucif/app/data/repository/family_service_repository.dart';
@@ -59,6 +60,7 @@ class PeopleController extends GetxController {
   int? idFamilySelected;
 
   RxList<People> listPeoples = <People>[].obs;
+  RxList<People> listPeopleFamilies = <People>[].obs;
   final repositoryChurch = Get.put(ChurchRepository());
   final box = GetStorage('credenciado');
   RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
@@ -75,6 +77,8 @@ class PeopleController extends GetxController {
 
   People? selectedPeople;
   FamilyService? selectedService;
+
+  User? selectedUser;
 
   final repository = Get.put(PeopleRepository());
   final familyController = Get.put(FamilyController());
@@ -214,6 +218,26 @@ class PeopleController extends GetxController {
       ErrorHandler.showError(e);
     }
     isLoading.value = false;
+  }
+
+  Future<void> getPeoplesFilter(User user) async {
+    isLoading.value = true;
+    try {
+      final token = UserStorage.getToken();
+      var response = await repository.getAllFilter("Bearer $token", user);
+      listPeopleFamilies.value = (response['data'] as List)
+          .map((familiaJson) => People.fromJson(familiaJson))
+          .toList();
+
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoading.value = false;
+  }
+
+  setSelectedUser(User user) {
+    selectedUser = user;
   }
 
   Future<Map<String, dynamic>> savePeople(

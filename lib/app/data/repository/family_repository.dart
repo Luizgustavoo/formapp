@@ -54,12 +54,12 @@ class FamilyRepository {
     return list;
   }
 
-  getAllFilter(String token, String search, User lider) async {
+  getAllFilter(String token, String search, User user) async {
     // List<Family> list = <Family>[];
 
     if (await ConnectionStatus.verifyConnection()) {
       var response =
-          await apiClient.getAllFilter(token, search: search, lider: lider);
+          await apiClient.getAllFilter(token, search: search, user: user);
 
       // response['data'].forEach((e) {
       //   Family f = Family.fromJson(e);

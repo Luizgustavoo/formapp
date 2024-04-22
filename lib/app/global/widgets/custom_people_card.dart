@@ -16,15 +16,17 @@ class CustomPeopleCard extends StatelessWidget {
   VoidCallback? addMember;
   VoidCallback? onEditPerson;
   bool showAddMember = false;
+  final bool showMenu;
 
   People people;
 
-  CustomPeopleCard({
-    Key? key,
-    required this.people,
-    this.addMember,
-    required this.stripe,
-  }) : super(key: key);
+  CustomPeopleCard(
+      {Key? key,
+      required this.people,
+      this.addMember,
+      required this.stripe,
+      required this.showMenu})
+      : super(key: key);
 
   final PeopleController controller = Get.find();
 

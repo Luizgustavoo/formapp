@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/people_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
@@ -28,6 +29,20 @@ class PeopleRepository {
       }
     }
     return list;
+  }
+
+  getAllFilter(String token, User user) async {
+    // List<Family> list = <Family>[];
+
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAllFilter(token, user: user);
+
+      // response['data'].forEach((e) {
+      //   Family f = Family.fromJson(e);
+      //   list.add(f);
+      // });
+      return response;
+    }
   }
 
   insertPeople(

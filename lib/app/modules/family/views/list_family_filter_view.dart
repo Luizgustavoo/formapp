@@ -16,7 +16,6 @@ import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 
 import 'package:ucif/app/modules/people/views/list_people_view.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
-import 'package:ucif/app/utils/user_storage.dart';
 
 import '../../../global/shimmer/shimmer_custom_family_card.dart';
 
@@ -62,7 +61,6 @@ class FamilyFilterView extends GetView<FamilyController> {
                 topStart: Radius.circular(15), topEnd: Radius.circular(15))),
         child: RefreshIndicator(
           onRefresh: () async {
-            controller.searchController.clear();
             controller.getFamiliesFilter('null', controller.selectedUser!);
             // Get.offAllNamed('/filter-family');
           },
@@ -93,6 +91,13 @@ class FamilyFilterView extends GetView<FamilyController> {
                             womanCount: controller.totalFemale.toString(),
                             menCount: controller.totalMale.toString(),
                             noSexCount: controller.totalNoSex.toString(),
+                            onTap: () {
+                              peopleController.selectedUser =
+                                  controller.selectedUser!;
+                              peopleController
+                                  .getPeoplesFilter(controller.selectedUser!);
+                              Get.toNamed('/filter-people');
+                            },
                           ),
                         ),
                       ],
@@ -101,10 +106,11 @@ class FamilyFilterView extends GetView<FamilyController> {
               Expanded(
                   child: NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification scrollInfo) {
-                  if (!controller.isLoadingFamilies.value &&
+                  if (!controller.isLoadingFamiliesFiltered.value &&
                       scrollInfo.metrics.pixels >=
                           scrollInfo.metrics.maxScrollExtent * 0.9) {
-                    controller.loadMoreFamilies();
+                    print('CHEGUEI AQUI');
+                    controller.loadMoreFamiliesFiltered();
                   }
                   return false;
                 },
@@ -116,7 +122,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                   if (controller.isLoadingFamilies.value) {
                     return ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      controller: controller.scrollController,
+                      controller: controller.scrollFilterFamily,
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       itemCount: 5,
@@ -147,7 +153,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                           if (status == InternetStatus.disconnected &&
                               !family.familyLocal!) {
                             return ListView.builder(
-                              controller: controller.scrollController,
+                              controller: controller.scrollFilterFamily,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               physics: const AlwaysScrollableScrollPhysics(),
@@ -268,31 +274,6 @@ class FamilyFilterView extends GetView<FamilyController> {
           ),
         ),
       ),
-      floatingActionButton: UserStorage.getUserType() < 3
-          ? FloatingActionButton(
-              backgroundColor: const Color(0xFF1C6399),
-              onPressed: () {
-                controller.clearAllFamilyTextFields();
-                controller.typeOperation.value = 1;
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  isDismissible: false,
-                  context: context,
-                  builder: (context) => Padding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    child: CreateFamilyModal(
-                      tipoOperacao: 'insert',
-                      titulo: "Cadastro de Família",
-                    ),
-                  ),
-                );
-              },
-              child: const Icon(
-                Icons.add_rounded,
-                color: Colors.white,
-              ),
-            )
-          : const SizedBox(),
     );
   }
 }
@@ -305,17 +286,18 @@ class CustomCard extends StatelessWidget {
   final String? menCount;
   final String? noSexCount;
   final bool showGenderInfo;
+  final Function()? onTap;
 
-  const CustomCard({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-    this.menCount,
-    this.womanCount,
-    this.noSexCount,
-    this.showGenderInfo = true,
-  });
+  const CustomCard(
+      {super.key,
+      required this.title,
+      required this.description,
+      required this.imageUrl,
+      this.menCount,
+      this.womanCount,
+      this.noSexCount,
+      this.showGenderInfo = true,
+      this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -330,44 +312,47 @@ class CustomCard extends StatelessWidget {
               topRight: Radius.circular(10),
             ),
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Poppins',
-                        color: Colors.white,
+          child: InkWell(
+            onTap: onTap,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              ClipOval(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Image.asset(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.height * 0.05,
-                    height: MediaQuery.of(context).size.height * 0.05,
+                    ],
                   ),
                 ),
-              ),
-            ],
+                ClipOval(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Image.asset(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.height * 0.05,
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         if (showGenderInfo) // Exibir informações de gênero apenas se showGenderInfo for true
@@ -382,7 +367,7 @@ class CustomCard extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Row(
                         children: [

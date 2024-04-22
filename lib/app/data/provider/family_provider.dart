@@ -74,12 +74,12 @@ class FamilyApiClient {
     return null;
   }
 
-  getAllFilter(String token, {int? page, String? search, User? lider}) async {
+  getAllFilter(String token, {int? page, String? search, User? user}) async {
     try {
       Uri familyUrl;
       search = search ?? 'null';
       String url =
-          '$baseUrl/v1/familia/list-paginate-lider/$search/${lider!.id}/?page=$page&limit';
+          '$baseUrl/v1/familia/list-paginate-lider/$search/${user!.id}/?page=$page&limit';
       familyUrl = Uri.parse(url);
 
       var response = await httpClient.get(

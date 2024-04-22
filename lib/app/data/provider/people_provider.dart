@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/people_database_helper.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
@@ -48,7 +49,7 @@ class PeopleApiClient {
           "Authorization": token,
         },
       );
-
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -64,6 +65,46 @@ class PeopleApiClient {
       }
     } catch (err) {
       //
+    }
+    return null;
+  }
+
+  getAllFilter(String token, {int? page, User? user}) async {
+    try {
+      Uri peopleUrl;
+
+      String url =
+          '$baseUrl/v1/pessoa/list-paginate-lider/${user!.id}/?page=$page&limit';
+      peopleUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        peopleUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('erro'),
+        );
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }

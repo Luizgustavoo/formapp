@@ -64,6 +64,7 @@ class FamilyController extends GetxController
   final showCaseViewShown = false.obs;
 
   RxBool isLoadingFamilies = false.obs;
+  RxBool isLoadingFamiliesFiltered = false.obs;
 
   Rx<Color> corFundoScaffold = Colors.white.obs;
 
@@ -109,6 +110,15 @@ class FamilyController extends GetxController
         }
       }
     });
+    scrollFilterFamily.addListener(() {
+      if (scrollFilterFamily.position.pixels ==
+          scrollFilterFamily.position.maxScrollExtent) {
+        if (!isLoadingMore) {
+          loadMoreFamiliesFiltered()
+              .then((value) => isLoadingFamiliesFiltered.value = false);
+        }
+      }
+    });
 
     super.onInit();
   }
@@ -130,6 +140,30 @@ class FamilyController extends GetxController
         for (final family in moreFamilies) {
           if (!listFamilies
               .any((existingFamily) => existingFamily.id == family.id)) {
+            listFamilies.add(family);
+          }
+        }
+        currentPage = nextPage;
+      } else {}
+    } catch (e) {
+      ErrorHandler.showError(e);
+    } finally {
+      isLoadingMore = false;
+    }
+  }
+
+  Future<void> loadMoreFamiliesFiltered() async {
+    try {
+      final token = UserStorage.getToken();
+      isLoadingMore = true;
+      final nextPage = currentPage + 1;
+      final moreFamilies =
+          await repository.getAllFilter("Bearer $token", 'null', selectedUser!);
+      if (moreFamilies.isNotEmpty) {
+        for (final family in moreFamilies['familias'] as List) {
+          final familyId = family['familias']['data']['id'];
+          if (!listFamilyPeoples
+              .any((existingFamily) => existingFamily.id == familyId)) {
             listFamilies.add(family);
           }
         }
@@ -189,7 +223,7 @@ class FamilyController extends GetxController
   }
 
   Future<void> getFamiliesFilter(String search, User lider) async {
-    isLoadingFamilies.value = true;
+    isLoadingFamiliesFiltered.value = true;
     try {
       final token = UserStorage.getToken();
       var response =
@@ -208,7 +242,7 @@ class FamilyController extends GetxController
     } catch (e) {
       ErrorHandler.showError(e);
     }
-    isLoadingFamilies.value = false;
+    isLoadingFamiliesFiltered.value = false;
   }
 
   void searchFamilyUserId(String query) {
