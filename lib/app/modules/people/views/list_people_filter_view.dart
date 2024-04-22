@@ -59,7 +59,7 @@ class PeopleFilterView extends GetView<PeopleController> {
                     if (!controller.isLoading.value &&
                         scrollInfo.metrics.pixels >=
                             scrollInfo.metrics.maxScrollExtent * 0.9) {
-                      controller.loadMorePeoples();
+                      controller.loadMorePeoplesFiltered();
                     }
                     return false;
                   },
@@ -70,6 +70,7 @@ class PeopleFilterView extends GetView<PeopleController> {
                       return ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
+                        controller: controller.scrollFilterPeople,
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemCount: 15,
                         itemBuilder: (context, index) {
@@ -92,6 +93,7 @@ class PeopleFilterView extends GetView<PeopleController> {
                           child: ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.vertical,
+                            controller: controller.scrollFilterPeople,
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemCount: controller.listPeopleFamilies.length,
                             itemBuilder: (context, index) {

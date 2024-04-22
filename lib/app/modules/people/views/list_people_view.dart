@@ -114,7 +114,7 @@ class ListPeopleView extends GetView<PeopleController> {
                                   curve: Curves.easeInOut,
                                   child: FadeInAnimation(
                                     child: CustomPeopleCard(
-                                      showMenu: false,
+                                      showMenu: true,
                                       people: people,
                                       stripe: index % 2 == 0 ? true : false,
                                     ),

@@ -27,7 +27,7 @@ class CustomFamilyCard extends StatelessWidget {
   bool local = false;
   List<String>? peopleNames;
   FamilyController familyController = Get.find();
-  PeopleController peopleController = Get.find();
+  final peopleController = Get.put(PeopleController());
   Family family;
   final messageController = Get.find<MessageController>();
   final bool showMenu;

@@ -144,7 +144,7 @@ class FamilyController extends GetxController
           }
         }
         currentPage = nextPage;
-      } else {}
+      }
     } catch (e) {
       ErrorHandler.showError(e);
     } finally {
@@ -157,18 +157,17 @@ class FamilyController extends GetxController
       final token = UserStorage.getToken();
       isLoadingMore = true;
       final nextPage = currentPage + 1;
-      final moreFamilies =
-          await repository.getAllFilter("Bearer $token", 'null', selectedUser!);
+      final moreFamilies = await repository
+          .getAllFilter("Bearer $token", selectedUser!, page: nextPage);
       if (moreFamilies.isNotEmpty) {
-        for (final family in moreFamilies['familias'] as List) {
-          final familyId = family['familias']['data']['id'];
+        for (final family in moreFamilies['familias']['data'] as List) {
           if (!listFamilyPeoples
-              .any((existingFamily) => existingFamily.id == familyId)) {
-            listFamilies.add(family);
+              .any((existingFamily) => existingFamily.id == family['id'])) {
+            listFamilyPeoples.add(Family.fromJson(family));
           }
         }
         currentPage = nextPage;
-      } else {}
+      }
     } catch (e) {
       ErrorHandler.showError(e);
     } finally {
@@ -222,12 +221,11 @@ class FamilyController extends GetxController
     isLoadingFamilies.value = false;
   }
 
-  Future<void> getFamiliesFilter(String search, User lider) async {
+  Future<void> getFamiliesFilter(User lider) async {
     isLoadingFamiliesFiltered.value = true;
     try {
       final token = UserStorage.getToken();
-      var response =
-          await repository.getAllFilter("Bearer $token", search, lider);
+      var response = await repository.getAllFilter("Bearer $token", lider);
       listFamilyPeoples.value = (response['familias']['data'] as List)
           .map((familiaJson) => Family.fromJson(familiaJson))
           .toList();

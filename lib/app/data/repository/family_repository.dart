@@ -54,17 +54,10 @@ class FamilyRepository {
     return list;
   }
 
-  getAllFilter(String token, String search, User user) async {
-    // List<Family> list = <Family>[];
-
+  getAllFilter(String token, User user, {int? page}) async {
     if (await ConnectionStatus.verifyConnection()) {
       var response =
-          await apiClient.getAllFilter(token, search: search, user: user);
-
-      // response['data'].forEach((e) {
-      //   Family f = Family.fromJson(e);
-      //   list.add(f);
-      // });
+          await apiClient.getAllFilter(token, user: user, page: page);
       return response;
     }
   }

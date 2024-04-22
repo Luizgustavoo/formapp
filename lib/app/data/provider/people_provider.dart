@@ -49,7 +49,6 @@ class PeopleApiClient {
           "Authorization": token,
         },
       );
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -97,11 +96,6 @@ class PeopleApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
       ErrorHandler.showError("Sem conexão!");

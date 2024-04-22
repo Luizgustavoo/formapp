@@ -43,11 +43,13 @@ class CustomUserCard extends StatelessWidget {
     return Card(
       color: user.tipousuarioId == 2 ? const Color(0xFF1C6399) : null,
       child: InkWell(
-        onTap: () {
-          familyController.selectedUser = user;
-          familyController.getFamiliesFilter('null', user);
-          Get.toNamed('/filter-family');
-        },
+        onTap: UserStorage.getUserType() == 1
+            ? () {
+                familyController.selectedUser = user;
+                familyController.getFamiliesFilter(user);
+                Get.toNamed('/filter-family');
+              }
+            : () {},
         child: ListTile(
           leading: (editaMaster || editaLider || editaFamiliar)
               ? IconButton(
@@ -128,9 +130,11 @@ class CustomUserCard extends StatelessWidget {
                 ),
           title: Text(
             user.nome!,
-            style: user.tipousuarioId == 2
-                ? CustomTextStyle.subtitleWhite(context)
-                : CustomTextStyle.subtitleNegrit(context),
+            style: user.quantidadeFamilias > 0
+                ? CustomTextStyle.subtitleFamily(context)
+                : user.tipousuarioId == 2
+                    ? CustomTextStyle.subtitleWhite(context)
+                    : CustomTextStyle.subtitleNegrit(context),
           ),
           subtitle: Column(
             mainAxisAlignment: MainAxisAlignment.start,

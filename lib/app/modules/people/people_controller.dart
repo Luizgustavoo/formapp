@@ -97,6 +97,7 @@ class PeopleController extends GetxController {
   final status = Get.find<InternetStatusProvider>().status;
 
   final ScrollController scrollController = ScrollController();
+  final ScrollController scrollFilterPeople = ScrollController();
 
   int currentPage = 1;
   bool isLoadingMore = false;
@@ -149,6 +150,14 @@ class PeopleController extends GetxController {
           }
         }
       });
+      scrollFilterPeople.addListener(() {
+        if (scrollFilterPeople.position.pixels ==
+            scrollFilterPeople.position.maxScrollExtent) {
+          if (!isLoadingMore) {
+            loadMorePeoplesFiltered().then((value) => isLoading.value = false);
+          }
+        }
+      });
 
       getPeoples();
     }
@@ -179,7 +188,30 @@ class PeopleController extends GetxController {
           }
         }
         currentPage = nextPage;
-      } else {}
+      }
+    } catch (e) {
+      ErrorHandler.showError(e);
+    } finally {
+      isLoadingMore = false;
+    }
+  }
+
+  Future<void> loadMorePeoplesFiltered() async {
+    try {
+      final token = UserStorage.getToken();
+      isLoadingMore = true;
+      final nextPage = currentPage + 1;
+      final morePeoples = await repository
+          .getAllFilter("Bearer $token", selectedUser!, page: nextPage);
+      if (morePeoples.isNotEmpty) {
+        for (final people in morePeoples['data'] as List) {
+          if (!listPeopleFamilies
+              .any((existingFamily) => existingFamily.id == people['id'])) {
+            listPeopleFamilies.add(People.fromJson(people));
+          }
+        }
+        currentPage = nextPage;
+      }
     } catch (e) {
       ErrorHandler.showError(e);
     } finally {

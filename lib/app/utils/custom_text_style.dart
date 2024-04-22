@@ -89,6 +89,14 @@ class CustomTextStyle {
         overflow: TextOverflow.clip);
   }
 
+  static TextStyle? subtitleFamily(BuildContext context) {
+    return TextStyle(
+        fontSize: 16,
+        color: Colors.orange.shade300,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.clip);
+  }
+
   static TextStyle? subtitleWhite(BuildContext context) {
     return const TextStyle(
         fontSize: 16,

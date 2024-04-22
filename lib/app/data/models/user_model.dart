@@ -16,6 +16,7 @@ class User {
   Family? family;
   dynamic foto;
   dynamic mensagens;
+  dynamic quantidadeFamilias;
 
   User(
       {this.id,
@@ -32,7 +33,8 @@ class User {
       this.familiaId,
       this.family,
       this.foto,
-      this.mensagens});
+      this.mensagens,
+      this.quantidadeFamilias});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -50,6 +52,7 @@ class User {
     family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
     foto = json['foto'];
     mensagens = json['mensagens'];
+    quantidadeFamilias = json['quantidade_familias'];
   }
 
   Map<String, dynamic> toJson() {
@@ -70,6 +73,7 @@ class User {
     data['familia_id'] = familiaId;
     data['foto'] = foto;
     data['mensagens'] = mensagens;
+    data['quantidade_familias'] = quantidadeFamilias;
     return data;
   }
 }

@@ -74,12 +74,11 @@ class FamilyApiClient {
     return null;
   }
 
-  getAllFilter(String token, {int? page, String? search, User? user}) async {
+  getAllFilter(String token, {int? page, User? user}) async {
     try {
       Uri familyUrl;
-      search = search ?? 'null';
       String url =
-          '$baseUrl/v1/familia/list-paginate-lider/$search/${user!.id}/?page=$page&limit';
+          '$baseUrl/v1/familia/list-paginate-lider/null/${user!.id}/?page=$page&limit';
       familyUrl = Uri.parse(url);
 
       var response = await httpClient.get(
@@ -89,7 +88,7 @@ class FamilyApiClient {
           "Authorization": token,
         },
       );
-      print(json.decode(response.body));
+
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -102,11 +101,6 @@ class FamilyApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
       ErrorHandler.showError("Sem conexão!");

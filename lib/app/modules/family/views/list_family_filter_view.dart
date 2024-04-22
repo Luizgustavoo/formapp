@@ -32,7 +32,8 @@ class FamilyFilterView extends GetView<FamilyController> {
       appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Get.back();
+                Get.offAllNamed('/filter-family',
+                    arguments: userController.selectedUser);
               },
               icon: const Icon(
                 Icons.arrow_back_ios_new_rounded,
@@ -61,7 +62,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                 topStart: Radius.circular(15), topEnd: Radius.circular(15))),
         child: RefreshIndicator(
           onRefresh: () async {
-            controller.getFamiliesFilter('null', controller.selectedUser!);
+            controller.getFamiliesFilter(controller.selectedUser!);
             // Get.offAllNamed('/filter-family');
           },
           child: Column(
@@ -109,7 +110,6 @@ class FamilyFilterView extends GetView<FamilyController> {
                   if (!controller.isLoadingFamiliesFiltered.value &&
                       scrollInfo.metrics.pixels >=
                           scrollInfo.metrics.maxScrollExtent * 0.9) {
-                    print('CHEGUEI AQUI');
                     controller.loadMoreFamiliesFiltered();
                   }
                   return false;

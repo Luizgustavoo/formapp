@@ -31,16 +31,10 @@ class PeopleRepository {
     return list;
   }
 
-  getAllFilter(String token, User user) async {
-    // List<Family> list = <Family>[];
-
+  getAllFilter(String token, User user, {int? page}) async {
     if (await ConnectionStatus.verifyConnection()) {
-      var response = await apiClient.getAllFilter(token, user: user);
-
-      // response['data'].forEach((e) {
-      //   Family f = Family.fromJson(e);
-      //   list.add(f);
-      // });
+      var response =
+          await apiClient.getAllFilter(token, user: user, page: page);
       return response;
     }
   }
