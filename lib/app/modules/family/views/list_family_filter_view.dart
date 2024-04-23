@@ -32,7 +32,7 @@ class FamilyFilterView extends GetView<FamilyController> {
       appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Get.offAllNamed('/filter-family',
+                Get.offAllNamed('/list-user',
                     arguments: userController.selectedUser);
               },
               icon: const Icon(
@@ -47,7 +47,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                 ),
               ),
               Text(
-                'Líder: ${controller.selectedUser!.nome}',
+                'Líder: ${controller.selectedUser?.nome}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 14,

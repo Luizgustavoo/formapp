@@ -84,7 +84,6 @@ class CustomPeopleCard extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.only(right: 12),
               child: ExpansionTile(
-                enabled: showMenu ? true : false,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 childrenPadding:

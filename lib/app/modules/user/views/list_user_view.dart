@@ -22,7 +22,7 @@ class ListUserView extends GetView<UserController> {
   @override
   Widget build(BuildContext context) {
     var idUserLogged = box.read('auth')['user']['id'];
-    controller.getUsers();
+    //controller.getUsers();
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,

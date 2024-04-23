@@ -22,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   final messageController = Get.put(MessageController());
-  final userController = Get.put(UserController());
+
   final RxString greeting = ''.obs;
 
   @override
@@ -123,6 +123,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         if (ModalRoute.of(context)!.settings.name != '/perfil')
                           IconButton(
                             onPressed: () {
+                              final userController = Get.find<UserController>();
                               userController.fillInPerfilFields();
                               Get.toNamed('/perfil');
                             },

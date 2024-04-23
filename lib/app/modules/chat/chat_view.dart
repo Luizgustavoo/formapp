@@ -9,8 +9,8 @@ import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ChatView extends GetView<ChatController> {
-  ChatView({Key? key}) : super(key: key);
-  final userController = Get.find<UserController>();
+  const ChatView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final User user = Get.arguments != null ? Get.arguments as User : User();
@@ -47,6 +47,7 @@ class ChatView extends GetView<ChatController> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
+        final userController = Get.find<UserController>();
         userController.getUsers();
         Get.offAllNamed('/list-user');
       },
@@ -60,6 +61,7 @@ class ChatView extends GetView<ChatController> {
               children: [
                 IconButton(
                     onPressed: () {
+                      final userController = Get.put(UserController());
                       userController.getUsers();
                       Get.offAllNamed('/list-user');
                     },

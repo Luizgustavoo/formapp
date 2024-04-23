@@ -41,7 +41,7 @@ class FirebaseApi {
 
   final messageController = Get.put(MessageController());
   final chatController = Get.put(ChatController());
-  final userController = Get.put(UserController());
+
 
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
@@ -54,6 +54,7 @@ class FirebaseApi {
   void handleMessage(RemoteMessage? message) {
     if (message == null || !UserStorage.existUser()) return;
 
+    final userController = Get.put(UserController());
     messageController.getMessages();
     chatController.getChat();
     userController.getUsers();
@@ -111,6 +112,7 @@ class FirebaseApi {
       final notification = message.notification;
       if (notification == null) return;
 
+      final userController = Get.put(UserController());
       messageController.getMessages();
       chatController.getChat();
       userController.getUsers();
