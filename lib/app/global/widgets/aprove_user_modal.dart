@@ -20,7 +20,7 @@ class AproveUserModal extends GetView<UserController> {
     familyController.getFamiliesDropDown();
     RxInt typeUserSelected = 1.obs;
     RxInt? familyUser = 0.obs;
-    controller.getTypeUser();
+    // controller.getTypeUser();
     return Form(
         key: controller.userFormKey,
         child: SingleChildScrollView(

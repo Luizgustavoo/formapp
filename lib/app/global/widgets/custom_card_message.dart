@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ucif/app/data/models/message_model.dart';
 import 'package:ucif/app/global/widgets/aprove_user_modal.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
@@ -39,6 +40,8 @@ class CustomCardMessage extends StatelessWidget {
               if (formatMessage.length > 1 &&
                   value == true &&
                   message!.solicitacao != 'aprovada') {
+                final userController = Get.put(UserController());
+                userController.getTypeUser();
                 showModalBottomSheet(
                   isScrollControlled: true,
                   isDismissible: true,
