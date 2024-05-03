@@ -75,24 +75,31 @@ class AproveUserModal extends GetView<UserController> {
                     ? DropdownButtonFormField<int>(
                         isDense: true,
                         menuMaxHeight: Get.size.height / 2,
-                        value: user?.familiaId ??
-                            (familyController.listFamiliesDropDown.isNotEmpty
-                                ? familyController.listFamiliesDropDown.first.id
-                                : null),
+                        value: user?.familiaId,
                         onChanged: (int? value) {
                           if (value != null) {
                             familyUser.value = value;
                           }
                         },
-                        items: familyController.listFamiliesDropDown
-                            .map<DropdownMenuItem<int>>((Family family) {
-                          return DropdownMenuItem<int>(
-                            value: family.id,
-                            child: Text(family.nome!),
-                          );
-                        }).toList(),
+                        items: [
+                          // Adicione a opção padrão "Selecione uma família" com valor nulo
+                          const DropdownMenuItem<int>(
+                            value: null,
+                            child: Text('Selecione uma família'),
+                          ),
+                          // Adicione as famílias disponíveis
+                          ...familyController.listFamiliesDropDown
+                              .map<DropdownMenuItem<int>>((Family family) {
+                            return DropdownMenuItem<int>(
+                              value: family.id,
+                              child: Text(family.nome!),
+                            );
+                          }).toList(),
+                        ],
                         decoration: const InputDecoration(
-                            border: OutlineInputBorder(), labelText: 'Família'),
+                          border: OutlineInputBorder(),
+                          labelText: 'Família',
+                        ),
                       )
                     : Container();
               }),
@@ -137,28 +144,35 @@ class AproveUserModal extends GetView<UserController> {
                       style: ElevatedButton.styleFrom(
                           fixedSize: const Size(110, 30)),
                       onPressed: () async {
-                        Map<String, dynamic> retorno =
-                            await controller.approveUser(
-                                typeUserSelected.value,
-                                idAprovacao!,
-                                idMensagem!,
-                                UserStorage.getUserId(),
-                                familyUser.value,
-                                'aprovar');
+                        if (typeUserSelected.value == 3 &&
+                            familyUser.value <= 0) {
+                          Get.snackbar('Atenção', 'Selecione uma família!',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white);
+                        } else {
+                          Map<String, dynamic> retorno =
+                              await controller.approveUser(
+                                  typeUserSelected.value,
+                                  idAprovacao!,
+                                  idMensagem!,
+                                  UserStorage.getUserId(),
+                                  familyUser.value,
+                                  'aprovar');
 
-                        if (retorno['return'] == 0) {
-                          Get.back();
+                          if (retorno['return'] == 0) {
+                            Get.back();
+                          }
+                          Get.snackbar(
+                            snackPosition: SnackPosition.BOTTOM,
+                            duration: const Duration(milliseconds: 3000),
+                            retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                            retorno['message'],
+                            backgroundColor: retorno['return'] == 0
+                                ? Colors.green
+                                : Colors.red,
+                            colorText: Colors.white,
+                          );
                         }
-                        Get.snackbar(
-                          snackPosition: SnackPosition.BOTTOM,
-                          duration: const Duration(milliseconds: 3000),
-                          retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                          retorno['message'],
-                          backgroundColor: retorno['return'] == 0
-                              ? Colors.green
-                              : Colors.red,
-                          colorText: Colors.white,
-                        );
                       },
                       child: Text(
                         'APROVAR',

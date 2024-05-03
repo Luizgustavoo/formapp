@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:ucif/app/data/models/genre_model.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
 
@@ -10,38 +11,58 @@ class GraphicWidget extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Column(
-        children: [
-          Expanded(
-            child: Obx(
-              () => PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      if (!event.isInterestedForInteractions ||
-                          pieTouchResponse == null ||
-                          pieTouchResponse.touchedSection == null) {
-                        controller.touchedIndex.value = -1;
-                        return;
-                      }
-                      controller.touchedIndex.value =
-                          pieTouchResponse.touchedSection!.touchedSectionIndex;
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 0,
-                  sections: showingSections(controller.genres),
-                ),
+    return Obx(
+      () {
+        // Verifica se ainda está carregando
+        if (controller.isGraphicLoading.value) {
+          // Usando Shimmer com forma circular
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: const BoxDecoration(
+                color: Colors.grey,
+                shape: BoxShape.circle, // Define o formato circular
               ),
             ),
+          );
+        }
+
+        // Exibe o gráfico se não estiver carregando
+        return AspectRatio(
+          aspectRatio: 1,
+          child: Column(
+            children: [
+              Expanded(
+                child: PieChart(
+                  PieChartData(
+                    pieTouchData: PieTouchData(
+                      touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                        if (!event.isInterestedForInteractions ||
+                            pieTouchResponse == null ||
+                            pieTouchResponse.touchedSection == null) {
+                          controller.touchedIndex.value = -1;
+                          return;
+                        }
+                        controller.touchedIndex.value = pieTouchResponse
+                            .touchedSection!.touchedSectionIndex;
+                      },
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    sectionsSpace: 0,
+                    centerSpaceRadius: 0,
+                    sections: showingSections(controller.genres),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

@@ -61,7 +61,6 @@ class UserController extends GetxController {
 
   @override
   void onInit() async {
-    print('To dentro do oninit users------------------->');
     if (UserStorage.existUser()) {
       if (await ConnectionStatus.verifyConnection()) {
         getTypeUser();

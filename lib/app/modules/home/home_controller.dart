@@ -12,7 +12,6 @@ class HomeController extends GetxController
     with GetSingleTickerProviderStateMixin {
   RxString username = "".obs;
 
-  final homeRepository = Get.find<HomeRepository>();
   RxInt familyUser = 150.obs;
   RxInt allFamily = 0.obs;
   RxInt peopleUser = 0.obs;
@@ -29,10 +28,11 @@ class HomeController extends GetxController
   RxInt counter = 0.obs;
   RxInt counter2 = 0.obs;
   RxInt counter3 = 0.obs;
-  late Timer timer;
-  late Timer timer2;
-  late Timer timer3;
+  Timer? timer;
+  Timer? timer2;
+  Timer? timer3;
 
+  RxBool isGraphicLoading = true.obs;
   @override
   void onInit() async {
     bool isConnected = await ConnectionStatus.verifyConnection();
@@ -42,6 +42,8 @@ class HomeController extends GetxController
       username.value = UserStorage.getUserName();
       startTimer();
       await getCountGenre();
+
+      isGraphicLoading.value = false;
       clearTouchedIndex();
     }
 
@@ -50,7 +52,9 @@ class HomeController extends GetxController
 
   @override
   void onClose() {
-    timer.cancel();
+    timer?.cancel();
+    timer2?.cancel();
+    timer3?.cancel();
     super.onClose();
   }
 
@@ -72,6 +76,7 @@ class HomeController extends GetxController
 
   getCountGenre() async {
     try {
+      final homeRepository = Get.find<HomeRepository>();
       List<Genre> genre = await homeRepository.getCountGenre();
       genres.assignAll(genre);
     } catch (e) {
@@ -81,6 +86,7 @@ class HomeController extends GetxController
 
   getCountFamiliesAndPeople() async {
     try {
+      final homeRepository = Get.find<HomeRepository>();
       CountFamiliesAndPeople resposta =
           await homeRepository.getCountFamiliesAndPeople();
       if (UserStorage.getUserType() == 1) {
@@ -98,6 +104,7 @@ class HomeController extends GetxController
   }
 
   void startTimer() {
+    // Inicialize `timer`, `timer2` e `timer3` com novos temporizadores
     timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (counter < totalFamilies.value) {
         counter++;
@@ -105,14 +112,16 @@ class HomeController extends GetxController
         timer.cancel();
       }
     });
+
     timer2 = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (counter2 < totalPeoples.value) {
         counter2++;
       } else {
-        timer2.cancel();
+        timer2?.cancel();
       }
     });
-    timer3 = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+
+    timer3 = Timer.periodic(const Duration(milliseconds: 50), (timer3) {
       if (counter3 < totalLider.value) {
         counter3++;
       } else {

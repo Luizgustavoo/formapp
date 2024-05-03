@@ -123,7 +123,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         if (ModalRoute.of(context)!.settings.name != '/perfil')
                           IconButton(
                             onPressed: () {
-                              final userController = Get.find<UserController>();
+                              final userController = Get.put(UserController());
                               userController.fillInPerfilFields();
                               Get.toNamed('/perfil');
                             },

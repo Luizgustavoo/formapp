@@ -6,7 +6,6 @@ import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
-import 'package:ucif/app/utils/user_storage.dart';
 
 class CreateUserModal extends StatelessWidget {
   CreateUserModal({
@@ -148,29 +147,31 @@ class CreateUserModal extends StatelessWidget {
                       )),
                   ElevatedButton(
                       onPressed: () async {
-                        Map<String, dynamic> retorno = tipoOperacao == 'insert'
-                            ? await controller.saveUser()
-                            : await controller.updateUser(user!.id!, 3);
+                        if (typeUserSelected.value == 3 &&
+                            controller.familyUser!.value <= 0) {
+                          Get.snackbar('Atenção', 'Selecione uma família!',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white);
+                        } else {
+                          Map<String, dynamic> retorno =
+                              tipoOperacao == 'insert'
+                                  ? await controller.saveUser()
+                                  : await controller.updateUser(
+                                      user!.id!, typeUserSelected.value);
 
-                        if (tipoOperacao == 'update' &&
-                            retorno['return'] == 0 &&
-                            user!.id == UserStorage.getUserId()) {
-                          //homeController.logout();
-                        }
-                        if (tipoOperacao == 'insert' &&
-                            retorno['return'] == 0) {
                           Get.back();
+
+                          Get.snackbar(
+                            snackPosition: SnackPosition.BOTTOM,
+                            duration: const Duration(milliseconds: 1500),
+                            retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                            retorno['message'],
+                            backgroundColor: retorno['return'] == 0
+                                ? Colors.green
+                                : Colors.red,
+                            colorText: Colors.white,
+                          );
                         }
-                        Get.snackbar(
-                          snackPosition: SnackPosition.BOTTOM,
-                          duration: const Duration(milliseconds: 1500),
-                          retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                          retorno['message'],
-                          backgroundColor: retorno['return'] == 0
-                              ? Colors.green
-                              : Colors.red,
-                          colorText: Colors.white,
-                        );
                       },
                       child: Text(
                         tipoOperacao == 'insert' ? 'SALVAR' : 'ALTERAR',

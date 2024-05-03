@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ucif/app/global/shimmer/shimmer_custom_count_card.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_card.dart';
+import 'package:ucif/app/global/widgets/custom_count_card.dart';
 import 'package:ucif/app/global/widgets/custom_graphic.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
@@ -63,140 +65,49 @@ class HomeView extends GetView<HomeController> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed("/list-family");
-                          },
-                          child: Card(
-                            elevation: 5,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: const BorderSide(
-                                color: Color(0xFF123d68),
-                                width: 1,
-                              ),
-                            ),
-                            shadowColor: const Color(0xFF123d68),
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 12,
-                                right: 12,
-                                bottom: 10,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Obx(() => Text(
-                                        textAlign: TextAlign.center,
-                                        controller.counter.value.toString(),
-                                        style: const TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 30,
-                                            color: Color(0xfffc9805)),
-                                      )),
-                                  Text(
-                                    'Famílias\ncadastradas',
-                                    textAlign: TextAlign.center,
-                                    style: CustomTextStyle.homeCount(context),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        Obx(() {
+                          if (controller.isGraphicLoading.value) {
+                            // Exibir ShimmerCustomCountCard enquanto está carregando
+                            return const ShimmerCustomCountCard();
+                          } else {
+                            // Exibir CustomCountCard quando os dados estiverem carregados
+                            return CustomCountCard(
+                              title: 'Famílias\ncadastradas',
+                              counter: controller.counter,
+                              onTap: () {
+                                Get.toNamed("/list-family");
+                              },
+                            );
+                          }
+                        }),
                         const SizedBox(height: 5),
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed("/list-people");
-                          },
-                          child: Card(
-                            shadowColor: const Color(0xFF123d68),
-                            elevation: 5,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: const BorderSide(
-                                color: Color(0xFF123d68),
-                                width: 1,
-                              ),
-                            ),
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 12,
-                                right: 12,
-                                bottom: 10,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Obx(() => Text(
-                                        textAlign: TextAlign.center,
-                                        controller.counter2.value.toString(),
-                                        style: const TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 30,
-                                            color: Color(0xfffc9805)),
-                                      )),
-                                  Text(
-                                    'Pessoas\ncadastradas',
-                                    textAlign: TextAlign.center,
-                                    style: CustomTextStyle.homeCount(context),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        Obx(() {
+                          if (controller.isGraphicLoading.value) {
+                            return const ShimmerCustomCountCard();
+                          } else {
+                            return CustomCountCard(
+                              title: 'Pessoas\ncadastradas',
+                              counter: controller.counter2,
+                              onTap: () {
+                                Get.toNamed("/list-people");
+                              },
+                            );
+                          }
+                        }),
                         const SizedBox(height: 5),
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed("/list-people");
-                          },
-                          child: Card(
-                            shadowColor: const Color(0xFF123d68),
-                            elevation: 5,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: const BorderSide(
-                                color: Color(0xFF123d68),
-                                width: 1,
-                              ),
-                            ),
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 12,
-                                right: 12,
-                                bottom: 10,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Obx(() => Text(
-                                        textAlign: TextAlign.center,
-                                        controller.counter3.value.toString(),
-                                        style: const TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontSize: 30,
-                                            color: Color(0xfffc9805)),
-                                      )),
-                                  Text(
-                                    'Lideranças\ncadastradas',
-                                    textAlign: TextAlign.center,
-                                    style: CustomTextStyle.homeCount(context),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        Obx(() {
+                          if (controller.isGraphicLoading.value) {
+                            return const ShimmerCustomCountCard();
+                          } else {
+                            return CustomCountCard(
+                              title: 'Lideranças\ncadastradas',
+                              counter: controller.counter3,
+                              onTap: () {
+                                Get.toNamed("/list-people");
+                              },
+                            );
+                          }
+                        }),
                       ],
                     ),
                   ],
