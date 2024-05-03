@@ -24,11 +24,14 @@ class HomeController extends GetxController
   RxBool isNumActive = true.obs;
   RxInt totalFamilies = 0.obs;
   RxInt totalPeoples = 0.obs;
+  RxInt totalLider = 0.obs;
 
   RxInt counter = 0.obs;
   RxInt counter2 = 0.obs;
+  RxInt counter3 = 0.obs;
   late Timer timer;
   late Timer timer2;
+  late Timer timer3;
 
   @override
   void onInit() async {
@@ -83,9 +86,11 @@ class HomeController extends GetxController
       if (UserStorage.getUserType() == 1) {
         totalFamilies.value = resposta.allFamily;
         totalPeoples.value = resposta.allPeople;
+        totalLider.value = resposta.allLider;
       } else if (UserStorage.getUserType() == 2) {
         totalFamilies.value = resposta.familyUser;
         totalPeoples.value = resposta.peopleUser;
+        totalLider.value = resposta.liderUser;
       }
     } catch (e) {
       ErrorHandler.showError(e);
@@ -105,6 +110,13 @@ class HomeController extends GetxController
         counter2++;
       } else {
         timer2.cancel();
+      }
+    });
+    timer3 = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+      if (counter3 < totalLider.value) {
+        counter3++;
+      } else {
+        timer3.cancel();
       }
     });
   }

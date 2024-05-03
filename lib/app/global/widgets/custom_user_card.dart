@@ -56,6 +56,7 @@ class CustomUserCard extends StatelessWidget {
                   onPressed: () {
                     controller.selectedUser = user;
                     controller.fillInUserFields();
+
                     showModalBottomSheet(
                       isScrollControlled: true,
                       isDismissible: false,

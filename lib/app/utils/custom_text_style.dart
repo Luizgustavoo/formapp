@@ -75,7 +75,7 @@ class CustomTextStyle {
 
   static TextStyle? homeCount(BuildContext context) {
     return const TextStyle(
-        fontSize: 14,
+        fontSize: 12,
         color: Color(0xFF1C6399),
         fontFamily: 'Poppinss',
         overflow: TextOverflow.clip);

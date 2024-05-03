@@ -24,6 +24,8 @@ class CreateUserModal extends StatelessWidget {
   final String? titulo;
   final String? tipoOperacao;
 
+  final RxInt typeUserSelected = 1.obs;
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -63,7 +65,7 @@ class CreateUserModal extends StatelessWidget {
                     border: OutlineInputBorder()),
               ),
               const SizedBox(
-                height: 8,
+                height: 10,
               ),
               TextFormField(
                 enabled: tipoOperacao == 'update' ? false : true,
@@ -77,58 +79,59 @@ class CreateUserModal extends StatelessWidget {
                     border: OutlineInputBorder()),
               ),
               const SizedBox(
-                height: 8,
-              ),
-              if (tipoOperacao == 'insert') ...[
-                Obx(() => TextFormField(
-                      validator: (value) {
-                        return controller.validatePassword(value);
-                      },
-                      controller: controller.passwordController,
-                      obscureText: !controller.isPasswordVisible.value,
-                      decoration: InputDecoration(
-                          suffixIcon: Obx(() => IconButton(
-                                icon: Icon(
-                                    controller.isPasswordVisible.value
-                                        ? Icons.visibility_off
-                                        : Icons.visibility,
-                                    color: Colors.black54),
-                                onPressed: () {
-                                  controller.isPasswordVisible.value =
-                                      !controller.isPasswordVisible.value;
-                                },
-                              )),
-                          labelText: 'Senha',
-                          border: const OutlineInputBorder()),
-                    )),
-              ],
-              const SizedBox(
-                height: 8,
+                height: 10,
               ),
               Obx(
-                () => DropdownButtonFormField<int>(
-                  isDense: true,
-                  menuMaxHeight: Get.size.height / 2,
-                  value: user?.familiaId ??
-                      (familyController.listFamilies.isNotEmpty
-                          ? familyController.listFamilies.first.id
-                          : null),
-                  onChanged: (int? value) {
-                    if (value != null) {
-                      controller.familyUser!.value = value;
-                    }
-                  },
-                  items: familyController.listFamilies
-                      .map<DropdownMenuItem<int>>((Family family) {
-                    return DropdownMenuItem<int>(
-                      value: family.id,
-                      child: Text(family.nome!),
-                    );
-                  }).toList(),
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Família'),
+                () => SizedBox(
+                  child: DropdownButtonFormField<int>(
+                    value: typeUserSelected.value,
+                    onChanged: (value) {
+                      typeUserSelected.value = value!;
+                    },
+                    items: controller.listTypeUsers
+                        .map<DropdownMenuItem<int>>((item) {
+                      return DropdownMenuItem<int>(
+                        value: item.id,
+                        child: Text(item.descricao ?? ''),
+                      );
+                    }).toList(),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Tipo Usuário',
+                    ),
+                  ),
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              Obx(() {
+                return typeUserSelected.value == 3
+                    ? DropdownButtonFormField<int>(
+                        isDense: true,
+                        menuMaxHeight: Get.size.height / 2,
+                        value: user?.familiaId ??
+                            (familyController.listFamiliesDropDown.isNotEmpty
+                                ? familyController.listFamiliesDropDown.first.id
+                                : null),
+                        onChanged: (int? value) {
+                          if (value != null) {
+                            controller.familyUser!.value = value;
+                          }
+                        },
+                        items: familyController.listFamilies
+                            .map<DropdownMenuItem<int>>((Family family) {
+                          return DropdownMenuItem<int>(
+                            value: family.id,
+                            child: Text(family.nome!),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Selecione uma Família'),
+                      )
+                    : Container();
+              }),
               const SizedBox(
                 height: 16,
               ),

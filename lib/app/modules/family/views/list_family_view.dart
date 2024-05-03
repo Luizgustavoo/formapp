@@ -131,7 +131,8 @@ class FamilyView extends GetView<FamilyController> {
                                     family: family,
                                     showAddMember: true,
                                     stripe: index % 2 == 0 ? true : false,
-                                    familyName: family.nome.toString(),
+                                    familyName:
+                                        'Família: ${family.nome.toString()}',
                                     provedor: "Provedor: $provedorCasa",
                                     editFamily: () {
                                       controller.selectedFamily = family;

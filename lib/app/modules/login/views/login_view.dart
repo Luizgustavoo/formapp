@@ -83,12 +83,12 @@ class LoginView extends GetView<LoginController> {
                                         isDense: true,
                                         filled: true,
                                         fillColor: Colors.white,
-                                        labelText: 'USUÁRIO',
+                                        labelText: 'E-MAIL',
                                         labelStyle: const TextStyle(
                                             color: Colors.black54,
                                             fontFamily: 'Poppins',
                                             fontSize: 16),
-                                        hintText: 'Digite seu usuário...',
+                                        hintText: 'Digite seu e-mail...',
                                         hintStyle: const TextStyle(
                                             color: Colors.black54,
                                             fontFamily: 'Poppins',

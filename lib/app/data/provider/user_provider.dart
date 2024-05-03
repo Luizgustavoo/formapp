@@ -152,7 +152,7 @@ class UserApiClient {
           Get.offAllNamed('/login');
         }
       } else {
-        var response = await httpClient.put(
+        var response = await httpClient.post(
           userUrl,
           headers: {
             "Accept": "application/json",

@@ -115,7 +115,7 @@ class SignUpView extends GetView<LoginController> {
                                           isDense: true,
                                           filled: true,
                                           fillColor: Colors.white,
-                                          labelText: 'USUÁRIO',
+                                          labelText: 'E-MAIL',
                                           labelStyle: const TextStyle(
                                               color: Colors.black54,
                                               fontFamily: 'Poppins',
@@ -199,7 +199,7 @@ class SignUpView extends GetView<LoginController> {
                                             isDense: true,
                                             filled: true,
                                             fillColor: Colors.white,
-                                            labelText: 'CONFIRME SUA SENHA',
+                                            labelText: 'REPITA SUA SENHA',
                                             labelStyle: const TextStyle(
                                                 color: Colors.black54,
                                                 fontFamily: 'Poppins',

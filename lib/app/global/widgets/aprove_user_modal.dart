@@ -70,36 +70,32 @@ class AproveUserModal extends GetView<UserController> {
                 ),
               ),
               const SizedBox(height: 16),
-              Obx(
-                () => IgnorePointer(
-                  ignoring: typeUserSelected.value != 3,
-                  child: Opacity(
-                    opacity: typeUserSelected.value == 3 ? 1.0 : 0.5,
-                    child: DropdownButtonFormField<int>(
-                      isDense: true,
-                      menuMaxHeight: Get.size.height / 2,
-                      value: user?.familiaId ??
-                          (familyController.listFamiliesDropDown.isNotEmpty
-                              ? familyController.listFamiliesDropDown.first.id
-                              : null),
-                      onChanged: (int? value) {
-                        if (value != null) {
-                          familyUser.value = value;
-                        }
-                      },
-                      items: familyController.listFamiliesDropDown
-                          .map<DropdownMenuItem<int>>((Family family) {
-                        return DropdownMenuItem<int>(
-                          value: family.id,
-                          child: Text(family.nome!),
-                        );
-                      }).toList(),
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(), labelText: 'Família'),
-                    ),
-                  ),
-                ),
-              ),
+              Obx(() {
+                return typeUserSelected.value == 3
+                    ? DropdownButtonFormField<int>(
+                        isDense: true,
+                        menuMaxHeight: Get.size.height / 2,
+                        value: user?.familiaId ??
+                            (familyController.listFamiliesDropDown.isNotEmpty
+                                ? familyController.listFamiliesDropDown.first.id
+                                : null),
+                        onChanged: (int? value) {
+                          if (value != null) {
+                            familyUser.value = value;
+                          }
+                        },
+                        items: familyController.listFamiliesDropDown
+                            .map<DropdownMenuItem<int>>((Family family) {
+                          return DropdownMenuItem<int>(
+                            value: family.id,
+                            child: Text(family.nome!),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(), labelText: 'Família'),
+                      )
+                    : Container();
+              }),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
