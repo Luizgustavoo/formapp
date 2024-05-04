@@ -103,7 +103,7 @@ class HomeView extends GetView<HomeController> {
                               title: 'Lideranças\ncadastradas',
                               counter: controller.counter3,
                               onTap: () {
-                                Get.toNamed("/list-people");
+                                Get.toNamed("/list-user");
                               },
                             );
                           }
@@ -126,7 +126,7 @@ class HomeView extends GetView<HomeController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Copyright © ${DateTime.now().year} Adbras - Todos os direitos reservados',
+              'Copyright © ${DateTime.now().year} UCIF - Todos os direitos reservados',
               style: const TextStyle(
                 fontSize: 12,
                 fontFamily: 'Poppins',
