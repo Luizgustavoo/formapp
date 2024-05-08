@@ -43,12 +43,12 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     tipoOperacao == 0 ? "Adicionar Membro" : "Alterar Membro",
                     style: CustomTextStyle.title(context),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 5),
                     child: Divider(
                       height: 5,
                       thickness: 3,
-                      color: Colors.orange.shade500,
+                      color: Color(0xFF014acb),
                     ),
                   ),
                   const SizedBox(
@@ -97,9 +97,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         style: CustomTextStyle.button2(context),
                       ),
                       Obx(() => Switch(
-                            activeColor: Colors.orange.shade700,
-                            inactiveThumbColor: Colors.orange.shade500,
-                            inactiveTrackColor: Colors.orange.shade100,
+                            activeColor: Colors.blue.shade700,
+                            inactiveThumbColor: Colors.blue.shade500,
+                            inactiveTrackColor: Colors.blue.shade100,
                             value: controller.provedorCheckboxValue.value,
                             onChanged: (value) {
                               controller.provedorCheckboxValue.value = value;

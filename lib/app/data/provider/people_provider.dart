@@ -68,6 +68,42 @@ class PeopleApiClient {
     return null;
   }
 
+  getAllMember(String token, {int? page, String? search}) async {
+    final familiaId = box.read('auth')['user']['familia_id'];
+    try {
+      Uri peopleUrl;
+
+      String url = search != null
+          ? '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/$search/?page=1&limit'
+          : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';
+      peopleUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        peopleUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      //
+    }
+    return null;
+  }
+
   getAllFilter(String token, {int? page, User? user}) async {
     try {
       Uri peopleUrl;

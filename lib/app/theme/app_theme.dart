@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:ucif/app/utils/custom_route.dart';
 
 final ThemeData appThemeData = ThemeData(
-  scaffoldBackgroundColor: const Color(0xFF1C6399),
+  scaffoldBackgroundColor: const Color(0xFF014acb),
   elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF1C6399),
+    backgroundColor: const Color(0xFF014acb),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5),
     ),
@@ -19,7 +19,7 @@ final ThemeData appThemeData = ThemeData(
   appBarTheme: const AppBarTheme(
     iconTheme: IconThemeData(color: Colors.white),
     centerTitle: true,
-    backgroundColor: Color(0xFF1C6399),
+    backgroundColor: Color(0xFF014acb),
     titleTextStyle: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.bold,
@@ -31,6 +31,8 @@ final ThemeData appThemeData = ThemeData(
     indicatorColor: Colors.grey.shade900,
   ),
   cardTheme: CardTheme(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
   expansionTileTheme: const ExpansionTileThemeData(

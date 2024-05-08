@@ -1,13 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
-import 'package:ucif/app/global/shimmer/shimmer_custom_count_card.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
-import 'package:ucif/app/global/widgets/custom_card.dart';
-import 'package:ucif/app/global/widgets/custom_count_card.dart';
-import 'package:ucif/app/global/widgets/custom_graphic.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
-import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -17,170 +14,241 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final List<String> user = UserStorage.getUserName().split(' ');
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        userName: user[0],
-        showPadding: true,
-        title: '',
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(15),
-            topEnd: Radius.circular(15),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            userName: user[0],
+            showPadding: true,
+            title: '',
+          ),
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              color: Color(0xFFf1f5ff),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height / 9.5),
+                  SizedBox(
+                    height: 35,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: "Encontre um cadastro ...",
+                        labelStyle: const TextStyle(
+                            fontFamily: 'Poppinss', fontSize: 12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        suffixIcon: const Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Últimos 10 cadastros',
+                    style: TextStyle(fontFamily: 'Poppinss', fontSize: 13),
+                  ),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: 10,
+                        shrinkWrap: true,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Card(
+                            margin: const EdgeInsets.all(2),
+                            child: SizedBox(
+                              height: 45,
+                              child: ListTile(
+                                dense: true,
+                                titleAlignment: ListTileTitleAlignment.center,
+                                leading: const CircleAvatar(
+                                  radius: 14,
+                                ),
+                                title: const Text(
+                                  'Luiz Gustavo',
+                                  style: TextStyle(fontFamily: 'Poppinss'),
+                                ),
+                                trailing: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      CupertinoIcons.ellipsis,
+                                      color: Colors.black54,
+                                    )),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.zero,
+            decoration: const BoxDecoration(
+              color: Color(0xFFf1f5ff),
+            ),
+            height: 100,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 80),
+                  child: SizedBox(
+                    height: 35,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed('/list-people');
+                        },
+                        child: const Text(
+                          'VER TODOS',
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Poppinss'),
+                        )),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Copyright © ${DateTime.now().year} UCIF - Todos os direitos reservados',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontFamily: 'Poppins',
+                    color: Colors.black54,
+                  ),
+                ),
+                Image.asset(
+                  'assets/images/logo-wip.png',
+                  width: 30,
+                  height: 30,
+                ),
+              ],
+            ),
           ),
         ),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 20, bottom: 15),
-                child: Text(
-                  'Cadastros',
-                  style: CustomTextStyle.title(context),
-                ),
-              ),
-              const CategoryItems(),
-              if (UserStorage.getUserType() <= 2) ...[
-                const Divider(
-                  endIndent: 20,
-                  indent: 20,
-                  height: 3,
-                  thickness: 2,
-                  color: Color(0xfffc9805),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+        Positioned(
+          top: Get.height / 4.7,
+          left: 15,
+          right: 15,
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+            margin: const EdgeInsets.all(16),
+            elevation: 5,
+            child: SizedBox(
+              height: 180,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    right: 16, left: 16, top: 25, bottom: 7),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 200,
-                      child: GraphicWidget(),
+                    DynamicRichText(
+                      value: controller.counter2,
+                      description: 'Pessoas Cadastradas',
+                      valueStyle: const TextStyle(
+                        fontFamily: 'Poppinss',
+                      ),
+                      descriptionStyle: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                      isLargerText: true,
+                      color: Colors.black,
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Obx(() {
-                          if (controller.isGraphicLoading.value) {
-                            // Exibir ShimmerCustomCountCard enquanto está carregando
-                            return const ShimmerCustomCountCard();
-                          } else {
-                            // Exibir CustomCountCard quando os dados estiverem carregados
-                            return CustomCountCard(
-                              title: 'Famílias\ncadastradas',
-                              counter: controller.counter,
-                              onTap: () {
-                                Get.toNamed("/list-family");
-                              },
-                            );
-                          }
-                        }),
-                        const SizedBox(height: 5),
-                        Obx(() {
-                          if (controller.isGraphicLoading.value) {
-                            return const ShimmerCustomCountCard();
-                          } else {
-                            return CustomCountCard(
-                              title: 'Pessoas\ncadastradas',
-                              counter: controller.counter2,
-                              onTap: () {
-                                Get.toNamed("/list-people");
-                              },
-                            );
-                          }
-                        }),
-                        const SizedBox(height: 5),
-                        Obx(() {
-                          if (controller.isGraphicLoading.value) {
-                            return const ShimmerCustomCountCard();
-                          } else {
-                            return CustomCountCard(
-                              title: 'Lideranças\ncadastradas',
-                              counter: controller.counter3,
-                              onTap: () {
-                                Get.toNamed("/list-user");
-                              },
-                            );
-                          }
-                        }),
+                        DynamicRichText(
+                          value: controller.counter,
+                          description: 'Famílias',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
+                          ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          isLargerText: false,
+                          color: Colors.blue,
+                        ),
+                        const SizedBox(width: 20),
+                        DynamicRichText(
+                          value: controller.counter3,
+                          description: 'Lideranças',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
+                          ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          isLargerText: false,
+                          color: Colors.green,
+                        ),
                       ],
                     ),
                   ],
                 ),
-              ]
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(top: 5),
-        width: 75,
-        height: 75,
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Copyright © ${DateTime.now().year} UCIF - Todos os direitos reservados',
-              style: const TextStyle(
-                fontSize: 12,
-                fontFamily: 'Poppins',
-                color: Colors.black54,
               ),
             ),
-            Image.asset(
-              'assets/images/logo-wip.png',
-              width: 50,
-              height: 50,
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
 
-class CategoryItems extends StatelessWidget {
-  const CategoryItems({Key? key}) : super(key: key);
+class DynamicRichText extends StatelessWidget {
+  final RxInt value;
+  final String description;
+  final TextStyle valueStyle;
+  final TextStyle descriptionStyle;
+  final Color? color;
+
+  final bool isLargerText;
+
+  const DynamicRichText(
+      {Key? key,
+      required this.value,
+      required this.description,
+      required this.valueStyle,
+      required this.descriptionStyle,
+      required this.color,
+      required this.isLargerText})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      crossAxisCount: 3,
-      crossAxisSpacing: 2,
-      mainAxisSpacing: 2,
-      padding: const EdgeInsets.all(8),
-      children: [
-        CustomCard(
-          onTap: () {
-            Get.toNamed("/list-family");
-          },
-          title: 'Famílias',
-          imageUrl: 'assets/images/familia_icon.png',
-        ),
-        CustomCard(
-          onTap: () {
-            Get.toNamed('/list-people');
-          },
-          title: 'Pessoas',
-          imageUrl: 'assets/images/pessoa_icon.png',
-        ),
-        CustomCard(
-          onTap: () {
-            Get.toNamed('/list-user');
-          },
-          title: 'Liderança',
-          imageUrl: 'assets/images/lider_icon.png',
-        ),
-      ],
-    );
+    return Obx(() => RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            text: '$value',
+            style: TextStyle(
+              fontSize: isLargerText ? 85 : 20,
+              fontFamily: isLargerText ? 'Poppinss' : 'Poppins',
+              color: color,
+              height: 1,
+            ),
+            children: [
+              TextSpan(
+                text: isLargerText ? '\n$description' : ' $description',
+                style: TextStyle(
+                  fontSize: isLargerText ? 20 : 16,
+                  fontFamily: isLargerText ? 'Poppinss' : 'Poppinss',
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }

@@ -27,7 +27,7 @@ class CustomTextStyle {
 
   static TextStyle? appBarSubtitle(BuildContext context) {
     return const TextStyle(
-        fontSize: 15,
+        fontSize: 13,
         color: Colors.white,
         fontFamily: 'Poppinss',
         overflow: TextOverflow.clip);

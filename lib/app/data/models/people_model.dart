@@ -1,5 +1,7 @@
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/marital_status_model.dart';
+import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 
 class People {
@@ -29,6 +31,8 @@ class People {
   List<FamilyService>? atendimentos;
   User? user;
   Family? family;
+  Religion? religion;
+  MaritalStatus? maritalStatus;
 
   People(
       {this.id,
@@ -56,6 +60,8 @@ class People {
       this.parentesco,
       this.atendimentos,
       this.user,
+      this.religion,
+      this.maritalStatus,
       this.family});
 
   People.fromJson(Map<String, dynamic> json) {
@@ -90,6 +96,11 @@ class People {
       });
     }
     family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
+    religion =
+        json['religiao'] != null ? Religion.fromJson(json['religiao']) : null;
+    maritalStatus = json['estadocivil'] != null
+        ? MaritalStatus.fromJson(json['estadocivil'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {

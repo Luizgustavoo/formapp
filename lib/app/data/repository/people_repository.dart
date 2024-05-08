@@ -31,6 +31,13 @@ class PeopleRepository {
     return list;
   }
 
+  getAllMember(String token, {int? page}) async {
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAllMember(token, page: page);
+      return response;
+    }
+  }
+
   getAllFilter(String token, User user, {int? page}) async {
     if (await ConnectionStatus.verifyConnection()) {
       var response =

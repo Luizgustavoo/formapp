@@ -24,6 +24,7 @@ import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();
@@ -61,6 +62,7 @@ class PeopleController extends GetxController {
 
   RxList<People> listPeoples = <People>[].obs;
   RxList<People> listPeopleFamilies = <People>[].obs;
+  RxList<People> listFamilyMembers = <People>[].obs;
   final repositoryChurch = Get.put(ChurchRepository());
   final box = GetStorage('credenciado');
   RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
@@ -252,6 +254,19 @@ class PeopleController extends GetxController {
     isLoading.value = false;
   }
 
+  Future<void> getFamilyMembers() async {
+    isLoading.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listFamilyMembers.value = await repository.getAllMember("Bearer $token");
+
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoading.value = false;
+  }
+
   Future<void> getPeoplesFilter(User user) async {
     isLoading.value = true;
     try {
@@ -270,6 +285,25 @@ class PeopleController extends GetxController {
 
   setSelectedUser(User user) {
     selectedUser = user;
+  }
+
+  whatsapp(String phoneNumber) async {
+    var contact = phoneNumber;
+    var androidUrl = "whatsapp://send?phone=$contact&text=Hi, I need some help";
+    var iosUrl =
+        "https://wa.me/$contact?text=${Uri.parse('Hi, I need some help')}";
+
+    try {
+      if (Platform.isIOS) {
+        await launchUrl(Uri.parse(iosUrl));
+      } else {
+        await launchUrl(Uri.parse(androidUrl));
+      }
+    } on Exception {
+      Get.snackbar('Falha', 'Whatsapp não instalado!',
+          backgroundColor: Colors.red.shade500,
+          snackPosition: SnackPosition.BOTTOM);
+    }
   }
 
   Future<Map<String, dynamic>> savePeople(
@@ -465,8 +499,8 @@ class PeopleController extends GetxController {
     parentesco.value = selectedPeople!.parentesco!;
     sexo.value = selectedPeople!.sexo!;
     religiaoSelected.value = selectedPeople!.religiaoId!;
-    photoUrlPath.value = selectedPeople!.foto!;
-    oldImagePath.value = selectedPeople!.foto!;
+    photoUrlPath.value = selectedPeople!.foto ?? '';
+    oldImagePath.value = selectedPeople!.foto ?? '';
     redeSocialPessoaController.text = selectedPeople!.redeSocial!;
     isImagePicPathSet.value = false;
     provedorCheckboxValue.value =

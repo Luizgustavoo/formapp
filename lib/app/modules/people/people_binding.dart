@@ -9,7 +9,5 @@ class PeopleBinding implements Bindings {
     Get.lazyPut<PeopleController>(() => PeopleController());
     Get.lazyPut<PeopleApiClient>(() => PeopleApiClient());
     Get.lazyPut<PeopleRepository>(() => PeopleRepository());
-    // Get.lazyPut<FamilyServiceRepository>(() => FamilyServiceRepository());
-    // Get.lazyPut(() => FamilyController());
   }
 }

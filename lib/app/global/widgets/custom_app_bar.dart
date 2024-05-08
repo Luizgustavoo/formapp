@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({Key? key, this.userName, this.showPadding, this.title})
@@ -14,9 +19,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    double factor = 0.22; // Ajuste esse fator conforme necessário
+    double factor = 0.26;
     if (showPadding == false) {
-      factor = 0.15; // Ajuste esse fator conforme necessário
+      factor = 0.15;
     }
     return Size.fromHeight(Get.height * factor);
   }
@@ -36,18 +41,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Get.forceAppUpdate();
       });
     });
-
+    final controller = Get.put(UserController());
     return AppBar(
       elevation: 0,
       automaticallyImplyLeading: false,
       flexibleSpace: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: showPadding == false
                 ? const EdgeInsets.only(right: 20)
-                : const EdgeInsets.only(left: 20, right: 20, top: 22),
+                : const EdgeInsets.only(left: 20, right: 20, top: 20),
             child: Column(
               children: [
                 Row(
@@ -59,16 +64,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         showPadding == false
                             ? IconButton(
                                 onPressed: () {
-                                  Get.offAllNamed('/home');
+                                  if (Get.currentRoute == '/detail-people') {
+                                    final peopleController =
+                                        Get.put(PeopleController());
+                                    peopleController.getPeoples();
+                                    Get.offNamed('/list-people');
+                                  } else {
+                                    Get.offAllNamed('/home');
+                                  }
                                 },
                                 icon: const Icon(
                                   Icons.arrow_back_ios_new_rounded,
                                   color: Colors.white,
-                                ))
+                                ),
+                              )
                             : const SizedBox(),
-                        const SizedBox(
-                          width: 10,
-                        ),
+                        const SizedBox(width: 10),
                         Image.asset(
                           'assets/images/logo_horizontal.png',
                           width: Get.width * 0.22,
@@ -77,7 +88,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         const SizedBox(width: 10),
                       ],
                     ),
-                    const SizedBox(width: 10),
                     Row(
                       children: [
                         Stack(
@@ -147,10 +157,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           if (showPadding!)
             Padding(
-              padding: const EdgeInsets.only(left: 20, bottom: 20, right: 20),
-              child: Stack(
+              padding: const EdgeInsets.only(left: 30, bottom: 100, right: 20),
+              child: Row(
                 children: [
+                  CircleAvatar(
+                    backgroundImage: controller.isImagePicPathSet == true
+                        ? FileImage(File(UserStorage.getUserPhoto()))
+                        : (UserStorage.getUserPhoto().isNotEmpty
+                            ? NetworkImage(
+                                    '$urlImagem/storage/app/public/${UserStorage.getUserPhoto()}')
+                                as ImageProvider<Object>?
+                            : const AssetImage(
+                                'assets/images/default_avatar.jpg')),
+                    radius: 25,
+                  ),
+                  const SizedBox(width: 10),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
@@ -159,14 +182,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           const HandWaveAnimation(),
                         ],
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Text('$greeting, seja bem vindo!',
-                              style: CustomTextStyle.appBarSubtitle(context)),
-                        ],
+                      const SizedBox(height: 5),
+                      Text(
+                        '$greeting, seja bem-vindo!',
+                        style: CustomTextStyle.appBarSubtitle(context),
                       ),
                     ],
                   ),

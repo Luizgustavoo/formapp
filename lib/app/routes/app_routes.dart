@@ -10,6 +10,8 @@ abstract class Routes {
   static const CREATE_FAMILY = '/create-family';
   static const EDIT_PEOPLE = '/edit-people';
   static const LIST_PEOPLE = '/list-people';
+  static const DETAIL_PEOPLE = '/detail-people';
+  static const MEMBER_FAMILY = '/member-family';
   static const FILTERED_PEOPLE = '/filter-people';
   static const LIST_USER = '/list-user';
   static const LIST_MESSAGE = '/list-message';
