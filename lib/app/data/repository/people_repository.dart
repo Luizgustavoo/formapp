@@ -31,11 +31,16 @@ class PeopleRepository {
     return list;
   }
 
-  getAllMember(String token, {int? page}) async {
+  getAllMember(String token, int? familiaId) async {
+    List<People> list = <People>[];
     if (await ConnectionStatus.verifyConnection()) {
-      var response = await apiClient.getAllMember(token, page: page);
-      return response;
+      var response = await apiClient.getAllMember(token, familiaId);
+      response.forEach((e) {
+        People p = People.fromJson(e);
+        list.add(p);
+      });
     }
+    return list;
   }
 
   getAllFilter(String token, User user, {int? page}) async {

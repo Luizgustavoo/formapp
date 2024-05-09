@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/count_families_and_people.dart';
 import 'package:ucif/app/data/models/genre_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/repository/home_repository.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
@@ -12,12 +13,16 @@ class HomeController extends GetxController
     with GetSingleTickerProviderStateMixin {
   RxString username = "".obs;
 
+  RxList<People> listPeoples = <People>[].obs;
+
   RxInt familyUser = 150.obs;
   RxInt allFamily = 0.obs;
   RxInt peopleUser = 0.obs;
   RxInt allPeople = 0.obs;
   RxInt touchedIndex = 0.obs;
   RxList<Genre> genres = <Genre>[].obs;
+
+  RxBool isLoading = true.obs;
 
   RxInt number = 0.obs;
   RxBool isNumActive = true.obs;
@@ -42,6 +47,8 @@ class HomeController extends GetxController
       username.value = UserStorage.getUserName();
       startTimer();
       await getCountGenre();
+
+      await getPeoples();
 
       isGraphicLoading.value = false;
       clearTouchedIndex();
@@ -128,5 +135,19 @@ class HomeController extends GetxController
         timer3.cancel();
       }
     });
+  }
+
+  Future<void> getPeoples({int? page, String? search}) async {
+    isLoading.value = true;
+    try {
+      final repository = Get.put(HomeRepository());
+      final token = UserStorage.getToken();
+      listPeoples.value = await repository.getPeoples("Bearer $token",
+          page: page, search: search);
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoading.value = false;
   }
 }

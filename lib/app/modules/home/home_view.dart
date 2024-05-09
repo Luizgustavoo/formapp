@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
@@ -49,16 +51,19 @@ class HomeView extends GetView<HomeController> {
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    'Últimos 10 cadastros',
+                    'Últimos cadastros',
                     style: TextStyle(fontFamily: 'Poppinss', fontSize: 13),
                   ),
                   const SizedBox(height: 5),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: 10,
+                  Obx(
+                    () => Expanded(
+                      child: ListView.builder(
+                        itemCount: controller.listPeoples.length,
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
+                          People people = controller.listPeoples[index];
+
                           return Card(
                             margin: const EdgeInsets.all(2),
                             child: SizedBox(
@@ -66,12 +71,22 @@ class HomeView extends GetView<HomeController> {
                               child: ListTile(
                                 dense: true,
                                 titleAlignment: ListTileTitleAlignment.center,
-                                leading: const CircleAvatar(
+                                leading: CircleAvatar(
                                   radius: 14,
+                                  backgroundImage: people.foto
+                                          .toString()
+                                          .isEmpty
+                                      ? const AssetImage(
+                                          'assets/images/default_avatar.jpg')
+                                      : NetworkImage(
+                                              '$urlImagem/storage/app/public/${people.foto}')
+                                          as ImageProvider,
                                 ),
-                                title: const Text(
-                                  'Luiz Gustavo',
-                                  style: TextStyle(fontFamily: 'Poppinss'),
+                                title: Text(
+                                  people.nome!,
+                                  style: const TextStyle(
+                                      fontFamily: 'Poppinss',
+                                      overflow: TextOverflow.ellipsis),
                                 ),
                                 trailing: IconButton(
                                     onPressed: () {},
@@ -82,7 +97,9 @@ class HomeView extends GetView<HomeController> {
                               ),
                             ),
                           );
-                        }),
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),

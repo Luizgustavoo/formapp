@@ -68,14 +68,11 @@ class PeopleApiClient {
     return null;
   }
 
-  getAllMember(String token, {int? page, String? search}) async {
-    final familiaId = box.read('auth')['user']['familia_id'];
+  getAllMember(String token, int? familiaId) async {
     try {
       Uri peopleUrl;
 
-      String url = search != null
-          ? '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/$search/?page=1&limit'
-          : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';
+      String url = '$baseUrl/v1/pessoa/list-familiar/id/$familiaId';
       peopleUrl = Uri.parse(url);
 
       var response = await httpClient.get(
@@ -85,6 +82,7 @@ class PeopleApiClient {
           "Authorization": token,
         },
       );
+
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -186,7 +184,7 @@ class PeopleApiClient {
 
         var responseStream = await response.stream.bytesToString();
         var httpResponse = http.Response(responseStream, response.statusCode);
-
+        print(json.decode(httpResponse.body));
         if (response.statusCode == 200) {
           return json.decode(httpResponse.body);
         } else if (response.statusCode == 422 ||

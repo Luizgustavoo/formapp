@@ -40,7 +40,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    tipoOperacao == 0 ? "Adicionar Membro" : "Alterar Membro",
+                    tipoOperacao == 0 ? "Adicionar Pessoa" : "Alterar Pessoa",
                     style: CustomTextStyle.title(context),
                   ),
                   const Padding(
@@ -456,11 +456,11 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                                   Map<String, dynamic> retorno =
                                       tipoOperacao == 0
                                           ? await controller.savePeople(
-                                              family!, peopleLocal)
+                                              family, peopleLocal)
                                           : await controller
                                               .updatePeople(peopleLocal);
                                   if (retorno['return'] == 0) {
-                                    Get.offAllNamed('/list-family');
+                                    Get.offAllNamed('/list-people');
                                   }
                                   Get.snackbar(
                                     snackPosition: SnackPosition.BOTTOM,

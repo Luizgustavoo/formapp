@@ -254,12 +254,14 @@ class PeopleController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> getFamilyMembers() async {
+  Future<void> getFamilyMembers(int? familiaId) async {
     isLoading.value = true;
     try {
       final token = UserStorage.getToken();
-      listFamilyMembers.value = await repository.getAllMember("Bearer $token");
+      listFamilyMembers.value =
+          await repository.getAllMember("Bearer $token", familiaId);
 
+      print(listFamilyMembers.value);
       update();
     } catch (e) {
       ErrorHandler.showError(e);
@@ -307,7 +309,7 @@ class PeopleController extends GetxController {
   }
 
   Future<Map<String, dynamic>> savePeople(
-      Family family, bool peopleLocal) async {
+      Family? family, bool peopleLocal) async {
     if (peopleFormKey.currentState!.validate()) {
       String imagePath = photoUrlPath.value;
 
@@ -330,7 +332,7 @@ class PeopleController extends GetxController {
         funcaoIgreja: funcaoIgrejaPessoaController.text,
         status: 1,
         usuarioId: box.read('auth')['user']['id'],
-        familiaId: family.id,
+        familiaId: family?.id,
         foto: imagePath,
       );
 

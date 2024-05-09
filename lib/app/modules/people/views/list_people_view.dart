@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/global/widgets/create_family_modal.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_people_card.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
@@ -117,28 +119,74 @@ class ListPeopleView extends GetView<PeopleController> {
             ),
           ),
           floatingActionButton: UserStorage.getUserType() < 3
-              ? FloatingActionButton(
+              ? SpeedDial(
+                  childrenButtonSize: const Size(65, 65),
+                  foregroundColor: Colors.white,
                   backgroundColor: const Color(0xFF014acb),
-                  onPressed: () {
-                    controller.clearAllPeopleTextFields();
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      context: context,
-                      builder: (context) => Padding(
-                        padding: MediaQuery.of(context).viewInsets,
-                        child: const AddPeopleFamilyView(
-                          peopleLocal: false,
-                          tipoOperacao: 0,
-                          // family: family,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  isOpenOnStart: false,
+                  animatedIcon: AnimatedIcons.menu_close,
+                  children: [
+                    SpeedDialChild(
+                      backgroundColor: const Color(0xFF014acb),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.group,
+                          color: Colors.white,
                         ),
                       ),
-                    );
-                  },
-                  child: const Icon(
-                    Icons.add_rounded,
-                    color: Colors.white,
-                  ),
+                      label: 'Adicionar Família',
+                      labelStyle: const TextStyle(fontFamily: "Poppins"),
+                      onTap: () {
+                        // controller.clearAllFamilyTextFields();
+                        // controller.typeOperation.value = 1;
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CreateFamilyModal(
+                              tipoOperacao: 'insert',
+                              titulo: "Cadastro de Família",
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SpeedDialChild(
+                      backgroundColor: const Color(0xFF014acb),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                      ),
+                      label: 'Adicionar Pessoas',
+                      labelStyle: const TextStyle(fontFamily: "Poppins"),
+                      onTap: () {
+                        controller.clearAllPeopleTextFields();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: const AddPeopleFamilyView(
+                              peopleLocal: false,
+                              tipoOperacao: 0,
+                              // family: family,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 )
               : const SizedBox(),
         ),

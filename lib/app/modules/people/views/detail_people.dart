@@ -48,7 +48,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                       ),
                       TopCard(
                         onTap: () {
-                          controller.getFamilyMembers();
+                          controller.getFamilyMembers(people.family?.id);
                           Get.toNamed('/member-family');
                         },
                         icon: Icons.groups_2,

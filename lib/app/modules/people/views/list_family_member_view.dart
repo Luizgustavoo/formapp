@@ -101,6 +101,7 @@ class FamilyMemberView extends GetView<PeopleController> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             People people = controller.listFamilyMembers[index];
+
                             return AnimationConfiguration.staggeredList(
                               position: index,
                               duration: const Duration(milliseconds: 300),
