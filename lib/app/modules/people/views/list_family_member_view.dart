@@ -42,39 +42,10 @@ class FamilyMemberView extends GetView<PeopleController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height / 18),
-                    SizedBox(
-                      height: 35,
-                      child: TextField(
-                        controller: controller.searchController,
-                        textInputAction: TextInputAction.send,
-                        onSubmitted: (query) {
-                          // controller.getFamilies(
-                          //     search: controller.searchController.text
-                          //         .toUpperCase());
-                        },
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          hintText: 'Encontre um cadastrado ...',
-                          hintStyle: const TextStyle(
-                            fontFamily: 'Poppinss',
-                            fontSize: 12,
-                            color: Colors.black54,
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              // controller.getFamilies(
-                              //     search: controller.searchController.text);
-                            },
-                            icon: const Icon(
-                              Icons.search,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+
                     const SizedBox(height: 10),
                     const Text(
-                      'Famílias',
+                      "Membros da família",
                       style: TextStyle(fontFamily: 'Poppinss', fontSize: 16),
                     ),
                     const Divider(
@@ -124,31 +95,6 @@ class FamilyMemberView extends GetView<PeopleController> {
               ),
             ),
           ),
-          floatingActionButton: UserStorage.getUserType() < 3
-              ? FloatingActionButton(
-                  backgroundColor: const Color(0xFF014acb),
-                  onPressed: () {
-                    // controller.clearAllFamilyTextFields();
-                    // controller.typeOperation.value = 1;
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      context: context,
-                      builder: (context) => Padding(
-                        padding: MediaQuery.of(context).viewInsets,
-                        child: CreateFamilyModal(
-                          tipoOperacao: 'insert',
-                          titulo: "Cadastro de Família",
-                        ),
-                      ),
-                    );
-                  },
-                  child: const Icon(
-                    Icons.add_rounded,
-                    color: Colors.white,
-                  ),
-                )
-              : const SizedBox(),
         ),
         Positioned(
           top: Get.height / 7,

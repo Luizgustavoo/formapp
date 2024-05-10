@@ -9,13 +9,13 @@ class CustomFamilyMemberCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: CircleAvatar(
+        leading: const CircleAvatar(
           child: Text(
-            people.family!.nome![0].toUpperCase().toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            "P",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
-        title: Text('Família: ${people.family!.nome.toString()}',
+        title: Text('${people.nome}',
             style: const TextStyle(fontFamily: 'Poppinss')),
       ),
     );
