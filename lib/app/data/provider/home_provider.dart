@@ -71,28 +71,18 @@ class HomeApiClient {
   }
 
   getPeoples(String token, {int? page, String? search}) async {
-    final id = UserStorage.getUserId();
+    final userId = UserStorage.getUserId();
+    final typeUser = UserStorage.getUserType();
     final familiaId = UserStorage.getFamilyId();
+
     try {
       Uri peopleUrl;
-      if (UserStorage.getUserType() == 3) {
-        String url = search != null
-            ? '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/$search/?page=1&limit'
-            : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';
-        peopleUrl = Uri.parse(url);
-      } else {
-        if (UserStorage.getUserType() == 1) {
-          String url = search != null
-              ? '$baseUrl/v1/pessoa/list-paginate-adm/$search/?page=$page&limit'
-              : '$baseUrl/v1/pessoa/list-paginate-adm/?page=$page&limit';
-          peopleUrl = Uri.parse(url);
-        } else {
-          String url = search != null
-              ? '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/$search/?page=$page&limit'
-              : '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/?page=$page&limit';
-          peopleUrl = Uri.parse(url);
-        }
-      }
+      String url =
+          '$baseUrl/v1/pessoa/list-home-page/user/$userId/type/$typeUser/family/$familiaId';
+
+      print(url);
+
+      peopleUrl = Uri.parse(url);
 
       var response = await httpClient.get(
         peopleUrl,
@@ -101,6 +91,9 @@ class HomeApiClient {
           "Authorization": token,
         },
       );
+
+      print(json.decode(response.body));
+
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
