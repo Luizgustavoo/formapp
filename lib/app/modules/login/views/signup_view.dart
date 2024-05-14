@@ -112,9 +112,18 @@ class SignUpView extends GetView<LoginController> {
                                                 child: Text(value),
                                               );
                                             }).toList(),
-                                            decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                labelText: 'Sexo'),
+                                            decoration: InputDecoration(
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                labelText: 'SEXO'),
                                           ),
                                         ),
                                         const SizedBox(width: 5),
@@ -137,8 +146,17 @@ class SignUpView extends GetView<LoginController> {
                                                 child: Text(value),
                                               );
                                             }).toList(),
-                                            decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
+                                            decoration: InputDecoration(
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
                                                 labelText: 'Estado Civil'),
                                           ),
                                         ),
@@ -276,8 +294,17 @@ class SignUpView extends GetView<LoginController> {
                                           child: Text(value),
                                         );
                                       }).toList(),
-                                      decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
+                                      decoration: InputDecoration(
+                                          labelStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
                                           labelText: 'Religião'),
                                     ),
                                     _gap(),
@@ -302,8 +329,17 @@ class SignUpView extends GetView<LoginController> {
                                                 child: Text(value),
                                               );
                                             }).toList(),
-                                            decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
+                                            decoration: InputDecoration(
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
                                                 labelText: 'Igreja'),
                                           ),
                                         ),
