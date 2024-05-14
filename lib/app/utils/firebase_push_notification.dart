@@ -42,7 +42,6 @@ class FirebaseApi {
   final messageController = Get.put(MessageController());
   final chatController = Get.put(ChatController());
 
-
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
     'High Importance Notifications',

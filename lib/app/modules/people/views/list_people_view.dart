@@ -25,7 +25,7 @@ class ListPeopleView extends GetView<PeopleController> {
           body: RefreshIndicator(
             onRefresh: () async {
               controller.searchController.clear();
-              await controller.getPeoples();
+              Get.offAllNamed('/list-people');
             },
             child: Container(
               decoration: const BoxDecoration(
@@ -98,7 +98,7 @@ class ListPeopleView extends GetView<PeopleController> {
                               People people = controller.listPeoples[index];
                               return AnimationConfiguration.staggeredList(
                                 position: index,
-                                duration: const Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 100),
                                 child: SlideAnimation(
                                   curve: Curves.easeInOut,
                                   child: FadeInAnimation(
@@ -113,6 +113,7 @@ class ListPeopleView extends GetView<PeopleController> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),

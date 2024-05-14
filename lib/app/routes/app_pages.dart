@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:ucif/app/modules/chat/chat_binding.dart';
 import 'package:ucif/app/modules/chat/chat_view.dart';
 import 'package:ucif/app/modules/family/family_binding.dart';
-import 'package:ucif/app/modules/family/views/list_family_filter_view.dart';
-import 'package:ucif/app/modules/family/views/list_family_view.dart';
+import '../modules/family/views/list_family_filter_view.dart';
+import '../modules/family/views/list_family_view.dart';
 import 'package:ucif/app/modules/home/home_binding.dart';
 import 'package:ucif/app/modules/home/home_view.dart';
 import 'package:ucif/app/modules/initial/initial_binding.dart';
@@ -42,7 +42,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.LIST_FAMILY,
-      page: () => FamilyView(),
+      page: () => const FamilyView(),
       binding: FamilyBinding(),
     ),
     GetPage(
@@ -72,7 +72,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.MEMBER_FAMILY,
-      page: () => FamilyMemberView(),
+      page: () => const FamilyMemberView(),
       binding: PeopleBinding(),
     ),
     GetPage(

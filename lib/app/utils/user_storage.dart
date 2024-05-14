@@ -51,6 +51,13 @@ class UserStorage {
     return "";
   }
 
+  static int getPeopleId() {
+    if (existUser()) {
+      return _box.read('auth')['user']['pessoa_id'];
+    }
+    return 0;
+  }
+
   static int getUserType() {
     if (existUser()) {
       return _box.read('auth')['user']['tipousuario_id'];

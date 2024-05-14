@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
 import 'package:ucif/app/routes/app_pages.dart';
@@ -36,16 +35,12 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.dark));
 
   runApp(
-    ShowCaseWidget(
-      builder: Builder(
-        builder: (context) => GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'UCIF',
-          theme: appThemeData,
-          initialRoute: Routes.INITIAL,
-          getPages: AppPages.routes,
-        ),
-      ),
+    GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'UCIF',
+      theme: appThemeData,
+      initialRoute: Routes.INITIAL,
+      getPages: AppPages.routes,
     ),
   );
 }

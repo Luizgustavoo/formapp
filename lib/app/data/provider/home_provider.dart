@@ -80,8 +80,6 @@ class HomeApiClient {
       String url =
           '$baseUrl/v1/pessoa/list-home-page/user/$userId/type/$typeUser/family/$familiaId';
 
-      print(url);
-
       peopleUrl = Uri.parse(url);
 
       var response = await httpClient.get(
@@ -91,8 +89,6 @@ class HomeApiClient {
           "Authorization": token,
         },
       );
-
-      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

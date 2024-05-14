@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
 import 'package:ucif/app/data/base_url.dart';
@@ -107,6 +106,7 @@ class HomeView extends GetView<HomeController> {
           ),
           bottomNavigationBar: Container(
             padding: EdgeInsets.zero,
+            margin: EdgeInsets.zero,
             decoration: const BoxDecoration(
               color: Color(0xFFf1f5ff),
             ),
@@ -182,34 +182,44 @@ class HomeView extends GetView<HomeController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        DynamicRichText(
-                          value: controller.counter,
-                          description: 'Famílias',
-                          valueStyle: const TextStyle(
-                            fontFamily: 'Poppinss',
-                            height: 1,
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed('/list-family');
+                          },
+                          child: DynamicRichText(
+                            value: controller.counter,
+                            description: 'Famílias',
+                            valueStyle: const TextStyle(
+                              fontFamily: 'Poppinss',
+                              height: 1,
+                            ),
+                            descriptionStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              height: 1,
+                            ),
+                            isLargerText: false,
+                            color: Colors.blue,
                           ),
-                          descriptionStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            height: 1,
-                          ),
-                          isLargerText: false,
-                          color: Colors.blue,
                         ),
                         const SizedBox(width: 20),
-                        DynamicRichText(
-                          value: controller.counter3,
-                          description: 'Lideranças',
-                          valueStyle: const TextStyle(
-                            fontFamily: 'Poppinss',
-                            height: 1,
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed('/list-user');
+                          },
+                          child: DynamicRichText(
+                            value: controller.counter3,
+                            description: 'Lideranças',
+                            valueStyle: const TextStyle(
+                              fontFamily: 'Poppinss',
+                              height: 1,
+                            ),
+                            descriptionStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              height: 1,
+                            ),
+                            isLargerText: false,
+                            color: Colors.green,
                           ),
-                          descriptionStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            height: 1,
-                          ),
-                          isLargerText: false,
-                          color: Colors.green,
                         ),
                       ],
                     ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -69,6 +71,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                         Get.put(PeopleController());
                                     peopleController.getPeoples();
                                     Get.offNamed('/list-people');
+                                  } else if (Get.currentRoute ==
+                                      '/member-family') {
+                                    final peopleController =
+                                        Get.put(PeopleController());
+                                    peopleController.getPeoples();
+                                    Get.offNamed('/detail-people');
                                   } else {
                                     Get.offAllNamed('/home');
                                   }

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
-import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
@@ -13,9 +13,10 @@ class ChatView extends GetView<ChatController> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = Get.arguments != null ? Get.arguments as User : User();
-    if (user.id != null) {
-      controller.destinatarioId.value = user.id!;
+    final People people =
+        Get.arguments != null ? Get.arguments as People : People();
+    if (people.id != null) {
+      controller.destinatarioId.value = people.id!;
     }
     controller.getChat();
     controller.chatChange();
@@ -49,12 +50,12 @@ class ChatView extends GetView<ChatController> {
       onPopInvoked: (didPop) {
         final userController = Get.find<UserController>();
         userController.getUsers();
-        Get.offAllNamed('/list-user');
+        Get.offAllNamed('/detail-people', arguments: people);
       },
       child: Scaffold(
         appBar: AppBar(
             leadingWidth: Get.width * .25,
-            title: Text(user.nome ?? ""),
+            title: Text(people.nome ?? ""),
             leading: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -63,15 +64,15 @@ class ChatView extends GetView<ChatController> {
                     onPressed: () {
                       final userController = Get.put(UserController());
                       userController.getUsers();
-                      Get.offAllNamed('/list-user');
+                      Get.offAllNamed('/detail-people', arguments: people);
                     },
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                     )),
                 CircleAvatar(
-                  backgroundImage: user.foto != null
+                  backgroundImage: people.foto != null
                       ? NetworkImage(
-                              '$urlImagem/storage/app/public/${user.foto}')
+                              '$urlImagem/storage/app/public/${people.foto}')
                           as ImageProvider<Object>?
                       : const AssetImage('assets/images/default_avatar.jpg'),
                 )
@@ -96,7 +97,7 @@ class ChatView extends GetView<ChatController> {
                           List.generate(controller.listChats.length, (index) {
                         final chat = controller.listChats[index];
                         final mensagemRemetente =
-                            chat.remetenteId == UserStorage.getUserId();
+                            chat.remetenteId == UserStorage.getPeopleId();
                         return Row(
                           mainAxisAlignment: mensagemRemetente
                               ? MainAxisAlignment.end
@@ -106,7 +107,7 @@ class ChatView extends GetView<ChatController> {
                               mensagemRemetente: mensagemRemetente,
                               chat: chat,
                               remetenteId: UserStorage.getUserId(),
-                              user: user,
+                              people: people,
                             ),
                           ],
                         );
@@ -166,14 +167,14 @@ class ChatView extends GetView<ChatController> {
 class ChatMessageWidget extends StatelessWidget {
   final Chat? chat;
   final int? remetenteId;
-  final User? user;
+  final People? people;
   final bool? mensagemRemetente;
 
   const ChatMessageWidget(
       {Key? key,
       required this.chat,
       required this.remetenteId,
-      this.user,
+      this.people,
       required this.mensagemRemetente})
       : super(key: key);
 

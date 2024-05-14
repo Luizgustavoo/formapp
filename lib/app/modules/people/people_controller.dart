@@ -261,7 +261,6 @@ class PeopleController extends GetxController {
       listFamilyMembers.value =
           await repository.getAllMember("Bearer $token", familiaId);
 
-      print(listFamilyMembers.value);
       update();
     } catch (e) {
       ErrorHandler.showError(e);
@@ -503,7 +502,7 @@ class PeopleController extends GetxController {
     religiaoSelected.value = selectedPeople!.religiaoId!;
     photoUrlPath.value = selectedPeople!.foto ?? '';
     oldImagePath.value = selectedPeople!.foto ?? '';
-    redeSocialPessoaController.text = selectedPeople!.redeSocial!;
+    redeSocialPessoaController.text = selectedPeople!.redeSocial ?? '';
     isImagePicPathSet.value = false;
     provedorCheckboxValue.value =
         selectedPeople!.provedorCasa! == 'sim' ? true : false;

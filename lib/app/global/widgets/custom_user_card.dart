@@ -41,6 +41,8 @@ class CustomUserCard extends StatelessWidget {
     bool editaFamiliar = user.id == UserStorage.getUserId();
 
     return Card(
+      elevation: 1,
+      margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
       color: user.tipousuarioId == 2 ? const Color(0xFF1C6399) : null,
       child: InkWell(
         onTap: UserStorage.getUserType() == 1
@@ -65,7 +67,7 @@ class CustomUserCard extends StatelessWidget {
                         padding: MediaQuery.of(context).viewInsets,
                         child: CreateUserModal(
                           tipoOperacao: 'update',
-                          titulo: 'Alteração de Usuário',
+                          titulo: 'Editar Usuário',
                           user: user,
                         ),
                       ),

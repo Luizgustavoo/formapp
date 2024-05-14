@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 class ErrorHandler {
   static void showError(dynamic error) {
     String errorMessage = "Ocorreu um erro inesperado.";

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 
@@ -13,7 +14,8 @@ class DetailPeopleView extends GetView<PeopleController> {
 
   @override
   Widget build(BuildContext context) {
-    final People people = Get.arguments as People;
+    final People people =
+        Get.arguments != null ? Get.arguments as People : People();
     return Stack(
       children: [
         Scaffold(
@@ -36,13 +38,27 @@ class DetailPeopleView extends GetView<PeopleController> {
                     children: [
                       TopCard(
                         onTap: () {
-                          controller.whatsapp(people.telefone!);
+                          if (people.telefone != null) {
+                            controller.whatsapp(people.telefone!);
+                          } else {
+                            Get.snackbar(
+                                snackPosition: SnackPosition.BOTTOM,
+                                'Falha',
+                                'Telefone não informado!',
+                                colorText: Colors.white,
+                                backgroundColor: Colors.red);
+                          }
                         },
                         icon: FontAwesomeIcons.whatsapp,
                         description: 'Conversar\n no whatsapp',
                       ),
                       TopCard(
-                        onTap: () {},
+                        onTap: () {
+                          final chatController = Get.put(ChatController());
+                          chatController.destinatarioId.value = people.id!;
+                          chatController.chatChange();
+                          Get.toNamed('/chat', arguments: people);
+                        },
                         icon: Icons.wechat_sharp,
                         description: 'Enviar msg\npelo UCIF',
                       ),
@@ -63,50 +79,54 @@ class DetailPeopleView extends GetView<PeopleController> {
                     color: Color(0xFF1C6399),
                   ),
                   const SizedBox(height: 5),
-                  ListView(
-                    shrinkWrap: true,
-                    controller: controller.scrollController,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FormattedText(text: 'Líder: ${people.user!.nome}'),
-                          const SizedBox(height: 15),
-                          FormattedText(
-                              text: 'Provedor: ${people.provedorCasa}'),
-                          FormattedText(text: 'Sexo: ${people.sexo}'),
-                          FormattedText(
-                              text:
-                                  'Estado Civil: ${people.maritalStatus!.descricao}'),
-                          FormattedText(
-                              text: 'Nascimento: ${people.dataNascimento}'),
-                          FormattedText(
-                              text: 'Parentesco: ${people.parentesco}'),
-                          FormattedText(text: 'CPF: ${people.cpf}'),
-                          FormattedText(text: 'Telefone: ${people.telefone}'),
-                          FormattedText(
-                              text: 'Rede Social: @${people.redeSocial}'),
-                          const SizedBox(height: 15),
-                          FormattedText(
-                              text:
-                                  'Título de Eleitor: ${people.tituloEleitor}'),
-                          FormattedText(
-                              text: 'Zona Eleitoral: ${people.zonaEleitoral}'),
-                          const SizedBox(height: 15),
-                          FormattedText(
-                              text: 'Religião: ${people.religion!.descricao}'),
-                          FormattedText(text: 'Igreja: ${people.igrejaId}'),
-                          FormattedText(
-                              text: 'Função Igreja: ${people.funcaoIgreja}'),
-                          const SizedBox(height: 15),
-                          FormattedText(
-                              text:
-                                  'Local de Trabalho: ${people.localTrabalho}'),
-                          FormattedText(text: 'Cargo: ${people.cargoTrabalho}'),
-                        ],
-                      ),
-                    ],
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FormattedText(text: 'Líder: ${people.user!.nome}'),
+                            const SizedBox(height: 15),
+                            FormattedText(
+                                text: 'Provedor: ${people.provedorCasa}'),
+                            FormattedText(text: 'Sexo: ${people.sexo}'),
+                            FormattedText(
+                                text:
+                                    'Estado Civil: ${people.maritalStatus!.descricao}'),
+                            FormattedText(
+                                text: 'Nascimento: ${people.dataNascimento}'),
+                            FormattedText(
+                                text: 'Parentesco: ${people.parentesco}'),
+                            FormattedText(text: 'CPF: ${people.cpf}'),
+                            FormattedText(text: 'Telefone: ${people.telefone}'),
+                            FormattedText(
+                                text: 'Rede Social: @${people.redeSocial}'),
+                            const SizedBox(height: 15),
+                            FormattedText(
+                                text:
+                                    'Título de Eleitor: ${people.tituloEleitor}'),
+                            FormattedText(
+                                text:
+                                    'Zona Eleitoral: ${people.zonaEleitoral}'),
+                            const SizedBox(height: 15),
+                            FormattedText(
+                                text:
+                                    'Religião: ${people.religion!.descricao}'),
+                            FormattedText(text: 'Igreja: ${people.igrejaId}'),
+                            FormattedText(
+                                text: 'Função Igreja: ${people.funcaoIgreja}'),
+                            const SizedBox(height: 15),
+                            FormattedText(
+                                text:
+                                    'Local de Trabalho: ${people.localTrabalho}'),
+                            FormattedText(
+                                text: 'Cargo: ${people.cargoTrabalho}'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 15,

@@ -9,12 +9,12 @@ class CustomFamilyMemberCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: const CircleAvatar(
-          child: Text(
-            "P",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-        ),
+        // leading: CircleAvatar(
+        //   child: Text(
+        //     '${people.family?.nome}',
+        //     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        //   ),
+        // ),
         title: Text('${people.nome}',
             style: const TextStyle(fontFamily: 'Poppinss')),
       ),

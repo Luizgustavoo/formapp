@@ -24,6 +24,16 @@ class HomeController extends GetxController
 
   RxBool isLoading = true.obs;
 
+  RxBool isDrawerOpen = false.obs;
+
+  void toggleDrawer() {
+    isDrawerOpen.value = !isDrawerOpen.value;
+  }
+
+  void closeDrawer() {
+    isDrawerOpen.value = false;
+  }
+
   RxInt number = 0.obs;
   RxBool isNumActive = true.obs;
   RxInt totalFamilies = 0.obs;

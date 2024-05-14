@@ -16,7 +16,7 @@ class ChatApiClient {
     int destinatarioId,
   ) async {
     try {
-      final int remententeId = UserStorage.getUserId();
+      final int remententeId = UserStorage.getPeopleId();
       var chatUrl = Uri.parse('$baseUrl/v1/chat/list');
       var response = await httpClient.post(chatUrl, headers: {
         "Accept": "application/json",
@@ -47,7 +47,7 @@ class ChatApiClient {
 
   sendChat(String token, int destinatarioId, String mensagem) async {
     try {
-      final int remententeId = UserStorage.getUserId();
+      final int remententeId = UserStorage.getPeopleId();
       var messageUrl = Uri.parse('$baseUrl/v1/chat/create');
 
       var requestBody = {
@@ -64,6 +64,7 @@ class ChatApiClient {
         },
         body: requestBody,
       );
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||
@@ -88,7 +89,7 @@ class ChatApiClient {
 
   chatChange(String token, int destinatarioId) async {
     try {
-      final int remententeId = UserStorage.getUserId();
+      final int remententeId = UserStorage.getPeopleId();
       var chatUrl = Uri.parse('$baseUrl/v1/chat/update');
 
       var response = await httpClient.post(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
-import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CreateFamilyModal extends StatelessWidget {
@@ -20,7 +19,6 @@ class CreateFamilyModal extends StatelessWidget {
   final String? tipoOperacao;
 
   final FamilyController controller = Get.find();
-  final PeopleController peopleController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -280,7 +278,7 @@ class CreateFamilyModal extends StatelessWidget {
                       );
                     },
                     child: Text(
-                      'SALVAR',
+                      tipoOperacao == 'insert' ? 'SALVAR' : 'ALTERAR',
                       style: CustomTextStyle.button(context),
                     )),
               ],

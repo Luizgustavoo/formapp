@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 
 class CustomPeopleCard extends StatelessWidget {
   const CustomPeopleCard({
@@ -33,9 +34,25 @@ class CustomPeopleCard extends StatelessWidget {
         title: Text(people.nome!.toUpperCase(),
             style: const TextStyle(fontFamily: 'Poppinss', fontSize: 11)),
         trailing: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              final peopleController = Get.put(PeopleController());
+              peopleController.selectedPeople = people;
+              peopleController.fillInFieldsForEditPerson();
+              showModalBottomSheet(
+                isScrollControlled: true,
+                isDismissible: false,
+                context: context,
+                builder: (context) => Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: const AddPeopleFamilyView(
+                    peopleLocal: false,
+                    tipoOperacao: 1,
+                  ),
+                ),
+              );
+            },
             icon: const Icon(
-              CupertinoIcons.ellipsis,
+              Icons.edit_note_sharp,
               color: Colors.black54,
             )),
       ),
