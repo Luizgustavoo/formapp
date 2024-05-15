@@ -1,4 +1,5 @@
 import 'package:ucif/app/data/models/auth_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/provider/auth_provider.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 
@@ -41,5 +42,15 @@ class AuthRepository {
       // Exception(e);
     }
     return;
+  }
+
+  insertPeople(String token, People pessoa) async {
+    try {
+      var response = await apiClient.insertPeople(token, pessoa);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
   }
 }

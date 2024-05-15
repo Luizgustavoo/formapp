@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/modules/login/login_controller.dart';
@@ -25,17 +26,17 @@ class SignUpView extends GetView<LoginController> {
         resizeToAvoidBottomInset: true,
         body: Stack(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 30, left: 40),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: SizedBox(
-                    width: 90,
-                    height: 90,
-                    child: Image(
-                        image: AssetImage('assets/images/logo_splash.png'))),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(top: 30, left: 40),
+            //   child: Align(
+            //     alignment: Alignment.topLeft,
+            //     child: SizedBox(
+            //         width: 90,
+            //         height: 90,
+            //         child: Image(
+            //             image: AssetImage('assets/images/logo_splash.png'))),
+            //   ),
+            // ),
             ListView(
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
@@ -84,7 +85,7 @@ class SignUpView extends GetView<LoginController> {
                                                 .validateName(value);
                                           },
                                           decoration: CustomInputDecoration(
-                                            hintText: 'Digite sua nome...',
+                                            hintText: 'Digite seu nome...',
                                             labelText: 'NOME',
                                             suffixIcon:
                                                 const Icon(Icons.person),
@@ -375,6 +376,36 @@ class SignUpView extends GetView<LoginController> {
                                             suffixIcon:
                                                 const Icon(Icons.work))),
                                     _gap(),
+                                    DropdownButtonFormField<String>(
+                                      //value: controller.sexo.value,
+                                      onChanged: (value) {
+                                        //controller.sexo.value = value!;
+                                      },
+                                      items: [
+                                        'Líder 01',
+                                        'Líder 02',
+                                        'Líder 03'
+                                      ].map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      decoration: InputDecoration(
+                                          labelStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          labelText: 'Liderado'),
+                                    ),
+                                    _gap(),
                                     Obx(() => TextFormField(
                                         controller:
                                             controller.usernameSignUpCtrl,
@@ -389,136 +420,59 @@ class SignUpView extends GetView<LoginController> {
                                             suffixIcon:
                                                 const Icon(Icons.email)))),
                                     _gap(),
-                                    Row(
-                                      children: [
-                                        Obx(() => Expanded(
-                                              flex: 2,
-                                              child: TextFormField(
-                                                controller: controller
-                                                    .passwordSignUpCtrl,
-                                                validator: (value) {
-                                                  return controller
-                                                      .validatePassword(
-                                                          value, false);
-                                                },
-                                                enabled: !controller
-                                                    .isLoggingIn.value,
-                                                obscureText: !controller
-                                                    .isPasswordVisible.value,
-                                                decoration: InputDecoration(
-                                                    contentPadding:
-                                                        const EdgeInsets.only(
-                                                            left: 10),
-                                                    isDense: true,
-                                                    filled: true,
-                                                    fillColor: Colors.white,
-                                                    labelText: 'SENHA',
-                                                    labelStyle: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12),
-                                                    hintText:
-                                                        'Digite sua senha...',
-                                                    hintStyle: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12),
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide.none,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                    suffixIcon:
-                                                        Obx(() => IconButton(
-                                                              icon: Icon(
-                                                                  controller
-                                                                          .isPasswordVisible
-                                                                          .value
-                                                                      ? Icons
-                                                                          .visibility_off
-                                                                      : Icons
-                                                                          .visibility,
-                                                                  color: Colors
-                                                                      .black54),
-                                                              onPressed: () {
-                                                                controller
-                                                                        .isPasswordVisible
-                                                                        .value =
-                                                                    !controller
-                                                                        .isPasswordVisible
-                                                                        .value;
-                                                              },
-                                                            ))),
-                                              ),
-                                            )),
-                                        const SizedBox(width: 5),
-                                        Obx(() => Expanded(
-                                              flex: 2,
-                                              child: TextFormField(
-                                                controller: controller
-                                                    .confirmPasswordSignUpCtrl,
-                                                validator: (value) {
-                                                  return controller
-                                                      .validatePassword(
-                                                          value, false);
-                                                },
-                                                enabled: !controller
-                                                    .isLoggingIn.value,
-                                                obscureText: !controller
-                                                    .confirmPasswordVisible
-                                                    .value,
-                                                decoration: InputDecoration(
-                                                    contentPadding:
-                                                        const EdgeInsets.only(
-                                                            left: 10),
-                                                    isDense: true,
-                                                    filled: true,
-                                                    fillColor: Colors.white,
-                                                    labelText:
-                                                        'REPITA SUA SENHA',
-                                                    labelStyle: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12),
-                                                    hintText:
-                                                        'Digite novamente sua senha...',
-                                                    hintStyle: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12),
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide.none,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                    suffixIcon:
-                                                        Obx(() => IconButton(
-                                                              icon: Icon(
-                                                                  controller
-                                                                          .confirmPasswordVisible
-                                                                          .value
-                                                                      ? Icons
-                                                                          .visibility_off
-                                                                      : Icons
-                                                                          .visibility,
-                                                                  color: Colors
-                                                                      .black54),
-                                                              onPressed: () {
-                                                                controller
-                                                                        .confirmPasswordVisible
-                                                                        .value =
-                                                                    !controller
-                                                                        .confirmPasswordVisible
-                                                                        .value;
-                                                              },
-                                                            ))),
-                                              ),
-                                            )),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
+                                    Obx(() => TextFormField(
+                                          controller:
+                                              controller.passwordSignUpCtrl,
+                                          validator: (value) {
+                                            return controller.validatePassword(
+                                                value, false);
+                                          },
+                                          enabled:
+                                              !controller.isLoggingIn.value,
+                                          obscureText: !controller
+                                              .isPasswordVisible.value,
+                                          decoration: InputDecoration(
+                                              contentPadding:
+                                                  const EdgeInsets.only(
+                                                      left: 10),
+                                              isDense: true,
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              labelText: 'SENHA',
+                                              labelStyle: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12),
+                                              hintText: 'Digite sua senha...',
+                                              hintStyle: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12),
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              suffixIcon: Obx(() => IconButton(
+                                                    icon: Icon(
+                                                        controller
+                                                                .isPasswordVisible
+                                                                .value
+                                                            ? Icons
+                                                                .visibility_off
+                                                            : Icons.visibility,
+                                                        color: Colors.black54),
+                                                    onPressed: () {
+                                                      controller
+                                                              .isPasswordVisible
+                                                              .value =
+                                                          !controller
+                                                              .isPasswordVisible
+                                                              .value;
+                                                    },
+                                                  ))),
+                                        )),
+                                    const SizedBox(height: 8),
                                     SizedBox(
                                       height: 50,
                                       width: double.infinity,
@@ -598,7 +552,7 @@ class SignUpView extends GetView<LoginController> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 15),
+                                    const SizedBox(height: 2),
                                     Text(
                                       'Já possui uma conta?',
                                       textAlign: TextAlign.center,
@@ -606,7 +560,7 @@ class SignUpView extends GetView<LoginController> {
                                           CustomTextStyle.subjectMessageNegrit(
                                               context),
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: 2),
                                     SizedBox(
                                       height: 50,
                                       child: TextButton(
@@ -630,7 +584,29 @@ class SignUpView extends GetView<LoginController> {
                   ),
                 ),
               ],
-            )
+            ),
+            Positioned(
+              top: 0,
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 5),
+                width: size.width,
+                height: 70,
+                decoration:
+                    const BoxDecoration(color: Color.fromRGBO(3, 74, 201, .8)),
+                child: const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    'Criar conta',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontFamily: 'Poppinss',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

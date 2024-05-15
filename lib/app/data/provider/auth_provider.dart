@@ -1,8 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class AuthApiClient {
@@ -86,6 +91,79 @@ class AuthApiClient {
       }
     } catch (e) {
       print(e);
+    }
+    return null;
+  }
+
+  insertPeople(String token, People pessoa) async {
+    try {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected) {
+        var pessoaUrl = Uri.parse('$baseUrl/create-people');
+
+        var request = http.MultipartRequest('POST', pessoaUrl);
+
+        request.fields.addAll({
+          "nome": pessoa.nome!,
+          "sexo": pessoa.sexo!,
+          "cpf": pessoa.cpf!,
+          "data_nascimento": pessoa.dataNascimento!,
+          "estadocivil_id": pessoa.estadoCivilId.toString(),
+          "titulo_eleitor": pessoa.tituloEleitor!,
+          "zona_eleitoral": pessoa.zonaEleitoral!,
+          "telefone": pessoa.telefone!,
+          "rede_social": pessoa.redeSocial!,
+          "provedor_casa": pessoa.provedorCasa!,
+          "igreja_id": pessoa.igrejaId.toString(),
+          "local_trabalho": pessoa.localTrabalho!,
+          "cargo_trabalho": pessoa.cargoTrabalho!,
+          "religiao_id": pessoa.religiaoId.toString(),
+          "funcao_igreja": pessoa.funcaoIgreja!,
+          "usuario_id": pessoa.usuarioId.toString(),
+          "status": pessoa.status.toString(),
+          "familia_id": pessoa.familiaId.toString(),
+          "parentesco": pessoa.parentesco!,
+        });
+
+        request.headers.addAll({
+          'Accept': 'application/json',
+          'Authorization': token,
+        });
+
+        var response = await request.send();
+
+        var responseStream = await response.stream.bytesToString();
+        var httpResponse = http.Response(responseStream, response.statusCode);
+        if (response.statusCode == 200) {
+          return json.decode(httpResponse.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(httpResponse.body)['message'] == "ja_existe") {
+          return json.decode(httpResponse.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(httpResponse.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        }
+      } else {
+        Map<String, dynamic> responseData = {};
+
+        responseData = {
+          'code': 1,
+          'message': 'Sem conexão com a internet!',
+        };
+
+        String jsonResponse = jsonEncode(responseData);
+
+        return json.decode(jsonResponse);
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
     }
     return null;
   }

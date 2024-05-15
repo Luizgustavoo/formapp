@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/models/auth_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/repository/auth_repository.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
@@ -38,6 +39,31 @@ class LoginController extends GetxController {
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
+  /*DADOS PARA REGISTRAR UMA PESSOA */
+
+  TextEditingController idPessoaController = TextEditingController();
+  TextEditingController nomePessoaController = TextEditingController();
+  TextEditingController nascimentoPessoaController = TextEditingController();
+  TextEditingController cpfPessoaController = TextEditingController();
+  TextEditingController tituloEleitoralPessoaController =
+      TextEditingController();
+  TextEditingController zonaEleitoralPessoaController = TextEditingController();
+  TextEditingController celularPessoaController = TextEditingController();
+  TextEditingController redeSocialPessoaController = TextEditingController();
+  TextEditingController localTrabalhoPessoaController = TextEditingController();
+  TextEditingController cargoPessoaController = TextEditingController();
+  TextEditingController funcaoIgrejaPessoaController = TextEditingController();
+  TextEditingController statusPessoaController = TextEditingController();
+  TextEditingController usuarioId = TextEditingController();
+  TextEditingController familiaId = TextEditingController();
+  TextEditingController igrejaPessoaController = TextEditingController();
+
+  RxString sexo = 'Masculino'.obs;
+  RxInt estadoCivilSelected = 1.obs;
+  RxInt religiaoSelected = 1.obs;
+  RxString parentesco = 'Pai'.obs;
+
+/*FINAL REGISTRO PESSOA */
   final box = GetStorage('credenciado');
 
   RxBool isLoggingIn = false.obs;
@@ -213,5 +239,51 @@ class LoginController extends GetxController {
     for (final controller in textControllers) {
       controller.clear();
     }
+  }
+
+  Future<Map<String, dynamic>> insertPeople() async {
+    if (signupKey.currentState!.validate()) {
+      People pessoa = People(
+        nome: nomePessoaController.text,
+        cpf: cpfPessoaController.text,
+        estadoCivilId: estadoCivilSelected.value,
+        parentesco: parentesco.value,
+        provedorCasa: 'nao',
+        sexo: sexo.value,
+        dataNascimento: nascimentoPessoaController.text,
+        tituloEleitor: tituloEleitoralPessoaController.text,
+        zonaEleitoral: zonaEleitoralPessoaController.text,
+        localTrabalho: localTrabalhoPessoaController.text,
+        cargoTrabalho: cargoPessoaController.text,
+        telefone: celularPessoaController.text,
+        redeSocial: redeSocialPessoaController.text,
+        religiaoId: religiaoSelected.value,
+        igrejaId: igrejaPessoaController.text,
+        funcaoIgreja: funcaoIgrejaPessoaController.text,
+        status: 1,
+        usuarioId: box.read('auth')['user']['id'],
+      );
+
+      final token = box.read('auth')['access_token'];
+
+      mensagem = await repository.insertPeople("Bearer $token", pessoa);
+
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        }
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe um usuário com esse e-mail!"
+        };
+      }
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos da família!"
+      };
+    }
+    return retorno;
   }
 }
