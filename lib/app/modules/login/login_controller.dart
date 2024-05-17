@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/models/auth_model.dart';
+import 'package:ucif/app/data/models/church_model.dart';
+import 'package:ucif/app/data/models/marital_status_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/repository/auth_repository.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
@@ -62,6 +65,12 @@ class LoginController extends GetxController {
   RxInt estadoCivilSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
   RxString parentesco = 'Pai'.obs;
+  RxString igreja = ''.obs;
+  List<String> suggestions = [];
+
+  RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
+  RxList<Religion> listReligion = <Religion>[].obs;
+  RxList<Church> listChurch = <Church>[].obs;
 
 /*FINAL REGISTRO PESSOA */
   final box = GetStorage('credenciado');
@@ -72,6 +81,14 @@ class LoginController extends GetxController {
   dynamic mensagem;
 
   final userController = Get.put(UserController());
+
+  @override
+  void onInit() async {
+    super.onInit();
+    await getMaritalStatus();
+    await getReligion();
+    await getChurch();
+  }
 
   void login() async {
     if (formKey.currentState!.validate()) {
@@ -266,7 +283,7 @@ class LoginController extends GetxController {
 
       final token = box.read('auth')['access_token'];
 
-      mensagem = await repository.insertPeople("Bearer $token", pessoa);
+      mensagem = await repository.insertPeople(pessoa);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -285,5 +302,26 @@ class LoginController extends GetxController {
       };
     }
     return retorno;
+  }
+
+  Future<void> getMaritalStatus() async {
+    listMaritalStatus.clear();
+    listMaritalStatus.value = await repository.getMaritalStatus();
+  }
+
+  Future<void> getReligion() async {
+    listReligion.clear();
+    listReligion.value = await repository.getReligion();
+  }
+
+  Future<void> getChurch() async {
+    listChurch.clear();
+    listChurch.value = await repository.getChurch();
+
+    suggestions.clear();
+
+    for (var element in listChurch) {
+      suggestions.add(element.descricao!);
+    }
   }
 }

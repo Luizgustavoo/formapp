@@ -1,6 +1,10 @@
 import 'package:ucif/app/data/models/auth_model.dart';
+import 'package:ucif/app/data/models/church_model.dart';
+import 'package:ucif/app/data/models/marital_status_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/provider/auth_provider.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 
 class AuthRepository {
@@ -44,13 +48,56 @@ class AuthRepository {
     return;
   }
 
-  insertPeople(String token, People pessoa) async {
+  insertPeople(People pessoa) async {
     try {
-      var response = await apiClient.insertPeople(token, pessoa);
+      var response = await apiClient.insertPeople(pessoa);
 
       return response;
     } catch (e) {
       ErrorHandler.showError(e);
     }
+  }
+
+  Future<List<MaritalStatus>> getMaritalStatus() async {
+    List<MaritalStatus> list = <MaritalStatus>[];
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getMaritalStatus();
+      if (response != null) {
+        response.forEach((e) {
+          list.add(MaritalStatus.fromJson(e));
+        });
+      }
+    }
+    return list;
+  }
+
+  Future<List<Religion>> getReligion() async {
+    List<Religion> list = <Religion>[];
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getReligion();
+
+      if (response != null) {
+        response.forEach((e) {
+          list.add(Religion.fromJson(e));
+        });
+      }
+    }
+
+    return list;
+  }
+
+  Future<List<Church>> getChurch() async {
+    List<Church> list = <Church>[];
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getChurch();
+
+      if (response != null) {
+        response.forEach((e) {
+          list.add(Church.fromJson(e));
+        });
+      }
+    }
+
+    return list;
   }
 }

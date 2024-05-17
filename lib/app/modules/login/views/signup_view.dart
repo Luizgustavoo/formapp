@@ -1,9 +1,5 @@
 import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/modules/login/login_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
@@ -130,21 +126,24 @@ class SignUpView extends GetView<LoginController> {
                                         const SizedBox(width: 5),
                                         Expanded(
                                           flex: 2,
-                                          child:
-                                              DropdownButtonFormField<String>(
-                                            //value: controller.sexo.value,
-                                            onChanged: (value) {
-                                              //controller.sexo.value = value!;
+                                          child: DropdownButtonFormField<int>(
+                                            onTap: () async {
+                                              await controller
+                                                  .getMaritalStatus();
                                             },
-                                            items: [
-                                              'Solteiro(a)',
-                                              'Casado(a)',
-                                              'Divorciado(a)'
-                                            ].map<DropdownMenuItem<String>>(
-                                                (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
+                                            value: controller
+                                                .estadoCivilSelected.value,
+                                            onChanged: (value) {
+                                              controller.estadoCivilSelected
+                                                  .value = value!;
+                                            },
+                                            items: controller.listMaritalStatus
+                                                .map<DropdownMenuItem<int>>(
+                                                    (item) {
+                                              return DropdownMenuItem<int>(
+                                                value: item.id,
+                                                child:
+                                                    Text(item.descricao ?? ''),
                                               );
                                             }).toList(),
                                             decoration: InputDecoration(
@@ -279,22 +278,24 @@ class SignUpView extends GetView<LoginController> {
                                       ],
                                     ),
                                     _gap(),
-                                    DropdownButtonFormField<String>(
-                                      //value: controller.sexo.value,
-                                      onChanged: (value) {
-                                        //controller.sexo.value = value!;
+                                    DropdownButtonFormField<int>(
+                                      onTap: () async {
+                                        controller.getReligion();
                                       },
-                                      items: [
-                                        'Catílico(a)',
-                                        'Protestante',
-                                        'Ateu'
-                                      ].map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
+                                      value: controller.religiaoSelected.value,
+                                      onChanged: (value) {
+                                        controller.religiaoSelected.value =
+                                            value!;
+                                      },
+                                      items: controller.listReligion
+                                          .map<DropdownMenuItem<int>>((item) {
+                                            return DropdownMenuItem<int>(
+                                              value: item.id,
+                                              child: Text(item.descricao ?? ''),
+                                            );
+                                          })
+                                          .toSet()
+                                          .toList(),
                                       decoration: InputDecoration(
                                           labelStyle: const TextStyle(
                                             color: Colors.black54,
@@ -313,37 +314,150 @@ class SignUpView extends GetView<LoginController> {
                                       children: [
                                         Expanded(
                                           flex: 2,
-                                          child:
-                                              DropdownButtonFormField<String>(
-                                            //value: controller.sexo.value,
-                                            onChanged: (value) {
-                                              //controller.sexo.value = value!;
-                                            },
-                                            items: [
-                                              'Nossa Senhora',
-                                              'Metodista',
-                                              'Assembléia'
-                                            ].map<DropdownMenuItem<String>>(
-                                                (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
+                                          child: TextFormField(
+                                            controller: controller
+                                                .igrejaPessoaController,
+                                            readOnly: true,
+                                            onTap: () async {
+                                              final selectedChurch =
+                                                  await showDialog<String>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: const Text(
+                                                        'Selecione uma Igreja'),
+                                                    content:
+                                                        SingleChildScrollView(
+                                                      child: ListBody(
+                                                        children: controller
+                                                            .suggestions
+                                                            .map(
+                                                              (e) => ListTile(
+                                                                title: Text(e),
+                                                                onTap: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(e);
+                                                                },
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               );
-                                            }).toList(),
+
+                                              if (selectedChurch != null) {
+                                                controller
+                                                    .igrejaPessoaController
+                                                    .text = selectedChurch;
+                                              }
+                                            },
                                             decoration: InputDecoration(
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.black54,
-                                                  fontFamily: 'Poppins',
-                                                  fontSize: 12,
-                                                ),
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide.none,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                labelText: 'Igreja'),
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              labelText: 'Igreja',
+                                              suffixIcon: IconButton(
+                                                icon: const Icon(
+                                                    Icons.arrow_drop_down),
+                                                onPressed: () async {
+                                                  final selectedChurch =
+                                                      await showDialog<String>(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                          'Selecione uma Igreja',
+                                                        ),
+                                                        content:
+                                                            SingleChildScrollView(
+                                                          child: ListBody(
+                                                            children:
+                                                                controller
+                                                                    .suggestions
+                                                                    .map(
+                                                                      (e) =>
+                                                                          ListTile(
+                                                                        title:
+                                                                            Text(
+                                                                          e,
+                                                                          style:
+                                                                              const TextStyle(fontSize: 30),
+                                                                        ),
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.of(context)
+                                                                              .pop(e);
+                                                                        },
+                                                                      ),
+                                                                    )
+                                                                    .toList(),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+
+                                                  if (selectedChurch != null) {
+                                                    controller
+                                                        .igrejaPessoaController
+                                                        .text = selectedChurch;
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return 'Selecione uma igreja';
+                                              }
+                                              return null;
+                                            },
                                           ),
                                         ),
+                                        // Expanded(
+                                        //   flex: 2,
+                                        //   child:
+                                        //       DropdownButtonFormField<String>(
+                                        //     onTap: () async {
+                                        //       await controller.getChurch();
+                                        //     },
+                                        //     value: controller
+                                        //             .igreja.value.isNotEmpty
+                                        //         ? controller.igreja.value
+                                        //         : null,
+                                        //     hint: const Text(
+                                        //         'Selecione uma igreja'),
+                                        //     onChanged: (value) {
+                                        //       controller.igreja.value = value!;
+                                        //     },
+                                        //     isExpanded: true,
+                                        //     items: controller.listChurch
+                                        //         .map<DropdownMenuItem<String>>(
+                                        //             (item) {
+                                        //       return DropdownMenuItem<String>(
+                                        //         value: item.descricao,
+                                        //         child:
+                                        //             Text(item.descricao ?? ''),
+                                        //       );
+                                        //     }).toList(),
+                                        //     decoration: InputDecoration(
+                                        //         labelStyle: const TextStyle(
+                                        //           color: Colors.black54,
+                                        //           fontFamily: 'Poppins',
+                                        //           fontSize: 12,
+                                        //         ),
+                                        //         border: OutlineInputBorder(
+                                        //           borderSide: BorderSide.none,
+                                        //           borderRadius:
+                                        //               BorderRadius.circular(10),
+                                        //         ),
+                                        //         labelText: 'Igreja'),
+                                        //   ),
+                                        // ),
                                         const SizedBox(width: 5),
                                         Expanded(
                                           flex: 2,

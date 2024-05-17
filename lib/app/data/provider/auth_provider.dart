@@ -95,7 +95,7 @@ class AuthApiClient {
     return null;
   }
 
-  insertPeople(String token, People pessoa) async {
+  insertPeople(People pessoa) async {
     try {
       bool isConnected = await ConnectionStatus.verifyConnection();
       if (isConnected) {
@@ -127,7 +127,6 @@ class AuthApiClient {
 
         request.headers.addAll({
           'Accept': 'application/json',
-          'Authorization': token,
         });
 
         var response = await request.send();
@@ -161,6 +160,95 @@ class AuthApiClient {
         String jsonResponse = jsonEncode(responseData);
 
         return json.decode(jsonResponse);
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
+  getMaritalStatus() async {
+    try {
+      var maritalUrl = Uri.parse('$baseUrl/list-marital-status');
+      var response = await httpClient.get(
+        maritalUrl,
+        headers: {
+          "Accept": "application/json",
+        },
+      );
+
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
+  getReligion() async {
+    try {
+      var religionUrl = Uri.parse('$baseUrl/list-religion');
+      var response = await httpClient.get(
+        religionUrl,
+        headers: {
+          "Accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
+  getChurch() async {
+    try {
+      var churchUrl = Uri.parse('$baseUrl/list-church');
+      var response = await httpClient.get(
+        churchUrl,
+        headers: {
+          "Accept": "application/json",
+        },
+      );
+
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
       }
     } catch (err) {
       ErrorHandler.showError(err);
