@@ -106,23 +106,22 @@ class AuthApiClient {
         request.fields.addAll({
           "nome": pessoa.nome!,
           "sexo": pessoa.sexo!,
-          "cpf": pessoa.cpf!,
-          "data_nascimento": pessoa.dataNascimento!,
           "estadocivil_id": pessoa.estadoCivilId.toString(),
-          "titulo_eleitor": pessoa.tituloEleitor!,
-          "zona_eleitoral": pessoa.zonaEleitoral!,
+          "data_nascimento": pessoa.dataNascimento!,
+          "cpf": pessoa.cpf!,
           "telefone": pessoa.telefone!,
           "rede_social": pessoa.redeSocial!,
-          "provedor_casa": pessoa.provedorCasa!,
+          "titulo_eleitor": pessoa.tituloEleitor!,
+          "zona_eleitoral": pessoa.zonaEleitoral!,
+          "religiao_id": pessoa.religiaoId.toString(),
           "igreja_id": pessoa.igrejaId.toString(),
+          "funcao_igreja": pessoa.funcaoIgreja!,
           "local_trabalho": pessoa.localTrabalho!,
           "cargo_trabalho": pessoa.cargoTrabalho!,
-          "religiao_id": pessoa.religiaoId.toString(),
-          "funcao_igreja": pessoa.funcaoIgreja!,
-          "usuario_id": pessoa.usuarioId.toString(),
           "status": pessoa.status.toString(),
-          "familia_id": pessoa.familiaId.toString(),
-          "parentesco": pessoa.parentesco!,
+          "usuario_id": pessoa.usuarioId.toString(),
+          "username": pessoa.username.toString(),
+          "senha": pessoa.senha.toString()
         });
 
         request.headers.addAll({
@@ -167,6 +166,35 @@ class AuthApiClient {
     return null;
   }
 
+  getLeader() async {
+    try {
+      var liderUrl = Uri.parse('$baseUrl/list-lider');
+      var response = await httpClient.get(
+        liderUrl,
+        headers: {
+          "Accept": "application/json",
+        },
+      );
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
   getMaritalStatus() async {
     try {
       var maritalUrl = Uri.parse('$baseUrl/list-marital-status');
@@ -176,8 +204,6 @@ class AuthApiClient {
           "Accept": "application/json",
         },
       );
-
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -206,7 +232,6 @@ class AuthApiClient {
           "Accept": "application/json",
         },
       );
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -235,8 +260,6 @@ class AuthApiClient {
           "Accept": "application/json",
         },
       );
-
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&

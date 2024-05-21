@@ -8,6 +8,7 @@ import 'package:ucif/app/data/models/church_model.dart';
 import 'package:ucif/app/data/models/marital_status_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/repository/auth_repository.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
@@ -15,6 +16,7 @@ import 'package:ucif/app/data/repository/religion_repository.dart';
 import 'package:ucif/app/global/storage_manager.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/error_handler.dart';
+import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class LoginController extends GetxController {
@@ -63,12 +65,14 @@ class LoginController extends GetxController {
 
   RxString sexo = 'Masculino'.obs;
   RxInt estadoCivilSelected = 1.obs;
+  RxInt leaderSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
   RxString parentesco = 'Pai'.obs;
   RxString igreja = ''.obs;
   List<String> suggestions = [];
 
   RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
+  RxList<User> listLeader = <User>[].obs;
   RxList<Religion> listReligion = <Religion>[].obs;
   RxList<Church> listChurch = <Church>[].obs;
 
@@ -88,6 +92,7 @@ class LoginController extends GetxController {
     await getMaritalStatus();
     await getReligion();
     await getChurch();
+    await getLeader();
   }
 
   void login() async {
@@ -127,41 +132,41 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>> signUp() async {
-    if (signupKey.currentState!.validate()) {
-      if (passwordSignUpCtrl.text == confirmPasswordSignUpCtrl.text) {
-        isLoggingIn.value = true;
-        loading.value = true;
+  // Future<Map<String, dynamic>> signUp() async {
+  //   if (signupKey.currentState!.validate()) {
+  //     if (passwordSignUpCtrl.text == confirmPasswordSignUpCtrl.text) {
+  //       isLoggingIn.value = true;
+  //       loading.value = true;
 
-        mensagem = await repository.getSignUp(nameSignUpCtrl.text,
-            usernameSignUpCtrl.text, passwordSignUpCtrl.text);
+  //       mensagem = await repository.getSignUp(nameSignUpCtrl.text,
+  //           usernameSignUpCtrl.text, passwordSignUpCtrl.text);
 
-        if (mensagem != null) {
-          if (mensagem['message'] == 'success') {
-            retorno = {
-              "return": 0,
-              "message":
-                  "Sucesso! Fique atento ao seu e-mail cadastrado, pois iremos informar o status da sua solicitação."
-            };
-          } else if (mensagem['message'] == 'ja_existe') {
-            retorno = {
-              "return": 1,
-              "message": "Já existe um usuário com esse nome!"
-            };
-          } else {
-            retorno = {"return": 1, "message": "Falha!"};
-          }
-        } else {
-          showErrorSnackbar.value = true;
-          showErrorMessage();
-        }
+  //       if (mensagem != null) {
+  //         if (mensagem['message'] == 'success') {
+  //           retorno = {
+  //             "return": 0,
+  //             "message":
+  //                 "Sucesso! Fique atento ao seu e-mail cadastrado, pois iremos informar o status da sua solicitação."
+  //           };
+  //         } else if (mensagem['message'] == 'ja_existe') {
+  //           retorno = {
+  //             "return": 1,
+  //             "message": "Já existe um usuário com esse nome!"
+  //           };
+  //         } else {
+  //           retorno = {"return": 1, "message": "Falha!"};
+  //         }
+  //       } else {
+  //         showErrorSnackbar.value = true;
+  //         showErrorMessage();
+  //       }
 
-        loading.value = false;
-        isLoggingIn.value = false;
-      }
-    }
-    return retorno;
-  }
+  //       loading.value = false;
+  //       isLoggingIn.value = false;
+  //     }
+  //   }
+  //   return retorno;
+  // }
 
   //*VALIDAÇÕES */
   String? validateUsername(String? value) {
@@ -175,6 +180,31 @@ class LoginController extends GetxController {
       return 'Digite um e-mail válido';
     }
     return null;
+  }
+
+  void onNascimentoChanged(String nascimento) {
+    final formattedNASCIMENTO = FormattersValidators.formatDate(nascimento);
+    nascimentoPessoaController.value = TextEditingValue(
+      text: formattedNASCIMENTO.value,
+      selection:
+          TextSelection.collapsed(offset: formattedNASCIMENTO.value.length),
+    );
+  }
+
+  void onCPFChanged(String cpf) {
+    final formattedCPF = FormattersValidators.formatCPF(cpf);
+    cpfPessoaController.value = TextEditingValue(
+      text: formattedCPF.value,
+      selection: TextSelection.collapsed(offset: formattedCPF.value.length),
+    );
+  }
+
+  void onPhoneChanged(String phone) {
+    final formattedPhone = FormattersValidators.formatPhone(phone);
+    celularPessoaController.value = TextEditingValue(
+      text: formattedPhone.value,
+      selection: TextSelection.collapsed(offset: formattedPhone.value.length),
+    );
   }
 
   String? validatePassword(String? value, bool isLogin) {
@@ -250,7 +280,21 @@ class LoginController extends GetxController {
       nameSignUpCtrl,
       usernameSignUpCtrl,
       passwordSignUpCtrl,
-      confirmPasswordSignUpCtrl
+      confirmPasswordSignUpCtrl,
+      nomePessoaController,
+      nascimentoPessoaController,
+      cpfPessoaController,
+      tituloEleitoralPessoaController,
+      zonaEleitoralPessoaController,
+      celularPessoaController,
+      redeSocialPessoaController,
+      localTrabalhoPessoaController,
+      cargoPessoaController,
+      funcaoIgrejaPessoaController,
+      statusPessoaController,
+      usuarioId,
+      familiaId,
+      igrejaPessoaController,
     ];
 
     for (final controller in textControllers) {
@@ -258,50 +302,62 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>> insertPeople() async {
+  Future<Map<String, dynamic>> signUp() async {
     if (signupKey.currentState!.validate()) {
       People pessoa = People(
-        nome: nomePessoaController.text,
-        cpf: cpfPessoaController.text,
-        estadoCivilId: estadoCivilSelected.value,
-        parentesco: parentesco.value,
-        provedorCasa: 'nao',
-        sexo: sexo.value,
-        dataNascimento: nascimentoPessoaController.text,
-        tituloEleitor: tituloEleitoralPessoaController.text,
-        zonaEleitoral: zonaEleitoralPessoaController.text,
-        localTrabalho: localTrabalhoPessoaController.text,
-        cargoTrabalho: cargoPessoaController.text,
-        telefone: celularPessoaController.text,
-        redeSocial: redeSocialPessoaController.text,
-        religiaoId: religiaoSelected.value,
-        igrejaId: igrejaPessoaController.text,
-        funcaoIgreja: funcaoIgrejaPessoaController.text,
-        status: 1,
-        usuarioId: box.read('auth')['user']['id'],
-      );
+          nome: nomePessoaController.text,
+          sexo: sexo.value,
+          estadoCivilId: estadoCivilSelected.value,
+          dataNascimento: nascimentoPessoaController.text,
+          cpf: cpfPessoaController.text,
+          telefone: celularPessoaController.text,
+          redeSocial: redeSocialPessoaController.text,
+          tituloEleitor: tituloEleitoralPessoaController.text,
+          zonaEleitoral: zonaEleitoralPessoaController.text,
+          religiaoId: religiaoSelected.value,
+          igrejaId: igrejaPessoaController.text,
+          funcaoIgreja: funcaoIgrejaPessoaController.text,
+          localTrabalho: localTrabalhoPessoaController.text,
+          cargoTrabalho: cargoPessoaController.text,
+          status: 1,
+          usuarioId: leaderSelected.value,
+          username: usernameSignUpCtrl.text,
+          senha: passwordSignUpCtrl.text);
 
-      final token = box.read('auth')['access_token'];
+      // final token = box.read('auth')['access_token'];
 
       mensagem = await repository.insertPeople(pessoa);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
-          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+          retorno = {
+            "return": 0,
+            "message":
+                "Sucesso! Fique atento ao seu e-mail cadastrado, pois iremos informar o status da sua solicitação."
+          };
+        } else if (mensagem['message'] == 'ja_existe') {
+          retorno = {
+            "return": 1,
+            "message": "Já existe um usuário com esse nome!"
+          };
+        } else {
+          retorno = {"return": 1, "message": "Falha!"};
         }
-      } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe um usuário com esse e-mail!"
-        };
+      } else {
+        showErrorSnackbar.value = true;
+        showErrorMessage();
       }
-    } else {
-      retorno = {
-        "return": 1,
-        "message": "Preencha todos os campos da família!"
-      };
+
+      loading.value = false;
+      isLoggingIn.value = false;
     }
+
     return retorno;
+  }
+
+  Future<void> getLeader() async {
+    listLeader.clear();
+    listLeader.value = await repository.getLeader();
   }
 
   Future<void> getMaritalStatus() async {

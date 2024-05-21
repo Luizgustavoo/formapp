@@ -3,6 +3,7 @@ import 'package:ucif/app/data/models/church_model.dart';
 import 'package:ucif/app/data/models/marital_status_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/auth_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
@@ -56,6 +57,19 @@ class AuthRepository {
     } catch (e) {
       ErrorHandler.showError(e);
     }
+  }
+
+  Future<List<User>> getLeader() async {
+    List<User> list = <User>[];
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getLeader();
+      if (response != null) {
+        response.forEach((e) {
+          list.add(User.fromJson(e));
+        });
+      }
+    }
+    return list;
   }
 
   Future<List<MaritalStatus>> getMaritalStatus() async {

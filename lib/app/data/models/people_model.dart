@@ -28,6 +28,8 @@ class People {
   String? dataUpdate;
   int? familiaId;
   String? parentesco;
+  String? username;
+  String? senha;
   List<FamilyService>? atendimentos;
   User? user;
   Family? family;
@@ -61,6 +63,8 @@ class People {
       this.atendimentos,
       this.user,
       this.religion,
+      this.username,
+      this.senha,
       this.maritalStatus,
       this.family});
 
@@ -85,6 +89,8 @@ class People {
     usuarioId = json['usuario_id'];
     status = json['status'];
     dataCadastro = json['data_cadastro'];
+    username = json['username'];
+    senha = json['senha'];
     dataUpdate = json['data_update'];
     familiaId = json['familia_id'];
     parentesco = json['parentesco'];
@@ -127,6 +133,8 @@ class People {
     data['data_cadastro'] = dataCadastro;
     data['data_update'] = dataUpdate;
     data['familia_id'] = familiaId;
+    data['username'] = username;
+    data['senha'] = senha;
     data['parentesco'] = parentesco;
     if (atendimentos != null) {
       data['atendimentos'] = atendimentos!.map((v) => v.toJson()).toList();
