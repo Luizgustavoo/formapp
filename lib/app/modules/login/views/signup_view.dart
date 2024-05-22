@@ -30,6 +30,7 @@ class SignUpView extends GetView<LoginController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    const SizedBox(height: 30),
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 18, left: 18, right: 18),

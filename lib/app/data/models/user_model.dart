@@ -1,4 +1,5 @@
 import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 
 class User {
   int? id;
@@ -18,6 +19,7 @@ class User {
   dynamic mensagens;
   dynamic quantidadeFamilias;
   dynamic pessoaId;
+  List<People>? pessoas;
 
   User(
       {this.id,
@@ -56,6 +58,12 @@ class User {
     mensagens = json['mensagens'];
     quantidadeFamilias = json['quantidade_familias'];
     pessoaId = json['pessoa_id'];
+    if (json['pessoas'] != null) {
+      pessoas = <People>[];
+      json['pessoas'].forEach((v) {
+        pessoas!.add(People.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +86,9 @@ class User {
     data['mensagens'] = mensagens;
     data['quantidade_familias'] = quantidadeFamilias;
     data['pessoa_id'] = pessoaId;
+    if (pessoas != null) {
+      data['pessoas'] = pessoas!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

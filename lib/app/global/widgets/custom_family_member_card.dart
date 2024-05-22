@@ -8,13 +8,9 @@ class CustomFamilyMemberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 1,
+      margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
       child: ListTile(
-        // leading: CircleAvatar(
-        //   child: Text(
-        //     '${people.family?.nome}',
-        //     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        //   ),
-        // ),
         title: Text('${people.nome}',
             style: const TextStyle(fontFamily: 'Poppinss')),
       ),

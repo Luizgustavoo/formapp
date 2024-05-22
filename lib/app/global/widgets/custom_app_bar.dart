@@ -21,9 +21,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    double factor = 0.26;
+    double factor = 0.30;
     if (showPadding == false) {
-      factor = 0.15;
+      factor = 0.18;
     }
     return Size.fromHeight(Get.height * factor);
   }
@@ -73,10 +73,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     Get.offNamed('/list-people');
                                   } else if (Get.currentRoute ==
                                       '/member-family') {
-                                    final peopleController =
-                                        Get.put(PeopleController());
-                                    peopleController.getPeoples();
-                                    Get.offNamed('/detail-people');
+                                    Get.back();
                                   } else {
                                     Get.offAllNamed('/home');
                                   }
@@ -184,9 +181,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Olá, $userName ',
-                              style: CustomTextStyle.appBarTitle(context)),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: SizedBox(
+                              width: Get.width * 0.60,
+                              child: Text(
+                                'Olá, $userName ',
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: CustomTextStyle.appBarTitle(context),
+                              ),
+                            ),
+                          ),
                           const HandWaveAnimation(),
                         ],
                       ),

@@ -3,7 +3,9 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
 import 'package:ucif/app/global/widgets/custom_family_member_card.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 
 class FamilyMemberView extends GetView<PeopleController> {
@@ -11,6 +13,7 @@ class FamilyMemberView extends GetView<PeopleController> {
 
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.put(HomeController());
     return Stack(
       children: [
         Scaffold(
@@ -31,7 +34,7 @@ class FamilyMemberView extends GetView<PeopleController> {
 
                   const SizedBox(height: 10),
                   const Text(
-                    "Membros da família",
+                    "Membros da Família",
                     style: TextStyle(fontFamily: 'Poppinss', fontSize: 16),
                   ),
                   const Divider(
@@ -42,15 +45,6 @@ class FamilyMemberView extends GetView<PeopleController> {
                   const SizedBox(height: 5),
                   Obx(
                     () => Expanded(
-                      // child: NotificationListener<ScrollNotification>(
-                      //   onNotification: (ScrollNotification scrollInfo) {
-                      //     if (!controller.isLoadingFamilies.value &&
-                      //         scrollInfo.metrics.pixels >=
-                      //             scrollInfo.metrics.maxScrollExtent * 0.9) {
-                      //       controller.loadMoreFamilies();
-                      //     }
-                      //     return false;
-                      //   },
                       child: ListView.builder(
                         itemCount: controller.listFamilyMembers.length,
                         shrinkWrap: true,
@@ -101,71 +95,42 @@ class FamilyMemberView extends GetView<PeopleController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '35',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.black,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nPessoas',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter2,
+                          description: 'Pessoas',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
+                          color: Colors.black,
                         ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '9',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.blue,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nFamílias',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter,
+                          description: 'Famílias',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          color: Colors.blue,
                         ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '23',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.green,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nLideranças',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter3,
+                          description: 'Lideranças',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          color: Colors.green,
                         ),
                       ],
                     ),

@@ -10,8 +10,8 @@ import 'package:ucif/app/utils/custom_text_style.dart';
 class FamilyListModal extends StatelessWidget {
   FamilyListModal({super.key, required this.people});
   final People? people;
-  final controller = Get.find<FamilyController>();
-  final peopleController = Get.find<PeopleController>();
+  final controller = Get.put(FamilyController());
+  final peopleController = Get.put(PeopleController());
 
   @override
   Widget build(BuildContext context) {

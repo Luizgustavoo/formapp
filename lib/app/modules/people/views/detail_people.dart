@@ -87,14 +87,14 @@ class DetailPeopleView extends GetView<PeopleController> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FormattedText(text: 'Líder: ${people.user!.nome}'),
+                            FormattedText(text: 'Líder: ${people.user?.nome}'),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text: 'Provedor: ${people.provedorCasa}'),
                             FormattedText(text: 'Sexo: ${people.sexo}'),
                             FormattedText(
                                 text:
-                                    'Estado Civil: ${people.maritalStatus!.descricao}'),
+                                    'Estado Civil: ${people.maritalStatus?.descricao}'),
                             FormattedText(
                                 text: 'Nascimento: ${people.dataNascimento}'),
                             FormattedText(
@@ -113,7 +113,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             const SizedBox(height: 15),
                             FormattedText(
                                 text:
-                                    'Religião: ${people.religion!.descricao}'),
+                                    'Religião: ${people.religion?.descricao}'),
                             FormattedText(text: 'Igreja: ${people.igrejaId}'),
                             FormattedText(
                                 text: 'Função Igreja: ${people.funcaoIgreja}'),
@@ -132,7 +132,8 @@ class DetailPeopleView extends GetView<PeopleController> {
                     height: 15,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 10),
                     child: SizedBox(
                       height: 30,
                       width: double.infinity,

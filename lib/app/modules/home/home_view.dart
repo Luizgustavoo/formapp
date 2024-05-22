@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_people_card.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
@@ -63,38 +62,8 @@ class HomeView extends GetView<HomeController> {
                         itemBuilder: (context, index) {
                           People people = controller.listPeoples[index];
 
-                          return Card(
-                            margin: const EdgeInsets.all(2),
-                            child: SizedBox(
-                              height: 45,
-                              child: ListTile(
-                                dense: true,
-                                titleAlignment: ListTileTitleAlignment.center,
-                                leading: CircleAvatar(
-                                  radius: 14,
-                                  backgroundImage: people.foto
-                                          .toString()
-                                          .isEmpty
-                                      ? const AssetImage(
-                                          'assets/images/default_avatar.jpg')
-                                      : NetworkImage(
-                                              '$urlImagem/storage/app/public/${people.foto}')
-                                          as ImageProvider,
-                                ),
-                                title: Text(
-                                  people.nome!,
-                                  style: const TextStyle(
-                                      fontFamily: 'Poppinss',
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                                trailing: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      CupertinoIcons.ellipsis,
-                                      color: Colors.black54,
-                                    )),
-                              ),
-                            ),
+                          return CustomPeopleCard(
+                            people: people,
                           );
                         },
                       ),
@@ -119,15 +88,17 @@ class HomeView extends GetView<HomeController> {
                   child: SizedBox(
                     height: 35,
                     width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Get.toNamed('/list-people');
-                        },
-                        child: const Text(
-                          'VER TODOS',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Poppinss'),
-                        )),
+                    child: UserStorage.getUserType() == 3
+                        ? const SizedBox()
+                        : ElevatedButton(
+                            onPressed: () {
+                              Get.toNamed('/list-people');
+                            },
+                            child: const Text(
+                              'VER TODOS',
+                              style: TextStyle(
+                                  color: Colors.white, fontFamily: 'Poppinss'),
+                            )),
                   ),
                 ),
                 const SizedBox(height: 10),

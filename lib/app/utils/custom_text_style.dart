@@ -19,10 +19,10 @@ class CustomTextStyle {
 
   static TextStyle? appBarTitle(BuildContext context) {
     return const TextStyle(
-      fontSize: 30,
-      color: Colors.white,
-      fontFamily: 'Poppins',
-    );
+        fontSize: 30,
+        color: Colors.white,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.ellipsis);
   }
 
   static TextStyle? appBarSubtitle(BuildContext context) {

@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
 import 'package:ucif/app/global/widgets/custom_user_card.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ListUserView extends GetView<UserController> {
@@ -15,6 +18,7 @@ class ListUserView extends GetView<UserController> {
   final messageController = Get.put(MessageController());
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.put(HomeController());
     var idUserLogged = box.read('auth')['user']['id'];
     return Stack(
       children: [
@@ -37,7 +41,7 @@ class ListUserView extends GetView<UserController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / 18),
+                    SizedBox(height: MediaQuery.of(context).size.height / 16),
                     SizedBox(
                       height: 35,
                       child: TextField(
@@ -70,7 +74,7 @@ class ListUserView extends GetView<UserController> {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      'Famílias',
+                      'Lideranças',
                       style: TextStyle(fontFamily: 'Poppinss', fontSize: 16),
                     ),
                     const Divider(
@@ -102,19 +106,84 @@ class ListUserView extends GetView<UserController> {
                                   : (user.tipousuarioId == 2
                                       ? "Lider"
                                       : "Familiar");
-                              return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: 600),
-                                child: SlideAnimation(
-                                  curve: Curves.easeInOut,
-                                  child: FadeInAnimation(
-                                    child: CustomUserCard(
-                                        user: user,
-                                        familiaId: UserStorage.getFamilyId(),
-                                        idUserLogged: idUserLogged,
-                                        controller: controller,
-                                        messageController: messageController,
-                                        typeUser: typeUser),
+
+                              bool desativaMaster =
+                                  UserStorage.getUserType() == 1;
+                              bool desativaLider =
+                                  UserStorage.getUserType() == 1 ||
+                                      user.id == UserStorage.getUserId();
+                              bool desativaFamiliar =
+                                  user.id == UserStorage.getUserId() ||
+                                      desativaMaster ||
+                                      desativaLider;
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 2, bottom: 2),
+                                child: Dismissible(
+                                  key: UniqueKey(),
+                                  direction: (!desativaMaster &&
+                                          !desativaLider &&
+                                          !desativaFamiliar)
+                                      ? DismissDirection.none
+                                      : DismissDirection.endToStart,
+                                  confirmDismiss:
+                                      (DismissDirection direction) async {
+                                    if (direction ==
+                                        DismissDirection.endToStart) {
+                                      showDialog(context, user);
+                                    }
+                                    return false;
+                                  },
+                                  background: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: user.status == 1
+                                          ? Colors.red.shade500
+                                          : Colors.green,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              user.status == 1
+                                                  ? const Icon(
+                                                      Icons.delete_outline,
+                                                      color: Colors.white,
+                                                      size: 25)
+                                                  : const Icon(
+                                                      Icons.check_rounded,
+                                                      size: 25,
+                                                      color: Colors.white,
+                                                    ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  child: AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 600),
+                                    child: SlideAnimation(
+                                      curve: Curves.easeInOut,
+                                      child: FadeInAnimation(
+                                        child: CustomUserCard(
+                                            user: user,
+                                            familiaId:
+                                                UserStorage.getFamilyId(),
+                                            idUserLogged: idUserLogged,
+                                            controller: controller,
+                                            messageController:
+                                                messageController,
+                                            typeUser: typeUser),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               );
@@ -151,71 +220,42 @@ class ListUserView extends GetView<UserController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '35',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.black,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nPessoas',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter2,
+                          description: 'Pessoas',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
+                          color: Colors.black,
                         ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '9',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.blue,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nFamílias',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter,
+                          description: 'Famílias',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          color: Colors.blue,
                         ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '23',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.green,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nLideranças',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter3,
+                          description: 'Lideranças',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          color: Colors.green,
                         ),
                       ],
                     ),
@@ -223,6 +263,55 @@ class ListUserView extends GetView<UserController> {
                 ),
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void showDialog(context, User user) {
+    Get.defaultDialog(
+      titlePadding: const EdgeInsets.all(16),
+      contentPadding: const EdgeInsets.all(16),
+      title: "Confirmação",
+      content: Text(
+        textAlign: TextAlign.center,
+        user.status == 0
+            ? "Tem certeza que deseja ativar novamente o usuário ${user.nome} ?"
+            : "Tem certeza que deseja desativar o usuário ${user.nome} ?",
+        style: const TextStyle(
+          fontFamily: 'Poppinss',
+          fontSize: 18,
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Get.back();
+          },
+          child: const Text("Cancelar"),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            Map<String, dynamic> retorno = user.status == 0
+                ? await controller.deleteUser(user.id!, 1)
+                : await controller.deleteUser(user.id!, 0);
+            if (retorno['return'] == 0) {
+              Get.back();
+            }
+            Get.snackbar(
+              snackPosition: SnackPosition.BOTTOM,
+              duration: const Duration(milliseconds: 1500),
+              retorno['return'] == 0 ? 'Sucesso' : "Falha",
+              retorno['message'],
+              backgroundColor:
+                  retorno['return'] == 0 ? Colors.green : Colors.red,
+              colorText: Colors.white,
+            );
+          },
+          child: Text(
+            "Confirmar",
+            style: CustomTextStyle.button(context),
           ),
         ),
       ],

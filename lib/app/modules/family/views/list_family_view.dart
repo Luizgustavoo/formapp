@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/global/widgets/create_family_modal.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
+import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
 import 'package:ucif/app/global/widgets/custom_family_card.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class FamilyView extends GetView<FamilyController> {
   const FamilyView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.put(HomeController());
     return Stack(
       children: [
         Scaffold(
@@ -21,7 +29,7 @@ class FamilyView extends GetView<FamilyController> {
           body: RefreshIndicator(
             onRefresh: () async {
               controller.searchController.clear();
-              await controller.getFamilies();
+              Get.offAllNamed('/list-family');
             },
             child: Container(
               decoration: const BoxDecoration(
@@ -32,7 +40,7 @@ class FamilyView extends GetView<FamilyController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / 18),
+                    SizedBox(height: MediaQuery.of(context).size.height / 16),
                     SizedBox(
                       height: 35,
                       child: TextField(
@@ -65,7 +73,7 @@ class FamilyView extends GetView<FamilyController> {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      'Famílias',
+                      'Famílias Cadastradas',
                       style: TextStyle(fontFamily: 'Poppinss', fontSize: 16),
                     ),
                     const Divider(
@@ -115,6 +123,77 @@ class FamilyView extends GetView<FamilyController> {
               ),
             ),
           ),
+          floatingActionButton: UserStorage.getUserType() < 3
+              ? SpeedDial(
+                  childrenButtonSize: const Size(55, 55),
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color(0xFF014acb),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  isOpenOnStart: false,
+                  animatedIcon: AnimatedIcons.menu_close,
+                  buttonSize: const Size(50, 50),
+                  children: [
+                    SpeedDialChild(
+                      backgroundColor: const Color(0xFF014acb),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.group,
+                          color: Colors.white,
+                        ),
+                      ),
+                      label: 'Adicionar Família',
+                      labelStyle: const TextStyle(fontFamily: "Poppins"),
+                      onTap: () {
+                        controller.clearAllFamilyTextFields();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CreateFamilyModal(
+                              tipoOperacao: 'insert',
+                              titulo: "Cadastro de Família",
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SpeedDialChild(
+                      backgroundColor: const Color(0xFF014acb),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                      ),
+                      label: 'Adicionar Pessoas',
+                      labelStyle: const TextStyle(fontFamily: "Poppins"),
+                      onTap: () {
+                        final peopleController = Get.put(PeopleController());
+                        peopleController.clearAllPeopleTextFields();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: const AddPeopleFamilyView(
+                              peopleLocal: false,
+                              tipoOperacao: 0,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                )
+              : const SizedBox(),
         ),
         Positioned(
           top: Get.height / 7,
@@ -137,71 +216,42 @@ class FamilyView extends GetView<FamilyController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '35',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.black,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nPessoas',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter2,
+                          description: 'Pessoas',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
+                          color: Colors.black,
                         ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '9',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.blue,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nFamílias',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter,
+                          description: 'Famílias',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          color: Colors.blue,
                         ),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            text: '23',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Poppinss',
-                              color: Colors.green,
-                              height: 1,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '\nLideranças',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
+                        DynamicRichText(
+                          value: homeController.counter3,
+                          description: 'Lideranças',
+                          valueStyle: const TextStyle(
+                            fontFamily: 'Poppinss',
+                            height: 1,
                           ),
+                          descriptionStyle: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 1,
+                          ),
+                          color: Colors.green,
                         ),
                       ],
                     ),
