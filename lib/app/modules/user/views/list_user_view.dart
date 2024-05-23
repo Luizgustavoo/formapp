@@ -223,6 +223,7 @@ class ListUserView extends GetView<UserController> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         DynamicRichText(
+                          routeR: '/list-people',
                           value: homeController.counter2,
                           description: 'Pessoas',
                           valueStyle: const TextStyle(
@@ -234,6 +235,7 @@ class ListUserView extends GetView<UserController> {
                           color: Colors.black,
                         ),
                         DynamicRichText(
+                          routeR: '/list-family',
                           value: homeController.counter,
                           description: 'Famílias',
                           valueStyle: const TextStyle(
@@ -247,6 +249,7 @@ class ListUserView extends GetView<UserController> {
                           color: Colors.blue,
                         ),
                         DynamicRichText(
+                          routeR: '/list-user',
                           value: homeController.counter3,
                           description: 'Lideranças',
                           valueStyle: const TextStyle(

@@ -7,19 +7,26 @@ class DynamicRichText extends StatelessWidget {
   final TextStyle valueStyle;
   final TextStyle descriptionStyle;
   final Color? color;
+  final String routeR;
 
-  const DynamicRichText({
-    Key? key,
-    required this.value,
-    required this.description,
-    required this.valueStyle,
-    required this.descriptionStyle,
-    required this.color,
-  }) : super(key: key);
+  const DynamicRichText(
+      {Key? key,
+      required this.value,
+      required this.description,
+      required this.valueStyle,
+      required this.descriptionStyle,
+      required this.color,
+      required this.routeR})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => RichText(
+    return GestureDetector(
+      onTap: () {
+        Get.offAllNamed(routeR);
+      },
+      child: Obx(
+        () => RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
             text: '$value',
@@ -40,6 +47,8 @@ class DynamicRichText extends StatelessWidget {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
