@@ -9,6 +9,7 @@ import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/services.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -93,9 +94,18 @@ class CustomUserCard extends StatelessWidget {
                   children: [
                     IconButton(
                         onPressed: () async {
-                          chatController.destinatarioId.value = user.id!;
-                          chatController.chatChange();
-                          Get.toNamed('/chat', arguments: user);
+                          if (user.people?.id == null) {
+                            Get.snackbar('Falha',
+                                "Usuário $typeUser não vinculado a uma pessoa!",
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white);
+                          } else {
+                            chatController.destinatarioId.value =
+                                user.people!.id!;
+                            chatController.chatChange();
+                            Services.setRoute('/list-user');
+                            Get.toNamed('/chat', arguments: user.people);
+                          }
                         },
                         icon: Icon(
                           Icons.message_outlined,

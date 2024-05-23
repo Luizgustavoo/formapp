@@ -8,6 +8,7 @@ import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
+import 'package:ucif/app/utils/services.dart';
 
 class DetailPeopleView extends GetView<PeopleController> {
   const DetailPeopleView({super.key});
@@ -57,6 +58,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                           final chatController = Get.put(ChatController());
                           chatController.destinatarioId.value = people.id!;
                           chatController.chatChange();
+                          Services.setRoute('/detail-people');
                           Get.toNamed('/chat', arguments: people);
                         },
                         icon: Icons.wechat_sharp,

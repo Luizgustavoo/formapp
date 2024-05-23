@@ -15,6 +15,7 @@ class User {
   String? tokenFirebase;
   dynamic familiaId;
   Family? family;
+  People? people;
   dynamic foto;
   dynamic mensagens;
   dynamic quantidadeFamilias;
@@ -36,6 +37,7 @@ class User {
       this.familiaId,
       this.family,
       this.foto,
+      this.people,
       this.mensagens,
       this.quantidadeFamilias,
       this.pessoaId});
@@ -54,6 +56,7 @@ class User {
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     familiaId = json['familia_id'] as dynamic;
     family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
+    people = json['pessoa'] != null ? People.fromJson(json['pessoa']) : null;
     foto = json['foto'];
     mensagens = json['mensagens'];
     quantidadeFamilias = json['quantidade_familias'];

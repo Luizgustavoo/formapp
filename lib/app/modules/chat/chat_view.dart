@@ -6,6 +6,7 @@ import 'package:ucif/app/data/models/chat_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/services.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ChatView extends GetView<ChatController> {
@@ -50,7 +51,7 @@ class ChatView extends GetView<ChatController> {
       onPopInvoked: (didPop) {
         final userController = Get.find<UserController>();
         userController.getUsers();
-        Get.offAllNamed('/detail-people', arguments: people);
+        Get.offAllNamed(Services.getRoute(), arguments: people);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -64,7 +65,7 @@ class ChatView extends GetView<ChatController> {
                     onPressed: () {
                       final userController = Get.put(UserController());
                       userController.getUsers();
-                      Get.offAllNamed('/detail-people', arguments: people);
+                      Get.offAllNamed(Services.getRoute(), arguments: people);
                     },
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
