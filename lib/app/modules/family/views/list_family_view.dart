@@ -196,7 +196,9 @@ class FamilyView extends GetView<FamilyController> {
               : const SizedBox(),
         ),
         Positioned(
-          top: Get.height / 7,
+          top: (MediaQuery.of(context).size.height -
+                  CustomAppBar().preferredSize.height) *
+              .155,
           left: 15,
           right: 15,
           child: Card(

@@ -28,28 +28,32 @@ class HomeView extends GetView<HomeController> {
               color: Color(0xFFf1f5ff),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(32),
+              padding: const EdgeInsets.only(left: 32, right: 32, bottom: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (UserStorage.getUserType() < 3) ...[
-                    SizedBox(height: MediaQuery.of(context).size.height / 9.5),
-                  ],
-                  SizedBox(
-                    height: 35,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: "Encontre um cadastro ...",
-                        labelStyle: const TextStyle(
-                            fontFamily: 'Poppinss', fontSize: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
+                  UserStorage.getUserType() < 3
+                      ? SizedBox(
+                          height: MediaQuery.of(context).size.height * .12)
+                      : SizedBox(
+                          height: MediaQuery.of(context).size.height * .02),
+                  if (UserStorage.getUserType() != 3) ...[
+                    SizedBox(
+                      height: 35,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          labelText: "Encontre um cadastro ...",
+                          labelStyle: const TextStyle(
+                              fontFamily: 'Poppinss', fontSize: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          suffixIcon: const Icon(Icons.search),
                         ),
-                        suffixIcon: const Icon(Icons.search),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
+                    const SizedBox(height: 10),
+                  ],
                   Text(
                     UserStorage.getUserType() != 3
                         ? 'Últimos cadastros'
@@ -126,23 +130,26 @@ class HomeView extends GetView<HomeController> {
         ),
         if (UserStorage.getUserType() < 3) ...[
           Positioned(
-            top: Get.height / 4.7,
-            left: 15,
-            right: 15,
+            top: (MediaQuery.of(context).size.height -
+                    CustomAppBar().preferredSize.height) *
+                .28,
+            left: MediaQuery.of(context).size.width * .04,
+            right: MediaQuery.of(context).size.width * .04,
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(7)),
               margin: const EdgeInsets.all(16),
               elevation: 5,
               child: SizedBox(
-                height: 180,
+                height: MediaQuery.of(context).size.height * .16,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      right: 16, left: 16, top: 25, bottom: 7),
+                      right: 16, left: 16, top: 12, bottom: 7),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       DynamicRichText(
+                        isBold: true,
                         value: controller.counter2,
                         description: 'Pessoas Cadastradas',
                         valueStyle: const TextStyle(
@@ -164,6 +171,7 @@ class HomeView extends GetView<HomeController> {
                               Get.toNamed('/list-family');
                             },
                             child: DynamicRichText(
+                              isBold: false,
                               value: controller.counter,
                               description: 'Famílias',
                               valueStyle: const TextStyle(
@@ -184,6 +192,7 @@ class HomeView extends GetView<HomeController> {
                               Get.toNamed('/list-user');
                             },
                             child: DynamicRichText(
+                              isBold: false,
                               value: controller.counter3,
                               description: 'Lideranças',
                               valueStyle: const TextStyle(
@@ -218,6 +227,7 @@ class DynamicRichText extends StatelessWidget {
   final TextStyle valueStyle;
   final TextStyle descriptionStyle;
   final Color? color;
+  final bool isBold;
 
   final bool isLargerText;
 
@@ -228,7 +238,8 @@ class DynamicRichText extends StatelessWidget {
       required this.valueStyle,
       required this.descriptionStyle,
       required this.color,
-      required this.isLargerText})
+      required this.isLargerText,
+      required this.isBold})
       : super(key: key);
 
   @override
@@ -238,8 +249,9 @@ class DynamicRichText extends StatelessWidget {
           text: TextSpan(
             text: '$value',
             style: TextStyle(
-              fontSize: isLargerText ? 85 : 20,
+              fontSize: isLargerText ? 45 : 20,
               fontFamily: isLargerText ? 'Poppinss' : 'Poppins',
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               color: color,
               height: 1,
             ),

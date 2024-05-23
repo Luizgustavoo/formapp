@@ -54,7 +54,7 @@ class PeopleController extends GetxController {
   RxString sexo = 'Masculino'.obs;
   RxInt estadoCivilSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
-  RxString parentesco = 'Pai'.obs;
+  RxString? parentesco = 'Pai'.obs;
   RxString oldImagePath = ''.obs;
 
   // int? idPeopleSelected;
@@ -316,7 +316,7 @@ class PeopleController extends GetxController {
         nome: nomePessoaController.text,
         cpf: cpfPessoaController.text,
         estadoCivilId: estadoCivilSelected.value,
-        parentesco: parentesco.value,
+        parentesco: parentesco?.value,
         provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
         sexo: sexo.value,
         dataNascimento: nascimentoPessoaController.text,
@@ -368,7 +368,7 @@ class PeopleController extends GetxController {
         nome: nomePessoaController.text,
         cpf: cpfPessoaController.text,
         estadoCivilId: estadoCivilSelected.value,
-        parentesco: parentesco.value,
+        parentesco: parentesco?.value,
         provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
         sexo: sexo.value,
         dataNascimento: nascimentoPessoaController.text,
@@ -484,9 +484,15 @@ class PeopleController extends GetxController {
     nascimentoPessoaController.text = dataFormatada.toString();
     cpfPessoaController.text = selectedPeople!.cpf.toString();
     tituloEleitoralPessoaController.text =
-        selectedPeople!.tituloEleitor.toString();
+        selectedPeople!.tituloEleitor != null &&
+                selectedPeople!.tituloEleitor != 'null'
+            ? selectedPeople!.tituloEleitor.toString()
+            : '';
     zonaEleitoralPessoaController.text =
-        selectedPeople!.zonaEleitoral.toString();
+        selectedPeople!.zonaEleitoral != null &&
+                selectedPeople!.zonaEleitoral != 'null'
+            ? selectedPeople!.zonaEleitoral.toString()
+            : '';
     celularPessoaController.text = selectedPeople!.telefone.toString();
     localTrabalhoPessoaController.text =
         selectedPeople!.localTrabalho.toString();
@@ -497,15 +503,19 @@ class PeopleController extends GetxController {
     familiaId.text = selectedPeople!.familiaId.toString();
     igrejaPessoaController.text = selectedPeople!.igrejaId.toString();
     estadoCivilSelected.value = selectedPeople!.estadoCivilId!;
-    parentesco.value = selectedPeople!.parentesco!;
+    parentesco?.value = selectedPeople?.parentesco != null
+        ? selectedPeople!.parentesco!
+        : 'Pai';
     sexo.value = selectedPeople!.sexo!;
     religiaoSelected.value = selectedPeople!.religiaoId!;
     photoUrlPath.value = selectedPeople!.foto ?? '';
     oldImagePath.value = selectedPeople!.foto ?? '';
     redeSocialPessoaController.text = selectedPeople!.redeSocial ?? '';
     isImagePicPathSet.value = false;
-    provedorCheckboxValue.value =
-        selectedPeople!.provedorCasa! == 'sim' ? true : false;
+    provedorCheckboxValue.value = (selectedPeople?.provedorCasa != null &&
+            selectedPeople!.provedorCasa! == 'sim')
+        ? true
+        : false;
 
     // Verifique se o caminho da imagem local está definido
     if (photoUrlPath.value.isNotEmpty) {

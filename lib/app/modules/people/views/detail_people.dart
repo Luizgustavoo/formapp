@@ -169,7 +169,9 @@ class DetailPeopleView extends GetView<PeopleController> {
           ),
         ),
         Positioned(
-          top: Get.height / 7,
+          top: (MediaQuery.of(context).size.height -
+                  CustomAppBar().preferredSize.height) *
+              .16,
           left: 15,
           right: 15,
           child: Card(

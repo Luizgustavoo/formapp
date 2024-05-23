@@ -21,9 +21,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    double factor = UserStorage.getUserType() < 3 ? 0.30 : .22;
+    double factor = UserStorage.getUserType() < 3 ? 0.25 : .23;
     if (showPadding == false) {
-      factor = 0.18;
+      factor = 0.16;
     }
     return Size.fromHeight(Get.height * factor);
   }
@@ -51,10 +51,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: showPadding == false
-                ? const EdgeInsets.only(right: 20)
-                : const EdgeInsets.only(left: 20, right: 20, top: 20),
+          Container(
+            margin:
+                const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
             child: Column(
               children: [
                 Row(
@@ -70,7 +69,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     final peopleController =
                                         Get.put(PeopleController());
                                     peopleController.getPeoples();
-                                    Get.offNamed('/list-people');
+                                    if (UserStorage.getUserType() == 3) {
+                                      Get.offAllNamed('/home');
+                                    } else {
+                                      Get.offNamed('/list-people');
+                                    }
                                   } else if (Get.currentRoute ==
                                       '/member-family') {
                                     Get.back();
@@ -162,7 +165,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           if (showPadding!)
             Padding(
-              padding: const EdgeInsets.only(left: 30, bottom: 50, right: 20),
+              padding: const EdgeInsets.only(
+                  top: 0, left: 30, bottom: 50, right: 20),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -198,7 +202,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           const HandWaveAnimation(),
                         ],
                       ),
-                      const SizedBox(height: 5),
                       Text(
                         '$greeting, seja bem-vindo!',
                         style: CustomTextStyle.appBarSubtitle(context),
