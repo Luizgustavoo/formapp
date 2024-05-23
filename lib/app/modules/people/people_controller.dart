@@ -250,7 +250,7 @@ class PeopleController extends GetxController {
           await repository.getAll("Bearer $token", page: page, search: search);
       update();
       if (routeHome) {
-        Get.offAllNamed('/list-people');
+        Get.toNamed('/list-people');
       }
     } catch (e) {
       ErrorHandler.showError(e);

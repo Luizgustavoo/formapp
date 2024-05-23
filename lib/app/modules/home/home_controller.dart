@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/count_families_and_people.dart';
 import 'package:ucif/app/data/models/genre_model.dart';
@@ -14,6 +15,8 @@ class HomeController extends GetxController
   RxString username = "".obs;
 
   RxList<People> listPeoples = <People>[].obs;
+
+  final TextEditingController searchController = TextEditingController();
 
   RxInt familyUser = 150.obs;
   RxInt allFamily = 0.obs;

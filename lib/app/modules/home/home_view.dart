@@ -42,6 +42,7 @@ class HomeView extends GetView<HomeController> {
                     SizedBox(
                       height: 35,
                       child: TextField(
+                        controller: controller.searchController,
                         decoration: InputDecoration(
                           labelText: "Encontre um cadastro ...",
                           labelStyle: const TextStyle(
@@ -51,12 +52,8 @@ class HomeView extends GetView<HomeController> {
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
-                              var peopleController =
-                                  Get.put(PeopleController());
-                              peopleController.getPeoples(
-                                  search:
-                                      peopleController.searchController.text,
-                                  routeHome: true);
+                              controller.getPeoples(
+                                  search: controller.searchController.text);
                             },
                             icon: const Icon(
                               Icons.search,
