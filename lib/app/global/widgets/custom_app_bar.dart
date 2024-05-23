@@ -21,7 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    double factor = 0.30;
+    double factor = UserStorage.getUserType() < 3 ? 0.30 : .22;
     if (showPadding == false) {
       factor = 0.18;
     }
@@ -162,7 +162,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           if (showPadding!)
             Padding(
-              padding: const EdgeInsets.only(left: 30, bottom: 100, right: 20),
+              padding: const EdgeInsets.only(left: 30, bottom: 50, right: 20),
               child: Row(
                 children: [
                   CircleAvatar(

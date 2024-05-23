@@ -32,7 +32,9 @@ class HomeView extends GetView<HomeController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height / 9.5),
+                  if (UserStorage.getUserType() < 3) ...[
+                    SizedBox(height: MediaQuery.of(context).size.height / 9.5),
+                  ],
                   SizedBox(
                     height: 35,
                     child: TextField(
@@ -48,9 +50,12 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Últimos cadastros',
-                    style: TextStyle(fontFamily: 'Poppinss', fontSize: 13),
+                  Text(
+                    UserStorage.getUserType() != 3
+                        ? 'Últimos cadastros'
+                        : 'Membros da Família',
+                    style:
+                        const TextStyle(fontFamily: 'Poppinss', fontSize: 13),
                   ),
                   const SizedBox(height: 5),
                   Obx(
@@ -119,87 +124,89 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ),
-        Positioned(
-          top: Get.height / 4.7,
-          left: 15,
-          right: 15,
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
-            margin: const EdgeInsets.all(16),
-            elevation: 5,
-            child: SizedBox(
-              height: 180,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    right: 16, left: 16, top: 25, bottom: 7),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    DynamicRichText(
-                      value: controller.counter2,
-                      description: 'Pessoas Cadastradas',
-                      valueStyle: const TextStyle(
-                        fontFamily: 'Poppinss',
-                      ),
-                      descriptionStyle: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                      ),
-                      isLargerText: true,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed('/list-family');
-                          },
-                          child: DynamicRichText(
-                            value: controller.counter,
-                            description: 'Famílias',
-                            valueStyle: const TextStyle(
-                              fontFamily: 'Poppinss',
-                              height: 1,
-                            ),
-                            descriptionStyle: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              height: 1,
-                            ),
-                            isLargerText: false,
-                            color: Colors.blue,
-                          ),
+        if (UserStorage.getUserType() < 3) ...[
+          Positioned(
+            top: Get.height / 4.7,
+            left: 15,
+            right: 15,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7)),
+              margin: const EdgeInsets.all(16),
+              elevation: 5,
+              child: SizedBox(
+                height: 180,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      right: 16, left: 16, top: 25, bottom: 7),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      DynamicRichText(
+                        value: controller.counter2,
+                        description: 'Pessoas Cadastradas',
+                        valueStyle: const TextStyle(
+                          fontFamily: 'Poppinss',
                         ),
-                        const SizedBox(width: 20),
-                        InkWell(
-                          onTap: () {
-                            Get.toNamed('/list-user');
-                          },
-                          child: DynamicRichText(
-                            value: controller.counter3,
-                            description: 'Lideranças',
-                            valueStyle: const TextStyle(
-                              fontFamily: 'Poppinss',
-                              height: 1,
-                            ),
-                            descriptionStyle: const TextStyle(
-                              fontWeight: FontWeight.normal,
-                              height: 1,
-                            ),
-                            isLargerText: false,
-                            color: Colors.green,
-                          ),
+                        descriptionStyle: const TextStyle(
+                          fontWeight: FontWeight.normal,
                         ),
-                      ],
-                    ),
-                  ],
+                        isLargerText: true,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Get.toNamed('/list-family');
+                            },
+                            child: DynamicRichText(
+                              value: controller.counter,
+                              description: 'Famílias',
+                              valueStyle: const TextStyle(
+                                fontFamily: 'Poppinss',
+                                height: 1,
+                              ),
+                              descriptionStyle: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                                height: 1,
+                              ),
+                              isLargerText: false,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          InkWell(
+                            onTap: () {
+                              Get.toNamed('/list-user');
+                            },
+                            child: DynamicRichText(
+                              value: controller.counter3,
+                              description: 'Lideranças',
+                              valueStyle: const TextStyle(
+                                fontFamily: 'Poppinss',
+                                height: 1,
+                              ),
+                              descriptionStyle: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                                height: 1,
+                              ),
+                              isLargerText: false,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+        ],
       ],
     );
   }
