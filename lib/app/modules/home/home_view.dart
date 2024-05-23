@@ -5,6 +5,7 @@ import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_people_card.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -48,7 +49,19 @@ class HomeView extends GetView<HomeController> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
-                          suffixIcon: const Icon(Icons.search),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              var peopleController =
+                                  Get.put(PeopleController());
+                              peopleController.getPeoples(
+                                  search:
+                                      peopleController.searchController.text,
+                                  routeHome: true);
+                            },
+                            icon: const Icon(
+                              Icons.search,
+                            ),
+                          ),
                         ),
                       ),
                     ),

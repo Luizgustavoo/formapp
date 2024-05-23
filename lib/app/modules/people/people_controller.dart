@@ -241,13 +241,17 @@ class PeopleController extends GetxController {
     }
   }
 
-  Future<void> getPeoples({int? page, String? search}) async {
+  Future<void> getPeoples(
+      {int? page, String? search, bool routeHome = false}) async {
     isLoading.value = true;
     try {
       final token = UserStorage.getToken();
       listPeoples.value =
           await repository.getAll("Bearer $token", page: page, search: search);
       update();
+      if (routeHome) {
+        Get.offAllNamed('/list-people');
+      }
     } catch (e) {
       ErrorHandler.showError(e);
     }
