@@ -67,7 +67,7 @@ class UserStorage {
 
   static int getFamilyId() {
     if (existUser() && getUserType() == 3) {
-      return _box.read('auth')['user']['familia_id'];
+      return _box.read('auth')['user']['pessoa']['familia_id'];
     }
     return 0;
   }
