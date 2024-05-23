@@ -1,3 +1,4 @@
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 
 class Auth {
@@ -5,14 +6,24 @@ class Auth {
   String? accessToken;
   String? tokenType;
   String? expiresIn;
+  People? people;
 
-  Auth({this.user, this.accessToken, this.tokenType, this.expiresIn});
+  Auth({
+    this.user,
+    this.accessToken,
+    this.tokenType,
+    this.expiresIn,
+    this.people,
+  });
 
   Auth.fromJson(Map<String, dynamic> json) {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     accessToken = json['access_token'];
     tokenType = json['token_type'];
     expiresIn = json['expires_in'];
+    people = json['user']['pessoa'] != null
+        ? People.fromJson(json['user']['pessoa'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +34,9 @@ class Auth {
     data['access_token'] = accessToken;
     data['token_type'] = tokenType;
     data['expires_in'] = expiresIn;
+    if (people != null) {
+      data['pessoa'] = people!.toJson();
+    }
     return data;
   }
 }

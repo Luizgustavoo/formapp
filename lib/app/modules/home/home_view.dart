@@ -13,7 +13,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final List<String> user = UserStorage.getUserName().split(' ');
-
+    print(UserStorage.getFamilyId());
     return Stack(
       children: [
         Scaffold(
