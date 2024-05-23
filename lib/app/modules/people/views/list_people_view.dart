@@ -196,7 +196,9 @@ class ListPeopleView extends GetView<PeopleController> {
               : const SizedBox(),
         ),
         Positioned(
-          top: MediaQuery.of(context).size.height * .155,
+          top: (MediaQuery.of(context).size.height -
+                  CustomAppBar().preferredSize.height) *
+              .155,
           left: 15,
           right: 15,
           child: Card(
