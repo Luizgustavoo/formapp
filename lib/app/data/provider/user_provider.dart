@@ -15,7 +15,7 @@ class UserApiClient {
   final box = GetStorage('credenciado');
 
   getAll(String token, {int? page, String? search}) async {
-    final id = UserStorage.getUserId();
+    final id = UserStorage.getPeopleId();
     try {
       String url = search != null
           ? '$baseUrl/v1/usuario/list-paginate/$id/$search/?page=$page&limit'

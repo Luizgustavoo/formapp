@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
@@ -66,9 +67,9 @@ class FirebaseApi {
         data['user'] != null &&
         UserStorage.existUser()) {
       Map<String, dynamic> jsonMap = jsonDecode(data['user']);
-      User user = User.fromJson(jsonMap);
+      People people = People.fromJson(jsonMap);
 
-      Get.offAllNamed('/chat', arguments: user);
+      Get.offAllNamed('/chat', arguments: people);
     } else if (data.containsKey('click_action') &&
         data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
         UserStorage.existUser()) {
