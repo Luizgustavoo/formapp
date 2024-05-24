@@ -94,6 +94,7 @@ class UserApiClient {
   updateUser(
       String token, User user, File? imageFile, String? oldImagePath) async {
     try {
+      oldImagePath = UserStorage.getUserPhoto();
       var userUrl = Uri.parse('$baseUrl/v1/usuario/update/${user.id}');
 
       var requestBody = {
@@ -117,7 +118,8 @@ class UserApiClient {
         var request = http.MultipartRequest('POST', userUrl);
         requestBody.removeWhere((key, value) => value == null);
         request.fields.addAll(requestBody.cast<String, String>());
-
+        print(imageFile.path);
+        print(oldImagePath);
         request.files.add(await http.MultipartFile.fromPath(
           'foto',
           imageFile.path,

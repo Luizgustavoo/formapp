@@ -5,6 +5,7 @@ import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/services.dart';
 import 'package:ucif/app/utils/user_storage.dart';
@@ -49,9 +50,23 @@ class ChatView extends GetView<ChatController> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        final userController = Get.find<UserController>();
-        userController.getUsers();
-        Get.offAllNamed(Services.getRoute(), arguments: people);
+        if (Get.previousRoute == '/detail-people') {
+          final homeController = Get.put(HomeController());
+          homeController.counter;
+          homeController.counter2;
+          homeController.counter3;
+          Get.offAllNamed('/detail-people', arguments: people);
+        } else if (Get.previousRoute == '/list-user') {
+          final userController = Get.find<UserController>();
+          userController.getUsers();
+          Get.offNamed('/list-user');
+        } else {
+          Get.back();
+        }
+
+        // final userController = Get.find<UserController>();
+        // userController.getUsers();
+        Get.toNamed(Services.getRoute(), arguments: people);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -63,9 +78,22 @@ class ChatView extends GetView<ChatController> {
               children: [
                 IconButton(
                     onPressed: () {
-                      final userController = Get.put(UserController());
-                      userController.getUsers();
-                      Get.offAllNamed(Services.getRoute(), arguments: people);
+                      if (Get.previousRoute == '/detail-people') {
+                        final homeController = Get.put(HomeController());
+                        homeController.counter;
+                        homeController.counter2;
+                        homeController.counter3;
+                        Get.offAllNamed('/detail-people', arguments: people);
+                      } else if (Get.previousRoute == '/list-user') {
+                        final userController = Get.find<UserController>();
+                        userController.getUsers();
+                        Get.offNamed('/list-user');
+                      } else {
+                        Get.back();
+                      }
+                      // final userController = Get.put(UserController());
+                      // userController.getUsers();
+                      // Get.toNamed(Services.getRoute(), arguments: people);
                     },
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,

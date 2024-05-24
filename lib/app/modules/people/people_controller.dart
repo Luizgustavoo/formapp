@@ -296,7 +296,7 @@ class PeopleController extends GetxController {
     var contact = phoneNumber;
     var androidUrl = "whatsapp://send?phone=$contact&text=Hi, I need some help";
     var iosUrl =
-        "https://wa.me/$contact?text=${Uri.parse('Hi, I need some help')}";
+        "https://wa.me/$contact?text=${Uri.parse('Olá, vim através do app da UCIF!')}";
 
     try {
       if (Platform.isIOS) {
@@ -307,6 +307,7 @@ class PeopleController extends GetxController {
     } on Exception {
       Get.snackbar('Falha', 'Whatsapp não instalado!',
           backgroundColor: Colors.red.shade500,
+          colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
     }
   }
