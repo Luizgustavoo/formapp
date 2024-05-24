@@ -21,7 +21,7 @@ class FamilyApiClient {
 
   getAll(String token, {int? page, String? search}) async {
     final id = box.read('auth')['user']['id'];
-    final familiaId = box.read('auth')['user']['familia_id'];
+    final familiaId = UserStorage.getFamilyId();
     try {
       Uri familyUrl;
 
@@ -88,7 +88,6 @@ class FamilyApiClient {
           "Authorization": token,
         },
       );
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&

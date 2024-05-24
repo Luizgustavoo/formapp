@@ -5,7 +5,6 @@ import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_people_card.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
-import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -14,7 +13,6 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final List<String> user = UserStorage.getUserName().split(' ');
-    print(UserStorage.getFamilyId());
     return Stack(
       children: [
         Scaffold(
@@ -103,12 +101,38 @@ class HomeView extends GetView<HomeController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: UserStorage.getUserType() == 3 ? 50 : 80),
                   child: SizedBox(
                     height: 35,
                     width: double.infinity,
                     child: UserStorage.getUserType() == 3
-                        ? const SizedBox()
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Get.toNamed('/list-family');
+                                  },
+                                  child: const Text(
+                                    'VER FAMÍLIA',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Poppinss'),
+                                  )),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Get.toNamed('/list-user');
+                                  },
+                                  child: const Text(
+                                    'VER LIDERANÇA',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Poppinss'),
+                                  )),
+                            ],
+                          )
                         : ElevatedButton(
                             onPressed: () {
                               Get.toNamed('/list-people');

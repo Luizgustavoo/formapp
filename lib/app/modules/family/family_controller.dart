@@ -40,6 +40,7 @@ class FamilyController extends GetxController
 
   RxList<Family> listFamilies = <Family>[].obs;
   RxList<Family> listFamilyPeoples = <Family>[].obs;
+  RxList<People> listPeoples = <People>[].obs;
   RxList<Family> listFamiliesDropDown = <Family>[].obs;
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
 
@@ -228,6 +229,9 @@ class FamilyController extends GetxController
       var response = await repository.getAllFilter("Bearer $token", lider);
       listFamilyPeoples.value = (response['familias']['data'] as List)
           .map((familiaJson) => Family.fromJson(familiaJson))
+          .toList();
+      listPeoples.value = (response['pessoas']['data'] as List)
+          .map((pessoaJson) => People.fromJson(pessoaJson))
           .toList();
 
       totalFamily.value = response['total_familias'].toString();

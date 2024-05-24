@@ -3,18 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import 'package:get/get.dart';
-import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
-import 'package:ucif/app/global/widgets/create_family_modal.dart';
-import 'package:ucif/app/global/widgets/custom_family_card_BCKP.dart';
-import 'package:ucif/app/global/widgets/message_modal.dart';
-import 'package:ucif/app/global/widgets/message_service_modal.dart';
+import 'package:ucif/app/global/widgets/custom_people_card.dart';
+
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
-import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 
-import 'package:ucif/app/modules/people/views/list_people_view.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 
 import '../../../global/shimmer/shimmer_custom_family_card.dart';
@@ -41,7 +37,7 @@ class FamilyFilterView extends GetView<FamilyController> {
           title: Column(
             children: [
               const Text(
-                'Famílias',
+                'Pessoas',
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -92,13 +88,6 @@ class FamilyFilterView extends GetView<FamilyController> {
                             womanCount: controller.totalFemale.toString(),
                             menCount: controller.totalMale.toString(),
                             noSexCount: controller.totalNoSex.toString(),
-                            onTap: () {
-                              peopleController.selectedUser =
-                                  controller.selectedUser!;
-                              peopleController
-                                  .getPeoplesFilter(controller.selectedUser!);
-                              Get.toNamed('/filter-people');
-                            },
                           ),
                         ),
                       ],
@@ -116,8 +105,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                 },
                 child: Obx(() {
                   final status = Get.find<InternetStatusProvider>().status;
-                  final List<Family> familiesToShow =
-                      controller.listFamilyPeoples;
+                  final List<People> familiesToShow = controller.listPeoples;
 
                   if (controller.isLoadingFamilies.value) {
                     return ListView.builder(
@@ -134,24 +122,14 @@ class FamilyFilterView extends GetView<FamilyController> {
                     return AnimationLimiter(
                       child: ListView.builder(
                         shrinkWrap: true,
+                        padding: const EdgeInsets.all(10),
                         scrollDirection: Axis.vertical,
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemCount: familiesToShow.length,
                         itemBuilder: (context, index) {
-                          final Family family = familiesToShow[index];
-                          String provedorCasa = "";
+                          final People people = familiesToShow[index];
 
-                          if (family.pessoas != null &&
-                              family.pessoas!.isNotEmpty) {
-                            for (var p in family.pessoas!) {
-                              if (p.provedorCasa == 'sim') {
-                                provedorCasa += p.nome!;
-                              }
-                            }
-                          }
-
-                          if (status == InternetStatus.disconnected &&
-                              !family.familyLocal!) {
+                          if (status == InternetStatus.disconnected) {
                             return ListView.builder(
                               controller: controller.scrollFilterFamily,
                               shrinkWrap: true,
@@ -170,95 +148,8 @@ class FamilyFilterView extends GetView<FamilyController> {
                                 verticalOffset: 50.0,
                                 curve: Curves.easeInOut,
                                 child: FadeInAnimation(
-                                  child: CustomFamilyCardBckp(
-                                    showMenu: false,
-                                    index: index,
-                                    local: family.familyLocal!,
-                                    family: family,
-                                    showAddMember: true,
-                                    stripe: index % 2 == 0 ? true : false,
-                                    familyName: family.nome.toString(),
-                                    provedor: "Provedor: $provedorCasa",
-                                    editFamily: () {
-                                      controller.selectedFamily = family;
-
-                                      controller.fillInFields();
-
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        isDismissible: false,
-                                        context: context,
-                                        builder: (context) => Padding(
-                                          padding:
-                                              MediaQuery.of(context).viewInsets,
-                                          child: CreateFamilyModal(
-                                            tipoOperacao: 'update',
-                                            titulo: 'Alteração da Família',
-                                            family: family,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    messageMember: () {
-                                      messageController.clearModalMessage();
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        isDismissible: false,
-                                        context: context,
-                                        builder: (context) => Padding(
-                                          padding:
-                                              MediaQuery.of(context).viewInsets,
-                                          child: MessageModal(
-                                            family: family,
-                                            titulo: 'Mensagem para a Família',
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    supportFamily: () {
-                                      peopleController
-                                          .clearModalMessageService();
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        isDismissible: false,
-                                        context: context,
-                                        builder: (context) => Padding(
-                                          padding:
-                                              MediaQuery.of(context).viewInsets,
-                                          child: MessageServiceModal(
-                                            family: family,
-                                            showWidget: true,
-                                            tipoOperacao: 'insert',
-                                            titulo:
-                                                'Atendimento ${family.nome}',
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    addMember: () {
-                                      peopleController
-                                          .clearAllPeopleTextFields();
-                                      showModalBottomSheet(
-                                        isScrollControlled: true,
-                                        isDismissible: false,
-                                        context: context,
-                                        builder: (context) => Padding(
-                                          padding:
-                                              MediaQuery.of(context).viewInsets,
-                                          child: AddPeopleFamilyView(
-                                            peopleLocal: family.familyLocal!,
-                                            tipoOperacao: 0,
-                                            family: family,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    deleteFamily: () {
-                                      Get.to(const ListPeopleView());
-                                    },
-                                    peopleNames: family.pessoas
-                                        ?.map((person) => person.nome!)
-                                        .toList(),
+                                  child: CustomPeopleCard(
+                                    people: people,
                                   ),
                                 ),
                               ),
@@ -286,18 +177,17 @@ class CustomCard extends StatelessWidget {
   final String? menCount;
   final String? noSexCount;
   final bool showGenderInfo;
-  final Function()? onTap;
 
-  const CustomCard(
-      {super.key,
-      required this.title,
-      required this.description,
-      required this.imageUrl,
-      this.menCount,
-      this.womanCount,
-      this.noSexCount,
-      this.showGenderInfo = true,
-      this.onTap});
+  const CustomCard({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    this.menCount,
+    this.womanCount,
+    this.noSexCount,
+    this.showGenderInfo = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -312,47 +202,44 @@ class CustomCard extends StatelessWidget {
               topRight: Radius.circular(10),
             ),
           ),
-          child: InkWell(
-            onTap: onTap,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                        ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ClipOval(
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Image.asset(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      width: MediaQuery.of(context).size.height * 0.05,
-                      height: MediaQuery.of(context).size.height * 0.05,
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ClipOval(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.height * 0.05,
+                    height: MediaQuery.of(context).size.height * 0.05,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         if (showGenderInfo) // Exibir informações de gênero apenas se showGenderInfo for true

@@ -30,7 +30,7 @@ class ListUserView extends GetView<UserController> {
           body: RefreshIndicator(
             onRefresh: () async {
               controller.searchController.clear();
-              await controller.getUsers();
+              Get.offAllNamed('/list-user');
             },
             child: Container(
               decoration: const BoxDecoration(

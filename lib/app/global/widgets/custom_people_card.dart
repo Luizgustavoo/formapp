@@ -65,9 +65,11 @@ class CustomPeopleCard extends StatelessWidget {
           elevation: 1,
           margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
           child: ListTile(
-            onTap: () {
-              Get.toNamed('/detail-people', arguments: people);
-            },
+            onTap: Get.currentRoute == '/filter-family'
+                ? null
+                : () {
+                    Get.toNamed('/detail-people', arguments: people);
+                  },
             dense: true,
             titleAlignment: ListTileTitleAlignment.center,
             leading: CircleAvatar(
@@ -80,27 +82,31 @@ class CustomPeopleCard extends StatelessWidget {
             title: Text(people.nome!.toUpperCase(),
                 style: const TextStyle(fontFamily: 'Poppinss', fontSize: 12)),
             trailing: IconButton(
-                onPressed: () {
-                  final peopleController = Get.put(PeopleController());
-                  peopleController.selectedPeople = people;
-                  peopleController.fillInFieldsForEditPerson();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    isDismissible: false,
-                    context: context,
-                    builder: (context) => Padding(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: const AddPeopleFamilyView(
-                        peopleLocal: false,
-                        tipoOperacao: 1,
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.edit_note_sharp,
-                  color: Colors.black54,
-                )),
+                onPressed: Get.currentRoute == '/filter-family'
+                    ? null
+                    : () {
+                        final peopleController = Get.put(PeopleController());
+                        peopleController.selectedPeople = people;
+                        peopleController.fillInFieldsForEditPerson();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: const AddPeopleFamilyView(
+                              peopleLocal: false,
+                              tipoOperacao: 1,
+                            ),
+                          ),
+                        );
+                      },
+                icon: Get.currentRoute == '/filter-family'
+                    ? const SizedBox()
+                    : const Icon(
+                        Icons.edit_note_sharp,
+                        color: Colors.black54,
+                      )),
           ),
         ),
       ),

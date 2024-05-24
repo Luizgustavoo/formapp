@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/global/shimmer/shimmer_custom_people_card.dart';
-import 'package:ucif/app/global/widgets/custom_people_card_BCKP.dart';
+import 'package:ucif/app/global/widgets/custom_people_card.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 
 class PeopleFilterView extends GetView<PeopleController> {
@@ -92,6 +92,7 @@ class PeopleFilterView extends GetView<PeopleController> {
                         return AnimationLimiter(
                           child: ListView.builder(
                             shrinkWrap: true,
+                            padding: const EdgeInsets.all(16),
                             scrollDirection: Axis.vertical,
                             controller: controller.scrollFilterPeople,
                             physics: const AlwaysScrollableScrollPhysics(),
@@ -105,10 +106,8 @@ class PeopleFilterView extends GetView<PeopleController> {
                                 child: SlideAnimation(
                                   curve: Curves.easeInOut,
                                   child: FadeInAnimation(
-                                    child: CustomPeopleCardBCKP(
-                                      showMenu: false,
+                                    child: CustomPeopleCard(
                                       people: people,
-                                      stripe: index % 2 == 0 ? true : false,
                                     ),
                                   ),
                                 ),

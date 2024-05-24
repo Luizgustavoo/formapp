@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
+// ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,8 +12,8 @@ import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 import 'package:badges/badges.dart' as badges;
 
-class CustomUserCardBCKP extends StatelessWidget {
-  CustomUserCardBCKP({
+class CustomUserCardbckp extends StatelessWidget {
+  CustomUserCardbckp({
     super.key,
     required this.user,
     required this.familiaId,
@@ -24,8 +24,8 @@ class CustomUserCardBCKP extends StatelessWidget {
   });
 
   final User user;
-  var familiaId;
-  var idUserLogged;
+  final familiaId;
+  final idUserLogged;
   final UserController controller;
 
   final MessageController messageController;

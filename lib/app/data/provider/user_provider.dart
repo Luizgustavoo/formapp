@@ -106,9 +106,6 @@ class UserApiClient {
       if (user.username!.isNotEmpty) {
         requestBody['username'] = user.username;
       }
-      if (user.familiaId != null && user.familiaId > 0) {
-        requestBody['familia_id'] = user.familiaId.toString();
-      }
 
       if (user.senha!.isNotEmpty) {
         requestBody['senha'] = user.senha;
@@ -134,7 +131,6 @@ class UserApiClient {
 
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
-
         if (response.statusCode == 200) {
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
@@ -307,7 +303,6 @@ class UserApiClient {
         },
         body: requestBody,
       );
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||

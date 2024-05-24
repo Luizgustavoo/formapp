@@ -26,27 +26,31 @@ class CustomFamilyCard extends StatelessWidget {
                 fontSize: 14,
                 overflow: TextOverflow.ellipsis)),
         trailing: IconButton(
-            onPressed: () {
-              final controller = Get.put(FamilyController());
-              controller.selectedFamily = family;
-              controller.fillInFields();
-              showModalBottomSheet(
-                isScrollControlled: true,
-                isDismissible: false,
-                context: context,
-                builder: (context) => Padding(
-                  padding: MediaQuery.of(context).viewInsets,
-                  child: CreateFamilyModal(
-                    tipoOperacao: 'update',
-                    titulo: 'Editar Família',
-                    family: family,
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.edit_note_sharp,
-            )),
+            onPressed: Get.currentRoute == '/filter-family'
+                ? null
+                : () {
+                    final controller = Get.put(FamilyController());
+                    controller.selectedFamily = family;
+                    controller.fillInFields();
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      isDismissible: false,
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        child: CreateFamilyModal(
+                          tipoOperacao: 'update',
+                          titulo: 'Editar Família',
+                          family: family,
+                        ),
+                      ),
+                    );
+                  },
+            icon: Get.currentRoute == '/filter-family'
+                ? const SizedBox()
+                : const Icon(
+                    Icons.edit_note_sharp,
+                  )),
       ),
     );
   }

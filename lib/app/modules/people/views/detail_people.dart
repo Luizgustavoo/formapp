@@ -9,6 +9,7 @@ import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 import 'package:ucif/app/utils/services.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class DetailPeopleView extends GetView<PeopleController> {
   const DetailPeopleView({super.key});
@@ -37,41 +38,43 @@ class DetailPeopleView extends GetView<PeopleController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      TopCard(
-                        onTap: () {
-                          if (people.telefone != null) {
-                            controller.whatsapp(people.telefone!);
-                          } else {
-                            Get.snackbar(
-                                snackPosition: SnackPosition.BOTTOM,
-                                'Falha',
-                                'Telefone não informado!',
-                                colorText: Colors.white,
-                                backgroundColor: Colors.red);
-                          }
-                        },
-                        icon: FontAwesomeIcons.whatsapp,
-                        description: 'Conversar\n no whatsapp',
-                      ),
-                      TopCard(
-                        onTap: () {
-                          final chatController = Get.put(ChatController());
-                          chatController.destinatarioId.value = people.id!;
-                          chatController.chatChange();
-                          Services.setRoute('/detail-people');
-                          Get.toNamed('/chat', arguments: people);
-                        },
-                        icon: Icons.wechat_sharp,
-                        description: 'Enviar msg\npelo UCIF',
-                      ),
-                      TopCard(
-                        onTap: () {
-                          controller.getFamilyMembers(people.family?.id);
-                          Get.toNamed('/member-family');
-                        },
-                        icon: Icons.groups_2,
-                        description: 'Ver membros\nda família',
-                      ),
+                      if (UserStorage.getUserType() != 3) ...[
+                        TopCard(
+                          onTap: () {
+                            if (people.telefone != null) {
+                              controller.whatsapp(people.telefone!);
+                            } else {
+                              Get.snackbar(
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  'Falha',
+                                  'Telefone não informado!',
+                                  colorText: Colors.white,
+                                  backgroundColor: Colors.red);
+                            }
+                          },
+                          icon: FontAwesomeIcons.whatsapp,
+                          description: 'Conversar\n no whatsapp',
+                        ),
+                        TopCard(
+                          onTap: () {
+                            final chatController = Get.put(ChatController());
+                            chatController.destinatarioId.value = people.id!;
+                            chatController.chatChange();
+                            Services.setRoute('/detail-people');
+                            Get.toNamed('/chat', arguments: people);
+                          },
+                          icon: Icons.wechat_sharp,
+                          description: 'Enviar msg\npelo UCIF',
+                        ),
+                        TopCard(
+                          onTap: () {
+                            controller.getFamilyMembers(people.family?.id);
+                            Get.toNamed('/member-family');
+                          },
+                          icon: Icons.groups_2,
+                          description: 'Ver membros\nda família',
+                        ),
+                      ]
                     ],
                   ),
                   const SizedBox(height: 10),

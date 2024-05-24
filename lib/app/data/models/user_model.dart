@@ -19,6 +19,7 @@ class User {
   dynamic foto;
   dynamic mensagens;
   dynamic quantidadeFamilias;
+  dynamic quantidadePessoas;
   dynamic pessoaId;
   List<People>? pessoas;
 
@@ -38,6 +39,7 @@ class User {
       this.family,
       this.foto,
       this.people,
+      this.quantidadePessoas,
       this.mensagens,
       this.quantidadeFamilias,
       this.pessoaId});
@@ -60,6 +62,7 @@ class User {
     foto = json['foto'];
     mensagens = json['mensagens'];
     quantidadeFamilias = json['quantidade_familias'];
+    quantidadePessoas = json['quantidade_pessoas'];
     pessoaId = json['pessoa_id'];
     if (json['pessoas'] != null) {
       pessoas = <People>[];
@@ -88,6 +91,7 @@ class User {
     data['foto'] = foto;
     data['mensagens'] = mensagens;
     data['quantidade_familias'] = quantidadeFamilias;
+    data['quantidade_pessoas'] = quantidadePessoas;
     data['pessoa_id'] = pessoaId;
     if (pessoas != null) {
       data['pessoas'] = pessoas!.map((v) => v.toJson()).toList();

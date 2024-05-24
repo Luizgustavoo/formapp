@@ -46,7 +46,7 @@ class CustomUserCard extends StatelessWidget {
       margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
       color: user.tipousuarioId == 2 ? const Color(0xFF1C6399) : null,
       child: InkWell(
-        onTap: UserStorage.getUserType() == 1
+        onTap: UserStorage.getUserType() == 1 && user.quantidadePessoas > 0
             ? () {
                 familyController.selectedUser = user;
                 familyController.getFamiliesFilter(user);
@@ -143,7 +143,7 @@ class CustomUserCard extends StatelessWidget {
                 ),
           title: Text(
             user.nome!,
-            style: user.quantidadeFamilias > 0
+            style: user.quantidadePessoas > 0
                 ? CustomTextStyle.subtitleFamily(context)
                 : user.tipousuarioId == 2
                     ? CustomTextStyle.subtitleWhite(context)
