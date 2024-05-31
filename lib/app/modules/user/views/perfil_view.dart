@@ -23,11 +23,7 @@ class PerfilView extends GetView<UserController> {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(15),
-            topEnd: Radius.circular(15),
-          ),
+          color: Color(0xFFf1f5ff),
         ),
         child: Obx(
           () => Stack(
