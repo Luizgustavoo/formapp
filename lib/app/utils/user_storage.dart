@@ -1,7 +1,9 @@
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class UserStorage {
   static final _box = GetStorage('credenciado');
+  static RxString changeName = ''.obs;
 
   static bool existUser() {
     if (_box.read('auth') != null) {

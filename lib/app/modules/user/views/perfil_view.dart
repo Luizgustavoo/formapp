@@ -46,47 +46,50 @@ class PerfilView extends GetView<UserController> {
                           child: Column(
                             children: [
                               const SizedBox(height: 20),
-                              CircleAvatar(
-                                radius: 80,
-                                backgroundImage: controller.isImagePicPathSet ==
-                                        true
-                                    ? FileImage(
-                                        File(controller.photoUrlPath.value))
-                                    : (controller.photoUrlPath.value.isNotEmpty
-                                        ? NetworkImage(
-                                                '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
-                                            as ImageProvider<Object>?
-                                        : const AssetImage(
-                                            'assets/images/default_avatar.jpg')),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: Material(
-                                        color: const Color(0xFF1C6399),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(80),
-                                        ),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.camera_alt,
-                                            color: Colors.white,
+                              Obx(
+                                () => CircleAvatar(
+                                  radius: 80,
+                                  backgroundImage: controller
+                                              .isImagePicPathSet ==
+                                          true
+                                      ? FileImage(
+                                          File(controller.photoUrlPath.value))
+                                      : (controller.photoUrlPath.value.isNotEmpty
+                                          ? NetworkImage(
+                                                  '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
+                                              as ImageProvider<Object>?
+                                          : const AssetImage(
+                                              'assets/images/default_avatar.jpg')),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child: Material(
+                                          color: const Color(0xFF1C6399),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(80),
                                           ),
-                                          onPressed: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                              builder: (context) =>
-                                                  CustomCameraModal(
-                                                tyContext: 'perfil',
-                                              ),
-                                            );
-                                          },
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) =>
+                                                    CustomCameraModal(
+                                                  tyContext: 'perfil',
+                                                ),
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -143,7 +146,7 @@ class PerfilView extends GetView<UserController> {
                                                   UserStorage.getUserType());
 
                                           if (retorno['return'] == 0) {
-                                            controller.logout();
+                                            Get.offAllNamed('/home');
                                           }
 
                                           Get.snackbar(

@@ -4,8 +4,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/family_list_modal.dart';
-import 'package:ucif/app/modules/people/people_controller.dart';
-import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CustomPeopleCard extends StatelessWidget {
@@ -85,26 +83,13 @@ class CustomPeopleCard extends StatelessWidget {
                 onPressed: Get.currentRoute == '/filter-family'
                     ? null
                     : () {
-                        final peopleController = Get.put(PeopleController());
-                        peopleController.selectedPeople = people;
-                        peopleController.fillInFieldsForEditPerson();
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          isDismissible: false,
-                          context: context,
-                          builder: (context) => Padding(
-                            padding: MediaQuery.of(context).viewInsets,
-                            child: const AddPeopleFamilyView(
-                              peopleLocal: false,
-                              tipoOperacao: 1,
-                            ),
-                          ),
-                        );
+                        Get.toNamed('/detail-people', arguments: people);
                       },
                 icon: Get.currentRoute == '/filter-family'
                     ? const SizedBox()
                     : const Icon(
-                        Icons.edit_note_sharp,
+                        Icons.remove_red_eye_rounded,
+                        size: 20,
                         color: Colors.black54,
                       )),
           ),

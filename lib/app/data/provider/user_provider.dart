@@ -118,8 +118,6 @@ class UserApiClient {
         var request = http.MultipartRequest('POST', userUrl);
         requestBody.removeWhere((key, value) => value == null);
         request.fields.addAll(requestBody.cast<String, String>());
-        print(imageFile.path);
-        print(oldImagePath);
         request.files.add(await http.MultipartFile.fromPath(
           'foto',
           imageFile.path,
@@ -133,7 +131,23 @@ class UserApiClient {
 
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
+        print(json.decode(response.body)['objeto']['foto']);
         if (response.statusCode == 200) {
+          Map<String, dynamic> user = box.read('auth')['user'];
+          user['foto'] = json.decode(response.body)['objeto']['foto'];
+          // user['nome'] = json.decode(response.body)['objeto']['nome'];
+          // UserStorage.changeName.value = user['nome'];
+          Map<String, dynamic> auth = box.read('auth');
+          print(auth);
+          auth['user'] = user;
+          print(auth);
+          box.write('auth', auth);
+
+          // auth.user = user as User?;
+          // print(user);
+          // print('------------------------------------------------');
+          // user['foto'] = photoUrlPath.value;
+          // print(user);
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
             json.decode(response.body)['message'] == "ja_existe") {
@@ -160,6 +174,15 @@ class UserApiClient {
         );
 
         if (response.statusCode == 200) {
+          Map<String, dynamic> user = box.read('auth')['user'];
+          // user['foto'] = json.decode(response.body)['objeto']['foto'];
+          user['nome'] = json.decode(response.body)['objeto']['nome'];
+          // UserStorage.changeName.value = user['nome'];
+          Map<String, dynamic> auth = box.read('auth');
+          print(auth);
+          auth['user'] = user;
+          print(auth);
+          box.write('auth', auth);
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
             json.decode(response.body)['message'] == "ja_existe") {

@@ -34,7 +34,7 @@ class DetailPeopleView extends GetView<PeopleController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height / 18),
+                  SizedBox(height: MediaQuery.of(context).size.height / 17),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -176,7 +176,7 @@ class DetailPeopleView extends GetView<PeopleController> {
         Positioned(
           top: (MediaQuery.of(context).size.height -
                   CustomAppBar().preferredSize.height) *
-              .16,
+              .180,
           left: 15,
           right: 15,
           child: Card(

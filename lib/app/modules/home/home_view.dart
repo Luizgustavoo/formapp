@@ -148,15 +148,15 @@ class HomeView extends GetView<HomeController> {
                 Text(
                   'Copyright © ${DateTime.now().year} UCIF - Todos os direitos reservados',
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 8,
                     fontFamily: 'Poppins',
                     color: Colors.black54,
                   ),
                 ),
                 Image.asset(
                   'assets/images/logo-wip.png',
-                  width: 30,
-                  height: 30,
+                  width: 44,
+                  height: 44,
                 ),
               ],
             ),

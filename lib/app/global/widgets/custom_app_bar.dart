@@ -16,6 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({Key? key, this.userName, this.showPadding, this.title})
       : super(key: key);
   final String? userName;
+
   final bool? showPadding;
   final String? title;
 
@@ -34,6 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    RxString changeName = UserStorage.getUserName().obs;
     final currentTime = DateTime.now();
     greeting.value = getGreeting(currentTime);
     messageController.getMessages();
@@ -169,16 +171,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   top: 0, left: 30, bottom: 50, right: 20),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: controller.isImagePicPathSet == true
-                        ? FileImage(File(UserStorage.getUserPhoto()))
-                        : (UserStorage.getUserPhoto().isNotEmpty
-                            ? NetworkImage(
-                                    '$urlImagem/storage/app/public/${UserStorage.getUserPhoto()}')
-                                as ImageProvider<Object>?
-                            : const AssetImage(
-                                'assets/images/default_avatar.jpg')),
-                    radius: 25,
+                  Obx(
+                    () => CircleAvatar(
+                      backgroundImage: controller.isImagePicPathSet == true
+                          ? FileImage(File(UserStorage.getUserPhoto()))
+                          : (UserStorage.getUserPhoto().isNotEmpty
+                              ? NetworkImage(
+                                      '$urlImagem/storage/app/public/${UserStorage.getUserPhoto()}')
+                                  as ImageProvider<Object>?
+                              : const AssetImage(
+                                  'assets/images/default_avatar.jpg')),
+                      radius: 25,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -191,12 +195,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             fit: FlexFit.loose,
                             child: SizedBox(
                               width: Get.width * 0.60,
-                              child: Text(
-                                'Olá, $userName ',
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: false,
-                                style: CustomTextStyle.appBarTitle(context),
-                              ),
+                              child: Obx(() => Text(
+                                    'Olá, ${changeName.value} ',
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                    style: CustomTextStyle.appBarTitle(context),
+                                  )),
                             ),
                           ),
                           const HandWaveAnimation(),

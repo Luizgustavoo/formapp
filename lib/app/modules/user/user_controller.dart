@@ -300,11 +300,6 @@ class UserController extends GetxController {
       }
 
       getUsers();
-    } else {
-      retorno = {
-        "return": 1,
-        "message": "Preencha todos os campos da família!"
-      };
     }
     return retorno;
   }
