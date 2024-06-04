@@ -161,10 +161,10 @@ class FamilyController extends GetxController
       final moreFamilies = await repository
           .getAllFilter("Bearer $token", selectedUser!, page: nextPage);
       if (moreFamilies.isNotEmpty) {
-        for (final family in moreFamilies['familias']['data'] as List) {
-          if (!listFamilyPeoples
-              .any((existingFamily) => existingFamily.id == family['id'])) {
-            listFamilyPeoples.add(Family.fromJson(family));
+        for (final people in moreFamilies['pessoas']['data'] as List) {
+          if (!listPeoples
+              .any((existingPeople) => existingPeople.id == people['id'])) {
+            listPeoples.add(People.fromJson(people));
           }
         }
         currentPage = nextPage;

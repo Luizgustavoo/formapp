@@ -110,10 +110,9 @@ class FamilyFilterView extends GetView<FamilyController> {
                   if (controller.isLoadingFamilies.value) {
                     return ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      controller: controller.scrollFilterFamily,
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: 5,
+                      itemCount: 15,
                       itemBuilder: (context, index) {
                         return const ShimmerCustomFamilyCard();
                       },
@@ -135,7 +134,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
                               physics: const AlwaysScrollableScrollPhysics(),
-                              itemCount: 5,
+                              itemCount: 15,
                               itemBuilder: (context, index) {
                                 return const ShimmerCustomFamilyCard();
                               },
