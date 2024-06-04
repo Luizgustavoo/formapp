@@ -23,7 +23,9 @@ class CustomPeopleCard extends StatelessWidget {
       padding: const EdgeInsets.only(top: 2, bottom: 2),
       child: Dismissible(
         key: UniqueKey(),
-        direction: familiaId != null || Get.currentRoute == '/home'
+        direction: familiaId != null ||
+                Get.currentRoute == '/home' ||
+                Get.currentRoute == '/filter-family'
             ? DismissDirection.none
             : DismissDirection.startToEnd,
         confirmDismiss: (DismissDirection direction) async {
