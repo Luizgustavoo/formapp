@@ -11,8 +11,17 @@ class CustomFamilyMemberCard extends StatelessWidget {
       elevation: 1,
       margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
       child: ListTile(
-        title: Text('${people.nome}',
-            style: const TextStyle(fontFamily: 'Poppinss')),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${people.nome}',
+                style: const TextStyle(fontFamily: 'Poppinss')),
+            if (people.provedorCasa == 'sim') ...[
+              Text('Provedor: ${people.provedorCasa!.toUpperCase()}',
+                  style: const TextStyle(fontFamily: 'Poppinss')),
+            ]
+          ],
+        ),
       ),
     );
   }

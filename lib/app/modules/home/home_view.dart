@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/global/shimmer/shimmer_custom_people_card.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_people_card.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
@@ -71,20 +72,32 @@ class HomeView extends GetView<HomeController> {
                   ),
                   const SizedBox(height: 5),
                   Obx(
-                    () => Expanded(
-                      child: ListView.builder(
-                        itemCount: controller.listPeoples.length,
-                        shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          People people = controller.listPeoples[index];
-
-                          return CustomPeopleCard(
-                            people: people,
-                          );
-                        },
-                      ),
-                    ),
+                    () {
+                      if (controller.isLoading.value) {
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: 10,
+                            itemBuilder: (context, index) {
+                              return const ShimmerCustomPeopleCard();
+                            },
+                          ),
+                        );
+                      } else {
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: controller.listPeoples.length,
+                            shrinkWrap: true,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              People people = controller.listPeoples[index];
+                              return CustomPeopleCard(
+                                people: people,
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),

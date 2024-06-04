@@ -3,6 +3,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/global/shimmer/shimmer_custom_user_card.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
 import 'package:ucif/app/global/widgets/custom_user_card.dart';
@@ -83,113 +85,157 @@ class ListUserView extends GetView<UserController> {
                       color: Color(0xFF1C6399),
                     ),
                     const SizedBox(height: 5),
-                    Obx(
-                      () => Expanded(
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (ScrollNotification scrollInfo) {
-                            if (!controller.isLoading.value &&
-                                scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent * 0.9) {
-                              controller.loadMoreUsers();
-                            }
-                            return false;
-                          },
-                          child: ListView.builder(
-                            itemCount: controller.listUsers.length,
-                            shrinkWrap: true,
-                            controller: controller.scrollController,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              User user = controller.listUsers[index];
-                              String typeUser = user.tipousuarioId == 1
-                                  ? "Master"
-                                  : (user.tipousuarioId == 2
-                                      ? "Lider"
-                                      : "Familiar");
+                    Expanded(
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (!controller.isLoading.value &&
+                              scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent * 0.9) {
+                            controller.loadMoreUsers();
+                          }
+                          return false;
+                        },
+                        child: Obx(() {
+                          final status =
+                              Get.find<InternetStatusProvider>().status;
 
-                              bool desativaMaster =
-                                  UserStorage.getUserType() == 1;
-                              bool desativaLider =
-                                  UserStorage.getUserType() == 1 ||
-                                      user.id == UserStorage.getUserId();
-                              bool desativaFamiliar =
-                                  user.id == UserStorage.getUserId() ||
-                                      desativaMaster ||
-                                      desativaLider;
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 2, bottom: 2),
-                                child: Dismissible(
-                                  key: UniqueKey(),
-                                  direction: (!desativaMaster &&
-                                          !desativaLider &&
-                                          !desativaFamiliar)
-                                      ? DismissDirection.none
-                                      : DismissDirection.endToStart,
-                                  confirmDismiss:
-                                      (DismissDirection direction) async {
-                                    if (direction ==
-                                        DismissDirection.endToStart) {
-                                      showDialog(context, user);
-                                    }
-                                    return false;
-                                  },
-                                  background: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: user.status == 1
-                                          ? Colors.red.shade500
-                                          : Colors.green,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              user.status == 1
-                                                  ? const Icon(
-                                                      Icons.delete_outline,
-                                                      color: Colors.white,
-                                                      size: 25)
-                                                  : const Icon(
-                                                      Icons.check_rounded,
-                                                      size: 25,
-                                                      color: Colors.white,
+                          if (status == InternetStatus.disconnected) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: 8,
+                              itemBuilder: (context, index) {
+                                return const ShimmerCustomUserCard();
+                              },
+                            );
+                          } else {
+                            return controller.isLoading.value
+                                ? ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: 15,
+                                    itemBuilder: (context, index) {
+                                      return const ShimmerCustomUserCard();
+                                    },
+                                  )
+                                : AnimationLimiter(
+                                    child: ListView.builder(
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemCount: controller.listUsers.length,
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        User user = controller.listUsers[index];
+
+                                        String typeUser =
+                                            user.tipousuarioId == 1
+                                                ? "Master"
+                                                : (user.tipousuarioId == 2
+                                                    ? "Lider"
+                                                    : "Familiar");
+
+                                        bool desativaMaster =
+                                            UserStorage.getUserType() == 1;
+                                        bool desativaLider =
+                                            UserStorage.getUserType() == 1 ||
+                                                user.id ==
+                                                    UserStorage.getUserId();
+                                        bool desativaFamiliar = user.id ==
+                                                UserStorage.getUserId() ||
+                                            desativaMaster ||
+                                            desativaLider;
+
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 5, right: 5, bottom: 5),
+                                          child: Dismissible(
+                                            key: UniqueKey(),
+                                            direction: (!desativaMaster &&
+                                                    !desativaLider &&
+                                                    !desativaFamiliar)
+                                                ? DismissDirection.none
+                                                : DismissDirection.endToStart,
+                                            confirmDismiss: (DismissDirection
+                                                direction) async {
+                                              if (direction ==
+                                                  DismissDirection.endToStart) {
+                                                showDialog(context, user);
+                                              }
+                                              return false;
+                                            },
+                                            background: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: user.status == 1
+                                                    ? Colors.red.shade500
+                                                    : Colors.green,
+                                              ),
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        user.status == 1
+                                                            ? const Icon(
+                                                                Icons
+                                                                    .delete_outline,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 25)
+                                                            : const Icon(
+                                                                Icons
+                                                                    .check_rounded,
+                                                                size: 25,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                      ],
                                                     ),
-                                            ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            child: AnimationConfiguration
+                                                .staggeredList(
+                                              position: index,
+                                              duration: const Duration(
+                                                  milliseconds: 600),
+                                              child: SlideAnimation(
+                                                verticalOffset: 50.0,
+                                                curve: Curves.easeInOut,
+                                                child: FadeInAnimation(
+                                                  child: CustomUserCard(
+                                                      user: user,
+                                                      familiaId: UserStorage
+                                                          .getFamilyId(),
+                                                      idUserLogged:
+                                                          idUserLogged,
+                                                      controller: controller,
+                                                      messageController:
+                                                          messageController,
+                                                      typeUser: typeUser),
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                  child: AnimationConfiguration.staggeredList(
-                                    position: index,
-                                    duration: const Duration(milliseconds: 600),
-                                    child: SlideAnimation(
-                                      curve: Curves.easeInOut,
-                                      child: FadeInAnimation(
-                                        child: CustomUserCard(
-                                            user: user,
-                                            familiaId:
-                                                UserStorage.getFamilyId(),
-                                            idUserLogged: idUserLogged,
-                                            controller: controller,
-                                            messageController:
-                                                messageController,
-                                            typeUser: typeUser),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                  );
+                          }
+                        }),
                       ),
                     ),
                     const SizedBox(height: 10)

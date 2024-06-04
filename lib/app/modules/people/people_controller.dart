@@ -294,9 +294,8 @@ class PeopleController extends GetxController {
 
   whatsapp(String phoneNumber) async {
     var contact = phoneNumber;
-    var androidUrl = "whatsapp://send?phone=$contact&text=Hi, I need some help";
-    var iosUrl =
-        "https://wa.me/$contact?text=${Uri.parse('Olá, vim através do app da UCIF!')}";
+    var androidUrl = "whatsapp://send?phone=$contact";
+    var iosUrl = "https://wa.me/$contact";
 
     try {
       if (Platform.isIOS) {

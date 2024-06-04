@@ -63,11 +63,9 @@ class CustomPeopleCard extends StatelessWidget {
           elevation: 1,
           margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
           child: ListTile(
-            onTap: Get.currentRoute == '/filter-family'
-                ? null
-                : () {
-                    Get.toNamed('/detail-people', arguments: people);
-                  },
+            onTap: () {
+              Get.toNamed('/detail-people', arguments: people);
+            },
             dense: true,
             titleAlignment: ListTileTitleAlignment.center,
             leading: CircleAvatar(
@@ -80,18 +78,14 @@ class CustomPeopleCard extends StatelessWidget {
             title: Text(people.nome!.toUpperCase(),
                 style: const TextStyle(fontFamily: 'Poppinss', fontSize: 12)),
             trailing: IconButton(
-                onPressed: Get.currentRoute == '/filter-family'
-                    ? null
-                    : () {
-                        Get.toNamed('/detail-people', arguments: people);
-                      },
-                icon: Get.currentRoute == '/filter-family'
-                    ? const SizedBox()
-                    : const Icon(
-                        Icons.remove_red_eye_rounded,
-                        size: 20,
-                        color: Colors.black54,
-                      )),
+                onPressed: () {
+                  Get.toNamed('/detail-people', arguments: people);
+                },
+                icon: const Icon(
+                  Icons.remove_red_eye_rounded,
+                  size: 20,
+                  color: Colors.black54,
+                )),
           ),
         ),
       ),

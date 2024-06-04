@@ -115,7 +115,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                       scrollDirection: Axis.vertical,
                       itemCount: 5,
                       itemBuilder: (context, index) {
-                        return const CustomShimmerFamilyCard();
+                        return const ShimmerCustomFamilyCard();
                       },
                     );
                   } else {
@@ -137,7 +137,7 @@ class FamilyFilterView extends GetView<FamilyController> {
                               physics: const AlwaysScrollableScrollPhysics(),
                               itemCount: 5,
                               itemBuilder: (context, index) {
-                                return const CustomShimmerFamilyCard();
+                                return const ShimmerCustomFamilyCard();
                               },
                             );
                           } else {

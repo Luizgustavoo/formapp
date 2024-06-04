@@ -68,10 +68,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ? IconButton(
                                 onPressed: () {
                                   if (Get.currentRoute == '/detail-people') {
+                                    final fromFilterFamily =
+                                        Get.previousRoute == '/filter-family';
+                                    final fromHome =
+                                        Get.previousRoute == '/home';
                                     final peopleController =
-                                        Get.put(PeopleController());
+                                        Get.find<PeopleController>();
                                     peopleController.getPeoples();
-                                    if (UserStorage.getUserType() == 3) {
+
+                                    if (fromFilterFamily) {
+                                      Get.back();
+                                    } else if (fromHome) {
+                                      Get.offAllNamed('/home');
+                                    } else if (UserStorage.getUserType() == 3) {
                                       Get.offAllNamed('/home');
                                     } else {
                                       Get.offNamed('/list-people');

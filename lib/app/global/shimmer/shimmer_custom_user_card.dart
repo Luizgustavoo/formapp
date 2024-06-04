@@ -7,20 +7,32 @@ class ShimmerCustomUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 1,
+      margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
       child: ListTile(
-        leading: CircleAvatar(
-          radius: 25,
-          backgroundColor: Colors.grey[300],
+        leading: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: const CircleAvatar(
+            radius: 25,
+            backgroundColor: Colors.white,
+          ),
         ),
-        trailing: const SizedBox(
-          width: 50,
-          height: 50,
+        trailing: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: const Icon(
+            Icons.message_outlined,
+            size: 25,
+            color: Colors.grey,
+          ),
         ),
         title: Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            height: 18,
+            width: double.infinity,
+            height: 20.0,
             color: Colors.white,
           ),
         ),
@@ -32,19 +44,20 @@ class ShimmerCustomUserCard extends StatelessWidget {
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(
-                height: 12,
-                width: 150,
+                width: double.infinity,
+                height: 14.0,
                 color: Colors.white,
+                margin: const EdgeInsets.only(top: 5),
               ),
             ),
-            const SizedBox(height: 4),
             Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Container(
-                height: 12,
-                width: 100,
+                width: 100.0,
+                height: 14.0,
                 color: Colors.white,
+                margin: const EdgeInsets.only(top: 5),
               ),
             ),
           ],

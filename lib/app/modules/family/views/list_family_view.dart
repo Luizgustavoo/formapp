@@ -3,6 +3,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/global/shimmer/shimmer_custom_family_card.dart';
 import 'package:ucif/app/global/widgets/create_family_modal.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
@@ -82,39 +84,77 @@ class FamilyView extends GetView<FamilyController> {
                       color: Color(0xFF1C6399),
                     ),
                     const SizedBox(height: 5),
-                    Obx(
-                      () => Expanded(
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (ScrollNotification scrollInfo) {
-                            if (!controller.isLoadingFamilies.value &&
-                                scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent * 0.9) {
-                              controller.loadMoreFamilies();
-                            }
-                            return false;
-                          },
-                          child: ListView.builder(
-                            itemCount: controller.listFamilies.length,
-                            shrinkWrap: true,
-                            controller: controller.scrollController,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              Family family = controller.listFamilies[index];
-                              return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: 600),
-                                child: SlideAnimation(
-                                  curve: Curves.easeInOut,
-                                  child: FadeInAnimation(
-                                    child: CustomFamilyCard(
-                                      family: family,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                    Expanded(
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (!controller.isLoadingFamilies.value &&
+                              scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent * 0.9) {
+                            controller.loadMoreFamilies();
+                          }
+                          return false;
+                        },
+                        child: Obx(() {
+                          final status =
+                              Get.find<InternetStatusProvider>().status;
+                          final List<Family> familiesToShow =
+                              controller.listFamilies;
+
+                          if (controller.isLoadingFamilies.value) {
+                            return ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              controller: controller.scrollController,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: 15,
+                              itemBuilder: (context, index) {
+                                return const ShimmerCustomFamilyCard();
+                              },
+                            );
+                          } else {
+                            return AnimationLimiter(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: familiesToShow.length,
+                                itemBuilder: (context, index) {
+                                  final Family family = familiesToShow[index];
+
+                                  if (status == InternetStatus.disconnected &&
+                                      !family.familyLocal!) {
+                                    return ListView.builder(
+                                      controller: controller.scrollController,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemCount: 15,
+                                      itemBuilder: (context, index) {
+                                        return const ShimmerCustomFamilyCard();
+                                      },
+                                    );
+                                  } else {
+                                    return AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      duration:
+                                          const Duration(milliseconds: 400),
+                                      child: SlideAnimation(
+                                        verticalOffset: 50.0,
+                                        curve: Curves.easeInOut,
+                                        child: FadeInAnimation(
+                                          child: CustomFamilyCard(
+                                            family: family,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          }
+                        }),
                       ),
                     ),
                     const SizedBox(height: 10)

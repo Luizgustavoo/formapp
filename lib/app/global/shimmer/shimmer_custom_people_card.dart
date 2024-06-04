@@ -1,104 +1,62 @@
 import 'package:flutter/material.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerCustomPeopleCard extends StatelessWidget {
-  const ShimmerCustomPeopleCard({Key? key}) : super(key: key);
+  const ShimmerCustomPeopleCard({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+      padding: const EdgeInsets.only(top: 2, bottom: 2),
       child: Card(
-        margin: const EdgeInsets.all(3),
-        elevation: 3,
-        child: Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: ExpansionTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+        elevation: 1,
+        margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
+        child: ListTile(
+          onTap: () {},
+          dense: true,
+          titleAlignment: ListTileTitleAlignment.center,
+          leading: CircleAvatar(
+            radius: 15,
+            child: ClipOval(
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: _buildLeading(),
               ),
-              childrenPadding:
-                  const EdgeInsets.only(left: 18, right: 18, bottom: 5),
-              title: Column(
-                children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.grey[300],
-                    ),
-                    title: Container(
-                      height: 18,
-                      color: Colors.white,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 12,
-                          width: 100,
-                          color: Colors.white,
-                        ),
-                        const Divider(
-                          height: 3,
-                          thickness: 2,
-                          color: Color(0xFF123d68),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Atendimentos:",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const Divider(
-                      height: 3,
-                      thickness: 2,
-                      color: Color(0xFF123d68),
-                    ),
-                    SizedBox(
-                      height: 120, // Adjust the height as needed
-                      child: ListView.builder(
-                        itemCount: 3, // Adjust the number of shimmer items
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 18,
-                                  width: 150,
-                                  color: Colors.white,
-                                ),
-                                Container(
-                                  height: 18,
-                                  width: 50,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            ),
+          ),
+          title: _buildTitle(),
+          trailing: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: const Icon(
+              Icons.remove_red_eye,
+              size: 25,
+              color: Colors.grey,
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLeading() {
+    return const CircleAvatar(
+      radius: 15,
+    );
+  }
+
+  Widget _buildTitle() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: double.infinity,
+        height: 20.0,
+        color: Colors.white,
       ),
     );
   }

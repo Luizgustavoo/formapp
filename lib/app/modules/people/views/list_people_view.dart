@@ -3,6 +3,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/global/shimmer/shimmer_custom_people_card.dart';
 import 'package:ucif/app/global/widgets/create_family_modal.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
@@ -82,39 +84,71 @@ class ListPeopleView extends GetView<PeopleController> {
                       color: Color(0xFF1C6399),
                     ),
                     const SizedBox(height: 5),
-                    Obx(
-                      () => Expanded(
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (ScrollNotification scrollInfo) {
-                            if (!controller.isLoading.value &&
-                                scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent * 0.9) {
-                              controller.loadMorePeoples();
-                            }
-                            return false;
-                          },
-                          child: ListView.builder(
-                            itemCount: controller.listPeoples.length,
-                            shrinkWrap: true,
-                            controller: controller.scrollController,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              People people = controller.listPeoples[index];
-                              return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: 100),
-                                child: SlideAnimation(
-                                  curve: Curves.easeInOut,
-                                  child: FadeInAnimation(
-                                    child: CustomPeopleCard(
-                                      people: people,
-                                    ),
-                                  ),
+                    Expanded(
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (!controller.isLoading.value &&
+                              scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent * 0.9) {
+                            controller.loadMorePeoples();
+                          }
+                          return false;
+                        },
+                        child: Obx(() {
+                          final status =
+                              Get.find<InternetStatusProvider>().status;
+
+                          if (status == InternetStatus.disconnected) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: 20,
+                              itemBuilder: (context, index) {
+                                return const ShimmerCustomPeopleCard();
+                              },
+                            );
+                          } else {
+                            if (controller.isLoading.value) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemCount: 20,
+                                itemBuilder: (context, index) {
+                                  return const ShimmerCustomPeopleCard();
+                                },
+                              );
+                            } else {
+                              return AnimationLimiter(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  itemCount: controller.listPeoples.length,
+                                  itemBuilder: (context, index) {
+                                    People people =
+                                        controller.listPeoples[index];
+                                    return AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      duration:
+                                          const Duration(milliseconds: 350),
+                                      child: SlideAnimation(
+                                        curve: Curves.easeInOut,
+                                        child: FadeInAnimation(
+                                          child: CustomPeopleCard(
+                                            people: people,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               );
-                            },
-                          ),
-                        ),
+                            }
+                          }
+                        }),
                       ),
                     ),
                     const SizedBox(height: 10),

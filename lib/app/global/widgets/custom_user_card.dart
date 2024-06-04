@@ -143,6 +143,7 @@ class CustomUserCard extends StatelessWidget {
                 ),
           title: Text(
             user.nome!,
+            overflow: TextOverflow.ellipsis,
             style: user.quantidadePessoas > 0
                 ? CustomTextStyle.subtitleFamily(context)
                 : user.tipousuarioId == 2
