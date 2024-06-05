@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
 import 'package:ucif/app/routes/app_pages.dart';
@@ -27,6 +28,17 @@ void main() async {
   );
 
   await FirebaseApi().initNotifications();
+
+  final storage = GetStorage('credenciado');
+  final packageInfo = await PackageInfo.fromPlatform();
+  final currentVersion = packageInfo.version;
+  final storedVersion = storage.read('app_version');
+
+  if (storedVersion != currentVersion) {
+    await storage.erase();
+
+    storage.write('app_version', currentVersion);
+  }
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

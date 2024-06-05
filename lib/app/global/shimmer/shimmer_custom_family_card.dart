@@ -19,6 +19,15 @@ class ShimmerCustomFamilyCard extends StatelessWidget {
             color: Colors.white,
           ),
         ),
+        subtitle: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            height: 20.0,
+            color: Colors.white,
+          ),
+        ),
         trailing: Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,

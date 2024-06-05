@@ -262,6 +262,7 @@ class PeopleController extends GetxController {
     isLoading.value = true;
     try {
       final token = UserStorage.getToken();
+      listFamilyMembers.clear();
       listFamilyMembers.value =
           await repository.getAllMember("Bearer $token", familiaId);
 

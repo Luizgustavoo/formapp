@@ -253,6 +253,13 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         counterText: '',
                         border: OutlineInputBorder(),
                         labelText: 'CPF'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Preencha o cpf";
+                      }
+
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 8),
                   Row(

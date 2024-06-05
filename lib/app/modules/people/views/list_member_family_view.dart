@@ -38,27 +38,37 @@ class FamilyMemberView extends GetView<PeopleController> {
               const SizedBox(height: 5),
               Obx(
                 () => Expanded(
-                  child: ListView.builder(
-                    itemCount: controller.listFamilyMembers.length,
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      People people = controller.listFamilyMembers[index];
-
-                      return AnimationConfiguration.staggeredList(
-                        position: index,
-                        duration: const Duration(milliseconds: 300),
-                        child: SlideAnimation(
-                          curve: Curves.easeInOut,
-                          child: FadeInAnimation(
-                            child: CustomFamilyMemberCard(
-                              people: people,
-                            ),
+                  child: controller.isLoading == false &&
+                          controller.listFamilyMembers.isEmpty
+                      ? const Center(
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            'Não há membros nesta família',
+                            style:
+                                TextStyle(fontFamily: 'Poppinss', fontSize: 22),
                           ),
+                        )
+                      : ListView.builder(
+                          itemCount: controller.listFamilyMembers.length,
+                          shrinkWrap: true,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            People people = controller.listFamilyMembers[index];
+
+                            return AnimationConfiguration.staggeredList(
+                              position: index,
+                              duration: const Duration(milliseconds: 300),
+                              child: SlideAnimation(
+                                curve: Curves.easeInOut,
+                                child: FadeInAnimation(
+                                  child: CustomFamilyMemberCard(
+                                    people: people,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ),
               // ),

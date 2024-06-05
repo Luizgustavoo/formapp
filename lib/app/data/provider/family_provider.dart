@@ -220,10 +220,7 @@ class FamilyApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -302,10 +299,7 @@ class FamilyApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -369,7 +363,7 @@ class FamilyApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      ErrorHandler.showError(err);
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }

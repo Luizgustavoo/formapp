@@ -15,7 +15,7 @@ import 'package:ucif/app/modules/message/message_binding.dart';
 import 'package:ucif/app/modules/message/views/list_message_view.dart';
 import 'package:ucif/app/modules/people/people_binding.dart';
 import 'package:ucif/app/modules/people/views/detail_people.dart';
-import 'package:ucif/app/modules/people/views/list_family_member_view.dart';
+import 'package:ucif/app/modules/people/views/list_member_family_view.dart';
 import 'package:ucif/app/modules/people/views/list_people_filter_view.dart';
 import 'package:ucif/app/modules/people/views/list_people_view.dart';
 import 'package:ucif/app/modules/user/user_binding.dart';

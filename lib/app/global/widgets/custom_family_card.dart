@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/global/widgets/create_family_modal.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 
 // ignore: must_be_immutable
@@ -20,11 +21,22 @@ class CustomFamilyCard extends StatelessWidget {
       elevation: 1,
       margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
       child: ListTile(
+        onTap: () {
+          final controller = Get.put(PeopleController());
+
+          controller.getFamilyMembers(family.id);
+          Get.toNamed('/member-family');
+        },
         title: Text('Família: ${family.nome!}',
             style: const TextStyle(
                 fontFamily: 'Poppinss',
                 fontSize: 14,
                 overflow: TextOverflow.ellipsis)),
+        subtitle: Text('Total de membros: ${family.pessoas!.length}',
+            style: const TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 14,
+            )),
         trailing: IconButton(
             onPressed: Get.currentRoute == '/filter-family'
                 ? null

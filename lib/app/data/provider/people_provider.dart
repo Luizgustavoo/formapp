@@ -63,7 +63,7 @@ class PeopleApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      //
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -97,7 +97,7 @@ class PeopleApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      //
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -223,7 +223,7 @@ class PeopleApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      ErrorHandler.showError(err);
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -314,7 +314,7 @@ class PeopleApiClient {
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      ErrorHandler.showError(err);
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -353,7 +353,7 @@ class PeopleApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      ErrorHandler.showError(err);
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
