@@ -131,16 +131,13 @@ class UserApiClient {
 
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
-        print(json.decode(response.body)['objeto']['foto']);
         if (response.statusCode == 200) {
           Map<String, dynamic> user = box.read('auth')['user'];
           user['foto'] = json.decode(response.body)['objeto']['foto'];
           // user['nome'] = json.decode(response.body)['objeto']['nome'];
           // UserStorage.changeName.value = user['nome'];
           Map<String, dynamic> auth = box.read('auth');
-          print(auth);
           auth['user'] = user;
-          print(auth);
           box.write('auth', auth);
 
           // auth.user = user as User?;
@@ -179,9 +176,7 @@ class UserApiClient {
           user['nome'] = json.decode(response.body)['objeto']['nome'];
           // UserStorage.changeName.value = user['nome'];
           Map<String, dynamic> auth = box.read('auth');
-          print(auth);
           auth['user'] = user;
-          print(auth);
           box.write('auth', auth);
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
@@ -364,7 +359,7 @@ class UserApiClient {
 
       return json.decode(response.body);
     } catch (e) {
-      print(e);
+      ErrorHandler.showError('Sem Conexão');
     }
     return null;
   }

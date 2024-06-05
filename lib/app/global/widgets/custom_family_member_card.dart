@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 
 class CustomFamilyMemberCard extends StatelessWidget {
@@ -11,6 +12,22 @@ class CustomFamilyMemberCard extends StatelessWidget {
       elevation: 1,
       margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
       child: ListTile(
+        onTap: Get.previousRoute == '/detail-people'
+            ? null
+            : () {
+                Get.toNamed('/detail-people', arguments: people);
+              },
+        trailing: Get.previousRoute == '/detail-people'
+            ? const SizedBox()
+            : IconButton(
+                onPressed: () {
+                  Get.toNamed('/detail-people', arguments: people);
+                },
+                icon: const Icon(
+                  Icons.remove_red_eye_rounded,
+                  size: 20,
+                  color: Colors.black54,
+                )),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

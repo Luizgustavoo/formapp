@@ -46,7 +46,7 @@ class MessageApiClient {
         Get.offAllNamed('/login');
       }
     } catch (err) {
-      print(err);
+      ErrorHandler.showError('Sem Conexão');
     }
     return null;
   }

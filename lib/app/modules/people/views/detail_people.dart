@@ -36,7 +36,9 @@ class DetailPeopleView extends GetView<PeopleController> {
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height / 17),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: Get.previousRoute == '/member-family'
+                        ? MainAxisAlignment.start
+                        : MainAxisAlignment.spaceBetween,
                     children: [
                       if (UserStorage.getUserType() != 3) ...[
                         TopCard(
@@ -55,6 +57,11 @@ class DetailPeopleView extends GetView<PeopleController> {
                           icon: FontAwesomeIcons.whatsapp,
                           description: 'Conversar\n no whatsapp',
                         ),
+                        if (Get.previousRoute == '/member-family') ...[
+                          const SizedBox(
+                            width: 50,
+                          )
+                        ],
                         TopCard(
                           onTap: () {
                             final chatController = Get.put(ChatController());
@@ -66,14 +73,17 @@ class DetailPeopleView extends GetView<PeopleController> {
                           icon: Icons.wechat_sharp,
                           description: 'Enviar msg\npelo UCIF',
                         ),
-                        TopCard(
-                          onTap: () {
-                            controller.getFamilyMembers(people.family?.id);
-                            Get.toNamed('/member-family');
-                          },
-                          icon: Icons.groups_2,
-                          description: 'Ver membros\nda família',
-                        ),
+                        Get.previousRoute == '/member-family'
+                            ? const SizedBox()
+                            : TopCard(
+                                onTap: () {
+                                  controller
+                                      .getFamilyMembers(people.family?.id);
+                                  Get.toNamed('/member-family');
+                                },
+                                icon: Icons.groups_2,
+                                description: 'Ver membros\nda família',
+                              ),
                       ]
                     ],
                   ),

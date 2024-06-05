@@ -70,6 +70,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   if (Get.currentRoute == '/detail-people') {
                                     final fromFilterFamily =
                                         Get.previousRoute == '/filter-family';
+                                    final fromDetailPeople =
+                                        Get.previousRoute == '/member-family';
+                                    final fromListFamily =
+                                        Get.previousRoute == '/list-family';
                                     final fromHome =
                                         Get.previousRoute == '/home';
                                     final peopleController =
@@ -78,8 +82,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
                                     if (fromFilterFamily) {
                                       Get.back();
+                                    } else if (fromListFamily) {
+                                      Get.back();
                                     } else if (fromHome) {
                                       Get.offAllNamed('/home');
+                                    } else if (fromDetailPeople) {
+                                      Get.back();
                                     } else if (UserStorage.getUserType() == 3) {
                                       Get.offAllNamed('/home');
                                     } else {

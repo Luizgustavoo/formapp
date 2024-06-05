@@ -51,10 +51,6 @@ class ChatView extends GetView<ChatController> {
       canPop: false,
       onPopInvoked: (didPop) {
         if (Get.previousRoute == '/detail-people') {
-          final homeController = Get.put(HomeController());
-          homeController.counter;
-          homeController.counter2;
-          homeController.counter3;
           Get.offAllNamed('/detail-people', arguments: people);
         } else if (Get.previousRoute == '/list-user') {
           final userController = Get.find<UserController>();
