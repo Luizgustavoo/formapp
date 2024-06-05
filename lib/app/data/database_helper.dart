@@ -111,7 +111,7 @@ class DatabaseHelper {
     return delete;
   }
 
-  Future<List<Map<String, dynamic>>> getFamiliesWithPeople() async {
+  Future<List<Map<String, dynamic>>> getFamiliesOffline() async {
     final db = await database;
     return await db.rawQuery('''
       SELECT 
@@ -128,7 +128,15 @@ class DatabaseHelper {
       families.status AS status_familia,
       families.data_cadastro AS data_cadastro_familia,
       families.data_update AS data_update_familia,
-      families.cep AS cep_familia,
+      families.cep AS cep_familia
+      FROM families
+    ''');
+  }
+
+  Future<List<Map<String, dynamic>>> getPeoplesOffline() async {
+    final db = await database;
+    return await db.rawQuery('''
+      SELECT 
       people.id AS id_people,
       people.nome AS nome_people,
       people.foto AS foto_people,
@@ -152,8 +160,7 @@ class DatabaseHelper {
       people.data_update AS data_update_people,
       people.familia_id AS familia_id_people,
       people.parentesco AS parentesco_people
-      FROM families
-      LEFT JOIN people ON families.id = people.familia_id
+      FROM people
     ''');
   }
 }

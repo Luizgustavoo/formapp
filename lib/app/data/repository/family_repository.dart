@@ -104,7 +104,7 @@ class FamilyRepository {
 
   Future<List<Family>> getFamiliesWithPeopleLocal() async {
     final dbHelper = DatabaseHelper();
-    final result = await dbHelper.getFamiliesWithPeople();
+    final result = await dbHelper.getFamiliesOffline();
 
     List<Family> families = [];
     int? currentFamilyId;

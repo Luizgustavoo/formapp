@@ -35,6 +35,7 @@ class People {
   Family? family;
   Religion? religion;
   MaritalStatus? maritalStatus;
+  bool? peopleLocal;
 
   People(
       {this.id,
@@ -66,6 +67,7 @@ class People {
       this.username,
       this.senha,
       this.maritalStatus,
+      this.peopleLocal,
       this.family});
 
   People.fromJson(Map<String, dynamic> json) {

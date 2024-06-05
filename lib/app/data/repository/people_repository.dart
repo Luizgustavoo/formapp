@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/people_provider.dart';
@@ -11,6 +12,13 @@ class PeopleRepository {
 
   getAll(String token, {int? page, String? search}) async {
     List<People> list = <People>[];
+
+    var responseLocal = await getPeoplesOffline();
+
+    for (People peopleLocal in responseLocal) {
+      peopleLocal.peopleLocal = true;
+      list.add(peopleLocal);
+    }
 
     if (await ConnectionStatus.verifyConnection()) {
       var response = await apiClient.getAll(token, page: page, search: search);
@@ -92,5 +100,69 @@ class PeopleRepository {
     } catch (e) {
       ErrorHandler.showError(e);
     }
+  }
+
+  Future<List<People>> getPeoplesOffline() async {
+    final dbHelper = DatabaseHelper();
+    final result = await dbHelper.getPeoplesOffline();
+
+    List<People> peoples = [];
+    int? currentFamilyId;
+    People? currentPeople;
+
+    for (final row in result) {
+      final idPeople = row['id_people'] as int?;
+      final nomePeople = row['nome_people'] as String?;
+      final fotoPeople = row['foto_people'] as String?;
+      final sexoPeople = row['sexo_people'] as String?;
+      final cpfPeople = row['cpf_people'] as String?;
+      final dataNascimentoPeople = row['data_nascimento_people'] as String?;
+      final estadocivilIdPeople = row['estadocivil_id_people'] as int?;
+      final tituloEleitorPeople = row['titulo_eleitor_people'] as String?;
+      final zonaEleitoralPeople = row['zona_eleitoral_people'] as String?;
+      final telefonePeople = row['telefone_people'] as String?;
+      final redeSocialPeople = row['rede_social_people'] as String?;
+      final provedorCasaPeople = row['provedor_casa_people'] as String?;
+      final igrejaIdPeople = row['igreja_id_people'] as String?;
+      final localTrabalhoPeople = row['local_trabalho_people'] as String?;
+      final cargoTrabalhoPeople = row['cargo_trabalho_people'] as String?;
+      final religiaoIdPeople = row['religiao_id_people'] as int?;
+      final funcaoIgrejaPeople = row['funcao_igreja_people'] as String?;
+      final usuarioIdPeople = row['usuario_id_people'] as int?;
+      final statusPeople = row['status_people'] as String?;
+      final dataCadastroPeople = row['data_cadastro_people'] as String?;
+      final dataUpdatePeople = row['data_update_people'] as String?;
+      // final familiaIdPeople = row['familia_id_people'] as int?;
+      final parentescoPeople = row['parentesco_people'] as String?;
+
+      if (idPeople != null && nomePeople != null) {
+        peoples.add(People(
+          id: idPeople,
+          nome: nomePeople,
+          foto: fotoPeople,
+          sexo: sexoPeople,
+          cpf: cpfPeople,
+          dataNascimento: dataNascimentoPeople,
+          estadoCivilId: estadocivilIdPeople,
+          tituloEleitor: tituloEleitorPeople,
+          zonaEleitoral: zonaEleitoralPeople,
+          telefone: telefonePeople,
+          redeSocial: redeSocialPeople,
+          provedorCasa: provedorCasaPeople,
+          igrejaId: igrejaIdPeople,
+          localTrabalho: localTrabalhoPeople,
+          cargoTrabalho: cargoTrabalhoPeople,
+          religiaoId: religiaoIdPeople,
+          funcaoIgreja: funcaoIgrejaPeople,
+          usuarioId: usuarioIdPeople,
+          status: int.parse(statusPeople.toString()),
+          dataCadastro: dataCadastroPeople,
+          dataUpdate: dataUpdatePeople,
+          parentesco: parentescoPeople,
+        ));
+      }
+    }
+
+    return peoples;
   }
 }
