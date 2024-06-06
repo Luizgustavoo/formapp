@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/family_list_modal.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CustomPeopleCard extends StatelessWidget {
@@ -25,7 +26,8 @@ class CustomPeopleCard extends StatelessWidget {
         key: UniqueKey(),
         direction: familiaId != null ||
                 Get.currentRoute == '/home' ||
-                Get.currentRoute == '/filter-family'
+                Get.currentRoute == '/filter-family' ||
+                people.peopleLocal!
             ? DismissDirection.none
             : DismissDirection.startToEnd,
         confirmDismiss: (DismissDirection direction) async {
@@ -62,6 +64,7 @@ class CustomPeopleCard extends StatelessWidget {
           ),
         ),
         child: Card(
+          color: people.peopleLocal! ? const Color(0xFF014acb) : Colors.white,
           elevation: 1,
           margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
           child: ListTile(
@@ -78,16 +81,40 @@ class CustomPeopleCard extends StatelessWidget {
                       as ImageProvider,
             ),
             title: Text(people.nome!.toUpperCase(),
-                style: const TextStyle(fontFamily: 'Poppinss', fontSize: 12)),
-            trailing: IconButton(
-                onPressed: () {
-                  Get.toNamed('/detail-people', arguments: people);
-                },
-                icon: const Icon(
-                  Icons.remove_red_eye_rounded,
-                  size: 20,
-                  color: Colors.black54,
-                )),
+                style: TextStyle(
+                    fontFamily: 'Poppinss',
+                    fontSize: 12,
+                    color: people.peopleLocal! ? Colors.white : Colors.black)),
+            trailing: people.peopleLocal!
+                ? IconButton(
+                    onPressed: () async {
+                      final controller = Get.put(PeopleController());
+                      Map<String, dynamic> mensagem =
+                          await controller.sendPeopleToAPIOffline(people);
+                      if (mensagem['return'] == 0) {
+                        Get.snackbar('Sucesso', mensagem['message'],
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green);
+                      } else {
+                        Get.snackbar('Falha', mensagem['message'],
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 20,
+                      color: Colors.white,
+                    ))
+                : IconButton(
+                    onPressed: () {
+                      Get.toNamed('/detail-people', arguments: people);
+                    },
+                    icon: const Icon(
+                      Icons.remove_red_eye_rounded,
+                      size: 20,
+                      color: Colors.black54,
+                    )),
           ),
         ),
       ),

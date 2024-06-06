@@ -97,44 +97,50 @@ class ListPeopleView extends GetView<PeopleController> {
                         child: Obx(() {
                           final status =
                               Get.find<InternetStatusProvider>().status;
+                          final List<People> familiesToShow =
+                              controller.listPeoples;
 
-                          if (status == InternetStatus.disconnected) {
+                          if (controller.isLoading.value) {
                             return ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              controller: controller.scrollController,
                               shrinkWrap: true,
                               scrollDirection: Axis.vertical,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              itemCount: 20,
+                              itemCount: 15,
                               itemBuilder: (context, index) {
                                 return const ShimmerCustomPeopleCard();
                               },
                             );
                           } else {
-                            if (controller.isLoading.value) {
-                              return ListView.builder(
+                            return AnimationLimiter(
+                              child: ListView.builder(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
                                 physics: const AlwaysScrollableScrollPhysics(),
-                                itemCount: 20,
+                                itemCount: familiesToShow.length,
                                 itemBuilder: (context, index) {
-                                  return const ShimmerCustomPeopleCard();
-                                },
-                              );
-                            } else {
-                              return AnimationLimiter(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics(),
-                                  itemCount: controller.listPeoples.length,
-                                  itemBuilder: (context, index) {
-                                    People people =
-                                        controller.listPeoples[index];
+                                  final People people = familiesToShow[index];
+
+                                  if (status == InternetStatus.disconnected &&
+                                      !people.peopleLocal!) {
+                                    return ListView.builder(
+                                      controller: controller.scrollController,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemCount: 15,
+                                      itemBuilder: (context, index) {
+                                        return const ShimmerCustomPeopleCard();
+                                      },
+                                    );
+                                  } else {
                                     return AnimationConfiguration.staggeredList(
                                       position: index,
                                       duration:
-                                          const Duration(milliseconds: 350),
+                                          const Duration(milliseconds: 400),
                                       child: SlideAnimation(
+                                        verticalOffset: 50.0,
                                         curve: Curves.easeInOut,
                                         child: FadeInAnimation(
                                           child: CustomPeopleCard(
@@ -143,10 +149,10 @@ class ListPeopleView extends GetView<PeopleController> {
                                         ),
                                       ),
                                     );
-                                  },
-                                ),
-                              );
-                            }
+                                  }
+                                },
+                              ),
+                            );
                           }
                         }),
                       ),

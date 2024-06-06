@@ -483,9 +483,15 @@ class PeopleController extends GetxController {
   void fillInFieldsForEditPerson() {
     idPessoaController.text = selectedPeople!.id.toString();
     nomePessoaController.text = selectedPeople!.nome.toString();
-    final DateTime data =
-        DateTime.parse(selectedPeople!.dataNascimento.toString());
-    final String dataFormatada = DateFormat('dd/MM/yyyy').format(data);
+    String dataFormatada = '';
+    if (selectedPeople!.peopleLocal == false) {
+      final DateTime data =
+          DateTime.parse(selectedPeople!.dataNascimento.toString());
+      dataFormatada = DateFormat('dd/MM/yyyy').format(data);
+    } else {
+      dataFormatada = selectedPeople!.dataNascimento.toString();
+    }
+
     nascimentoPessoaController.text = dataFormatada.toString();
     cpfPessoaController.text = selectedPeople!.cpf.toString();
     tituloEleitoralPessoaController.text =
@@ -691,5 +697,73 @@ class PeopleController extends GetxController {
     } else {
       selectedDate.value = DateTime.now();
     }
+  }
+
+  //MANDA OS DADOS OFFLINE PARA API
+  Future<Map<String, dynamic>> sendPeopleToAPIOffline(People people) async {
+    try {
+      if (await ConnectionStatus.verifyConnection()) {
+        final token = UserStorage.getToken();
+        var mensagem =
+            await repository.insertPeopleLocalToApi("Bearer $token", people);
+
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            deletePeopleLocal(people.id!);
+            retorno = {
+              "return": 0,
+              "message": "Operação realizada com sucesso!"
+            };
+          } else if (mensagem['message'] == 'ja_existe') {
+            retorno = {
+              "return": 1,
+              "message": "Já existe uma pessoa com esse nome!"
+            };
+          } else {
+            retorno = {"return": 1, "message": "Falha!"};
+          }
+        }
+        getPeoples();
+      }
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> deletePeople(int id, bool peopleLocal) async {
+    People people = People(
+      id: id,
+    );
+    final token = UserStorage.getToken();
+    mensagem =
+        await repository.deletePeople("Bearer $token", people, peopleLocal);
+
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      }
+    }
+
+    getPeoples();
+
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> deletePeopleLocal(int id) async {
+    People people = People(
+      id: id,
+    );
+    mensagem = await repository.deletePeopleLocal(people);
+
+    if (mensagem != null) {
+      if (mensagem['message'] == 'success') {
+        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+      }
+    }
+
+    getPeoples();
+
+    return retorno;
   }
 }

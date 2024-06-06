@@ -25,6 +25,7 @@ class PeopleRepository {
       List<People> newPeoples = [];
       response['data'].forEach((e) {
         People p = People.fromJson(e);
+        p.peopleLocal = false;
         newPeoples.add(p);
       });
       if (page == 1) {
@@ -83,15 +84,6 @@ class PeopleRepository {
     }
   }
 
-  savePeopleLocal(People people) async {
-    try {
-      var response = await apiClient.savePeopleLocal(people);
-      return response;
-    } catch (e) {
-      ErrorHandler.showError(e);
-    }
-  }
-
   changePeopleFamily(String token, People pessoa) async {
     try {
       var response = await apiClient.changePeopleFamily(token, pessoa);
@@ -107,8 +99,8 @@ class PeopleRepository {
     final result = await dbHelper.getPeoplesOffline();
 
     List<People> peoples = [];
-    int? currentFamilyId;
-    People? currentPeople;
+    // int? currentFamilyId;
+    // People? currentPeople;
 
     for (final row in result) {
       final idPeople = row['id_people'] as int?;
@@ -164,5 +156,36 @@ class PeopleRepository {
     }
 
     return peoples;
+  }
+
+  insertPeopleLocalToApi(String token, People people) async {
+    try {
+      var response =
+          await apiClient.insertPeople(token, people, File(''), false);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+  }
+
+  deletePeople(String token, People people, bool peopleLocal) async {
+    try {
+      var response = await apiClient.deletePeople(token, people, peopleLocal);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+  }
+
+  deletePeopleLocal(People people) async {
+    try {
+      var response = await apiClient.deletePeopleLocal(people);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
   }
 }

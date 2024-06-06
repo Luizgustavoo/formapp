@@ -358,36 +358,73 @@ class PeopleApiClient {
     return null;
   }
 
-  Future<List<People>> getAllPeopleLocally() async {
-    return await localDatabase.getAllPeople();
+  deletePeople(String token, People people, bool peopleLocal) async {
+    try {
+      if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
+        var peopleUrl = Uri.parse('$baseUrl/v1/pessoa/delete/${people.id}');
+
+        var response = await httpClient.delete(
+          peopleUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          return json.decode(response.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(response.body)['message'] == "ja_existe") {
+          return json.decode(response.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(response.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
   }
 
-  Future<dynamic> savePeopleLocal(People people) async {
-    People peopleData = People(
-      nome: people.nome,
-      foto: people.foto,
-      sexo: people.sexo,
-      cpf: people.cpf,
-      dataNascimento: people.dataNascimento,
-      estadoCivilId: people.estadoCivilId,
-      tituloEleitor: people.tituloEleitor,
-      zonaEleitoral: people.zonaEleitoral,
-      telefone: people.telefone,
-      redeSocial: people.redeSocial,
-      provedorCasa: people.provedorCasa,
-      igrejaId: people.igrejaId,
-      localTrabalho: people.localTrabalho,
-      cargoTrabalho: people.cargoTrabalho,
-      religiaoId: people.religiaoId,
-      funcaoIgreja: people.funcaoIgreja,
-      usuarioId: people.usuarioId,
-      status: people.status,
-      dataCadastro: people.dataCadastro,
-      dataUpdate: people.dataUpdate,
-      familiaId: people.familiaId,
-      parentesco: people.parentesco,
-    );
+  deletePeopleLocal(People people) async {
+    try {
+      //remover offline
+      final dbHelper = DatabaseHelper();
+      dynamic retorno = await dbHelper.deletePeople(people.id!);
 
-    return await localDatabase.insertPeople(peopleData);
+      Map<String, dynamic> responseData = {};
+
+      if (retorno > 0) {
+        responseData = {
+          'message': 'success',
+          'objeto': people,
+        };
+      } else {
+        responseData = {
+          'code': 0,
+          'message': 'Operação realizada com sucesso',
+        };
+      }
+
+      String jsonResponse = jsonEncode(responseData);
+
+      return json.decode(jsonResponse);
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
   }
 }

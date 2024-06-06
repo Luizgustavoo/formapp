@@ -102,7 +102,9 @@ class DetailPeopleView extends GetView<PeopleController> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FormattedText(text: 'Líder: ${people.user?.nome}'),
+                            FormattedText(
+                                text:
+                                    'Líder: ${people.peopleLocal! ? UserStorage.getUserName() : people.user?.nome}'),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text: 'Provedor: ${people.provedorCasa}'),

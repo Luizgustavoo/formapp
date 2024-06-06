@@ -36,6 +36,7 @@ class HomeRepository {
       List<People> newPeoples = [];
       response['data'].forEach((e) {
         People p = People.fromJson(e);
+        p.peopleLocal = false;
         newPeoples.add(p);
       });
       if (page == 1) {
