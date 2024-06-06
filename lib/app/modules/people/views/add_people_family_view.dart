@@ -152,9 +152,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         () => SizedBox(
                           width: 150,
                           child: DropdownButtonFormField<int>(
-                            onTap: () async {
-                              await controller.getMaritalStatus();
-                            },
+
                             value: controller.estadoCivilSelected.value,
                             onChanged: (value) {
                               controller.estadoCivilSelected.value = value!;
@@ -323,9 +321,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   const SizedBox(height: 8),
                   Obx(
                     () => DropdownButtonFormField<int>(
-                      onTap: () async {
-                        controller.getReligion();
-                      },
+
                       value: controller.religiaoSelected.value,
                       onChanged: (value) {
                         controller.religiaoSelected.value = value!;

@@ -11,7 +11,7 @@ class FamilyListModal extends StatelessWidget {
   FamilyListModal({super.key, required this.people});
   final People? people;
   final controller = Get.put(FamilyController());
-  final peopleController = Get.put(PeopleController());
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +118,7 @@ class FamilyListModal extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () async {
+            final peopleController = Get.put(PeopleController());
             Map<String, dynamic> retorno = await peopleController
                 .changePeopleFamily(family.id!, people!.id!);
 

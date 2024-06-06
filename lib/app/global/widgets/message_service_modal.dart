@@ -153,26 +153,26 @@ class MessageServiceModal extends StatelessWidget {
                       family2 = Family(pessoas: pessoas);
                     }
 
-                    Map<String, dynamic> retorno = tipoOperacao == 'insert'
-                        ? family != null
-                            ? await peopleController.saveService(family!)
-                            : await peopleController.saveService(family2!)
-                        : await peopleController.updateService(
-                            familyService!.id!, familyService!.pessoaId!);
+                    // Map<String, dynamic> retorno = tipoOperacao == 'insert'
+                    //     ? family != null
+                    //         ? await peopleController.saveService(family!)
+                    //         : await peopleController.saveService(family2!)
+                    //     : await peopleController.updateService(
+                    //         familyService!.id!, familyService!.pessoaId!);
+                    //
+                    // if (retorno['return'] == 0) {
+                    //   Get.back();
+                    // }
 
-                    if (retorno['return'] == 0) {
-                      Get.back();
-                    }
-
-                    Get.snackbar(
-                      snackPosition: SnackPosition.BOTTOM,
-                      duration: const Duration(milliseconds: 1500),
-                      retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                      retorno['message'],
-                      backgroundColor:
-                          retorno['return'] == 0 ? Colors.green : Colors.red,
-                      colorText: Colors.white,
-                    );
+                    // Get.snackbar(
+                    //   snackPosition: SnackPosition.BOTTOM,
+                    //   duration: const Duration(milliseconds: 1500),
+                    //   retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                    //   retorno['message'],
+                    //   backgroundColor:
+                    //       retorno['return'] == 0 ? Colors.green : Colors.red,
+                    //   colorText: Colors.white,
+                    // );
                   },
                   child: Text(
                     'Enviar',

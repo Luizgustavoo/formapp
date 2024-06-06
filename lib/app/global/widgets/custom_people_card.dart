@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/widgets/family_list_modal.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 
@@ -31,6 +32,7 @@ class CustomPeopleCard extends StatelessWidget {
             ? DismissDirection.none
             : DismissDirection.startToEnd,
         confirmDismiss: (DismissDirection direction) async {
+
           if (direction == DismissDirection.startToEnd) {
             await showModalBottomSheet(
               context: context,

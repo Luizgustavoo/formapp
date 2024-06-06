@@ -10,7 +10,6 @@ class FamilyBinding implements Bindings {
   void dependencies() {
     Get.put<FamilyController>(FamilyController());
     Get.put<FamilyRepository>(FamilyRepository());
-    Get.put<FamilyServiceRepository>(FamilyServiceRepository());
     Get.put<FamilyApiClient>(FamilyApiClient());
     Get.put<InternetStatusProvider>(InternetStatusProvider());
   }

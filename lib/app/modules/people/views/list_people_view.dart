@@ -216,6 +216,9 @@ class ListPeopleView extends GetView<PeopleController> {
                       label: 'Adicionar Pessoas',
                       labelStyle: const TextStyle(fontFamily: "Poppins"),
                       onTap: () {
+                        controller.getMaritalStatus();
+                        controller.getChurch();
+                        controller.getReligion();
                         controller.clearAllPeopleTextFields();
                         showModalBottomSheet(
                           isScrollControlled: true,

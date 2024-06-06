@@ -29,7 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Size.fromHeight(Get.height * factor);
   }
 
-  final messageController = Get.put(MessageController());
+  //final messageController = Get.put(MessageController());
 
   final RxString greeting = ''.obs;
 
@@ -38,14 +38,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     RxString changeName = UserStorage.getUserName().obs;
     final currentTime = DateTime.now();
     greeting.value = getGreeting(currentTime);
-    messageController.getMessages();
+    //messageController.getMessages();
 
     ever(greeting, (_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Get.forceAppUpdate();
       });
     });
-    final controller = Get.put(UserController());
+
+
     return AppBar(
       elevation: 0,
       automaticallyImplyLeading: false,
@@ -129,32 +130,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 size: 28,
                               ),
                             ),
-                            Obx(
-                              () => Positioned(
-                                right: 0,
-                                top: 0,
-                                child: messageController
-                                            .quantidadeMensagensNaoLidas.value >
-                                        0
-                                    ? badges.Badge(
-                                        showBadge: true,
-                                        ignorePointer: false,
-                                        onTap: () {},
-                                        badgeContent: const Icon(Icons.check,
-                                            color: Colors.white, size: 10),
-                                        badgeAnimation: const badges
-                                            .BadgeAnimation.rotation(
-                                          animationDuration:
-                                              Duration(seconds: 1),
-                                          colorChangeAnimationDuration:
-                                              Duration(seconds: 1),
-                                          loopAnimation: false,
-                                          curve: Curves.easeInOut,
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                              ),
-                            )
+                            SizedBox()
                           ],
                         ),
                         if (ModalRoute.of(context)!.settings.name != '/perfil')
@@ -188,20 +164,28 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   top: 0, left: 30, bottom: 50, right: 20),
               child: Row(
                 children: [
-                  Obx(
-                    () => CircleAvatar(
-                      backgroundImage: controller.isImagePicPathSet == true
-                          ? FileImage(File(UserStorage.getUserPhoto()))
-                          : (UserStorage.getUserPhoto().isNotEmpty
-                              ? NetworkImage(
-                                      '$urlImagem/storage/app/public/${UserStorage.getUserPhoto()}')
-                                  as ImageProvider<Object>?
-                              : const AssetImage(
-                                  'assets/images/default_avatar.jpg')),
-                      radius: 25,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
+
+                  if(Get.currentRoute == '/home')...[
+
+    Obx(
+    () {
+      final controller = Get.put(UserController());
+      return CircleAvatar(
+    backgroundImage: controller.isImagePicPathSet == true
+    ? FileImage(File(UserStorage.getUserPhoto()))
+        : (UserStorage.getUserPhoto().isNotEmpty
+    ? NetworkImage(
+    '$urlImagem/storage/app/public/${UserStorage.getUserPhoto()}')
+    as ImageProvider<Object>?
+        : const AssetImage(
+    'assets/images/default_avatar.jpg')),
+    radius: 25,
+    );
+  },
+    ),
+    const SizedBox(width: 10),
+                  ],
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

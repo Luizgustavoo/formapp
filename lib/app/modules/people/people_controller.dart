@@ -83,8 +83,8 @@ class PeopleController extends GetxController {
   User? selectedUser;
 
   final repository = Get.put(PeopleRepository());
-  final familyController = Get.put(FamilyController());
-  final repositoryService = Get.put(FamilyServiceRepository());
+
+  // final repositoryService = Get.put(FamilyServiceRepository());
   final maritalRepository = Get.find<MaritalStatusRepository>();
   final repositoryReligion = Get.put(ReligionRepository());
 
@@ -115,25 +115,26 @@ class PeopleController extends GetxController {
     // print(
     //     '======================================================controller PEOPLE==============');
     if (UserStorage.existUser()) {
-      bool isConnected = await ConnectionStatus.verifyConnection();
-      if (isConnected) {
-        Future.wait([
-          getMaritalStatus(),
-          getPeoples(),
-          getReligion(),
-          getChurch(),
-        ]);
-      }
 
+      // bool isConnected = await ConnectionStatus.verifyConnection();
+      // if (isConnected) {
+      //
+      // }
+      Future.wait([
+        //getMaritalStatus(),
+        getPeoples(),
+        //getReligion(),
+        //getChurch(),
+      ]);
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;
       statusStream.listen((status) {
         if (status == InternetStatus.connected) {
           Future.wait([
-            getMaritalStatus(),
+            //getMaritalStatus(),
             getPeoples(),
-            getReligion(),
-            getChurch(),
+            //getReligion(),
+            //getChurch(),
           ]);
         }
       });
@@ -161,7 +162,7 @@ class PeopleController extends GetxController {
         }
       });
 
-      getPeoples();
+      //getPeoples();
     }
 
     super.onInit();
@@ -348,7 +349,7 @@ class PeopleController extends GetxController {
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-          familyController.getFamilies(page: 1);
+         // familyController.getFamilies(page: 1);
         }
       } else if (mensagem['message'] == 'ja_existe') {
         retorno = {
@@ -405,7 +406,7 @@ class PeopleController extends GetxController {
         }
       }
 
-      familyController.getFamilies(page: 1);
+      //familyController.getFamilies(page: 1);
     } else {
       retorno = {
         "return": 1,
@@ -627,12 +628,12 @@ class PeopleController extends GetxController {
     final token = box.read('auth')['access_token'];
     dynamic mensagem;
 
-    if (await ConnectionStatus.verifyConnection()) {
-      mensagem = await repositoryService.insertService(
-          "Bearer $token", familyService, family);
-    } else {
-      //await repositoryService.saveFamilyServiceLocal(familyService);
-    }
+    // if (await ConnectionStatus.verifyConnection()) {
+    //   mensagem = await repositoryService.insertService(
+    //       "Bearer $token", familyService, family);
+    // } else {
+    //   //await repositoryService.saveFamilyServiceLocal(familyService);
+    // }
 
     if (mensagem != null) {
       if (mensagem['message'] == 'success') {
@@ -648,37 +649,37 @@ class PeopleController extends GetxController {
     return retorno;
   }
 
-  Future<Map<String, dynamic>> updateService(
-      int id, int idPeopleSelected) async {
-    FamilyService familyService = FamilyService(
-      descricao: messageController.text,
-      assunto: subjectController.text,
-      dataAtendimento: selectedDate.value.toString(),
-      pessoaId: idPeopleSelected,
-      usuarioId: box.read('auth')['user']['id'],
-      id: id,
-    );
-
-    final token = box.read('auth')['access_token'];
-
-    final mensagem =
-        await repositoryService.updateService("Bearer $token", familyService);
-
-    if (mensagem != null) {
-      if (mensagem['message'] == 'success') {
-        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-      } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uam família com esse nome!"
-        };
-      }
-    }
-
-    getPeoples();
-
-    return retorno;
-  }
+  // Future<Map<String, dynamic>> updateService(
+  //     int id, int idPeopleSelected) async {
+  //   FamilyService familyService = FamilyService(
+  //     descricao: messageController.text,
+  //     assunto: subjectController.text,
+  //     dataAtendimento: selectedDate.value.toString(),
+  //     pessoaId: idPeopleSelected,
+  //     usuarioId: box.read('auth')['user']['id'],
+  //     id: id,
+  //   );
+  //
+  //   final token = box.read('auth')['access_token'];
+  //
+  //   final mensagem =
+  //       await repositoryService.updateService("Bearer $token", familyService);
+  //
+  //   if (mensagem != null) {
+  //     if (mensagem['message'] == 'success') {
+  //       retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+  //     } else if (mensagem['message'] == 'ja_existe') {
+  //       retorno = {
+  //         "return": 1,
+  //         "message": "Já existe uam família com esse nome!"
+  //       };
+  //     }
+  //   }
+  //
+  //   getPeoples();
+  //
+  //   return retorno;
+  // }
 
   void clearModalMessageService() {
     subjectController.value = TextEditingValue.empty;
