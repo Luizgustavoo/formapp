@@ -109,4 +109,15 @@ class UserRepository {
 
     return json;
   }
+
+  //TRANSFORMAR PESSOA EM USUARIO
+  insertUserPeople(String token, User user) async {
+    try {
+      var response = await apiClient.insertUserPeople(token, user);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+  }
 }

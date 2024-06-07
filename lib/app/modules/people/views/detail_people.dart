@@ -8,6 +8,7 @@ import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/services.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
@@ -42,14 +43,23 @@ class DetailPeopleView extends GetView<PeopleController> {
                     children: [
                       if (UserStorage.getUserType() != 3) ...[
                         TopCard(
-                          onTap: () {
-                            if (people.telefone != null) {
-                              controller.whatsapp(people.telefone!);
+                          onTap: () async {
+                            if (await ConnectionStatus.verifyConnection()) {
+                              if (people.telefone != null) {
+                                controller.whatsapp(people.telefone!);
+                              } else {
+                                Get.snackbar(
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    'Falha',
+                                    'Telefone não informado!',
+                                    colorText: Colors.white,
+                                    backgroundColor: Colors.red);
+                              }
                             } else {
-                              Get.snackbar(
+                              Get.snackbar('Falha',
+                                  'Verifique sua conexão e tente novamente!',
                                   snackPosition: SnackPosition.BOTTOM,
-                                  'Falha',
-                                  'Telefone não informado!',
+                                  duration: const Duration(seconds: 3),
                                   colorText: Colors.white,
                                   backgroundColor: Colors.red);
                             }
@@ -63,12 +73,21 @@ class DetailPeopleView extends GetView<PeopleController> {
                           )
                         ],
                         TopCard(
-                          onTap: () {
-                            final chatController = Get.put(ChatController());
-                            chatController.destinatarioId.value = people.id!;
-                            chatController.chatChange();
-                            Services.setRoute('/detail-people');
-                            Get.toNamed('/chat', arguments: people);
+                          onTap: () async {
+                            if (await ConnectionStatus.verifyConnection()) {
+                              final chatController = Get.put(ChatController());
+                              chatController.destinatarioId.value = people.id!;
+                              chatController.chatChange();
+                              Services.setRoute('/detail-people');
+                              Get.toNamed('/chat', arguments: people);
+                            } else {
+                              Get.snackbar('Falha',
+                                  'Verifique sua conexão e tente novamente!',
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  duration: const Duration(seconds: 3),
+                                  colorText: Colors.white,
+                                  backgroundColor: Colors.red);
+                            }
                           },
                           icon: Icons.wechat_sharp,
                           description: 'Enviar msg\npelo UCIF',
@@ -76,10 +95,20 @@ class DetailPeopleView extends GetView<PeopleController> {
                         Get.previousRoute == '/member-family'
                             ? const SizedBox()
                             : TopCard(
-                                onTap: () {
-                                  controller
-                                      .getFamilyMembers(people.family?.id);
-                                  Get.toNamed('/member-family');
+                                onTap: () async {
+                                  if (await ConnectionStatus
+                                      .verifyConnection()) {
+                                    controller
+                                        .getFamilyMembers(people.family?.id);
+                                    Get.toNamed('/member-family');
+                                  } else {
+                                    Get.snackbar('Falha',
+                                        'Verifique sua conexão e tente novamente!',
+                                        snackPosition: SnackPosition.BOTTOM,
+                                        duration: const Duration(seconds: 3),
+                                        colorText: Colors.white,
+                                        backgroundColor: Colors.red);
+                                  }
                                 },
                                 icon: Icons.groups_2,
                                 description: 'Ver membros\nda família',

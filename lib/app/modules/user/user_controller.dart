@@ -72,7 +72,7 @@ class UserController extends GetxController {
           (status) {
             if (status == InternetStatus.connected) {
               getUsers();
-             // getTypeUser();
+              // getTypeUser();
             }
           },
         );
@@ -403,5 +403,41 @@ class UserController extends GetxController {
     }
 
     return mensagem;
+  }
+
+  Future<Map<String, dynamic>> saveUserPeople() async {
+    if (userFormKey.currentState!.validate()) {
+      User user = User(
+        nome: nameController.text,
+        username: usernameController.text,
+        senha: passwordController.text,
+        usuarioId: UserStorage.getUserId(),
+      );
+      final token = UserStorage.getToken();
+      if (await ConnectionStatus.verifyConnection()) {
+        mensagem = await userRepository.insertUserPeople("Bearer $token", user);
+        if (mensagem != null) {
+          if (mensagem['message'] == 'success') {
+            retorno = {
+              "return": 0,
+              "message": "Operação realizada com sucesso!"
+            };
+          } else if (mensagem['message'] == 'ja_existe') {
+            retorno = {
+              "return": 1,
+              "message": "Já existe um usuário com esse e-mail!"
+            };
+          }
+        }
+      }
+
+      getUsers();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos do usuário!"
+      };
+    }
+    return retorno;
   }
 }

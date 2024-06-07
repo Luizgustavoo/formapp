@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
@@ -81,16 +80,16 @@ class CreateUserModal extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              if(UserStorage.getUserType() == 1) ...[
+              if (UserStorage.getUserType() == 1) ...[
                 Obx(
-                      () => SizedBox(
+                  () => SizedBox(
                     child: DropdownButtonFormField<int>(
                       value: typeUserSelected.value,
                       onChanged: (value) {
                         typeUserSelected.value = value!;
                       },
                       items: controller.listTypeUsers
-                      // .where((item) => item.id != 3)
+                          // .where((item) => item.id != 3)
                           .map<DropdownMenuItem<int>>((item) {
                         return DropdownMenuItem<int>(
                           value: item.id,
@@ -105,40 +104,9 @@ class CreateUserModal extends StatelessWidget {
                   ),
                 ),
               ],
-
               const SizedBox(
                 height: 10,
               ),
-              // Obx(() {
-              //   return typeUserSelected.value == 3
-              //       ? DropdownButtonFormField<int>(
-              //           isDense: true,
-              //           menuMaxHeight: Get.size.height / 2,
-              //           value: user?.familiaId ??
-              //               (familyController.listFamiliesDropDown.isNotEmpty
-              //                   ? familyController.listFamiliesDropDown.first.id
-              //                   : null),
-              //           onChanged: (int? value) {
-              //             if (value != null) {
-              //               controller.familyUser!.value = value;
-              //             }
-              //           },
-              //           items: familyController.listFamilies
-              //               .map<DropdownMenuItem<int>>((Family family) {
-              //             return DropdownMenuItem<int>(
-              //               value: family.id,
-              //               child: Text(family.nome!),
-              //             );
-              //           }).toList(),
-              //           decoration: const InputDecoration(
-              //               border: OutlineInputBorder(),
-              //               labelText: 'Selecione uma Família'),
-              //         )
-              //       : Container();
-              // }),
-              // const SizedBox(
-              //   height: 16,
-              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -158,25 +126,23 @@ class CreateUserModal extends StatelessWidget {
                         //       backgroundColor: Colors.red,
                         //       colorText: Colors.white);
                         // } else {
-                          Map<String, dynamic> retorno =
-                              tipoOperacao == 'insert'
-                                  ? await controller.saveUser()
-                                  : await controller.updateUser(
-                                      user!.id!, typeUserSelected.value);
+                        Map<String, dynamic> retorno = tipoOperacao == 'insert'
+                            ? await controller.saveUser()
+                            : await controller.updateUser(
+                                user!.id!, typeUserSelected.value);
 
-                          Get.back();
+                        Get.back();
 
-                          Get.snackbar(
-                            snackPosition: SnackPosition.BOTTOM,
-                            duration: const Duration(milliseconds: 1500),
-                            retorno['return'] == 0 ? 'Sucesso' : "Falha",
-                            retorno['message'],
-                            backgroundColor: retorno['return'] == 0
-                                ? Colors.green
-                                : Colors.red,
-                            colorText: Colors.white,
-                          );
-
+                        Get.snackbar(
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(milliseconds: 1500),
+                          retorno['return'] == 0 ? 'Sucesso' : "Falha",
+                          retorno['message'],
+                          backgroundColor: retorno['return'] == 0
+                              ? Colors.green
+                              : Colors.red,
+                          colorText: Colors.white,
+                        );
                       },
                       child: Text(
                         tipoOperacao == 'insert' ? 'SALVAR' : 'ALTERAR',

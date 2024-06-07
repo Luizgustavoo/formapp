@@ -74,7 +74,7 @@ class FamilyRepository {
 
   insertFamilyLocalToAPi(String token, Family family) async {
     try {
-      var response = await apiClient.insertFamilyLocalForApi(token, family);
+      var response = await apiClient.insertFamily(token, family);
 
       return response;
     } catch (e) {

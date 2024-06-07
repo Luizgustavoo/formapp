@@ -20,12 +20,10 @@ import 'package:ucif/app/utils/user_storage.dart';
 class ListPeopleView extends GetView<PeopleController> {
   const ListPeopleView({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     final homeController = Get.put(HomeController());
-    Timer? _debounce;
+    Timer? debounce;
     double previousScrollPosition = 0.0;
     return Stack(
       children: [
@@ -96,15 +94,17 @@ class ListPeopleView extends GetView<PeopleController> {
                           if (!controller.isLoading.value &&
                               scrollInfo.metrics.pixels >=
                                   scrollInfo.metrics.maxScrollExtent * 0.9) {
-
-                            if (scrollInfo.metrics.pixels > previousScrollPosition) {
+                            if (scrollInfo.metrics.pixels >
+                                previousScrollPosition) {
                               // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
-                              if (_debounce?.isActive ?? false) _debounce!.cancel();
-                              _debounce = Timer(const Duration(milliseconds: 300), () {
+                              if (debounce?.isActive ?? false) {
+                                debounce!.cancel();
+                              }
+                              debounce =
+                                  Timer(const Duration(milliseconds: 300), () {
                                 controller.loadMorePeoples();
                               });
                             }
-
                           }
                           previousScrollPosition = scrollInfo.metrics.pixels;
                           return false;
@@ -228,7 +228,7 @@ class ListPeopleView extends GetView<PeopleController> {
                           color: Colors.white,
                         ),
                       ),
-                      label: 'Adicionar Pessoas',
+                      label: 'Adicionar Pessoa',
                       labelStyle: const TextStyle(fontFamily: "Poppins"),
                       onTap: () {
                         controller.getMaritalStatus();

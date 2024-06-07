@@ -26,7 +26,7 @@ class FamilyFilterView extends GetView<FamilyController> {
 
   @override
   Widget build(BuildContext context) {
-    Timer? _debounce;
+    Timer? debounce;
     double previousScrollPosition = 0.0;
     return Scaffold(
       appBar: AppBar(
@@ -103,11 +103,10 @@ class FamilyFilterView extends GetView<FamilyController> {
                   if (!controller.isLoadingFamiliesFiltered.value &&
                       scrollInfo.metrics.pixels >=
                           scrollInfo.metrics.maxScrollExtent * 0.9) {
-
                     if (scrollInfo.metrics.pixels > previousScrollPosition) {
                       // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
-                      if (_debounce?.isActive ?? false) _debounce!.cancel();
-                      _debounce = Timer(const Duration(milliseconds: 300), () {
+                      if (debounce?.isActive ?? false) debounce!.cancel();
+                      debounce = Timer(const Duration(milliseconds: 300), () {
                         controller.loadMoreFamiliesFiltered();
                       });
                     }

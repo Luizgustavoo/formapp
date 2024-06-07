@@ -25,7 +25,7 @@ class ListUserView extends GetView<UserController> {
     final homeController = Get.put(HomeController());
     var idUserLogged = box.read('auth')['user']['id'];
     double previousScrollPosition = 0.0;
-    Timer? _debounce;
+    Timer? debounce;
 
     return Stack(
       children: [
@@ -48,7 +48,9 @@ class ListUserView extends GetView<UserController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / (UserStorage.getUserType() == 3 ? 30 : 15)),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height /
+                            (UserStorage.getUserType() == 3 ? 30 : 15)),
                     SizedBox(
                       height: 35,
                       child: TextField(
@@ -92,28 +94,30 @@ class ListUserView extends GetView<UserController> {
                     const SizedBox(height: 5),
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (!controller.isLoading.value &&
+                              scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent * 0.9) {
+                            if (scrollInfo.metrics.pixels >
+                                previousScrollPosition) {
+                              // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
 
-
-                      onNotification: (ScrollNotification scrollInfo) {
-                      if (!controller.isLoading.value &&
-                      scrollInfo.metrics.pixels >=
-                      scrollInfo.metrics.maxScrollExtent * 0.9) {
-                      if (scrollInfo.metrics.pixels > previousScrollPosition) {
-                      // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
-
-                        if (scrollInfo.metrics.pixels > previousScrollPosition) {
-                          // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
-                          if (_debounce?.isActive ?? false) _debounce!.cancel();
-                          _debounce = Timer(const Duration(milliseconds: 300), () {
-                            controller.loadMoreUsers();
-                          });
-                        }
-
-                      }
-                      }
-                      previousScrollPosition = scrollInfo.metrics.pixels;
-                      return false;
-                      },
+                              if (scrollInfo.metrics.pixels >
+                                  previousScrollPosition) {
+                                // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
+                                if (debounce?.isActive ?? false) {
+                                  debounce!.cancel();
+                                }
+                                debounce = Timer(
+                                    const Duration(milliseconds: 300), () {
+                                  controller.loadMoreUsers();
+                                });
+                              }
+                            }
+                          }
+                          previousScrollPosition = scrollInfo.metrics.pixels;
+                          return false;
+                        },
                         child: Obx(() {
                           final status =
                               Get.find<InternetStatusProvider>().status;
@@ -264,16 +268,16 @@ class ListUserView extends GetView<UserController> {
             ),
           ),
         ),
-        if(UserStorage.getUserType() < 3)...[
+        if (UserStorage.getUserType() < 3) ...[
           Positioned(
             top: (MediaQuery.of(context).size.height -
-                CustomAppBar().preferredSize.height) *
+                    CustomAppBar().preferredSize.height) *
                 .180,
             left: 15,
             right: 15,
             child: Card(
-              shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7)),
               margin: const EdgeInsets.all(16),
               elevation: 5,
               child: SizedBox(

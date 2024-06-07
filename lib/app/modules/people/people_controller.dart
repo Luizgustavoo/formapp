@@ -15,17 +15,14 @@ import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
-import 'package:ucif/app/data/repository/family_service_repository.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
 import 'package:ucif/app/data/repository/people_repository.dart';
 import 'package:ucif/app/data/repository/religion_repository.dart';
-import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();
@@ -116,7 +113,6 @@ class PeopleController extends GetxController {
     // print(
     //     '======================================================controller PEOPLE==============');
     if (UserStorage.existUser()) {
-
       // bool isConnected = await ConnectionStatus.verifyConnection();
       // if (isConnected) {
       //
@@ -350,7 +346,7 @@ class PeopleController extends GetxController {
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-         // familyController.getFamilies(page: 1);
+          // familyController.getFamilies(page: 1);
         }
       } else if (mensagem['message'] == 'ja_existe') {
         retorno = {
@@ -615,90 +611,6 @@ class PeopleController extends GetxController {
     }
 
     photoUrlPath.value = "";
-  }
-
-  //*MÉTODOS RESPONSAVEIS PELO ATENDIMENTO*/
-  Future<Map<String, dynamic>> saveService(Family family) async {
-    FamilyService familyService = FamilyService(
-      descricao: messageController.text,
-      assunto: subjectController.text,
-      dataAtendimento: selectedDate.value.toString(),
-      usuarioId: box.read('auth')['user']['id'],
-    );
-
-    final token = box.read('auth')['access_token'];
-    dynamic mensagem;
-
-    // if (await ConnectionStatus.verifyConnection()) {
-    //   mensagem = await repositoryService.insertService(
-    //       "Bearer $token", familyService, family);
-    // } else {
-    //   //await repositoryService.saveFamilyServiceLocal(familyService);
-    // }
-
-    if (mensagem != null) {
-      if (mensagem['message'] == 'success') {
-        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-      } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uam família com esse nome!"
-        };
-      }
-    }
-    getPeoples();
-    return retorno;
-  }
-
-  // Future<Map<String, dynamic>> updateService(
-  //     int id, int idPeopleSelected) async {
-  //   FamilyService familyService = FamilyService(
-  //     descricao: messageController.text,
-  //     assunto: subjectController.text,
-  //     dataAtendimento: selectedDate.value.toString(),
-  //     pessoaId: idPeopleSelected,
-  //     usuarioId: box.read('auth')['user']['id'],
-  //     id: id,
-  //   );
-  //
-  //   final token = box.read('auth')['access_token'];
-  //
-  //   final mensagem =
-  //       await repositoryService.updateService("Bearer $token", familyService);
-  //
-  //   if (mensagem != null) {
-  //     if (mensagem['message'] == 'success') {
-  //       retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-  //     } else if (mensagem['message'] == 'ja_existe') {
-  //       retorno = {
-  //         "return": 1,
-  //         "message": "Já existe uam família com esse nome!"
-  //       };
-  //     }
-  //   }
-  //
-  //   getPeoples();
-  //
-  //   return retorno;
-  // }
-
-  void clearModalMessageService() {
-    subjectController.value = TextEditingValue.empty;
-    messageController.value = TextEditingValue.empty;
-    selectedDate.value = null;
-    idFamilySelected = null;
-    // idPeopleSelected = null;
-  }
-
-  void fillInFieldsServicePerson() {
-    subjectController.text = selectedService!.assunto.toString();
-    messageController.text = selectedService!.descricao.toString();
-
-    if (selectedService!.dataCadastro != null) {
-      selectedDate.value = DateTime.parse(selectedService!.dataAtendimento!);
-    } else {
-      selectedDate.value = DateTime.now();
-    }
   }
 
   //MANDA OS DADOS OFFLINE PARA API

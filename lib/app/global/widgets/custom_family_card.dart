@@ -18,6 +18,7 @@ class CustomFamilyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: family.familyLocal! ? const Color(0xFF014acb) : Colors.white,
       elevation: 1,
       margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
       child: ListTile(
@@ -28,41 +29,68 @@ class CustomFamilyCard extends StatelessWidget {
           Get.toNamed('/member-family');
         },
         title: Text('Família: ${family.nome!}',
-            style: const TextStyle(
+            style: TextStyle(
                 fontFamily: 'Poppinss',
                 fontSize: 14,
-                overflow: TextOverflow.ellipsis)),
+                overflow: TextOverflow.ellipsis,
+                color: family.familyLocal! ? Colors.white : Colors.black)),
         subtitle: Text('Total de membros: ${family.pessoas!.length}',
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 14,
-            )),
-        trailing: IconButton(
-            onPressed: Get.currentRoute == '/filter-family'
-                ? null
-                : () {
-                    final controller = Get.put(FamilyController());
-                    controller.selectedFamily = family;
-                    controller.fillInFields();
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      isDismissible: false,
-                      context: context,
-                      builder: (context) => Padding(
-                        padding: MediaQuery.of(context).viewInsets,
-                        child: CreateFamilyModal(
-                          tipoOperacao: 'update',
-                          titulo: 'Editar Família',
-                          family: family,
-                        ),
-                      ),
-                    );
-                  },
-            icon: Get.currentRoute == '/filter-family'
-                ? const SizedBox()
-                : const Icon(
-                    Icons.edit_note_sharp,
-                  )),
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 14,
+                color: family.familyLocal! ? Colors.white : Colors.black)),
+        trailing: family.familyLocal!
+            ? IconButton(
+                onPressed: () async {
+                  final controller = Get.put(FamilyController());
+
+                  Map<String, dynamic> mensagem =
+                      await controller.sendFamilyToAPIOffline(family);
+                  if (mensagem['return'] == 0) {
+                    Get.snackbar('Sucesso', mensagem['message'],
+                        snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        backgroundColor: Colors.green);
+                  } else {
+                    Get.snackbar('Falha', mensagem['message'],
+                        snackPosition: SnackPosition.BOTTOM,
+                        colorText: Colors.white,
+                        backgroundColor: Colors.red);
+                  }
+                },
+                icon: const Icon(
+                  Icons.refresh,
+                  color: Colors.white,
+                ))
+            : IconButton(
+                onPressed: Get.currentRoute == '/filter-family'
+                    ? null
+                    : () {
+                        final controller = Get.put(FamilyController());
+                        controller.selectedFamily = family;
+                        controller.fillInFields();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CreateFamilyModal(
+                              tipoOperacao: 'update',
+                              titulo: 'Editar Família',
+                              family: family,
+                            ),
+                          ),
+                        );
+                      },
+                icon: Get.currentRoute == '/filter-family'
+                    ? const SizedBox()
+                    : Icon(
+                        Icons.edit_note_sharp,
+                        color: family.familyLocal!
+                            ? Colors.white
+                            : Colors.grey.shade200,
+                      )),
       ),
     );
   }

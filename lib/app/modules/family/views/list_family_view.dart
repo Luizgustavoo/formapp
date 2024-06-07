@@ -23,7 +23,7 @@ class FamilyView extends GetView<FamilyController> {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.put(HomeController());
-    Timer? _debounce;
+    Timer? debounce;
     double previousScrollPosition = 0.0;
     return Stack(
       children: [
@@ -46,7 +46,9 @@ class FamilyView extends GetView<FamilyController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / (UserStorage.getUserType() == 3 ? 30 : 15)),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height /
+                            (UserStorage.getUserType() == 3 ? 30 : 15)),
                     SizedBox(
                       height: 35,
                       child: TextField(
@@ -94,18 +96,17 @@ class FamilyView extends GetView<FamilyController> {
                           if (!controller.isLoadingFamilies.value &&
                               scrollInfo.metrics.pixels >=
                                   scrollInfo.metrics.maxScrollExtent * 0.9) {
-
-
-                            if (scrollInfo.metrics.pixels > previousScrollPosition) {
+                            if (scrollInfo.metrics.pixels >
+                                previousScrollPosition) {
                               // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
-                              if (_debounce?.isActive ?? false) _debounce!.cancel();
-                              _debounce = Timer(const Duration(milliseconds: 300), () {
+                              if (debounce?.isActive ?? false) {
+                                debounce!.cancel();
+                              }
+                              debounce =
+                                  Timer(const Duration(milliseconds: 300), () {
                                 controller.loadMoreFamilies();
                               });
                             }
-
-
-
                           }
                           previousScrollPosition = scrollInfo.metrics.pixels;
                           return false;
@@ -228,7 +229,7 @@ class FamilyView extends GetView<FamilyController> {
                           color: Colors.white,
                         ),
                       ),
-                      label: 'Adicionar Pessoas',
+                      label: 'Adicionar Pessoa',
                       labelStyle: const TextStyle(fontFamily: "Poppins"),
                       onTap: () {
                         final peopleController = Get.put(PeopleController());
@@ -251,16 +252,16 @@ class FamilyView extends GetView<FamilyController> {
                 )
               : const SizedBox(),
         ),
-        if(UserStorage.getUserType() < 3)...[
+        if (UserStorage.getUserType() < 3) ...[
           Positioned(
             top: (MediaQuery.of(context).size.height -
-                CustomAppBar().preferredSize.height) *
+                    CustomAppBar().preferredSize.height) *
                 .180,
             left: 15,
             right: 15,
             child: Card(
-              shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7)),
               margin: const EdgeInsets.all(16),
               elevation: 5,
               child: SizedBox(

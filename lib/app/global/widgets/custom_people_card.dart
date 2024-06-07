@@ -4,9 +4,10 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/global/widgets/create_new_user_modal.dart';
 import 'package:ucif/app/global/widgets/family_list_modal.dart';
-import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 
 class CustomPeopleCard extends StatelessWidget {
@@ -31,9 +32,8 @@ class CustomPeopleCard extends StatelessWidget {
                 Get.currentRoute == '/filter-family' ||
                 people.peopleLocal!
             ? DismissDirection.none
-            : DismissDirection.startToEnd,
+            : DismissDirection.horizontal,
         confirmDismiss: (DismissDirection direction) async {
-
           if (direction == DismissDirection.startToEnd) {
             await showModalBottomSheet(
               context: context,
@@ -41,13 +41,28 @@ class CustomPeopleCard extends StatelessWidget {
                 people: people,
               ),
             );
+            return false;
+          } else if (direction == DismissDirection.endToStart) {
+            final controller = Get.put(UserController());
+            controller.getTypeUser();
+            await showModalBottomSheet(
+              context: context,
+              builder: (context) => Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: CreateNewUserModal(
+                  titulo: 'Cadastrar Usuário',
+                  people: people,
+                ),
+              ),
+            );
+            return false;
           }
           return false;
         },
         background: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: Colors.orange.shade300,
+            color: const Color(0xFF014acb),
           ),
           child: Align(
             alignment: Alignment.centerLeft,
@@ -55,12 +70,35 @@ class CustomPeopleCard extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Row(
                 children: [
+                  const Icon(Icons.list_rounded, color: Colors.white),
                   Text(
                     'Alterar Família',
                     style: CustomTextStyle.button(context),
                   ),
                   const SizedBox(width: 5),
-                  const Icon(Icons.list_rounded, color: Colors.white)
+                ],
+              ),
+            ),
+          ),
+        ),
+        secondaryBackground: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.green.shade300,
+          ),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Cadastrar usuário',
+                    style: CustomTextStyle.button(context),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(Icons.person_add, color: Colors.white),
                 ],
               ),
             ),
@@ -80,7 +118,9 @@ class CustomPeopleCard extends StatelessWidget {
               radius: 15,
               backgroundImage: people.foto.toString().isEmpty
                   ? const AssetImage('assets/images/default_avatar.jpg')
-                  : CachedNetworkImageProvider('$urlImagem/storage/app/public/${people.foto}') as ImageProvider,
+                  : CachedNetworkImageProvider(
+                          '$urlImagem/storage/app/public/${people.foto}')
+                      as ImageProvider,
             ),
             title: Text(people.nome!.toUpperCase(),
                 style: TextStyle(
@@ -96,10 +136,12 @@ class CustomPeopleCard extends StatelessWidget {
                       if (mensagem['return'] == 0) {
                         Get.snackbar('Sucesso', mensagem['message'],
                             snackPosition: SnackPosition.BOTTOM,
+                            colorText: Colors.white,
                             backgroundColor: Colors.green);
                       } else {
                         Get.snackbar('Falha', mensagem['message'],
                             snackPosition: SnackPosition.BOTTOM,
+                            colorText: Colors.white,
                             backgroundColor: Colors.red);
                       }
                     },

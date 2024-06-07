@@ -108,11 +108,9 @@ class DatabaseHelper {
     return delete;
   }
 
-  Future<int> deleteFamilyAndPeople(int familyId) async {
+  Future<int> deleFamily(int familyId) async {
     int delete = 0;
     final db = await database;
-    delete += await db.delete('people',
-        where: 'familia_id = ? and id > 0', whereArgs: [familyId]);
     delete +=
         await db.delete('families', where: 'id = ?', whereArgs: [familyId]);
     return delete;

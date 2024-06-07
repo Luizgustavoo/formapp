@@ -99,7 +99,9 @@ class UserApiClient {
 
       var requestBody = {
         "nome": user.nome,
-        "tipousuario_id": UserStorage.getUserType() == 1 ? user.tipousuarioId.toString() : UserStorage.getUserType().toString(),
+        "tipousuario_id": UserStorage.getUserType() == 1
+            ? user.tipousuarioId.toString()
+            : UserStorage.getUserType().toString(),
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
       };
@@ -132,19 +134,11 @@ class UserApiClient {
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
         if (response.statusCode == 200) {
-          Map<String, dynamic> user = box.read('auth')['user'];
+          Map<String, dynamic> user = box.read('auth')['pessoa'];
           user['foto'] = json.decode(response.body)['objeto']['foto'];
-          // user['nome'] = json.decode(response.body)['objeto']['nome'];
-          // UserStorage.changeName.value = user['nome'];
           Map<String, dynamic> auth = box.read('auth');
-          auth['user'] = user;
+          auth['pessoa'] = user;
           box.write('auth', auth);
-
-          // auth.user = user as User?;
-          // print(user);
-          // print('------------------------------------------------');
-          // user['foto'] = photoUrlPath.value;
-          // print(user);
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
             json.decode(response.body)['message'] == "ja_existe") {
@@ -360,6 +354,48 @@ class UserApiClient {
       return json.decode(response.body);
     } catch (e) {
       ErrorHandler.showError('Sem Conexão');
+    }
+    return null;
+  }
+
+  //TRANSFORMAR PESSOA EM USUARIO
+  insertUserPeople(String token, User user) async {
+    try {
+      var userUrl = Uri.parse('$baseUrl/v1/usuario/createuserpeople');
+
+      var requestBody = {
+        "nome": user.nome,
+        "username": user.username,
+        "senha": user.senha,
+        "usuario_id": user.usuarioId.toString(),
+      };
+
+      var response = await httpClient.post(
+        userUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
     }
     return null;
   }

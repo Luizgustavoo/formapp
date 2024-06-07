@@ -21,7 +21,7 @@ class UserStorage {
 
   static String getUserPhoto() {
     if (existUser()) {
-      return _box.read('auth')['user']['foto'] ?? "";
+      return _box.read('auth')['pessoa']['foto'] ?? "";
     }
     return "";
   }

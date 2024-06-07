@@ -5,9 +5,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:ucif/app/data/base_url.dart';
-import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
@@ -131,7 +129,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   size: 28,
                                 ),
                               ),
-                              SizedBox()
+                              const SizedBox()
                             ],
                           ),
                         ],

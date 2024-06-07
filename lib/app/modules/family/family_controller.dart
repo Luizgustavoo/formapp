@@ -390,11 +390,6 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<Map<String, dynamic>> sendFamilyToAPI(Family family) async {
-    await sendFamilyToAPIOffline(family);
-    return retorno;
-  }
-
   void clearAllFamilyTextFields() {
     final textControllers = [
       idFamiliaController,
