@@ -1,6 +1,4 @@
-import 'dart:ffi';
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -408,16 +406,16 @@ class UserController extends GetxController {
     return mensagem;
   }
 
-  Future<Map<String, dynamic>> saveUserPeople(String namePeople, int pessoaId) async {
+  Future<Map<String, dynamic>> saveUserPeople(
+      String namePeople, int pessoaId) async {
     if (userFormKey.currentState!.validate()) {
       User user = User(
-        nome: namePeople,
-        username: usernameController.text,
-        senha: passwordController.text,
-        tipousuarioId: typeUserSelected.value,
-        usuarioId: UserStorage.getUserId(),
-        pessoaId: pessoaId.toString()
-      );
+          nome: namePeople,
+          username: usernameController.text,
+          senha: passwordController.text,
+          tipousuarioId: typeUserSelected.value,
+          usuarioId: UserStorage.getUserId(),
+          pessoaId: pessoaId.toString());
       final token = UserStorage.getToken();
       if (await ConnectionStatus.verifyConnection()) {
         mensagem = await userRepository.insertUserPeople("Bearer $token", user);

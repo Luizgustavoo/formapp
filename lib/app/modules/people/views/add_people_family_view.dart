@@ -1,8 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, unrelated_type_equality_checks
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/family_model.dart';
@@ -21,7 +23,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
 
   final Family? family;
   final int tipoOperacao;
-
   final bool peopleLocal;
 
   @override
@@ -152,7 +153,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         () => SizedBox(
                           width: 150,
                           child: DropdownButtonFormField<int>(
-
                             value: controller.estadoCivilSelected.value,
                             onChanged: (value) {
                               controller.estadoCivilSelected.value = value!;
@@ -255,7 +255,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       if (value == null || value.isEmpty) {
                         return "Preencha o cpf";
                       }
-
                       return null;
                     },
                   ),
@@ -288,40 +287,98 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: TextFormField(
-                          controller:
-                              controller.tituloEleitoralPessoaController,
-                          keyboardType: TextInputType.number,
-                          maxLength: 12,
-                          decoration: const InputDecoration(
-                              counterText: "",
-                              border: OutlineInputBorder(),
-                              labelText: 'Título de Eleitor'),
+                  Obx(
+                    () => MultiSelectBottomSheetField(
+                      selectedColor: const Color(0xFF014acb),
+                      isDismissible: false,
+                      searchable: true,
+                      items: controller.listHealth.map((item) {
+                        return MultiSelectItem(item.id, item.nome ?? '');
+                      }).toList(),
+                      selectedItemsTextStyle: const TextStyle(
+                          color: Colors.black, fontFamily: 'Poppinss'),
+                      listType: MultiSelectListType.LIST,
+                      searchHint: 'Pesquisar',
+                      onConfirm: (values) {
+                        controller.selectedSaudeIds = values;
+                      },
+                      title: const Text(''),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      cancelText: const Text(
+                        'CANCELAR',
+                        style: TextStyle(
+                            fontFamily: 'Poppinss', color: Color(0xFF014acb)),
+                      ),
+                      confirmText: const Text(
+                        'OK',
+                        style: TextStyle(
+                            fontFamily: 'Poppinss', color: Color(0xFF014acb)),
+                      ),
+                      buttonIcon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black,
+                      ),
+                      buttonText: const Text(
+                        "Acometimento de Saúde",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Poppinss',
+                          fontSize: 14,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 2,
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: controller.zonaEleitoralPessoaController,
-                          maxLength: 3,
-                          decoration: const InputDecoration(
-                              counterText: "",
-                              border: OutlineInputBorder(),
-                              labelText: 'Zona Eleitoral'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Obx(
+                    () => MultiSelectBottomSheetField(
+                      selectedColor: const Color(0xFF014acb),
+                      isDismissible: false,
+                      searchable: true,
+                      items: controller.listMedicine.map((item) {
+                        return MultiSelectItem(item.id, item.nome ?? '');
+                      }).toList(),
+                      selectedItemsTextStyle: const TextStyle(
+                          color: Colors.black, fontFamily: 'Poppinss'),
+                      listType: MultiSelectListType.LIST,
+                      searchHint: 'Pesquisar',
+                      onConfirm: (values) {
+                        controller.selectedMedicamentoIds = values;
+                      },
+                      title: const Text(''),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      cancelText: const Text(
+                        'CANCELAR',
+                        style: TextStyle(
+                            fontFamily: 'Poppinss', color: Color(0xFF014acb)),
+                      ),
+                      confirmText: const Text(
+                        'OK',
+                        style: TextStyle(
+                            fontFamily: 'Poppinss', color: Color(0xFF014acb)),
+                      ),
+                      buttonIcon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black,
+                      ),
+                      buttonText: const Text(
+                        "Uso de Medicamento",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Poppinss',
+                          fontSize: 14,
                         ),
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Obx(
                     () => DropdownButtonFormField<int>(
-
                       value: controller.religiaoSelected.value,
                       onChanged: (value) {
                         controller.religiaoSelected.value = value!;

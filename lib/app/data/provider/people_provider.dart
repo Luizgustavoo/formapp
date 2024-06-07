@@ -137,8 +137,8 @@ class PeopleApiClient {
     return null;
   }
 
-  insertPeople(
-      String token, People pessoa, File imageFile, bool peopleLocal) async {
+  insertPeople(String token, People pessoa, File imageFile, bool peopleLocal,
+      List? saude, List? medicamento) async {
     try {
       bool isConnected = await ConnectionStatus.verifyConnection();
       if (isConnected && !peopleLocal) {
@@ -167,6 +167,12 @@ class PeopleApiClient {
           "familia_id": pessoa.familiaId.toString(),
           "parentesco": pessoa.parentesco!,
         });
+        if (saude != null) {
+          request.fields['saude'] = json.encode(saude);
+        }
+        if (medicamento != null) {
+          request.fields['medicamento'] = json.encode(medicamento);
+        }
 
         if (imageFile.path.isNotEmpty) {
           request.files.add(await http.MultipartFile.fromPath(

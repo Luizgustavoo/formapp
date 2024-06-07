@@ -134,14 +134,11 @@ class UserApiClient {
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
         if (response.statusCode == 200) {
-
-
           Map<String, dynamic> user = box.read('auth')['pessoa'];
           user['foto'] = json.decode(response.body)['objeto']['foto'];
           Map<String, dynamic> auth = box.read('auth');
           auth['pessoa'] = user;
           box.write('auth', auth);
-
 
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
@@ -385,7 +382,6 @@ class UserApiClient {
         body: requestBody,
       );
 
-      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||

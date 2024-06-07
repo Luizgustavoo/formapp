@@ -60,11 +60,11 @@ class PeopleRepository {
     }
   }
 
-  insertPeople(
-      String token, People pessoa, File imageFile, bool peopleLocal) async {
+  insertPeople(String token, People pessoa, File imageFile, bool peopleLocal,
+      List? saude, List? medicamento) async {
     try {
-      var response =
-          await apiClient.insertPeople(token, pessoa, imageFile, peopleLocal);
+      var response = await apiClient.insertPeople(
+          token, pessoa, imageFile, peopleLocal, saude, medicamento);
 
       return response;
     } catch (e) {
@@ -158,10 +158,11 @@ class PeopleRepository {
     return peoples;
   }
 
-  insertPeopleLocalToApi(String token, People people) async {
+  insertPeopleLocalToApi(
+      String token, People people, List? saude, List? medicamento) async {
     try {
-      var response =
-          await apiClient.insertPeople(token, people, File(''), false);
+      var response = await apiClient.insertPeople(
+          token, people, File(''), false, saude, medicamento);
 
       return response;
     } catch (e) {

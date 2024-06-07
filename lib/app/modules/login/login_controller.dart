@@ -5,13 +5,17 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/models/auth_model.dart';
 import 'package:ucif/app/data/models/church_model.dart';
+import 'package:ucif/app/data/models/health_model.dart';
 import 'package:ucif/app/data/models/marital_status_model.dart';
+import 'package:ucif/app/data/models/medicine_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/repository/auth_repository.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
+import 'package:ucif/app/data/repository/health_repository.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
+import 'package:ucif/app/data/repository/medicine_repository.dart';
 import 'package:ucif/app/data/repository/religion_repository.dart';
 import 'package:ucif/app/global/storage_manager.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
@@ -75,6 +79,8 @@ class LoginController extends GetxController {
   RxList<User> listLeader = <User>[].obs;
   RxList<Religion> listReligion = <Religion>[].obs;
   RxList<Church> listChurch = <Church>[].obs;
+  RxList<Health> listHealth = <Health>[].obs;
+  RxList<Medicine> listMedicine = <Medicine>[].obs;
 
 /*FINAL REGISTRO PESSOA */
   final box = GetStorage('credenciado');
@@ -82,6 +88,9 @@ class LoginController extends GetxController {
   RxBool isLoggingIn = false.obs;
   RxString errorMessage = ''.obs;
   RxBool showErrorSnackbar = false.obs;
+
+  List<int?> selectedSaudeIds = <int>[].obs;
+  List<int?> selectedMedicamentoIds = <int>[].obs;
   dynamic mensagem;
 
   final userController = Get.put(UserController());
@@ -115,11 +124,15 @@ class LoginController extends GetxController {
             Get.find<MaritalStatusRepository>();
         final ReligionRepository repositoryReligion =
             Get.put(ReligionRepository());
-        final ChurchRepository churchReligion = Get.put(ChurchRepository());
+        final ChurchRepository church = Get.put(ChurchRepository());
+        final HealthRepository health = Get.put(HealthRepository());
+        final MedicineRepository medicine = Get.put(MedicineRepository());
 
         await repositoryMarital.getAll("Bearer ${UserStorage.getToken()}");
         await repositoryReligion.getAll("Bearer ${UserStorage.getToken()}");
-        await churchReligion.getAll("Bearer ${UserStorage.getToken()}");
+        await church.getAll("Bearer ${UserStorage.getToken()}");
+        await health.getAll("Bearer ${UserStorage.getToken()}");
+        await medicine.getAll("Bearer ${UserStorage.getToken()}");
 
         Get.offAllNamed('/home');
       } else {

@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:ucif/app/modules/login/login_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/format_validator.dart';
@@ -287,58 +288,104 @@ class SignUpView extends GetView<LoginController> {
                                     ],
                                   ),
                                   _gap(),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: TextFormField(
-                                          controller: controller
-                                              .tituloEleitoralPessoaController,
-                                          keyboardType: TextInputType.number,
-                                          maxLength: 12,
-                                          decoration: InputDecoration(
-                                              counterText: "",
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              suffixIcon: const Icon(
-                                                  Icons.view_timeline_rounded),
-                                              labelStyle: const TextStyle(
-                                                color: Colors.black54,
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12,
-                                              ),
-                                              labelText: 'TÍTULO DE ELEITOR'),
+                                  Obx(
+                                    () => MultiSelectBottomSheetField(
+                                      selectedColor: const Color(0xFF014acb),
+                                      isDismissible: false,
+                                      searchable: true,
+                                      items: controller.listHealth.map((item) {
+                                        return MultiSelectItem(
+                                            item.id, item.nome ?? '');
+                                      }).toList(),
+                                      selectedItemsTextStyle: const TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Poppinss'),
+                                      listType: MultiSelectListType.LIST,
+                                      searchHint: 'Pesquisar',
+                                      onConfirm: (values) {
+                                        controller.selectedSaudeIds = values;
+                                      },
+                                      title: const Text(''),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      cancelText: const Text(
+                                        'CANCELAR',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppinss',
+                                            color: Color(0xFF014acb)),
+                                      ),
+                                      confirmText: const Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppinss',
+                                            color: Color(0xFF014acb)),
+                                      ),
+                                      buttonIcon: const Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.black,
+                                      ),
+                                      buttonText: const Text(
+                                        "Acometimento de Saúde",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Poppinss',
+                                          fontSize: 14,
                                         ),
                                       ),
-                                      const SizedBox(width: 5),
-                                      Expanded(
-                                        flex: 2,
-                                        child: TextFormField(
-                                          keyboardType: TextInputType.number,
-                                          controller: controller
-                                              .zonaEleitoralPessoaController,
-                                          maxLength: 3,
-                                          decoration: InputDecoration(
-                                              counterText: "",
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              suffixIcon:
-                                                  const Icon(Icons.adjust),
-                                              labelStyle: const TextStyle(
-                                                color: Colors.black54,
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12,
-                                              ),
-                                              labelText: 'ZONA ELEITORAL'),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Obx(
+                                    () => MultiSelectBottomSheetField(
+                                      selectedColor: const Color(0xFF014acb),
+                                      isDismissible: false,
+                                      searchable: true,
+                                      items:
+                                          controller.listMedicine.map((item) {
+                                        return MultiSelectItem(
+                                            item.id, item.nome ?? '');
+                                      }).toList(),
+                                      selectedItemsTextStyle: const TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Poppinss'),
+                                      listType: MultiSelectListType.LIST,
+                                      searchHint: 'Pesquisar',
+                                      onConfirm: (values) {
+                                        controller.selectedMedicamentoIds =
+                                            values;
+                                      },
+                                      title: const Text(''),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      cancelText: const Text(
+                                        'CANCELAR',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppinss',
+                                            color: Color(0xFF014acb)),
+                                      ),
+                                      confirmText: const Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppinss',
+                                            color: Color(0xFF014acb)),
+                                      ),
+                                      buttonIcon: const Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.black,
+                                      ),
+                                      buttonText: const Text(
+                                        "Uso de Medicamento",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Poppinss',
+                                          fontSize: 14,
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
                                   _gap(),
                                   DropdownButtonFormField<int>(

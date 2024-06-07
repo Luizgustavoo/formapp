@@ -1,11 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:ucif/app/data/models/health_model.dart';
+import 'package:ucif/app/data/models/medicine_model.dart';
+import 'package:ucif/app/data/repository/health_repository.dart';
+import 'package:ucif/app/data/repository/medicine_repository.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:ucif/app/data/models/church_model.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
@@ -22,7 +29,6 @@ import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();
@@ -55,15 +61,14 @@ class PeopleController extends GetxController {
   RxString? parentesco = 'Pai'.obs;
   RxString oldImagePath = ''.obs;
 
-  // int? idPeopleSelected;
-  int? idFamilySelected;
-
   RxList<People> listPeoples = <People>[].obs;
   RxList<People> listPeopleFamilies = <People>[].obs;
   RxList<People> listFamilyMembers = <People>[].obs;
-  final repositoryChurch = Get.put(ChurchRepository());
+
   final box = GetStorage('credenciado');
   RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
+  RxList<Health> listHealth = <Health>[].obs;
+  RxList<Medicine> listMedicine = <Medicine>[].obs;
   RxList<Religion> listReligion = <Religion>[].obs;
   RxList<People> composicaoFamiliar = <People>[].obs;
   RxList<Church> listChurch = <Church>[].obs;
@@ -81,10 +86,11 @@ class PeopleController extends GetxController {
   User? selectedUser;
 
   final repository = Get.put(PeopleRepository());
-
-  // final repositoryService = Get.put(FamilyServiceRepository());
   final maritalRepository = Get.find<MaritalStatusRepository>();
+  final repositoryChurch = Get.put(ChurchRepository());
   final repositoryReligion = Get.put(ReligionRepository());
+  final healthRepository = Get.put(HealthRepository());
+  final medicineRepository = Get.put(MedicineRepository());
 
   RxBool isLoading = true.obs;
 
@@ -98,6 +104,15 @@ class PeopleController extends GetxController {
 
   final ScrollController scrollController = ScrollController();
   final ScrollController scrollFilterPeople = ScrollController();
+
+  var medicamentoItems = <Item>[
+    Item(id: 1, descricao: "Medicamento A"),
+    Item(id: 2, descricao: "Medicamento B"),
+    // Adicione mais itens conforme necessário
+  ].obs;
+
+  List<int?> selectedSaudeIds = <int>[].obs;
+  List<int?> selectedMedicamentoIds = <int>[].obs;
 
   int currentPage = 1;
   bool isLoadingMore = false;
@@ -341,12 +356,16 @@ class PeopleController extends GetxController {
       final token = box.read('auth')['access_token'];
 
       mensagem = await repository.insertPeople(
-          "Bearer $token", pessoa, File(photoUrlPath.value), peopleLocal);
+          "Bearer $token",
+          pessoa,
+          File(photoUrlPath.value),
+          peopleLocal,
+          selectedSaudeIds,
+          selectedMedicamentoIds);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-          // familyController.getFamilies(page: 1);
         }
       } else if (mensagem['message'] == 'ja_existe') {
         retorno = {
@@ -452,6 +471,22 @@ class PeopleController extends GetxController {
       final token = UserStorage.getToken();
       final updatedList = await maritalRepository.getAll("Bearer $token");
       listMaritalStatus.assignAll(updatedList);
+    }
+  }
+
+  Future<void> getHealth() async {
+    if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
+      final updatedList = await healthRepository.getAll("Bearer $token");
+      listHealth.assignAll(updatedList);
+    }
+  }
+
+  Future<void> getMedicine() async {
+    if (UserStorage.existUser()) {
+      final token = UserStorage.getToken();
+      final updatedList = await medicineRepository.getAll("Bearer $token");
+      listMedicine.assignAll(updatedList);
     }
   }
 
@@ -618,8 +653,8 @@ class PeopleController extends GetxController {
     try {
       if (await ConnectionStatus.verifyConnection()) {
         final token = UserStorage.getToken();
-        var mensagem =
-            await repository.insertPeopleLocalToApi("Bearer $token", people);
+        var mensagem = await repository.insertPeopleLocalToApi(
+            "Bearer $token", people, selectedSaudeIds, selectedMedicamentoIds);
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
@@ -680,4 +715,13 @@ class PeopleController extends GetxController {
 
     return retorno;
   }
+}
+
+class Item {
+  int? id;
+  String? descricao;
+  Item({
+    this.id,
+    this.descricao,
+  });
 }
