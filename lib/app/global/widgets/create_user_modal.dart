@@ -6,6 +6,7 @@ import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class CreateUserModal extends StatelessWidget {
   CreateUserModal({
@@ -80,60 +81,64 @@ class CreateUserModal extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Obx(
-                () => SizedBox(
-                  child: DropdownButtonFormField<int>(
-                    value: typeUserSelected.value,
-                    onChanged: (value) {
-                      typeUserSelected.value = value!;
-                    },
-                    items: controller.listTypeUsers
-                        .map<DropdownMenuItem<int>>((item) {
-                      return DropdownMenuItem<int>(
-                        value: item.id,
-                        child: Text(item.descricao ?? ''),
-                      );
-                    }).toList(),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Tipo Usuário',
+              if(UserStorage.getUserType() == 1) ...[
+                Obx(
+                      () => SizedBox(
+                    child: DropdownButtonFormField<int>(
+                      value: typeUserSelected.value,
+                      onChanged: (value) {
+                        typeUserSelected.value = value!;
+                      },
+                      items: controller.listTypeUsers
+                      // .where((item) => item.id != 3)
+                          .map<DropdownMenuItem<int>>((item) {
+                        return DropdownMenuItem<int>(
+                          value: item.id,
+                          child: Text(item.descricao ?? ''),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Tipo Usuário',
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
+
               const SizedBox(
                 height: 10,
               ),
-              Obx(() {
-                return typeUserSelected.value == 3
-                    ? DropdownButtonFormField<int>(
-                        isDense: true,
-                        menuMaxHeight: Get.size.height / 2,
-                        value: user?.familiaId ??
-                            (familyController.listFamiliesDropDown.isNotEmpty
-                                ? familyController.listFamiliesDropDown.first.id
-                                : null),
-                        onChanged: (int? value) {
-                          if (value != null) {
-                            controller.familyUser!.value = value;
-                          }
-                        },
-                        items: familyController.listFamilies
-                            .map<DropdownMenuItem<int>>((Family family) {
-                          return DropdownMenuItem<int>(
-                            value: family.id,
-                            child: Text(family.nome!),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Selecione uma Família'),
-                      )
-                    : Container();
-              }),
-              const SizedBox(
-                height: 16,
-              ),
+              // Obx(() {
+              //   return typeUserSelected.value == 3
+              //       ? DropdownButtonFormField<int>(
+              //           isDense: true,
+              //           menuMaxHeight: Get.size.height / 2,
+              //           value: user?.familiaId ??
+              //               (familyController.listFamiliesDropDown.isNotEmpty
+              //                   ? familyController.listFamiliesDropDown.first.id
+              //                   : null),
+              //           onChanged: (int? value) {
+              //             if (value != null) {
+              //               controller.familyUser!.value = value;
+              //             }
+              //           },
+              //           items: familyController.listFamilies
+              //               .map<DropdownMenuItem<int>>((Family family) {
+              //             return DropdownMenuItem<int>(
+              //               value: family.id,
+              //               child: Text(family.nome!),
+              //             );
+              //           }).toList(),
+              //           decoration: const InputDecoration(
+              //               border: OutlineInputBorder(),
+              //               labelText: 'Selecione uma Família'),
+              //         )
+              //       : Container();
+              // }),
+              // const SizedBox(
+              //   height: 16,
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -147,12 +152,12 @@ class CreateUserModal extends StatelessWidget {
                       )),
                   ElevatedButton(
                       onPressed: () async {
-                        if (typeUserSelected.value == 3 &&
-                            controller.familyUser!.value <= 0) {
-                          Get.snackbar('Atenção', 'Selecione uma família!',
-                              backgroundColor: Colors.red,
-                              colorText: Colors.white);
-                        } else {
+                        // if (typeUserSelected.value == 3 &&
+                        //     controller.familyUser!.value <= 0) {
+                        //   Get.snackbar('Atenção', 'Selecione uma família!',
+                        //       backgroundColor: Colors.red,
+                        //       colorText: Colors.white);
+                        // } else {
                           Map<String, dynamic> retorno =
                               tipoOperacao == 'insert'
                                   ? await controller.saveUser()
@@ -171,7 +176,7 @@ class CreateUserModal extends StatelessWidget {
                                 : Colors.red,
                             colorText: Colors.white,
                           );
-                        }
+
                       },
                       child: Text(
                         tipoOperacao == 'insert' ? 'SALVAR' : 'ALTERAR',

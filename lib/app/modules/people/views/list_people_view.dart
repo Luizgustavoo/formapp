@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -18,9 +20,13 @@ import 'package:ucif/app/utils/user_storage.dart';
 class ListPeopleView extends GetView<PeopleController> {
   const ListPeopleView({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
     final homeController = Get.put(HomeController());
+    Timer? _debounce;
+    double previousScrollPosition = 0.0;
     return Stack(
       children: [
         Scaffold(
@@ -90,8 +96,17 @@ class ListPeopleView extends GetView<PeopleController> {
                           if (!controller.isLoading.value &&
                               scrollInfo.metrics.pixels >=
                                   scrollInfo.metrics.maxScrollExtent * 0.9) {
-                            controller.loadMorePeoples();
+
+                            if (scrollInfo.metrics.pixels > previousScrollPosition) {
+                              // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
+                              if (_debounce?.isActive ?? false) _debounce!.cancel();
+                              _debounce = Timer(const Duration(milliseconds: 300), () {
+                                controller.loadMorePeoples();
+                              });
+                            }
+
                           }
+                          previousScrollPosition = scrollInfo.metrics.pixels;
                           return false;
                         },
                         child: Obx(() {

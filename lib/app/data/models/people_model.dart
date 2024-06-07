@@ -35,7 +35,7 @@ class People {
   Family? family;
   Religion? religion;
   MaritalStatus? maritalStatus;
-  bool? peopleLocal;
+  bool? peopleLocal = false;
 
   People(
       {this.id,

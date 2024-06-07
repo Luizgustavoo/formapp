@@ -99,7 +99,7 @@ class UserApiClient {
 
       var requestBody = {
         "nome": user.nome,
-        "tipousuario_id": user.tipousuarioId.toString(),
+        "tipousuario_id": UserStorage.getUserType() == 1 ? user.tipousuarioId.toString() : UserStorage.getUserType().toString(),
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
       };

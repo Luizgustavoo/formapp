@@ -26,6 +26,7 @@ import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+
 class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();
   TextEditingController nomePessoaController = TextEditingController();

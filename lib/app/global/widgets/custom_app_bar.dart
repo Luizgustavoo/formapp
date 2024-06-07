@@ -118,21 +118,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     Row(
                       children: [
-                        Stack(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Get.toNamed('/list-message');
-                              },
-                              icon: const Icon(
-                                Icons.notifications_rounded,
-                                color: Colors.white,
-                                size: 28,
+                        if(UserStorage.getUserType() == 1)...[
+                          Stack(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Get.toNamed('/list-message');
+                                },
+                                icon: const Icon(
+                                  Icons.notifications_rounded,
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
                               ),
-                            ),
-                            SizedBox()
-                          ],
-                        ),
+                              SizedBox()
+                            ],
+                          ),
+                        ],
                         if (ModalRoute.of(context)!.settings.name != '/perfil')
                           IconButton(
                             onPressed: () {

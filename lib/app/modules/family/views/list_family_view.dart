@@ -42,7 +42,7 @@ class FamilyView extends GetView<FamilyController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height / 15),
+                    SizedBox(height: MediaQuery.of(context).size.height / (UserStorage.getUserType() == 3 ? 30 : 15)),
                     SizedBox(
                       height: 35,
                       child: TextField(
@@ -235,77 +235,79 @@ class FamilyView extends GetView<FamilyController> {
                 )
               : const SizedBox(),
         ),
-        Positioned(
-          top: (MediaQuery.of(context).size.height -
-                  CustomAppBar().preferredSize.height) *
-              .180,
-          left: 15,
-          right: 15,
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
-            margin: const EdgeInsets.all(16),
-            elevation: 5,
-            child: SizedBox(
-              height: 80,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    right: 10, left: 10, top: 15, bottom: 7),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        DynamicRichText(
-                          routeR: '/list-people',
-                          value: homeController.counter2,
-                          description: 'Pessoas',
-                          valueStyle: const TextStyle(
-                            fontFamily: 'Poppinss',
+        if(UserStorage.getUserType() < 3)...[
+          Positioned(
+            top: (MediaQuery.of(context).size.height -
+                CustomAppBar().preferredSize.height) *
+                .180,
+            left: 15,
+            right: 15,
+            child: Card(
+              shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+              margin: const EdgeInsets.all(16),
+              elevation: 5,
+              child: SizedBox(
+                height: 80,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      right: 10, left: 10, top: 15, bottom: 7),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          DynamicRichText(
+                            routeR: '/list-people',
+                            value: homeController.counter2,
+                            description: 'Pessoas',
+                            valueStyle: const TextStyle(
+                              fontFamily: 'Poppinss',
+                            ),
+                            descriptionStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ),
+                            color: Colors.black,
                           ),
-                          descriptionStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
+                          DynamicRichText(
+                            routeR: '/list-family',
+                            value: homeController.counter,
+                            description: 'Famílias',
+                            valueStyle: const TextStyle(
+                              fontFamily: 'Poppinss',
+                              height: 1,
+                            ),
+                            descriptionStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              height: 1,
+                            ),
+                            color: Colors.blue,
                           ),
-                          color: Colors.black,
-                        ),
-                        DynamicRichText(
-                          routeR: '/list-family',
-                          value: homeController.counter,
-                          description: 'Famílias',
-                          valueStyle: const TextStyle(
-                            fontFamily: 'Poppinss',
-                            height: 1,
+                          DynamicRichText(
+                            routeR: '/list-user',
+                            value: homeController.counter3,
+                            description: 'Lideranças',
+                            valueStyle: const TextStyle(
+                              fontFamily: 'Poppinss',
+                              height: 1,
+                            ),
+                            descriptionStyle: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              height: 1,
+                            ),
+                            color: Colors.green,
                           ),
-                          descriptionStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            height: 1,
-                          ),
-                          color: Colors.blue,
-                        ),
-                        DynamicRichText(
-                          routeR: '/list-user',
-                          value: homeController.counter3,
-                          description: 'Lideranças',
-                          valueStyle: const TextStyle(
-                            fontFamily: 'Poppinss',
-                            height: 1,
-                          ),
-                          descriptionStyle: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            height: 1,
-                          ),
-                          color: Colors.green,
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+        ]
       ],
     );
   }

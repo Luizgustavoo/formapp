@@ -30,8 +30,8 @@ class CustomUserCard extends StatelessWidget {
   final UserController controller;
 
   final MessageController messageController;
-  final chatController = Get.put(ChatController());
-  final familyController = Get.put(FamilyController());
+
+  //final familyController = Get.put(FamilyController());
   final String typeUser;
 
   @override
@@ -48,8 +48,10 @@ class CustomUserCard extends StatelessWidget {
       child: InkWell(
         onTap: UserStorage.getUserType() == 1 && user.quantidadePessoas > 0
             ? () {
+          final familyController = Get.put(FamilyController());
                 familyController.selectedUser = user;
                 familyController.getFamiliesFilter(user);
+
                 Get.toNamed('/filter-family');
               }
             : () {},
@@ -57,6 +59,7 @@ class CustomUserCard extends StatelessWidget {
           leading: (editaMaster || editaLider || editaFamiliar)
               ? IconButton(
                   onPressed: () {
+                    controller.getTypeUser();
                     controller.selectedUser = user;
                     controller.fillInUserFields();
 
@@ -100,6 +103,7 @@ class CustomUserCard extends StatelessWidget {
                                 backgroundColor: Colors.red,
                                 colorText: Colors.white);
                           } else {
+                            final chatController = Get.put(ChatController());
                             chatController.destinatarioId.value =
                                 user.people!.id!;
                             chatController.chatChange();

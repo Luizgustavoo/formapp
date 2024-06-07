@@ -28,9 +28,9 @@ class PeopleRepository {
         p.peopleLocal = false;
         newPeoples.add(p);
       });
-      if (page == 1) {
-        list.clear();
-      }
+      // if (page == 1) {
+      //   list.clear();
+      // }
       for (var family in newPeoples) {
         if (!list.contains(family)) {
           list.add(family);

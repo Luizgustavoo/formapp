@@ -63,7 +63,7 @@ class UserController extends GetxController {
   void onInit() async {
     if (UserStorage.existUser()) {
       if (await ConnectionStatus.verifyConnection()) {
-        getTypeUser();
+        //getTypeUser();
         getUsers();
       } else {
         final internetStatusProvider = Get.find<InternetStatusProvider>();
@@ -72,7 +72,7 @@ class UserController extends GetxController {
           (status) {
             if (status == InternetStatus.connected) {
               getUsers();
-              getTypeUser();
+             // getTypeUser();
             }
           },
         );
