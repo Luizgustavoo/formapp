@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart' as badges;
@@ -45,7 +46,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Get.forceAppUpdate();
       });
     });
-
 
     return AppBar(
       elevation: 0,
@@ -118,7 +118,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     Row(
                       children: [
-                        if(UserStorage.getUserType() == 1)...[
+                        if (UserStorage.getUserType() == 1) ...[
                           Stack(
                             children: [
                               IconButton(
@@ -166,28 +166,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   top: 0, left: 30, bottom: 50, right: 20),
               child: Row(
                 children: [
-
-                  if(Get.currentRoute == '/home')...[
-
-    Obx(
-    () {
-      final controller = Get.put(UserController());
-      return CircleAvatar(
-    backgroundImage: controller.isImagePicPathSet == true
-    ? FileImage(File(UserStorage.getUserPhoto()))
-        : (UserStorage.getUserPhoto().isNotEmpty
-    ? NetworkImage(
-    '$urlImagem/storage/app/public/${UserStorage.getUserPhoto()}')
-    as ImageProvider<Object>?
-        : const AssetImage(
-    'assets/images/default_avatar.jpg')),
-    radius: 25,
-    );
-  },
-    ),
-    const SizedBox(width: 10),
+                  if (Get.currentRoute == '/home') ...[
+                    Obx(
+                      () {
+                        final controller = Get.put(UserController());
+                        return CircleAvatar(
+                          backgroundImage: controller.isImagePicPathSet == true
+                              ? FileImage(File(UserStorage.getUserPhoto()))
+                              : (UserStorage.getUserPhoto().isNotEmpty
+                                  ? CachedNetworkImageProvider(
+                                          '$urlImagem/storage/app/public/${UserStorage.getUserPhoto()}')
+                                      as ImageProvider
+                                  : const AssetImage(
+                                      'assets/images/default_avatar.jpg')),
+                          radius: 25,
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 10),
                   ],
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

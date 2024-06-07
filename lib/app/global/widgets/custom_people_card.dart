@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -79,8 +80,7 @@ class CustomPeopleCard extends StatelessWidget {
               radius: 15,
               backgroundImage: people.foto.toString().isEmpty
                   ? const AssetImage('assets/images/default_avatar.jpg')
-                  : NetworkImage('$urlImagem/storage/app/public/${people.foto}')
-                      as ImageProvider,
+                  : CachedNetworkImageProvider('$urlImagem/storage/app/public/${people.foto}') as ImageProvider,
             ),
             title: Text(people.nome!.toUpperCase(),
                 style: TextStyle(

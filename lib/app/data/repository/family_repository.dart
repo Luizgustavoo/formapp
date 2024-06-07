@@ -28,9 +28,9 @@ class FamilyRepository {
         f.familyLocal = false;
         newFamilies.add(f);
       });
-      if (page == 1) {
-        list.clear();
-      }
+      // if (page == 1) {
+      //   list.clear();
+      // }
       for (var family in newFamilies) {
         if (!list.contains(family)) {
           list.add(family);

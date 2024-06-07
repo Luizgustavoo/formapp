@@ -19,9 +19,9 @@ class UserRepository {
         User u = User.fromJson(e);
         newUsers.add(u);
       });
-      if (page == 1) {
-        list.clear();
-      }
+      // if (page == 1) {
+      //   list.clear();
+      // }
       for (var family in newUsers) {
         if (!list.contains(family)) {
           list.add(family);

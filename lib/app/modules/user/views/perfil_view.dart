@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/base_url.dart';
@@ -50,10 +51,11 @@ class PerfilView extends GetView<UserController> {
                                           true
                                       ? FileImage(
                                           File(controller.photoUrlPath.value))
-                                      : (controller.photoUrlPath.value.isNotEmpty
-                                          ? NetworkImage(
+                                      : (controller
+                                              .photoUrlPath.value.isNotEmpty
+                                          ? CachedNetworkImageProvider(
                                                   '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
-                                              as ImageProvider<Object>?
+                                              as ImageProvider
                                           : const AssetImage(
                                               'assets/images/default_avatar.jpg')),
                                   child: Stack(
@@ -221,10 +223,10 @@ class PerfilView extends GetView<UserController> {
                                             ],
                                           ),
                                         ),
-                                        confirmTextColor: Colors
-                                            .white, // Cor do texto do botão de confirmar
-                                        cancelTextColor: Colors
-                                            .black, // Cor do texto do botão de cancelar
+                                        confirmTextColor: Colors.white,
+                                        // Cor do texto do botão de confirmar
+                                        cancelTextColor: Colors.black,
+                                        // Cor do texto do botão de cancelar
                                         buttonColor: Colors.blue.shade400,
                                         textCancel: 'Cancelar',
                                         textConfirm: 'Confirmar',

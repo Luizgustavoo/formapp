@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
@@ -23,6 +25,8 @@ class ListUserView extends GetView<UserController> {
     final homeController = Get.put(HomeController());
     var idUserLogged = box.read('auth')['user']['id'];
     double previousScrollPosition = 0.0;
+    Timer? _debounce;
+
     return Stack(
       children: [
         Scaffold(
@@ -96,7 +100,15 @@ class ListUserView extends GetView<UserController> {
                       scrollInfo.metrics.maxScrollExtent * 0.9) {
                       if (scrollInfo.metrics.pixels > previousScrollPosition) {
                       // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
-                      controller.loadMoreUsers();
+
+                        if (scrollInfo.metrics.pixels > previousScrollPosition) {
+                          // Se o usuário está rolando para baixo, chama a função loadMoreUsers()
+                          if (_debounce?.isActive ?? false) _debounce!.cancel();
+                          _debounce = Timer(const Duration(milliseconds: 300), () {
+                            controller.loadMoreUsers();
+                          });
+                        }
+
                       }
                       }
                       previousScrollPosition = scrollInfo.metrics.pixels;
