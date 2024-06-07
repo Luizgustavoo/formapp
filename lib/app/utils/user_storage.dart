@@ -12,6 +12,13 @@ class UserStorage {
     return false;
   }
 
+  static bool existPeople() {
+    if (_box.read('auth')['pessoa'] != null) {
+      return true;
+    }
+    return false;
+  }
+
   static String getToken() {
     if (existUser()) {
       return _box.read('auth')['access_token'];
@@ -20,7 +27,7 @@ class UserStorage {
   }
 
   static String getUserPhoto() {
-    if (existUser()) {
+    if (existUser() && existPeople()) {
       return _box.read('auth')['pessoa']['foto'] ?? "";
     }
     return "";

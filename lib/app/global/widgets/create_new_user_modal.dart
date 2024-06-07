@@ -19,7 +19,7 @@ class CreateNewUserModal extends StatelessWidget {
   final String? titulo;
   final People? people;
 
-  final RxInt typeUserSelected = 1.obs;
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,8 @@ class CreateNewUserModal extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
                   child: Text(
-                    titulo!,
-                    style: CustomTextStyle.title(context),
+                    "${titulo!}: ${people?.nome}",
+                    style: CustomTextStyle.titleModal(context),
                   ),
                 ),
                 const Padding(
@@ -58,7 +58,7 @@ class CreateNewUserModal extends StatelessWidget {
                   controller: controller.usernameController,
                   decoration: const InputDecoration(
                       suffixIcon: Icon(Icons.person),
-                      labelText: 'Login',
+                      labelText: 'E-mail',
                       border: OutlineInputBorder()),
                 ),
                 const SizedBox(height: 10),
@@ -93,9 +93,9 @@ class CreateNewUserModal extends StatelessWidget {
                   Obx(
                     () => SizedBox(
                       child: DropdownButtonFormField<int>(
-                        value: typeUserSelected.value,
+                        value: controller.typeUserSelected.value,
                         onChanged: (value) {
-                          typeUserSelected.value = value!;
+                          controller.typeUserSelected.value = value!;
                         },
                         items: controller.listTypeUsers
                             .map<DropdownMenuItem<int>>((item) {
@@ -135,7 +135,7 @@ class CreateNewUserModal extends StatelessWidget {
                           //       colorText: Colors.white);
                           // } else {
                           Map<String, dynamic> retorno =
-                              await controller.saveUserPeople();
+                              await controller.saveUserPeople(people!.nome!, people!.id!);
 
                           Get.back();
 

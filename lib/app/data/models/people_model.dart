@@ -36,6 +36,7 @@ class People {
   Religion? religion;
   MaritalStatus? maritalStatus;
   bool? peopleLocal = false;
+  User? userSistema;
 
   People(
       {this.id,
@@ -68,7 +69,10 @@ class People {
       this.senha,
       this.maritalStatus,
       this.peopleLocal,
-      this.family});
+      this.family,
+        this.userSistema,
+
+      });
 
   People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -97,6 +101,7 @@ class People {
     familiaId = json['familia_id'];
     parentesco = json['parentesco'];
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
+    userSistema = json['usuario_sistema'] != null ? User.fromJson(json['usuario_sistema']) : null;
     if (json['atendimentos'] != null) {
       atendimentos = <FamilyService>[];
       json['atendimentos'].forEach((v) {

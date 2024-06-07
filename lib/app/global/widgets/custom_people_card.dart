@@ -42,21 +42,26 @@ class CustomPeopleCard extends StatelessWidget {
               ),
             );
             return false;
-          } else if (direction == DismissDirection.endToStart) {
-            final controller = Get.put(UserController());
-            controller.getTypeUser();
-            await showModalBottomSheet(
-              context: context,
-              builder: (context) => Padding(
-                padding: MediaQuery.of(context).viewInsets,
-                child: CreateNewUserModal(
-                  titulo: 'Cadastrar Usuário',
-                  people: people,
+          } else if ((people.userSistema == null)) {
+            if (direction == DismissDirection.endToStart) {
+
+              final controller = Get.put(UserController());
+              controller.clearAllUserTextFields();
+              controller.getTypeUser();
+              await showModalBottomSheet(
+                context: context,
+                builder: (context) => Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: CreateNewUserModal(
+                    titulo: 'Usuário',
+                    people: people,
+                  ),
                 ),
-              ),
-            );
-            return false;
+              );
+              return false;
+            }
           }
+
           return false;
         },
         background: Container(
@@ -84,7 +89,9 @@ class CustomPeopleCard extends StatelessWidget {
         secondaryBackground: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: Colors.green.shade300,
+            color: people.userSistema == null
+                ? Colors.green.shade300
+                : Colors.red.shade300,
           ),
           child: Align(
             alignment: Alignment.centerRight,
@@ -94,7 +101,9 @@ class CustomPeopleCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Cadastrar usuário',
+                    (people.userSistema == null
+                        ? 'Cadastrar usuário'
+                        : 'Usuário já existe'),
                     style: CustomTextStyle.button(context),
                   ),
                   const SizedBox(width: 5),
@@ -116,7 +125,7 @@ class CustomPeopleCard extends StatelessWidget {
             titleAlignment: ListTileTitleAlignment.center,
             leading: CircleAvatar(
               radius: 15,
-              backgroundImage: people.foto.toString().isEmpty
+              backgroundImage: people.foto.toString().isEmpty || people.foto == null
                   ? const AssetImage('assets/images/default_avatar.jpg')
                   : CachedNetworkImageProvider(
                           '$urlImagem/storage/app/public/${people.foto}')
@@ -158,7 +167,8 @@ class CustomPeopleCard extends StatelessWidget {
                       Icons.remove_red_eye_rounded,
                       size: 20,
                       color: Colors.black54,
-                    )),
+                    ),
+           ),
           ),
         ),
       ),

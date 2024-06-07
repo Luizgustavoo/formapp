@@ -9,6 +9,14 @@ class CustomTextStyle {
         overflow: TextOverflow.ellipsis);
   }
 
+  static TextStyle? titleModal(BuildContext context) {
+    return const TextStyle(
+        fontSize: 16,
+        color: Colors.black87,
+        fontFamily: 'Poppins',
+        overflow: TextOverflow.ellipsis);
+  }
+
   static TextStyle? titleWhite(BuildContext context) {
     return const TextStyle(
         fontSize: 23,

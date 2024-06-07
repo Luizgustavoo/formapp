@@ -134,11 +134,15 @@ class UserApiClient {
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
         if (response.statusCode == 200) {
+
+
           Map<String, dynamic> user = box.read('auth')['pessoa'];
           user['foto'] = json.decode(response.body)['objeto']['foto'];
           Map<String, dynamic> auth = box.read('auth');
           auth['pessoa'] = user;
           box.write('auth', auth);
+
+
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
             json.decode(response.body)['message'] == "ja_existe") {
@@ -364,10 +368,12 @@ class UserApiClient {
       var userUrl = Uri.parse('$baseUrl/v1/usuario/createuserpeople');
 
       var requestBody = {
-        "nome": user.nome,
-        "username": user.username,
-        "senha": user.senha,
+        "nome": user.nome.toString(),
+        "username": user.username.toString().trim(),
+        "senha": user.senha.toString().trim(),
         "usuario_id": user.usuarioId.toString(),
+        "tipousuario_id": user.tipousuarioId.toString(),
+        "pessoa_id": user.pessoaId.toString()
       };
 
       var response = await httpClient.post(
@@ -378,6 +384,8 @@ class UserApiClient {
         },
         body: requestBody,
       );
+
+      print(json.decode(response.body));
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 422 ||

@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -58,6 +59,8 @@ class UserController extends GetxController {
   RxString oldImagePath = ''.obs;
 
   RxList<TypeUser> listTypeUsers = <TypeUser>[].obs;
+
+  final RxInt typeUserSelected = 1.obs;
 
   @override
   void onInit() async {
@@ -405,13 +408,15 @@ class UserController extends GetxController {
     return mensagem;
   }
 
-  Future<Map<String, dynamic>> saveUserPeople() async {
+  Future<Map<String, dynamic>> saveUserPeople(String namePeople, int pessoaId) async {
     if (userFormKey.currentState!.validate()) {
       User user = User(
-        nome: nameController.text,
+        nome: namePeople,
         username: usernameController.text,
         senha: passwordController.text,
+        tipousuarioId: typeUserSelected.value,
         usuarioId: UserStorage.getUserId(),
+        pessoaId: pessoaId.toString()
       );
       final token = UserStorage.getToken();
       if (await ConnectionStatus.verifyConnection()) {
