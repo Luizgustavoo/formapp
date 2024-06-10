@@ -49,6 +49,7 @@ class DatabaseHelper {
           nome TEXT,
           cpf TEXT,
           estadocivil_id INTEGER,
+          estado_civil_name TEXT,
           parentesco TEXT,
           provedor_casa TEXT,
           sexo TEXT,
@@ -62,8 +63,10 @@ class DatabaseHelper {
           funcao_igreja TEXT,
           status TEXT,
           usuario_id INTEGER,
+          usuario_name TEXT,
           igreja_id TEXT,
           religiao_id INTEGER,
+          religiao_name TEXT,
           familia_id INTEGER,
           data_cadastro TEXT,
           data_update TEXT,
@@ -166,7 +169,10 @@ class DatabaseHelper {
       people.familia_id AS familia_id_people,
       people.parentesco AS parentesco_people,
       people.medicamentosOffline AS medicamentosOffline,
-      people.acometimentosOffline AS acometimentosOffline
+      people.acometimentosOffline AS acometimentosOffline,
+      people.estado_civil_name as estadoCivilName,
+      people.usuario_name as usuarioName,
+      people.religiao_name as religiaoName
       FROM people
     ''');
   }

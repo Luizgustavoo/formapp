@@ -248,13 +248,7 @@ class PeopleApiClient {
       bool peopleLocal,
       List? saude,
       List? medicamento) async {
-    if (pessoa.medicamentosOffline!.isNotEmpty) {
-      medicamento = stringToIntList(',');
-    }
 
-    if (pessoa.acometimentosOffline!.isNotEmpty) {
-      saude = stringToIntList(',');
-    }
     try {
       if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/update/${pessoa.id}');

@@ -134,6 +134,10 @@ class PeopleRepository {
       final medicamentosOffline = row['medicamentosOffline'] as String?;
       final acometimentosOffline = row['acometimentosOffline'] as String?;
 
+      final estadoCivilName = row['estadoCivilName'] as String?;
+      final usuarioName = row['usuarioName'] as String?;
+      final religiaoName = row['religiaoName'] as String?;
+
       if (idPeople != null && nomePeople != null) {
         peoples.add(People(
             id: idPeople,
@@ -159,7 +163,11 @@ class PeopleRepository {
             dataUpdate: dataUpdatePeople,
             parentesco: parentescoPeople,
             acometimentosOffline: acometimentosOffline,
-            medicamentosOffline: medicamentosOffline));
+            medicamentosOffline: medicamentosOffline,
+            estado_civil_name: estadoCivilName,
+            usuario_name:usuarioName,
+            religiao_name:religiaoName
+        ));
       }
     }
 

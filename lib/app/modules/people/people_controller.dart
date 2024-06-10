@@ -319,6 +319,14 @@ class PeopleController extends GetxController {
     if (peopleFormKey.currentState!.validate()) {
       String imagePath = photoUrlPath.value;
 
+      MaritalStatus? estadoCivil = listMaritalStatus.firstWhere(
+            (estado) => estado.id == estadoCivilSelected.value
+      );
+
+      Religion? religiao = listReligion.firstWhere(
+              (relig) => relig.id == religiaoSelected.value
+      );
+
       People pessoa = People(
         nome: nomePessoaController.text,
         cpf: cpfPessoaController.text,
@@ -340,6 +348,8 @@ class PeopleController extends GetxController {
         foto: imagePath,
         acometimentosOffline: selectedSaudeIds.map((e) => e).join(','),
         medicamentosOffline: selectedMedicamentoIds.map((e) => e).join(','),
+        estado_civil_name: estadoCivil.descricao,
+        religiao_name: religiao.descricao
       );
 
       final token = box.read('auth')['access_token'];

@@ -19,18 +19,26 @@ class DetailPeopleView extends GetView<PeopleController> {
   Widget build(BuildContext context) {
     final People people =
         Get.arguments != null ? Get.arguments as People : People();
-    List<int> idsListAcon =
-        people.acometimentosOffline!.split(',').map(int.parse).toList();
-    List<String?> nomeAcometimento = controller.listHealth
-        .where((acomentimento) => idsListAcon.contains(acomentimento.id))
-        .map((acomentimento) => acomentimento.nome)
-        .toList();
-    List<int> idsListMed =
-        people.acometimentosOffline!.split(',').map(int.parse).toList();
-    List<String?> nomeMedicamento = controller.listMedicine
-        .where((medicamento) => idsListMed.contains(medicamento.id))
-        .map((medicamento) => medicamento.nome)
-        .toList();
+    List<String?> nomeAcometimento = [];
+    List<String?> nomeMedicamento = [];
+
+    if (people.peopleLocal == true) {
+      List<int> idsListAcon =
+      people.acometimentosOffline!.split(',').map(int.parse).toList();
+      nomeAcometimento = controller.listHealth
+          .where((acomentimento) => idsListAcon.contains(acomentimento.id))
+          .map((acomentimento) => acomentimento.nome)
+          .toList();
+
+      List<int> idsListMed =
+      people.acometimentosOffline!.split(',').map(int.parse).toList();
+
+      nomeMedicamento = controller.listMedicine
+          .where((medicamento) => idsListMed.contains(medicamento.id))
+          .map((medicamento) => medicamento.nome)
+          .toList();
+    }
+
     return Stack(
       children: [
         Scaffold(
@@ -150,11 +158,12 @@ class DetailPeopleView extends GetView<PeopleController> {
                             FormattedText(
                                 text: 'Provedor: ${people.provedorCasa}'),
                             FormattedText(text: 'Sexo: ${people.sexo}'),
+
                             FormattedText(
                                 text:
-                                    'Estado Civil: ${people.maritalStatus?.descricao}'),
+                                    'Estado Civil: ${people.peopleLocal! ? people.estado_civil_name : people.maritalStatus?.descricao}'),
                             FormattedText(
-                                text: 'Nascimento: ${people.dataNascimento}'),
+                                text: 'Nascimento: ${people.dataNascimento}', local: true,),
                             FormattedText(
                                 text: 'Parentesco: ${people.parentesco}'),
                             FormattedText(text: 'CPF: ${people.cpf}'),
@@ -165,7 +174,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             people.peopleLocal == true
                                 ? FormattedText(
                                     text:
-                                        'Acometimento: ${nomeAcometimento.join(', ')}',
+                                        'Acometimento: ${people.acometimentosOffline}',
                                   )
                                 : people.acometimentosSaude != null &&
                                         people.acometimentosSaude!.isNotEmpty
@@ -178,7 +187,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                                                   'Acometimento: ${people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ')}',
                                             ),
                                           ])
-                                    : const FormattedText(
+                                    : FormattedText(
                                         text:
                                             'Acometimentos Saúde: Nenhum acometimento informado.',
                                       ),
@@ -198,14 +207,14 @@ class DetailPeopleView extends GetView<PeopleController> {
                                                   'Medicamento: ${people.medicamentos!.map((medicamento) => medicamento.nome).join(', ')}',
                                             ),
                                           ])
-                                    : const FormattedText(
+                                    : FormattedText(
                                         text:
                                             'Medicamentos: Nenhum medicamento informado.',
                                       ),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text:
-                                    'Religião: ${people.religion?.descricao}'),
+                                    'Religião: ${people.peopleLocal! ? people.religiao_name : people.religion?.descricao}'),
                             FormattedText(text: 'Igreja: ${people.igrejaId}'),
                             FormattedText(
                                 text: 'Função Igreja: ${people.funcaoIgreja}'),
@@ -335,8 +344,9 @@ class DetailPeopleView extends GetView<PeopleController> {
 
 class FormattedText extends StatelessWidget {
   final String text;
+  bool? local = false;
 
-  const FormattedText({Key? key, required this.text}) : super(key: key);
+  FormattedText({Key? key, required this.text, this.local}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -352,8 +362,17 @@ class FormattedText extends StatelessWidget {
     if (boldPart.toLowerCase() == 'nascimento' && normalPart.isNotEmpty) {
       // Formata a data de nascimento usando DateFormat
       try {
-        final DateTime birthDate = DateFormat("yyyy-MM-dd").parse(normalPart);
-        final String formattedDate = DateFormat("dd/MM/yyyy").format(birthDate);
+        String formattedDate = "";
+
+        if(local!){
+          formattedDate = normalPart;
+        }else{
+          final DateTime birthDate = DateFormat("yyyy-MM-dd").parse(normalPart);
+          formattedDate = DateFormat("dd/MM/yyyy").format(birthDate);
+        }
+
+
+
         return RichText(
           text: TextSpan(
             children: [
@@ -380,7 +399,7 @@ class FormattedText extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                text: '$boldPart: ',
+                text: '$boldPart: ${e}',
                 style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,
