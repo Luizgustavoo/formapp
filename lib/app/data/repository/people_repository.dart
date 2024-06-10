@@ -73,10 +73,10 @@ class PeopleRepository {
   }
 
   updatePeople(String token, People pessoa, File imageFile,
-      String? oldImagePath, bool peopleLocal) async {
+      String? oldImagePath, bool peopleLocal, List? saude, List? medicamento) async {
     try {
       var response = await apiClient.updatePeople(
-          token, pessoa, imageFile, oldImagePath, peopleLocal);
+          token, pessoa, imageFile, oldImagePath, peopleLocal, saude, medicamento);
 
       return response;
     } catch (e) {

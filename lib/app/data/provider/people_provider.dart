@@ -235,7 +235,7 @@ class PeopleApiClient {
   }
 
   updatePeople(String token, People pessoa, File imageFile,
-      String? oldImagePath, bool peopleLocal) async {
+      String? oldImagePath, bool peopleLocal,List? saude, List? medicamento) async {
     try {
       if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/update/${pessoa.id}');
@@ -248,8 +248,6 @@ class PeopleApiClient {
           "cpf": pessoa.cpf!,
           "data_nascimento": pessoa.dataNascimento!,
           "estadocivil_id": pessoa.estadoCivilId.toString(),
-          "titulo_eleitor": pessoa.tituloEleitor!,
-          "zona_eleitoral": pessoa.zonaEleitoral!,
           "telefone": pessoa.telefone!,
           "rede_social": pessoa.redeSocial!,
           "provedor_casa": pessoa.provedorCasa!,
@@ -262,6 +260,13 @@ class PeopleApiClient {
           "status": pessoa.status.toString(),
           "parentesco": pessoa.parentesco!,
         });
+
+        if (saude != null) {
+          request.fields['saude'] = json.encode(saude);
+        }
+        if (medicamento != null) {
+          request.fields['medicamento'] = json.encode(medicamento);
+        }
 
         if (imageFile.path.isNotEmpty && imageFile.path != oldImagePath) {
           request.files.add(await http.MultipartFile.fromPath(
@@ -280,6 +285,8 @@ class PeopleApiClient {
 
         var responseStream = await response.stream.bytesToString();
         var httpResponse = http.Response(responseStream, response.statusCode);
+
+        print(json.decode(httpResponse.body));
 
         if (response.statusCode == 200) {
           return json.decode(httpResponse.body);

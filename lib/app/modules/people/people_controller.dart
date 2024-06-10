@@ -394,7 +394,8 @@ class PeopleController extends GetxController {
       );
       final token = UserStorage.getToken();
       final mensagem = await repository.updatePeople("Bearer $token", pessoa,
-          File(photoUrlPath.value), oldImagePath.value, peopleLocal);
+          File(photoUrlPath.value), oldImagePath.value, peopleLocal, selectedSaudeIds,
+          selectedMedicamentoIds);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {

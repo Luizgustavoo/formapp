@@ -133,7 +133,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                           children: [
                             FormattedText(
                                 text:
-                                    'Líder: ${people.peopleLocal! ? UserStorage.getUserName() : people.user?.nome}'),
+                                    'Líder: ${people.peopleL! ?UserStorage.getUserName() : people.user?.nome}'),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text: 'Provedor: ${people.provedorCasa}'),
@@ -211,6 +211,12 @@ class DetailPeopleView extends GetView<PeopleController> {
                           onPressed: () {
                             final peopleController =
                                 Get.put(PeopleController());
+                            peopleController.getMaritalStatus();
+                            peopleController.getChurch();
+                            peopleController.getReligion();
+                            peopleController.getHealth();
+                            peopleController.getMedicine();
+
                             peopleController.selectedPeople = people;
                             peopleController.fillInFieldsForEditPerson();
                             showModalBottomSheet(

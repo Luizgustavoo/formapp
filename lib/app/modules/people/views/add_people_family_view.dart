@@ -289,6 +289,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   const SizedBox(height: 8),
                   Obx(
                     () => MultiSelectBottomSheetField(
+                      initialValue: controller.selectedSaudeIds,
                       selectedColor: const Color(0xFF014acb),
                       isDismissible: false,
                       searchable: true,
@@ -299,11 +300,13 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           color: Colors.black, fontFamily: 'Poppinss'),
                       listType: MultiSelectListType.LIST,
                       searchHint: 'Pesquisar',
+
                       onConfirm: (values) {
                         controller.selectedSaudeIds = values;
                       },
                       title: const Text(''),
                       decoration: BoxDecoration(
+                        color: Colors.white,
                         border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(5),
                       ),
@@ -334,6 +337,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   const SizedBox(height: 8),
                   Obx(
                     () => MultiSelectBottomSheetField(
+                      initialValue: controller.selectedMedicamentoIds,
                       selectedColor: const Color(0xFF014acb),
                       isDismissible: false,
                       searchable: true,
@@ -349,6 +353,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       },
                       title: const Text(''),
                       decoration: BoxDecoration(
+                        color: Colors.white,
                         border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(5),
                       ),
