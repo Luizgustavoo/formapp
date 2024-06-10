@@ -528,12 +528,22 @@ class PeopleController extends GetxController {
     usuarioId.text = selectedPeople!.usuarioId.toString();
     familiaId.text = selectedPeople!.familiaId.toString();
     igrejaPessoaController.text = selectedPeople!.igrejaId.toString();
-    estadoCivilSelected.value = selectedPeople!.estadoCivilId! ?? 0;
+
+    if(selectedPeople!.estadoCivilId != null){
+      estadoCivilSelected.value = selectedPeople!.estadoCivilId!;
+    }
+
+
     parentesco?.value = selectedPeople?.parentesco != null
         ? selectedPeople!.parentesco!
         : 'Pai';
     sexo.value = selectedPeople!.sexo!;
-    religiaoSelected.value = selectedPeople!.religiaoId!;
+
+    if(selectedPeople!.religiaoId != null){
+      religiaoSelected.value = selectedPeople!.religiaoId!;
+    }
+
+
     photoUrlPath.value = selectedPeople!.foto ?? '';
     oldImagePath.value = selectedPeople!.foto ?? '';
     redeSocialPessoaController.text = selectedPeople!.redeSocial ?? '';
