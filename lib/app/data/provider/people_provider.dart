@@ -234,8 +234,27 @@ class PeopleApiClient {
     return null;
   }
 
-  updatePeople(String token, People pessoa, File imageFile,
-      String? oldImagePath, bool peopleLocal,List? saude, List? medicamento) async {
+  List<int> stringToIntList(String input) {
+    List<String> stringList = input.split(',');
+    List<int> intList = stringList.map(int.parse).toList();
+    return intList;
+  }
+
+  updatePeople(
+      String token,
+      People pessoa,
+      File imageFile,
+      String? oldImagePath,
+      bool peopleLocal,
+      List? saude,
+      List? medicamento) async {
+    if (pessoa.medicamentosOffline!.isNotEmpty) {
+      medicamento = stringToIntList(',');
+    }
+
+    if (pessoa.acometimentosOffline!.isNotEmpty) {
+      saude = stringToIntList(',');
+    }
     try {
       if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/update/${pessoa.id}');
@@ -285,8 +304,6 @@ class PeopleApiClient {
 
         var responseStream = await response.stream.bytesToString();
         var httpResponse = http.Response(responseStream, response.statusCode);
-
-        print(json.decode(httpResponse.body));
 
         if (response.statusCode == 200) {
           return json.decode(httpResponse.body);

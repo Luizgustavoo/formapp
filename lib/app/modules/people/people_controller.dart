@@ -100,8 +100,8 @@ class PeopleController extends GetxController {
   final ScrollController scrollController = ScrollController();
   final ScrollController scrollFilterPeople = ScrollController();
 
-  List<int?> selectedSaudeIds = <int>[].obs;
-  List<int?> selectedMedicamentoIds = <int>[].obs;
+  RxList<int> selectedSaudeIds = <int>[].obs;
+  RxList<int> selectedMedicamentoIds = <int>[].obs;
 
   int currentPage = 1;
   bool isLoadingMore = false;
@@ -338,6 +338,8 @@ class PeopleController extends GetxController {
         usuarioId: box.read('auth')['user']['id'],
         familiaId: family?.id,
         foto: imagePath,
+        acometimentosOffline: selectedSaudeIds.map((e) => e).join(','),
+        medicamentosOffline: selectedMedicamentoIds.map((e) => e).join(','),
       );
 
       final token = box.read('auth')['access_token'];
@@ -392,9 +394,15 @@ class PeopleController extends GetxController {
         usuarioId: UserStorage.getUserId(),
         foto: imagePath,
       );
+
       final token = UserStorage.getToken();
-      final mensagem = await repository.updatePeople("Bearer $token", pessoa,
-          File(photoUrlPath.value), oldImagePath.value, peopleLocal, selectedSaudeIds,
+      final mensagem = await repository.updatePeople(
+          "Bearer $token",
+          pessoa,
+          File(photoUrlPath.value),
+          oldImagePath.value,
+          peopleLocal,
+          selectedSaudeIds,
           selectedMedicamentoIds);
 
       if (mensagem != null) {
@@ -520,7 +528,7 @@ class PeopleController extends GetxController {
     usuarioId.text = selectedPeople!.usuarioId.toString();
     familiaId.text = selectedPeople!.familiaId.toString();
     igrejaPessoaController.text = selectedPeople!.igrejaId.toString();
-    estadoCivilSelected.value = selectedPeople!.estadoCivilId!;
+    estadoCivilSelected.value = selectedPeople!.estadoCivilId! ?? 0;
     parentesco?.value = selectedPeople?.parentesco != null
         ? selectedPeople!.parentesco!
         : 'Pai';
@@ -545,14 +553,14 @@ class PeopleController extends GetxController {
     if (selectedPeople!.acometimentosSaude != null) {
       selectedSaudeIds.clear();
       for (var saude in selectedPeople!.acometimentosSaude!) {
-        selectedSaudeIds.add(saude.id);
+        selectedSaudeIds.add(saude.id!);
       }
     }
 
     if (selectedPeople!.medicamentos != null) {
       selectedMedicamentoIds.clear();
       for (var medicamento in selectedPeople!.medicamentos!) {
-        selectedMedicamentoIds.add(medicamento.id);
+        selectedMedicamentoIds.add(medicamento.id!);
       }
     }
   }

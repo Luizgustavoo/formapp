@@ -19,6 +19,18 @@ class DetailPeopleView extends GetView<PeopleController> {
   Widget build(BuildContext context) {
     final People people =
         Get.arguments != null ? Get.arguments as People : People();
+    List<int> idsListAcon =
+        people.acometimentosOffline!.split(',').map(int.parse).toList();
+    List<String?> nomeAcometimento = controller.listHealth
+        .where((acomentimento) => idsListAcon.contains(acomentimento.id))
+        .map((acomentimento) => acomentimento.nome)
+        .toList();
+    List<int> idsListMed =
+        people.acometimentosOffline!.split(',').map(int.parse).toList();
+    List<String?> nomeMedicamento = controller.listMedicine
+        .where((medicamento) => idsListMed.contains(medicamento.id))
+        .map((medicamento) => medicamento.nome)
+        .toList();
     return Stack(
       children: [
         Scaffold(
@@ -133,7 +145,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                           children: [
                             FormattedText(
                                 text:
-                                    'Líder: ${people.peopleL! ?UserStorage.getUserName() : people.user?.nome}'),
+                                    'Líder: ${people.peopleLocal! ? UserStorage.getUserName() : people.user?.nome}'),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text: 'Provedor: ${people.provedorCasa}'),
@@ -150,36 +162,46 @@ class DetailPeopleView extends GetView<PeopleController> {
                             FormattedText(
                                 text: 'Rede Social: @${people.redeSocial}'),
                             const SizedBox(height: 15),
-                            people.acometimentosSaude != null &&
-                                    people.acometimentosSaude!.isNotEmpty
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                        FormattedText(
-                                          text:
-                                              'Acometimento: ${people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ')}',
-                                        ),
-                                      ])
-                                : const FormattedText(
+                            people.peopleLocal == true
+                                ? FormattedText(
                                     text:
-                                        'Acometimentos Saúde: Nenhum acometimento informado.',
-                                  ),
-                            people.medicamentos != null &&
-                                    people.medicamentos!.isNotEmpty
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                        FormattedText(
-                                          text:
-                                              'Medicamento: ${people.medicamentos!.map((medicamento) => medicamento.nome).join(', ')}',
-                                        ),
-                                      ])
-                                : const FormattedText(
+                                        'Acometimento: ${nomeAcometimento.join(', ')}',
+                                  )
+                                : people.acometimentosSaude != null &&
+                                        people.acometimentosSaude!.isNotEmpty
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                            FormattedText(
+                                              text:
+                                                  'Acometimento: ${people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ')}',
+                                            ),
+                                          ])
+                                    : const FormattedText(
+                                        text:
+                                            'Acometimentos Saúde: Nenhum acometimento informado.',
+                                      ),
+                            people.peopleLocal == true
+                                ? FormattedText(
                                     text:
-                                        'Medicamentos: Nenhum medicamento informado.',
-                                  ),
+                                        'Acometimento: ${nomeMedicamento.join(', ')}',
+                                  )
+                                : people.medicamentos != null &&
+                                        people.medicamentos!.isNotEmpty
+                                    ? Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                            FormattedText(
+                                              text:
+                                                  'Medicamento: ${people.medicamentos!.map((medicamento) => medicamento.nome).join(', ')}',
+                                            ),
+                                          ])
+                                    : const FormattedText(
+                                        text:
+                                            'Medicamentos: Nenhum medicamento informado.',
+                                      ),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text:
@@ -216,7 +238,6 @@ class DetailPeopleView extends GetView<PeopleController> {
                             peopleController.getReligion();
                             peopleController.getHealth();
                             peopleController.getMedicine();
-
                             peopleController.selectedPeople = people;
                             peopleController.fillInFieldsForEditPerson();
                             showModalBottomSheet(

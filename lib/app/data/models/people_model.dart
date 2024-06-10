@@ -41,41 +41,44 @@ class People {
   MaritalStatus? maritalStatus;
   bool? peopleLocal = false;
   User? userSistema;
+  String? medicamentosOffline;
+  String? acometimentosOffline;
 
-  People({
-    this.id,
-    this.nome,
-    this.foto,
-    this.sexo,
-    this.cpf,
-    this.dataNascimento,
-    this.estadoCivilId,
-    this.tituloEleitor,
-    this.zonaEleitoral,
-    this.telefone,
-    this.redeSocial,
-    this.provedorCasa,
-    this.igrejaId,
-    this.localTrabalho,
-    this.cargoTrabalho,
-    this.religiaoId,
-    this.funcaoIgreja,
-    this.usuarioId,
-    this.status,
-    this.dataCadastro,
-    this.dataUpdate,
-    this.familiaId,
-    this.parentesco,
-    this.atendimentos,
-    this.user,
-    this.religion,
-    this.username,
-    this.senha,
-    this.maritalStatus,
-    this.peopleLocal,
-    this.family,
-    this.userSistema,
-  });
+  People(
+      {this.id,
+      this.nome,
+      this.foto,
+      this.sexo,
+      this.cpf,
+      this.dataNascimento,
+      this.estadoCivilId,
+      this.tituloEleitor,
+      this.zonaEleitoral,
+      this.telefone,
+      this.redeSocial,
+      this.provedorCasa,
+      this.igrejaId,
+      this.localTrabalho,
+      this.cargoTrabalho,
+      this.religiaoId,
+      this.funcaoIgreja,
+      this.usuarioId,
+      this.status,
+      this.dataCadastro,
+      this.dataUpdate,
+      this.familiaId,
+      this.parentesco,
+      this.atendimentos,
+      this.user,
+      this.religion,
+      this.username,
+      this.senha,
+      this.maritalStatus,
+      this.peopleLocal,
+      this.family,
+      this.userSistema,
+      this.acometimentosOffline,
+      this.medicamentosOffline});
 
   People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -181,8 +184,6 @@ class People {
       'sexo': sexo,
       'cpf': cpf,
       'data_nascimento': dataNascimento,
-      'estadocivil_id': estadoCivilId,
-      'titulo_eleitor': tituloEleitor,
       'zona_eleitoral': zonaEleitoral,
       'telefone': telefone,
       'rede_social': redeSocial,
@@ -198,6 +199,8 @@ class People {
       'data_update': dataUpdate,
       'familia_id': familiaId,
       'parentesco': parentesco,
+      'medicamentosOffline': medicamentosOffline,
+      'acometimentosOffline': acometimentosOffline
     };
   }
 }

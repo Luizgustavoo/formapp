@@ -300,9 +300,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           color: Colors.black, fontFamily: 'Poppinss'),
                       listType: MultiSelectListType.LIST,
                       searchHint: 'Pesquisar',
-
                       onConfirm: (values) {
-                        controller.selectedSaudeIds = values;
+                        controller.selectedSaudeIds.value =
+                            List<int>.from(values);
                       },
                       title: const Text(''),
                       decoration: BoxDecoration(
@@ -349,7 +349,8 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       listType: MultiSelectListType.LIST,
                       searchHint: 'Pesquisar',
                       onConfirm: (values) {
-                        controller.selectedMedicamentoIds = values;
+                        controller.selectedMedicamentoIds.value =
+                            List<int>.from(values);
                       },
                       title: const Text(''),
                       decoration: BoxDecoration(

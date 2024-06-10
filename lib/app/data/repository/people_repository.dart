@@ -72,11 +72,17 @@ class PeopleRepository {
     }
   }
 
-  updatePeople(String token, People pessoa, File imageFile,
-      String? oldImagePath, bool peopleLocal, List? saude, List? medicamento) async {
+  updatePeople(
+      String token,
+      People pessoa,
+      File imageFile,
+      String? oldImagePath,
+      bool peopleLocal,
+      List? saude,
+      List? medicamento) async {
     try {
-      var response = await apiClient.updatePeople(
-          token, pessoa, imageFile, oldImagePath, peopleLocal, saude, medicamento);
+      var response = await apiClient.updatePeople(token, pessoa, imageFile,
+          oldImagePath, peopleLocal, saude, medicamento);
 
       return response;
     } catch (e) {
@@ -124,34 +130,36 @@ class PeopleRepository {
       final statusPeople = row['status_people'] as String?;
       final dataCadastroPeople = row['data_cadastro_people'] as String?;
       final dataUpdatePeople = row['data_update_people'] as String?;
-      // final familiaIdPeople = row['familia_id_people'] as int?;
       final parentescoPeople = row['parentesco_people'] as String?;
+      final medicamentosOffline = row['medicamentosOffline'] as String?;
+      final acometimentosOffline = row['acometimentosOffline'] as String?;
 
       if (idPeople != null && nomePeople != null) {
         peoples.add(People(
-          id: idPeople,
-          nome: nomePeople,
-          foto: fotoPeople,
-          sexo: sexoPeople,
-          cpf: cpfPeople,
-          dataNascimento: dataNascimentoPeople,
-          estadoCivilId: estadocivilIdPeople,
-          tituloEleitor: tituloEleitorPeople,
-          zonaEleitoral: zonaEleitoralPeople,
-          telefone: telefonePeople,
-          redeSocial: redeSocialPeople,
-          provedorCasa: provedorCasaPeople,
-          igrejaId: igrejaIdPeople,
-          localTrabalho: localTrabalhoPeople,
-          cargoTrabalho: cargoTrabalhoPeople,
-          religiaoId: religiaoIdPeople,
-          funcaoIgreja: funcaoIgrejaPeople,
-          usuarioId: usuarioIdPeople,
-          status: int.parse(statusPeople.toString()),
-          dataCadastro: dataCadastroPeople,
-          dataUpdate: dataUpdatePeople,
-          parentesco: parentescoPeople,
-        ));
+            id: idPeople,
+            nome: nomePeople,
+            foto: fotoPeople,
+            sexo: sexoPeople,
+            cpf: cpfPeople,
+            dataNascimento: dataNascimentoPeople,
+            estadoCivilId: estadocivilIdPeople,
+            tituloEleitor: tituloEleitorPeople,
+            zonaEleitoral: zonaEleitoralPeople,
+            telefone: telefonePeople,
+            redeSocial: redeSocialPeople,
+            provedorCasa: provedorCasaPeople,
+            igrejaId: igrejaIdPeople,
+            localTrabalho: localTrabalhoPeople,
+            cargoTrabalho: cargoTrabalhoPeople,
+            religiaoId: religiaoIdPeople,
+            funcaoIgreja: funcaoIgrejaPeople,
+            usuarioId: usuarioIdPeople,
+            status: int.parse(statusPeople.toString()),
+            dataCadastro: dataCadastroPeople,
+            dataUpdate: dataUpdatePeople,
+            parentesco: parentescoPeople,
+            acometimentosOffline: acometimentosOffline,
+            medicamentosOffline: medicamentosOffline));
       }
     }
 

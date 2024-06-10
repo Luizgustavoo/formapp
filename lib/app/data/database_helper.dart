@@ -66,7 +66,9 @@ class DatabaseHelper {
           religiao_id INTEGER,
           familia_id INTEGER,
           data_cadastro TEXT,
-          data_update TEXT
+          data_update TEXT,
+          medicamentosOffline TEXT,
+          acometimentosOffline TEXT
       )
     ''');
   }
@@ -149,8 +151,6 @@ class DatabaseHelper {
       people.cpf AS cpf_people,
       people.data_nascimento AS data_nascimento_people,
       people.estadocivil_id AS estadocivil_id_people,
-      people.titulo_eleitor AS titulo_eleitor_people,
-      people.zona_eleitoral AS zona_eleitoral_people,
       people.telefone AS telefone_people,
       people.rede_social AS rede_social_people,
       people.provedor_casa AS provedor_casa_people,
@@ -164,7 +164,9 @@ class DatabaseHelper {
       people.data_cadastro AS data_cadastro_people,
       people.data_update AS data_update_people,
       people.familia_id AS familia_id_people,
-      people.parentesco AS parentesco_people
+      people.parentesco AS parentesco_people,
+      people.medicamentosOffline AS medicamentosOffline,
+      people.acometimentosOffline AS acometimentosOffline
       FROM people
     ''');
   }
