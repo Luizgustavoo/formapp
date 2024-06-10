@@ -35,9 +35,6 @@ class PeopleController extends GetxController {
   TextEditingController nomePessoaController = TextEditingController();
   TextEditingController nascimentoPessoaController = TextEditingController();
   TextEditingController cpfPessoaController = TextEditingController();
-  TextEditingController tituloEleitoralPessoaController =
-      TextEditingController();
-  TextEditingController zonaEleitoralPessoaController = TextEditingController();
   TextEditingController celularPessoaController = TextEditingController();
   TextEditingController redeSocialPessoaController = TextEditingController();
   TextEditingController localTrabalhoPessoaController = TextEditingController();
@@ -76,8 +73,6 @@ class PeopleController extends GetxController {
   final focus = FocusNode();
   List<String> suggestions = [];
 
-  TextEditingController subjectController = TextEditingController();
-  TextEditingController messageController = TextEditingController();
   final Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
 
   People? selectedPeople;
@@ -104,12 +99,6 @@ class PeopleController extends GetxController {
 
   final ScrollController scrollController = ScrollController();
   final ScrollController scrollFilterPeople = ScrollController();
-
-  var medicamentoItems = <Item>[
-    Item(id: 1, descricao: "Medicamento A"),
-    Item(id: 2, descricao: "Medicamento B"),
-    // Adicione mais itens conforme necessário
-  ].obs;
 
   List<int?> selectedSaudeIds = <int>[].obs;
   List<int?> selectedMedicamentoIds = <int>[].obs;
@@ -338,8 +327,6 @@ class PeopleController extends GetxController {
         provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
         sexo: sexo.value,
         dataNascimento: nascimentoPessoaController.text,
-        tituloEleitor: tituloEleitoralPessoaController.text,
-        zonaEleitoral: zonaEleitoralPessoaController.text,
         localTrabalho: localTrabalhoPessoaController.text,
         cargoTrabalho: cargoPessoaController.text,
         telefone: celularPessoaController.text,
@@ -394,8 +381,6 @@ class PeopleController extends GetxController {
         provedorCasa: provedorCheckboxValue.value ? 'sim' : 'nao',
         sexo: sexo.value,
         dataNascimento: nascimentoPessoaController.text,
-        tituloEleitor: tituloEleitoralPessoaController.text,
-        zonaEleitoral: zonaEleitoralPessoaController.text,
         localTrabalho: localTrabalhoPessoaController.text,
         cargoTrabalho: cargoPessoaController.text,
         telefone: celularPessoaController.text,
@@ -421,8 +406,6 @@ class PeopleController extends GetxController {
           };
         }
       }
-
-      //familyController.getFamilies(page: 1);
     } else {
       retorno = {
         "return": 1,
@@ -527,16 +510,6 @@ class PeopleController extends GetxController {
 
     nascimentoPessoaController.text = dataFormatada.toString();
     cpfPessoaController.text = selectedPeople!.cpf.toString();
-    tituloEleitoralPessoaController.text =
-        selectedPeople!.tituloEleitor != null &&
-                selectedPeople!.tituloEleitor != 'null'
-            ? selectedPeople!.tituloEleitor.toString()
-            : '';
-    zonaEleitoralPessoaController.text =
-        selectedPeople!.zonaEleitoral != null &&
-                selectedPeople!.zonaEleitoral != 'null'
-            ? selectedPeople!.zonaEleitoral.toString()
-            : '';
     celularPessoaController.text = selectedPeople!.telefone.toString();
     localTrabalhoPessoaController.text =
         selectedPeople!.localTrabalho.toString();
@@ -561,14 +534,25 @@ class PeopleController extends GetxController {
         ? true
         : false;
 
-    // Verifique se o caminho da imagem local está definido
     if (photoUrlPath.value.isNotEmpty) {
-      // Defina a imagem usando FileImage para exibir localmente
       isImagePicPathSet.value = false;
       photoUrlPath.value = selectedPeople!.foto!;
     } else {
-      // Caso contrário, defina para false e exiba a imagem padrão
       isImagePicPathSet.value = true;
+    }
+
+    if (selectedPeople!.acometimentosSaude != null) {
+      selectedSaudeIds.clear();
+      for (var saude in selectedPeople!.acometimentosSaude!) {
+        selectedSaudeIds.add(saude.id);
+      }
+    }
+
+    if (selectedPeople!.medicamentos != null) {
+      selectedMedicamentoIds.clear();
+      for (var medicamento in selectedPeople!.medicamentos!) {
+        selectedMedicamentoIds.add(medicamento.id);
+      }
     }
   }
 
@@ -627,8 +611,6 @@ class PeopleController extends GetxController {
       nomePessoaController,
       nascimentoPessoaController,
       cpfPessoaController,
-      tituloEleitoralPessoaController,
-      zonaEleitoralPessoaController,
       celularPessoaController,
       redeSocialPessoaController,
       localTrabalhoPessoaController,
@@ -715,13 +697,4 @@ class PeopleController extends GetxController {
 
     return retorno;
   }
-}
-
-class Item {
-  int? id;
-  String? descricao;
-  Item({
-    this.id,
-    this.descricao,
-  });
 }

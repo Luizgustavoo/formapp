@@ -150,12 +150,36 @@ class DetailPeopleView extends GetView<PeopleController> {
                             FormattedText(
                                 text: 'Rede Social: @${people.redeSocial}'),
                             const SizedBox(height: 15),
-                            FormattedText(
-                                text:
-                                    'Título de Eleitor: ${people.tituloEleitor}'),
-                            FormattedText(
-                                text:
-                                    'Zona Eleitoral: ${people.zonaEleitoral}'),
+                            people.acometimentosSaude != null &&
+                                    people.acometimentosSaude!.isNotEmpty
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                        FormattedText(
+                                          text:
+                                              'Acometimento: ${people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ')}',
+                                        ),
+                                      ])
+                                : const FormattedText(
+                                    text:
+                                        'Acometimentos Saúde: Nenhum acometimento informado.',
+                                  ),
+                            people.medicamentos != null &&
+                                    people.medicamentos!.isNotEmpty
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                        FormattedText(
+                                          text:
+                                              'Medicamento: ${people.medicamentos!.map((medicamento) => medicamento.nome).join(', ')}',
+                                        ),
+                                      ])
+                                : const FormattedText(
+                                    text:
+                                        'Medicamentos: Nenhum medicamento informado.',
+                                  ),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text:

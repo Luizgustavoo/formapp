@@ -1,6 +1,9 @@
+import 'package:get_storage/get_storage.dart';
 import 'package:ucif/app/data/models/auth_model.dart';
 import 'package:ucif/app/data/models/church_model.dart';
+import 'package:ucif/app/data/models/health_model.dart';
 import 'package:ucif/app/data/models/marital_status_model.dart';
+import 'package:ucif/app/data/models/medicine_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
@@ -10,6 +13,7 @@ import 'package:ucif/app/utils/error_handler.dart';
 
 class AuthRepository {
   final AuthApiClient apiClient = AuthApiClient();
+  final box = GetStorage();
 
   Future<Auth?> getLogin(String username, String password) async {
     Map<String, dynamic>? json = await apiClient.getLogin(username, password);
@@ -49,9 +53,9 @@ class AuthRepository {
     return;
   }
 
-  insertPeople(People pessoa) async {
+  insertPeople(People pessoa, List? saude, List? medicamento) async {
     try {
-      var response = await apiClient.insertPeople(pessoa);
+      var response = await apiClient.insertPeople(pessoa, saude, medicamento);
 
       return response;
     } catch (e) {
@@ -110,6 +114,64 @@ class AuthRepository {
           list.add(Church.fromJson(e));
         });
       }
+    }
+
+    return list;
+  }
+
+  Future<List<Health>> getHealth() async {
+    List<dynamic> localData = [];
+    List<Health> localHealthList = [];
+
+    if (box.hasData('health')) {
+      localData = box.read<List<dynamic>>('health')!;
+      localHealthList = localData
+          .map((e) => Health.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<Health> list = <Health>[];
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getHealth();
+
+      if (response != null) {
+        response.forEach((e) {
+          list.add(Health.fromJson(e));
+        });
+
+        box.write('health', list.map((e) => e.toJson()).toList());
+      }
+    } else {
+      return localHealthList;
+    }
+
+    return list;
+  }
+
+  Future<List<Medicine>> getMedicine() async {
+    List<dynamic> localData = [];
+    List<Medicine> localMedicineList = [];
+
+    if (box.hasData('medicine')) {
+      localData = box.read<List<dynamic>>('medicine')!;
+      localMedicineList = localData
+          .map((e) => Medicine.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<Medicine> list = <Medicine>[];
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getMedicine();
+
+      if (response != null) {
+        response.forEach((e) {
+          list.add(Medicine.fromJson(e));
+        });
+
+        box.write('medicine', list.map((e) => e.toJson()).toList());
+      }
+    } else {
+      return localMedicineList;
     }
 
     return list;

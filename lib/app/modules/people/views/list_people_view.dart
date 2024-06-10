@@ -234,9 +234,9 @@ class ListPeopleView extends GetView<PeopleController> {
                         controller.getMaritalStatus();
                         controller.getChurch();
                         controller.getReligion();
-                        controller.clearAllPeopleTextFields();
                         controller.getHealth();
                         controller.getMedicine();
+                        controller.clearAllPeopleTextFields();
                         showModalBottomSheet(
                           isScrollControlled: true,
                           isDismissible: false,

@@ -95,15 +95,6 @@ class LoginController extends GetxController {
 
   final userController = Get.put(UserController());
 
-  @override
-  void onInit() async {
-    super.onInit();
-    await getMaritalStatus();
-    await getReligion();
-    await getChurch();
-    await getLeader();
-  }
-
   void login() async {
     if (formKey.currentState!.validate()) {
       isLoggingIn.value = true;
@@ -144,42 +135,6 @@ class LoginController extends GetxController {
       isLoggingIn.value = false;
     }
   }
-
-  // Future<Map<String, dynamic>> signUp() async {
-  //   if (signupKey.currentState!.validate()) {
-  //     if (passwordSignUpCtrl.text == confirmPasswordSignUpCtrl.text) {
-  //       isLoggingIn.value = true;
-  //       loading.value = true;
-
-  //       mensagem = await repository.getSignUp(nameSignUpCtrl.text,
-  //           usernameSignUpCtrl.text, passwordSignUpCtrl.text);
-
-  //       if (mensagem != null) {
-  //         if (mensagem['message'] == 'success') {
-  //           retorno = {
-  //             "return": 0,
-  //             "message":
-  //                 "Sucesso! Fique atento ao seu e-mail cadastrado, pois iremos informar o status da sua solicitação."
-  //           };
-  //         } else if (mensagem['message'] == 'ja_existe') {
-  //           retorno = {
-  //             "return": 1,
-  //             "message": "Já existe um usuário com esse nome!"
-  //           };
-  //         } else {
-  //           retorno = {"return": 1, "message": "Falha!"};
-  //         }
-  //       } else {
-  //         showErrorSnackbar.value = true;
-  //         showErrorMessage();
-  //       }
-
-  //       loading.value = false;
-  //       isLoggingIn.value = false;
-  //     }
-  //   }
-  //   return retorno;
-  // }
 
   //*VALIDAÇÕES */
   String? validateUsername(String? value) {
@@ -337,9 +292,8 @@ class LoginController extends GetxController {
           username: usernameSignUpCtrl.text,
           senha: passwordSignUpCtrl.text);
 
-      // final token = box.read('auth')['access_token'];
-
-      mensagem = await repository.insertPeople(pessoa);
+      mensagem = await repository.insertPeople(
+          pessoa, selectedSaudeIds, selectedMedicamentoIds);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -392,5 +346,15 @@ class LoginController extends GetxController {
     for (var element in listChurch) {
       suggestions.add(element.descricao!);
     }
+  }
+
+  Future<void> getHealth() async {
+    final updatedList = await repository.getHealth();
+    listHealth.assignAll(updatedList);
+  }
+
+  Future<void> getMedicine() async {
+    final updatedList = await repository.getMedicine();
+    listMedicine.assignAll(updatedList);
   }
 }

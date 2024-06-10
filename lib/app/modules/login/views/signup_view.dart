@@ -123,40 +123,44 @@ class SignUpView extends GetView<LoginController> {
                                         ),
                                       ),
                                       const SizedBox(width: 5),
-                                      Expanded(
-                                        flex: 2,
-                                        child: DropdownButtonFormField<int>(
-                                          onTap: () async {
-                                            await controller.getMaritalStatus();
-                                          },
-                                          value: controller
-                                              .estadoCivilSelected.value,
-                                          onChanged: (value) {
-                                            controller.estadoCivilSelected
-                                                .value = value!;
-                                          },
-                                          items: controller.listMaritalStatus
-                                              .map<DropdownMenuItem<int>>(
-                                                  (item) {
-                                            return DropdownMenuItem<int>(
-                                              value: item.id,
-                                              child: Text(item.descricao ?? ''),
-                                            );
-                                          }).toList(),
-                                          decoration: InputDecoration(
-                                              labelStyle: const TextStyle(
-                                                color: Colors.black54,
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12,
-                                              ),
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              labelText: 'Estado Civil'),
+                                      Obx(
+                                        () => Expanded(
+                                          flex: 2,
+                                          child: DropdownButtonFormField<int>(
+                                            onTap: () async {
+                                              await controller
+                                                  .getMaritalStatus();
+                                            },
+                                            value: controller
+                                                .estadoCivilSelected.value,
+                                            onChanged: (value) {
+                                              controller.estadoCivilSelected
+                                                  .value = value!;
+                                            },
+                                            items: controller.listMaritalStatus
+                                                .map<DropdownMenuItem<int>>(
+                                                    (item) {
+                                              return DropdownMenuItem<int>(
+                                                value: item.id,
+                                                child:
+                                                    Text(item.descricao ?? ''),
+                                              );
+                                            }).toList(),
+                                            decoration: InputDecoration(
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.black54,
+                                                  fontFamily: 'Poppins',
+                                                  fontSize: 12,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                labelText: 'Estado Civil'),
+                                          ),
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
                                   _gap(),
@@ -307,8 +311,9 @@ class SignUpView extends GetView<LoginController> {
                                       },
                                       title: const Text(''),
                                       decoration: BoxDecoration(
+                                        color: Colors.white,
                                         border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(5),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                       cancelText: const Text(
                                         'CANCELAR',
@@ -358,8 +363,9 @@ class SignUpView extends GetView<LoginController> {
                                       },
                                       title: const Text(''),
                                       decoration: BoxDecoration(
+                                        color: Colors.white,
                                         border: Border.all(color: Colors.black),
-                                        borderRadius: BorderRadius.circular(5),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                       cancelText: const Text(
                                         'CANCELAR',
@@ -388,36 +394,30 @@ class SignUpView extends GetView<LoginController> {
                                     ),
                                   ),
                                   _gap(),
-                                  DropdownButtonFormField<int>(
-                                    onTap: () async {
-                                      controller.getReligion();
-                                    },
-                                    value: controller.religiaoSelected.value,
-                                    onChanged: (value) {
-                                      controller.religiaoSelected.value =
-                                          value!;
-                                    },
-                                    items: controller.listReligion
-                                        .map<DropdownMenuItem<int>>((item) {
-                                          return DropdownMenuItem<int>(
-                                            value: item.id,
-                                            child: Text(item.descricao ?? ''),
-                                          );
-                                        })
-                                        .toSet()
-                                        .toList(),
-                                    decoration: InputDecoration(
-                                        labelStyle: const TextStyle(
-                                          color: Colors.black54,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 12,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        labelText: 'Religião'),
+                                  Obx(
+                                    () => DropdownButtonFormField<int>(
+                                      value: controller.religiaoSelected.value,
+                                      onChanged: (value) {
+                                        controller.religiaoSelected.value =
+                                            value!;
+                                      },
+                                      items: controller.listReligion
+                                          .map<DropdownMenuItem<int>>((item) {
+                                            return DropdownMenuItem<int>(
+                                              value: item.id,
+                                              child: Text(item.descricao ?? ''),
+                                            );
+                                          })
+                                          .toSet()
+                                          .toList(),
+                                      decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          labelText: 'Religião'),
+                                    ),
                                   ),
                                   _gap(),
                                   Row(
@@ -589,39 +589,39 @@ class SignUpView extends GetView<LoginController> {
                                           ),
                                           labelText: 'CARGO')),
                                   _gap(),
-                                  DropdownButtonFormField<int>(
-                                    onTap: () async {
-                                      await controller.getLeader();
-                                    },
-                                    value: controller.leaderSelected.value,
-                                    onChanged: (value) {
-                                      controller.leaderSelected.value = value!;
-                                    },
-                                    validator: (value) {
-                                      if (value == null || value <= 0) {
-                                        return 'Selecione uma liderança';
-                                      }
-                                      return null;
-                                    },
-                                    items: controller.listLeader
-                                        .map<DropdownMenuItem<int>>((item) {
-                                      return DropdownMenuItem<int>(
-                                        value: item.id,
-                                        child: Text(item.nome ?? ''),
-                                      );
-                                    }).toList(),
-                                    decoration: InputDecoration(
-                                        labelStyle: const TextStyle(
-                                          color: Colors.black54,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 12,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        labelText: 'Liderança'),
+                                  Obx(
+                                    () => DropdownButtonFormField<int>(
+                                      value: controller.leaderSelected.value,
+                                      onChanged: (value) {
+                                        controller.leaderSelected.value =
+                                            value!;
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value <= 0) {
+                                          return 'Selecione uma liderança';
+                                        }
+                                        return null;
+                                      },
+                                      items: controller.listLeader
+                                          .map<DropdownMenuItem<int>>((item) {
+                                        return DropdownMenuItem<int>(
+                                          value: item.id,
+                                          child: Text(item.nome ?? ''),
+                                        );
+                                      }).toList(),
+                                      decoration: InputDecoration(
+                                          labelStyle: const TextStyle(
+                                            color: Colors.black54,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 12,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          labelText: 'Liderança'),
+                                    ),
                                   ),
                                   _gap(),
                                   Obx(() => TextFormField(

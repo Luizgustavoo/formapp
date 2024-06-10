@@ -60,7 +60,6 @@ class HomeController extends GetxController
       username.value = UserStorage.getUserName();
       startTimer();
       await getCountGenre();
-
       await getPeoples();
 
       isGraphicLoading.value = false;

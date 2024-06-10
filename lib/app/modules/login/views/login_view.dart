@@ -233,6 +233,12 @@ class LoginView extends GetView<LoginController> {
                                     height: 50,
                                     child: TextButton(
                                         onPressed: () {
+                                          controller.getMaritalStatus();
+                                          controller.getReligion();
+                                          controller.getChurch();
+                                          controller.getLeader();
+                                          controller.getHealth();
+                                          controller.getMedicine();
                                           controller.clearAllSignUpTextFields();
                                           Get.toNamed('/signup');
                                         },

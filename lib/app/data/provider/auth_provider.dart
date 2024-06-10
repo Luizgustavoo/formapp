@@ -95,7 +95,7 @@ class AuthApiClient {
     return null;
   }
 
-  insertPeople(People pessoa) async {
+  insertPeople(People pessoa, List? saude, List? medicamento) async {
     try {
       bool isConnected = await ConnectionStatus.verifyConnection();
       if (isConnected) {
@@ -123,6 +123,12 @@ class AuthApiClient {
           "username": pessoa.username.toString(),
           "senha": pessoa.senha.toString()
         });
+        if (saude != null) {
+          request.fields['saude'] = json.encode(saude);
+        }
+        if (medicamento != null) {
+          request.fields['medicamento'] = json.encode(medicamento);
+        }
 
         request.headers.addAll({
           'Accept': 'application/json',
@@ -274,6 +280,70 @@ class AuthApiClient {
       }
     } catch (err) {
       ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
+  getHealth() async {
+    try {
+      Uri healthUrl;
+      String url = '$baseUrl/list-acometimentos';
+
+      healthUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        healthUrl,
+        headers: {
+          "Accept": "application/json",
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      //
+    }
+    return null;
+  }
+
+  getMedicine() async {
+    try {
+      Uri medicineUrl;
+      String url = '$baseUrl/list-medicamentos';
+
+      medicineUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        medicineUrl,
+        headers: {
+          "Accept": "application/json",
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      //
     }
     return null;
   }

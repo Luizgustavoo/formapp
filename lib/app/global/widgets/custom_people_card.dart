@@ -44,7 +44,6 @@ class CustomPeopleCard extends StatelessWidget {
             return false;
           } else if ((people.userSistema == null)) {
             if (direction == DismissDirection.endToStart) {
-
               final controller = Get.put(UserController());
               controller.clearAllUserTextFields();
               controller.getTypeUser();
@@ -125,11 +124,12 @@ class CustomPeopleCard extends StatelessWidget {
             titleAlignment: ListTileTitleAlignment.center,
             leading: CircleAvatar(
               radius: 15,
-              backgroundImage: people.foto.toString().isEmpty || people.foto == null
-                  ? const AssetImage('assets/images/default_avatar.jpg')
-                  : CachedNetworkImageProvider(
-                          '$urlImagem/storage/app/public/${people.foto}')
-                      as ImageProvider,
+              backgroundImage:
+                  people.foto.toString().isEmpty || people.foto == null
+                      ? const AssetImage('assets/images/default_avatar.jpg')
+                      : CachedNetworkImageProvider(
+                              '$urlImagem/storage/app/public/${people.foto}')
+                          as ImageProvider,
             ),
             title: Text(people.nome!.toUpperCase(),
                 style: TextStyle(
@@ -168,7 +168,7 @@ class CustomPeopleCard extends StatelessWidget {
                       size: 20,
                       color: Colors.black54,
                     ),
-           ),
+                  ),
           ),
         ),
       ),

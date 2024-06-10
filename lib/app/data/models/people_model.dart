@@ -1,6 +1,8 @@
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/health_model.dart';
 import 'package:ucif/app/data/models/marital_status_model.dart';
+import 'package:ucif/app/data/models/medicine_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 
@@ -31,6 +33,8 @@ class People {
   String? username;
   String? senha;
   List<FamilyService>? atendimentos;
+  List<Health>? acometimentosSaude;
+  List<Medicine>? medicamentos;
   User? user;
   Family? family;
   Religion? religion;
@@ -38,41 +42,40 @@ class People {
   bool? peopleLocal = false;
   User? userSistema;
 
-  People(
-      {this.id,
-      this.nome,
-      this.foto,
-      this.sexo,
-      this.cpf,
-      this.dataNascimento,
-      this.estadoCivilId,
-      this.tituloEleitor,
-      this.zonaEleitoral,
-      this.telefone,
-      this.redeSocial,
-      this.provedorCasa,
-      this.igrejaId,
-      this.localTrabalho,
-      this.cargoTrabalho,
-      this.religiaoId,
-      this.funcaoIgreja,
-      this.usuarioId,
-      this.status,
-      this.dataCadastro,
-      this.dataUpdate,
-      this.familiaId,
-      this.parentesco,
-      this.atendimentos,
-      this.user,
-      this.religion,
-      this.username,
-      this.senha,
-      this.maritalStatus,
-      this.peopleLocal,
-      this.family,
-        this.userSistema,
-
-      });
+  People({
+    this.id,
+    this.nome,
+    this.foto,
+    this.sexo,
+    this.cpf,
+    this.dataNascimento,
+    this.estadoCivilId,
+    this.tituloEleitor,
+    this.zonaEleitoral,
+    this.telefone,
+    this.redeSocial,
+    this.provedorCasa,
+    this.igrejaId,
+    this.localTrabalho,
+    this.cargoTrabalho,
+    this.religiaoId,
+    this.funcaoIgreja,
+    this.usuarioId,
+    this.status,
+    this.dataCadastro,
+    this.dataUpdate,
+    this.familiaId,
+    this.parentesco,
+    this.atendimentos,
+    this.user,
+    this.religion,
+    this.username,
+    this.senha,
+    this.maritalStatus,
+    this.peopleLocal,
+    this.family,
+    this.userSistema,
+  });
 
   People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -101,11 +104,25 @@ class People {
     familiaId = json['familia_id'];
     parentesco = json['parentesco'];
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
-    userSistema = json['usuario_sistema'] != null ? User.fromJson(json['usuario_sistema']) : null;
+    userSistema = json['usuario_sistema'] != null
+        ? User.fromJson(json['usuario_sistema'])
+        : null;
     if (json['atendimentos'] != null) {
       atendimentos = <FamilyService>[];
       json['atendimentos'].forEach((v) {
         atendimentos!.add(FamilyService.fromJson(v));
+      });
+    }
+    if (json['acometimentossaude'] != null) {
+      acometimentosSaude = <Health>[];
+      json['acometimentossaude'].forEach((v) {
+        acometimentosSaude!.add(Health.fromJson(v));
+      });
+    }
+    if (json['medicamentos'] != null) {
+      medicamentos = <Medicine>[];
+      json['medicamentos'].forEach((v) {
+        medicamentos!.add(Medicine.fromJson(v));
       });
     }
     family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
@@ -145,6 +162,13 @@ class People {
     data['parentesco'] = parentesco;
     if (atendimentos != null) {
       data['atendimentos'] = atendimentos!.map((v) => v.toJson()).toList();
+    }
+    if (acometimentosSaude != null) {
+      data['acometimentossaude'] =
+          acometimentosSaude!.map((v) => v.toJson()).toList();
+    }
+    if (medicamentos != null) {
+      data['medicamentos'] = medicamentos!.map((v) => v.toJson()).toList();
     }
     return data;
   }
