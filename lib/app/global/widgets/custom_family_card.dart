@@ -96,6 +96,38 @@ class CustomFamilyCard extends StatelessWidget {
                 fontFamily: 'Poppins',
                 fontSize: 14,
                 color: family.familyLocal! ? Colors.white : Colors.black)),
+        leading: family.familyLocal! ?
+        IconButton(
+            onPressed: Get.currentRoute == '/filter-family'
+                ? null
+                : () {
+              final controller = Get.put(FamilyController());
+              controller.selectedFamily = family;
+              controller.fillInFields();
+              showModalBottomSheet(
+                isScrollControlled: true,
+                isDismissible: false,
+                context: context,
+                builder: (context) => Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: CreateFamilyModal(
+                    tipoOperacao: 'update',
+                    titulo: 'Editar Família',
+                    family: family,
+                  ),
+                ),
+              );
+            },
+            icon: Get.currentRoute == '/filter-family'
+                ? const SizedBox()
+                : Icon(
+              Icons.edit_note_sharp,
+              color: family.familyLocal!
+                  ? Colors.white
+                  : Colors.grey.shade200,
+            )):
+            SizedBox()
+        ,
         trailing: family.familyLocal!
             ? IconButton(
                 onPressed: () async {
@@ -146,7 +178,7 @@ class CustomFamilyCard extends StatelessWidget {
                         Icons.edit_note_sharp,
                         color: family.familyLocal!
                             ? Colors.white
-                            : Colors.grey.shade200,
+                            : Colors.grey.shade800,
                       )),
       ),
     );
