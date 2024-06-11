@@ -44,6 +44,9 @@ class People {
   String? medicamentosOffline;
   String? acometimentosOffline;
 
+  String? medicamentosOfflineNames;
+  String? acometimentosOfflineNames;
+
   String? estado_civil_name;
   String? usuario_name;
   String? religiao_name;
@@ -82,10 +85,13 @@ class People {
       this.family,
       this.userSistema,
       this.acometimentosOffline,
+      this.acometimentosOfflineNames,
       this.estado_civil_name,
       this.usuario_name,
       this.religiao_name,
-      this.medicamentosOffline});
+      this.medicamentosOffline,
+      this.medicamentosOfflineNames,
+      });
 
   People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -208,6 +214,10 @@ class People {
       'parentesco': parentesco,
       'medicamentosOffline': medicamentosOffline,
       'acometimentosOffline': acometimentosOffline,
+
+      'medicamentosOfflineNames': medicamentosOfflineNames,
+      'acometimentosOfflineNames': acometimentosOfflineNames,
+
       'religiao_name': religiao_name,
       'usuario_name' : usuario_name,
       'estado_civil_name' : estado_civil_name

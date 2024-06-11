@@ -131,8 +131,11 @@ class PeopleRepository {
       final dataCadastroPeople = row['data_cadastro_people'] as String?;
       final dataUpdatePeople = row['data_update_people'] as String?;
       final parentescoPeople = row['parentesco_people'] as String?;
+
       final medicamentosOffline = row['medicamentosOffline'] as String?;
+      final medicamentosOfflineNames = row['medicamentosOfflineNames'] as String?;
       final acometimentosOffline = row['acometimentosOffline'] as String?;
+      final acometimentosOfflineNames = row['acometimentosOfflineNames'] as String?;
 
       final estadoCivilName = row['estadoCivilName'] as String?;
       final usuarioName = row['usuarioName'] as String?;
@@ -163,7 +166,9 @@ class PeopleRepository {
             dataUpdate: dataUpdatePeople,
             parentesco: parentescoPeople,
             acometimentosOffline: acometimentosOffline,
+            acometimentosOfflineNames: acometimentosOfflineNames,
             medicamentosOffline: medicamentosOffline,
+            medicamentosOfflineNames: medicamentosOfflineNames,
             estado_civil_name: estadoCivilName,
             usuario_name:usuarioName,
             religiao_name:religiaoName

@@ -71,7 +71,9 @@ class DatabaseHelper {
           data_cadastro TEXT,
           data_update TEXT,
           medicamentosOffline TEXT,
-          acometimentosOffline TEXT
+          medicamentosOfflineNames TEXT,
+          acometimentosOffline TEXT,
+          acometimentosOfflineNames TEXT
       )
     ''');
   }
@@ -169,7 +171,9 @@ class DatabaseHelper {
       people.familia_id AS familia_id_people,
       people.parentesco AS parentesco_people,
       people.medicamentosOffline AS medicamentosOffline,
+      people.medicamentosOfflineNames AS medicamentosOfflineNames,
       people.acometimentosOffline AS acometimentosOffline,
+      people.acometimentosOfflineNames AS acometimentosOfflineNames,
       people.estado_civil_name as estadoCivilName,
       people.usuario_name as usuarioName,
       people.religiao_name as religiaoName

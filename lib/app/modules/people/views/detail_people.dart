@@ -19,25 +19,7 @@ class DetailPeopleView extends GetView<PeopleController> {
   Widget build(BuildContext context) {
     final People people =
         Get.arguments != null ? Get.arguments as People : People();
-    List<String?> nomeAcometimento = [];
-    List<String?> nomeMedicamento = [];
 
-    if (people.peopleLocal == true) {
-      List<int> idsListAcon =
-      people.acometimentosOffline!.split(',').map(int.parse).toList();
-      nomeAcometimento = controller.listHealth
-          .where((acomentimento) => idsListAcon.contains(acomentimento.id))
-          .map((acomentimento) => acomentimento.nome)
-          .toList();
-
-      List<int> idsListMed =
-      people.acometimentosOffline!.split(',').map(int.parse).toList();
-
-      nomeMedicamento = controller.listMedicine
-          .where((medicamento) => idsListMed.contains(medicamento.id))
-          .map((medicamento) => medicamento.nome)
-          .toList();
-    }
 
     return Stack(
       children: [
@@ -174,7 +156,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             people.peopleLocal == true
                                 ? FormattedText(
                                     text:
-                                        'Acometimento: ${people.acometimentosOffline}',
+                                        'Acometimento: ${people.acometimentosOfflineNames}',
                                   )
                                 : people.acometimentosSaude != null &&
                                         people.acometimentosSaude!.isNotEmpty
@@ -194,7 +176,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             people.peopleLocal == true
                                 ? FormattedText(
                                     text:
-                                        'Acometimento: ${nomeMedicamento.join(', ')}',
+                                        'Medicamento: ${people.medicamentosOfflineNames}',
                                   )
                                 : people.medicamentos != null &&
                                         people.medicamentos!.isNotEmpty

@@ -319,13 +319,23 @@ class PeopleController extends GetxController {
     if (peopleFormKey.currentState!.validate()) {
       String imagePath = photoUrlPath.value;
 
-      MaritalStatus? estadoCivil = listMaritalStatus.firstWhere(
-            (estado) => estado.id == estadoCivilSelected.value
-      );
+      MaritalStatus? estadoCivil = listMaritalStatus
+          .firstWhere((estado) => estado.id == estadoCivilSelected.value);
 
-      Religion? religiao = listReligion.firstWhere(
-              (relig) => relig.id == religiaoSelected.value
-      );
+      Religion? religiao = listReligion
+          .firstWhere((relig) => relig.id == religiaoSelected.value);
+
+
+      String nomesMedicamentosFiltrados = listMedicine
+          .where((medicamento) => selectedMedicamentoIds.contains(medicamento.id))
+          .map((medicamento) => medicamento.nome)
+          .join(', ');
+
+      String nomesAcometimentosFiltrados = listHealth
+          .where((acometimento) => selectedMedicamentoIds.contains(acometimento.id))
+          .map((acometimento) => acometimento.nome)
+          .join(', ');
+
 
       People pessoa = People(
         nome: nomePessoaController.text,
@@ -349,7 +359,9 @@ class PeopleController extends GetxController {
         acometimentosOffline: selectedSaudeIds.map((e) => e).join(','),
         medicamentosOffline: selectedMedicamentoIds.map((e) => e).join(','),
         estado_civil_name: estadoCivil.descricao,
-        religiao_name: religiao.descricao
+        religiao_name: religiao.descricao,
+        acometimentosOfflineNames: nomesAcometimentosFiltrados,
+        medicamentosOfflineNames: nomesMedicamentosFiltrados,
       );
 
       final token = box.read('auth')['access_token'];
@@ -539,20 +551,18 @@ class PeopleController extends GetxController {
     familiaId.text = selectedPeople!.familiaId.toString();
     igrejaPessoaController.text = selectedPeople!.igrejaId.toString();
 
-    if(selectedPeople!.estadoCivilId != null){
+    if (selectedPeople!.estadoCivilId != null) {
       estadoCivilSelected.value = selectedPeople!.estadoCivilId!;
     }
-
 
     parentesco?.value = selectedPeople?.parentesco != null
         ? selectedPeople!.parentesco!
         : 'Pai';
     sexo.value = selectedPeople!.sexo!;
 
-    if(selectedPeople!.religiaoId != null){
+    if (selectedPeople!.religiaoId != null) {
       religiaoSelected.value = selectedPeople!.religiaoId!;
     }
-
 
     photoUrlPath.value = selectedPeople!.foto ?? '';
     oldImagePath.value = selectedPeople!.foto ?? '';
@@ -570,19 +580,31 @@ class PeopleController extends GetxController {
       isImagePicPathSet.value = true;
     }
 
-    if (selectedPeople!.acometimentosSaude != null) {
+    if(selectedPeople!.peopleLocal!){
+
       selectedSaudeIds.clear();
-      for (var saude in selectedPeople!.acometimentosSaude!) {
-        selectedSaudeIds.add(saude.id!);
+      selectedSaudeIds.value = selectedPeople!.acometimentosOffline!.split(',').map(int.parse).toList();
+      selectedMedicamentoIds.clear();
+      selectedMedicamentoIds.value = selectedPeople!.medicamentosOffline!.split(',').map(int.parse).toList();
+
+    }else{
+
+      if (selectedPeople!.acometimentosSaude != null) {
+        selectedSaudeIds.clear();
+        for (var saude in selectedPeople!.acometimentosSaude!) {
+          selectedSaudeIds.add(saude.id!);
+        }
+      }
+
+      if (selectedPeople!.medicamentos != null) {
+        selectedMedicamentoIds.clear();
+        for (var medicamento in selectedPeople!.medicamentos!) {
+          selectedMedicamentoIds.add(medicamento.id!);
+        }
       }
     }
 
-    if (selectedPeople!.medicamentos != null) {
-      selectedMedicamentoIds.clear();
-      for (var medicamento in selectedPeople!.medicamentos!) {
-        selectedMedicamentoIds.add(medicamento.id!);
-      }
-    }
+
   }
 
   void setImagePeople(String path) {
