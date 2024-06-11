@@ -152,8 +152,6 @@ class PeopleApiClient {
           "cpf": pessoa.cpf!,
           "data_nascimento": pessoa.dataNascimento!,
           "estadocivil_id": pessoa.estadoCivilId.toString(),
-          "titulo_eleitor": pessoa.tituloEleitor!,
-          "zona_eleitoral": pessoa.zonaEleitoral!,
           "telefone": pessoa.telefone!,
           "rede_social": pessoa.redeSocial!,
           "provedor_casa": pessoa.provedorCasa!,
@@ -190,6 +188,9 @@ class PeopleApiClient {
 
         var responseStream = await response.stream.bytesToString();
         var httpResponse = http.Response(responseStream, response.statusCode);
+
+        print(json.decode(httpResponse.body));
+
         if (response.statusCode == 200) {
           return json.decode(httpResponse.body);
         } else if (response.statusCode == 422 ||
@@ -433,13 +434,13 @@ class PeopleApiClient {
 
       if (retorno > 0) {
         responseData = {
-          'message': 'success',
-          'objeto': people,
+          'code': 0,
+          'message': 'Operação realizada com sucesso!',
         };
       } else {
         responseData = {
-          'code': 0,
-          'message': 'Operação realizada com sucesso',
+          'code': 1,
+          'message': 'Falha ao realizar a operação!',
         };
       }
 

@@ -4,7 +4,9 @@ import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/global/widgets/create_family_modal.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 // ignore: must_be_immutable
 class CustomFamilyCard extends StatelessWidget {
@@ -22,6 +24,61 @@ class CustomFamilyCard extends StatelessWidget {
       elevation: 1,
       margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
       child: ListTile(
+        onLongPress: UserStorage.getUserType() >= 3 ? null : () async{
+          final familyController = Get.put(FamilyController());
+
+          Get.defaultDialog(
+            titlePadding: const EdgeInsets.all(16),
+            contentPadding: const EdgeInsets.all(16),
+            title: "Confirmação",
+            content: Text("Deseja remover a família ${family.nome}?",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Poppinss',
+                fontSize: 18,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text("Cancelar"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+
+                  Map<String,dynamic> retorno = await ConnectionStatus.verifyConnection() && !family.familyLocal!
+                      ? await familyController.deleteFamily(family.id!, false) : await familyController.deleteFamily(family.id!, true);
+
+                  print(retorno);
+
+                  if (retorno['code'] == 0) {
+                    Get.back();
+                  }
+
+                  Get.snackbar(
+                    snackPosition: SnackPosition.BOTTOM,
+                    duration: const Duration(milliseconds: 1500),
+                    retorno['code'] == 0 ? 'Sucesso' : "Falha",
+                    retorno['message'],
+                    backgroundColor:
+                    retorno['code'] == 0 ? Colors.green : Colors.red,
+                    colorText: Colors.white,
+                  );
+                },
+                child: Text(
+                  "Confirmar",
+                  style: CustomTextStyle.button(context),
+                ),
+              ),
+            ],
+          );
+
+
+
+
+        },
         onTap: () {
           final controller = Get.put(PeopleController());
 

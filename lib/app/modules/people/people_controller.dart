@@ -394,8 +394,32 @@ class PeopleController extends GetxController {
   }
 
   Future<Map<String, dynamic>> updatePeople(bool peopleLocal) async {
+
+
+
+
     if (peopleFormKey.currentState!.validate()) {
       String imagePath = photoUrlPath.value;
+
+
+      MaritalStatus? estadoCivil = listMaritalStatus
+          .firstWhere((estado) => estado.id == estadoCivilSelected.value);
+
+      Religion? religiao = listReligion
+          .firstWhere((relig) => relig.id == religiaoSelected.value);
+
+
+      String nomesMedicamentosFiltrados = listMedicine
+          .where((medicamento) => selectedMedicamentoIds.contains(medicamento.id))
+          .map((medicamento) => medicamento.nome)
+          .join(', ');
+
+      String nomesAcometimentosFiltrados = listHealth
+          .where((acometimento) => selectedMedicamentoIds.contains(acometimento.id))
+          .map((acometimento) => acometimento.nome)
+          .join(', ');
+
+
       People pessoa = People(
         id: int.parse(idPessoaController.text),
         nome: nomePessoaController.text,
@@ -415,6 +439,12 @@ class PeopleController extends GetxController {
         status: 1,
         usuarioId: UserStorage.getUserId(),
         foto: imagePath,
+        acometimentosOffline: selectedSaudeIds.map((e) => e).join(','),
+        medicamentosOffline: selectedMedicamentoIds.map((e) => e).join(','),
+        estado_civil_name: estadoCivil.descricao,
+        religiao_name: religiao.descricao,
+        acometimentosOfflineNames: nomesAcometimentosFiltrados,
+        medicamentosOfflineNames: nomesMedicamentosFiltrados,
       );
 
       final token = UserStorage.getToken();
@@ -686,8 +716,23 @@ class PeopleController extends GetxController {
     try {
       if (await ConnectionStatus.verifyConnection()) {
         final token = UserStorage.getToken();
+
+        List<int> saudeIdsOffline = [];
+        List<int> medicamentosIdsOffline = [];
+
+        if(people.medicamentosOffline!.isNotEmpty){
+          List<String> stringMedicamentosIds = people.medicamentosOffline!.split(',');
+          medicamentosIdsOffline = stringMedicamentosIds.map(int.parse).toList();
+        }
+
+        if(people.acometimentosOffline!.isNotEmpty){
+          List<String> stringSaudeIds = people.acometimentosOffline!.split(',');
+          saudeIdsOffline = stringSaudeIds.map(int.parse).toList();
+        }
+
+
         var mensagem = await repository.insertPeopleLocalToApi(
-            "Bearer $token", people, selectedSaudeIds, selectedMedicamentoIds);
+            "Bearer $token", people, saudeIdsOffline, medicamentosIdsOffline);
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
@@ -713,7 +758,7 @@ class PeopleController extends GetxController {
     return retorno;
   }
 
-  Future<Map<String, dynamic>> deletePeople(int id, bool peopleLocal) async {
+  deletePeople(int id, bool peopleLocal) async {
     People people = People(
       id: id,
     );
@@ -721,31 +766,19 @@ class PeopleController extends GetxController {
     mensagem =
         await repository.deletePeople("Bearer $token", people, peopleLocal);
 
-    if (mensagem != null) {
-      if (mensagem['message'] == 'success') {
-        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-      }
-    }
-
     getPeoples();
 
-    return retorno;
+    return mensagem;
   }
 
-  Future<Map<String, dynamic>> deletePeopleLocal(int id) async {
+  deletePeopleLocal(int id) async {
     People people = People(
       id: id,
     );
-    mensagem = await repository.deletePeopleLocal(people);
-
-    if (mensagem != null) {
-      if (mensagem['message'] == 'success') {
-        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-      }
-    }
+     mensagem = await repository.deletePeopleLocal(people);
 
     getPeoples();
 
-    return retorno;
+    return mensagem;
   }
 }

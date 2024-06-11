@@ -335,7 +335,7 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<Map<String, dynamic>> deleteFamily(int id, bool familyLocal) async {
+  deleteFamily(int id, bool familyLocal) async {
     Family family = Family(
       id: id,
     );
@@ -343,20 +343,9 @@ class FamilyController extends GetxController
     mensagem =
         await repository.deleteFamily("Bearer $token", family, familyLocal);
 
-    if (mensagem != null) {
-      if (mensagem['message'] == 'success') {
-        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-      } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uma família com esse nome!"
-        };
-      }
-    }
-
     getFamilies();
 
-    return retorno;
+    return mensagem;
   }
 
   Future<Map<String, dynamic>> sendFamilyToAPIOffline(Family family) async {

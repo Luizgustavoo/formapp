@@ -8,8 +8,10 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/global/widgets/custom_camera_modal.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
+import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/format_validator.dart';
 
@@ -27,6 +29,9 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Container(
       margin: const EdgeInsets.only(top: 25),
       child: ListView(
@@ -58,39 +63,60 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+
                       Obx(
-                        () => ClipOval(
-                          child: CircleAvatar(
-                            radius: 35,
-                            backgroundImage: controller.isImagePicPathSet ==
+                        ()  {
+
+                          final status =
+                              Get.find<InternetStatusProvider>().status;
+
+
+                            return ClipOval(
+                              child: CircleAvatar(
+                                radius: 35,
+                                backgroundImage: controller.isImagePicPathSet ==
                                     true
-                                ? FileImage(File(controller.photoUrlPath.value))
-                                : (controller.photoUrlPath.value.isNotEmpty
+                                    ? FileImage(File(controller.photoUrlPath.value))
+                                    : (controller.photoUrlPath.value.isNotEmpty
                                     ? NetworkImage(
-                                            '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
-                                        as ImageProvider<Object>?
+                                    '$urlImagem/storage/app/public/${controller.photoUrlPath.value}')
+                                as ImageProvider<Object>?
                                     : const AssetImage(
-                                        'assets/images/default_avatar.jpg')),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                backgroundBlendMode: BlendMode.multiply,
-                                color: Colors.grey[300],
+                                    'assets/images/default_avatar.jpg')),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    backgroundBlendMode: BlendMode.multiply,
+                                    color: Colors.grey[300],
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.camera_alt),
+                                    onPressed: () {
+
+                                      if(status == InternetStatus.connected){
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) => CustomCameraModal(
+                                            tyContext: 'pessoa',
+                                          ),
+                                        );
+                                      }else{
+                                        Get.snackbar('Atenção', 'Conecte-se a internet para adicionar uma imagem!',
+                                            colorText: Colors.white,
+                                            backgroundColor: Colors.orange,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            duration: Duration(seconds: 3),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
                               ),
-                              child: IconButton(
-                                icon: const Icon(Icons.camera_alt),
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => CustomCameraModal(
-                                      tyContext: 'pessoa',
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
+                            );
+
+
+
+                        },
                       ),
                       const SizedBox(width: 70),
                       Text(

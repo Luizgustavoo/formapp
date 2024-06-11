@@ -214,10 +214,9 @@ class People {
       'parentesco': parentesco,
       'medicamentosOffline': medicamentosOffline,
       'acometimentosOffline': acometimentosOffline,
-
+      'estadocivil_id': estadoCivilId,
       'medicamentosOfflineNames': medicamentosOfflineNames,
       'acometimentosOfflineNames': acometimentosOfflineNames,
-
       'religiao_name': religiao_name,
       'usuario_name' : usuario_name,
       'estado_civil_name' : estado_civil_name

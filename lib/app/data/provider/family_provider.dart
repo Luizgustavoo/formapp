@@ -348,13 +348,13 @@ class FamilyApiClient {
 
         if (retorno > 0) {
           responseData = {
-            'message': 'success',
-            'objeto': family,
+            'code': 0,
+            'message': 'Operação realizada com sucesso!',
           };
         } else {
           responseData = {
-            'code': 0,
-            'message': 'Operação realizada com sucesso',
+            'code': 1,
+            'message': 'Falha ao realizar a operação!',
           };
         }
 
