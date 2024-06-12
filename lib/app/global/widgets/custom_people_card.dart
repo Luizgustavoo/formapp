@@ -115,67 +115,68 @@ class CustomPeopleCard extends StatelessWidget {
             ),
           ),
         ),
-
         child: Card(
           color: people.peopleLocal! ? const Color(0xFF014acb) : Colors.white,
           elevation: 1,
           margin: const EdgeInsets.only(left: 0, right: 0, top: 2),
           child: ListTile(
-            onLongPress: UserStorage.getUserType() >=3 ? null : () async{
-              final peopleController = Get.put(PeopleController());
+            onLongPress: UserStorage.getUserType() >= 3
+                ? null
+                : () async {
+                    final peopleController = Get.put(PeopleController());
 
-              Get.defaultDialog(
-                titlePadding: const EdgeInsets.all(16),
-                contentPadding: const EdgeInsets.all(16),
-                title: "Confirmação",
-                content: Text("Deseja remover a pessoa ${people.nome}?",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'Poppinss',
-                    fontSize: 18,
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: const Text("Cancelar"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
+                    Get.defaultDialog(
+                      titlePadding: const EdgeInsets.all(16),
+                      contentPadding: const EdgeInsets.all(16),
+                      title: "Confirmação",
+                      content: Text(
+                        "Deseja remover a pessoa ${people.nome}?",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontFamily: 'Poppinss',
+                          fontSize: 18,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: const Text("Cancelar"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Map<String, dynamic> retorno =
+                                await ConnectionStatus.verifyConnection() &&
+                                        !people.peopleLocal!
+                                    ? await peopleController.deletePeople(
+                                        people.id!, false)
+                                    : await peopleController
+                                        .deletePeopleLocal(people.id!);
 
-                       Map<String,dynamic> retorno = await ConnectionStatus.verifyConnection() && !people.peopleLocal!
-                        ? await peopleController.deletePeople(people.id!, false) : await peopleController.deletePeopleLocal(people.id!);
+                            if (retorno['code'] == 0) {
+                              Get.back();
+                            }
 
-                       print(retorno);
-
-                      if (retorno['code'] == 0) {
-                        Get.back();
-                      }
-
-                      Get.snackbar(
-                        snackPosition: SnackPosition.BOTTOM,
-                        duration: const Duration(milliseconds: 1500),
-                        retorno['code'] == 0 ? 'Sucesso' : "Falha",
-                        retorno['message'],
-                        backgroundColor:
-                        retorno['code'] == 0 ? Colors.green : Colors.red,
-                        colorText: Colors.white,
-                      );
-                    },
-                    child: Text(
-                      "Confirmar",
-                      style: CustomTextStyle.button(context),
-                    ),
-                  ),
-                ],
-              );
-
-
-
-
-            },
+                            Get.snackbar(
+                              snackPosition: SnackPosition.BOTTOM,
+                              duration: const Duration(milliseconds: 1500),
+                              retorno['code'] == 0 ? 'Sucesso' : "Falha",
+                              retorno['message'],
+                              backgroundColor: retorno['code'] == 0
+                                  ? Colors.green
+                                  : Colors.red,
+                              colorText: Colors.white,
+                            );
+                          },
+                          child: Text(
+                            "Confirmar",
+                            style: CustomTextStyle.button(context),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
             onTap: () {
               Get.toNamed('/detail-people', arguments: people);
             },

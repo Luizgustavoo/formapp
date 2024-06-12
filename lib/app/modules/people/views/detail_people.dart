@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -19,7 +21,6 @@ class DetailPeopleView extends GetView<PeopleController> {
   Widget build(BuildContext context) {
     final People people =
         Get.arguments != null ? Get.arguments as People : People();
-
 
     return Stack(
       children: [
@@ -140,12 +141,13 @@ class DetailPeopleView extends GetView<PeopleController> {
                             FormattedText(
                                 text: 'Provedor: ${people.provedorCasa}'),
                             FormattedText(text: 'Sexo: ${people.sexo}'),
-
                             FormattedText(
                                 text:
                                     'Estado Civil: ${people.peopleLocal! ? people.estado_civil_name : people.maritalStatus?.descricao}'),
                             FormattedText(
-                                text: 'Nascimento: ${people.dataNascimento}', local: true,),
+                              text: 'Nascimento: ${people.dataNascimento}',
+                              local: true,
+                            ),
                             FormattedText(
                                 text: 'Parentesco: ${people.parentesco}'),
                             FormattedText(text: 'CPF: ${people.cpf}'),
@@ -222,7 +224,6 @@ class DetailPeopleView extends GetView<PeopleController> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-
                             final peopleController =
                                 Get.put(PeopleController());
                             peopleController.getMaritalStatus();
@@ -347,14 +348,12 @@ class FormattedText extends StatelessWidget {
       try {
         String formattedDate = "";
 
-        if(local!){
+        if (local!) {
           formattedDate = normalPart;
-        }else{
+        } else {
           final DateTime birthDate = DateFormat("yyyy-MM-dd").parse(normalPart);
           formattedDate = DateFormat("dd/MM/yyyy").format(birthDate);
         }
-
-
 
         return RichText(
           text: TextSpan(
@@ -382,7 +381,7 @@ class FormattedText extends StatelessWidget {
           text: TextSpan(
             children: [
               TextSpan(
-                text: '$boldPart: ${e}',
+                text: '$boldPart: $e',
                 style: const TextStyle(
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.bold,

@@ -24,61 +24,62 @@ class CustomFamilyCard extends StatelessWidget {
       elevation: 1,
       margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
       child: ListTile(
-        onLongPress: UserStorage.getUserType() >= 3 ? null : () async{
-          final familyController = Get.put(FamilyController());
+        onLongPress: UserStorage.getUserType() >= 3
+            ? null
+            : () async {
+                final familyController = Get.put(FamilyController());
 
-          Get.defaultDialog(
-            titlePadding: const EdgeInsets.all(16),
-            contentPadding: const EdgeInsets.all(16),
-            title: "Confirmação",
-            content: Text("Deseja remover a família ${family.nome}?",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: 'Poppinss',
-                fontSize: 18,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text("Cancelar"),
-              ),
-              ElevatedButton(
-                onPressed: () async {
+                Get.defaultDialog(
+                  titlePadding: const EdgeInsets.all(16),
+                  contentPadding: const EdgeInsets.all(16),
+                  title: "Confirmação",
+                  content: Text(
+                    "Deseja remover a família ${family.nome}?",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: 'Poppinss',
+                      fontSize: 18,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: const Text("Cancelar"),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Map<String, dynamic> retorno =
+                            await ConnectionStatus.verifyConnection() &&
+                                    !family.familyLocal!
+                                ? await familyController.deleteFamily(
+                                    family.id!, false)
+                                : await familyController.deleteFamily(
+                                    family.id!, true);
 
-                  Map<String,dynamic> retorno = await ConnectionStatus.verifyConnection() && !family.familyLocal!
-                      ? await familyController.deleteFamily(family.id!, false) : await familyController.deleteFamily(family.id!, true);
+                        if (retorno['code'] == 0) {
+                          Get.back();
+                        }
 
-                  print(retorno);
-
-                  if (retorno['code'] == 0) {
-                    Get.back();
-                  }
-
-                  Get.snackbar(
-                    snackPosition: SnackPosition.BOTTOM,
-                    duration: const Duration(milliseconds: 1500),
-                    retorno['code'] == 0 ? 'Sucesso' : "Falha",
-                    retorno['message'],
-                    backgroundColor:
-                    retorno['code'] == 0 ? Colors.green : Colors.red,
-                    colorText: Colors.white,
-                  );
-                },
-                child: Text(
-                  "Confirmar",
-                  style: CustomTextStyle.button(context),
-                ),
-              ),
-            ],
-          );
-
-
-
-
-        },
+                        Get.snackbar(
+                          snackPosition: SnackPosition.BOTTOM,
+                          duration: const Duration(milliseconds: 1500),
+                          retorno['code'] == 0 ? 'Sucesso' : "Falha",
+                          retorno['message'],
+                          backgroundColor:
+                              retorno['code'] == 0 ? Colors.green : Colors.red,
+                          colorText: Colors.white,
+                        );
+                      },
+                      child: Text(
+                        "Confirmar",
+                        style: CustomTextStyle.button(context),
+                      ),
+                    ),
+                  ],
+                );
+              },
         onTap: () {
           final controller = Get.put(PeopleController());
 
@@ -96,38 +97,37 @@ class CustomFamilyCard extends StatelessWidget {
                 fontFamily: 'Poppins',
                 fontSize: 14,
                 color: family.familyLocal! ? Colors.white : Colors.black)),
-        leading: family.familyLocal! ?
-        IconButton(
-            onPressed: Get.currentRoute == '/filter-family'
-                ? null
-                : () {
-              final controller = Get.put(FamilyController());
-              controller.selectedFamily = family;
-              controller.fillInFields();
-              showModalBottomSheet(
-                isScrollControlled: true,
-                isDismissible: false,
-                context: context,
-                builder: (context) => Padding(
-                  padding: MediaQuery.of(context).viewInsets,
-                  child: CreateFamilyModal(
-                    tipoOperacao: 'update',
-                    titulo: 'Editar Família',
-                    family: family,
-                  ),
-                ),
-              );
-            },
-            icon: Get.currentRoute == '/filter-family'
-                ? const SizedBox()
-                : Icon(
-              Icons.edit_note_sharp,
-              color: family.familyLocal!
-                  ? Colors.white
-                  : Colors.grey.shade200,
-            )):
-            SizedBox()
-        ,
+        leading: family.familyLocal!
+            ? IconButton(
+                onPressed: Get.currentRoute == '/filter-family'
+                    ? null
+                    : () {
+                        final controller = Get.put(FamilyController());
+                        controller.selectedFamily = family;
+                        controller.fillInFields();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CreateFamilyModal(
+                              tipoOperacao: 'update',
+                              titulo: 'Editar Família',
+                              family: family,
+                            ),
+                          ),
+                        );
+                      },
+                icon: Get.currentRoute == '/filter-family'
+                    ? const SizedBox()
+                    : Icon(
+                        Icons.edit_note_sharp,
+                        color: family.familyLocal!
+                            ? Colors.white
+                            : Colors.grey.shade200,
+                      ))
+            : const SizedBox(),
         trailing: family.familyLocal!
             ? IconButton(
                 onPressed: () async {

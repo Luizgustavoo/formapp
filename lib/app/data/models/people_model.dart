@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
 import 'package:ucif/app/data/models/health_model.dart';
@@ -51,47 +53,47 @@ class People {
   String? usuario_name;
   String? religiao_name;
 
-  People(
-      {this.id,
-      this.nome,
-      this.foto,
-      this.sexo,
-      this.cpf,
-      this.dataNascimento,
-      this.estadoCivilId,
-      this.tituloEleitor,
-      this.zonaEleitoral,
-      this.telefone,
-      this.redeSocial,
-      this.provedorCasa,
-      this.igrejaId,
-      this.localTrabalho,
-      this.cargoTrabalho,
-      this.religiaoId,
-      this.funcaoIgreja,
-      this.usuarioId,
-      this.status,
-      this.dataCadastro,
-      this.dataUpdate,
-      this.familiaId,
-      this.parentesco,
-      this.atendimentos,
-      this.user,
-      this.religion,
-      this.username,
-      this.senha,
-      this.maritalStatus,
-      this.peopleLocal,
-      this.family,
-      this.userSistema,
-      this.acometimentosOffline,
-      this.acometimentosOfflineNames,
-      this.estado_civil_name,
-      this.usuario_name,
-      this.religiao_name,
-      this.medicamentosOffline,
-      this.medicamentosOfflineNames,
-      });
+  People({
+    this.id,
+    this.nome,
+    this.foto,
+    this.sexo,
+    this.cpf,
+    this.dataNascimento,
+    this.estadoCivilId,
+    this.tituloEleitor,
+    this.zonaEleitoral,
+    this.telefone,
+    this.redeSocial,
+    this.provedorCasa,
+    this.igrejaId,
+    this.localTrabalho,
+    this.cargoTrabalho,
+    this.religiaoId,
+    this.funcaoIgreja,
+    this.usuarioId,
+    this.status,
+    this.dataCadastro,
+    this.dataUpdate,
+    this.familiaId,
+    this.parentesco,
+    this.atendimentos,
+    this.user,
+    this.religion,
+    this.username,
+    this.senha,
+    this.maritalStatus,
+    this.peopleLocal,
+    this.family,
+    this.userSistema,
+    this.acometimentosOffline,
+    this.acometimentosOfflineNames,
+    this.estado_civil_name,
+    this.usuario_name,
+    this.religiao_name,
+    this.medicamentosOffline,
+    this.medicamentosOfflineNames,
+  });
 
   People.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -218,8 +220,8 @@ class People {
       'medicamentosOfflineNames': medicamentosOfflineNames,
       'acometimentosOfflineNames': acometimentosOfflineNames,
       'religiao_name': religiao_name,
-      'usuario_name' : usuario_name,
-      'estado_civil_name' : estado_civil_name
+      'usuario_name': usuario_name,
+      'estado_civil_name': estado_civil_name
     };
   }
 }

@@ -189,8 +189,6 @@ class PeopleApiClient {
         var responseStream = await response.stream.bytesToString();
         var httpResponse = http.Response(responseStream, response.statusCode);
 
-        print(json.decode(httpResponse.body));
-
         if (response.statusCode == 200) {
           return json.decode(httpResponse.body);
         } else if (response.statusCode == 422 ||
@@ -249,7 +247,6 @@ class PeopleApiClient {
       bool peopleLocal,
       List? saude,
       List? medicamento) async {
-
     try {
       if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/update/${pessoa.id}');

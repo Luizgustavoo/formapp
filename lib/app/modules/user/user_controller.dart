@@ -351,7 +351,6 @@ class UserController extends GetxController {
     nameController.text = selectedUser!.nome.toString();
     usernameController.text = selectedUser!.username.toString();
     passwordController.text = '';
-    //familyController.selectedFamily = selectedUser!.family;
   }
 
   void fillInPerfilFields() {
