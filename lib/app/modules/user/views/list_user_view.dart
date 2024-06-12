@@ -22,10 +22,24 @@ class ListUserView extends GetView<UserController> {
   final messageController = Get.put(MessageController());
   @override
   Widget build(BuildContext context) {
-    final homeController = Get.put(HomeController());
+
     var idUserLogged = box.read('auth')['user']['id'];
     double previousScrollPosition = 0.0;
     Timer? debounce;
+
+    Map<String,dynamic> totalCard = UserStorage.getTotalCards();
+
+    int families = totalCard.isNotEmpty && totalCard['families'] != null
+        ? int.tryParse(totalCard['families'].toString()) ?? 0
+        : 0;
+
+    int liders = totalCard.isNotEmpty && totalCard['liders'] != null
+        ? int.tryParse(totalCard['liders'].toString()) ?? 0
+        : 0;
+
+    int peoples = totalCard.isNotEmpty && totalCard['peoples'] != null
+        ? int.tryParse(totalCard['peoples'].toString()) ?? 0
+        : 0;
 
     return Stack(
       children: [
@@ -294,7 +308,7 @@ class ListUserView extends GetView<UserController> {
                         children: [
                           DynamicRichText(
                             routeR: '/list-people',
-                            value: homeController.counter2,
+                            value: peoples.obs,
                             description: 'Pessoas',
                             valueStyle: const TextStyle(
                               fontFamily: 'Poppinss',
@@ -306,7 +320,7 @@ class ListUserView extends GetView<UserController> {
                           ),
                           DynamicRichText(
                             routeR: '/list-family',
-                            value: homeController.counter,
+                            value: families.obs,
                             description: 'Famílias',
                             valueStyle: const TextStyle(
                               fontFamily: 'Poppinss',
@@ -320,7 +334,7 @@ class ListUserView extends GetView<UserController> {
                           ),
                           DynamicRichText(
                             routeR: '/list-user',
-                            value: homeController.counter3,
+                            value: liders.obs,
                             description: 'Lideranças',
                             valueStyle: const TextStyle(
                               fontFamily: 'Poppinss',

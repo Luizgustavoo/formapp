@@ -112,11 +112,13 @@ class HomeController extends GetxController
         totalFamilies.value = resposta.allFamily;
         totalPeoples.value = resposta.allPeople;
         totalLider.value = resposta.allLider;
+
       } else if (UserStorage.getUserType() == 2) {
         totalFamilies.value = resposta.familyUser;
         totalPeoples.value = resposta.peopleUser;
         totalLider.value = resposta.liderUser;
       }
+      UserStorage.setTotalCards(totalFamilies.value, totalLider.value, totalPeoples.value);
     } catch (e) {
       ErrorHandler.showError(e);
     }

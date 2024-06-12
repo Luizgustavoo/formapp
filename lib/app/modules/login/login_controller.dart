@@ -69,7 +69,7 @@ class LoginController extends GetxController {
 
   RxString sexo = 'Masculino'.obs;
   RxInt estadoCivilSelected = 1.obs;
-  RxInt leaderSelected = 1.obs;
+  RxInt leaderSelected = 73.obs;
   RxInt religiaoSelected = 1.obs;
   RxString parentesco = 'Pai'.obs;
   RxString igreja = ''.obs;

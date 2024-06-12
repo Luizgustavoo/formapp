@@ -27,8 +27,8 @@ class FamilyApiClient {
 
       if (UserStorage.getUserType() == 1) {
         String url = search != null
-            ? '$baseUrl/v1/familia/list-paginate/$search/?page=$page&limit'
-            : '$baseUrl/v1/familia/list-paginate/?page=$page&limit';
+            ? '$baseUrl/v1/familia/list-paginate/$search/'
+            : '$baseUrl/v1/familia/list-paginate/';
         familyUrl = Uri.parse(url);
       } else if (UserStorage.getUserType() == 2) {
         String url = search != null

@@ -5,6 +5,24 @@ class UserStorage {
   static final _box = GetStorage('credenciado');
   static RxString changeName = ''.obs;
 
+  static void setTotalCards(int families, int liders, int peoples){
+    final data = {
+      'families': families,
+      'liders': liders,
+      'peoples': peoples,
+    };
+    _box.write('total_card', data);
+  }
+
+  static Map<String, dynamic> getTotalCards(){
+    final data = _box.read('total_card');
+    if (data != null) {
+      return Map<String, dynamic>.from(data);
+    } else {
+      return {};
+    }
+  }
+
   static bool existUser() {
     if (_box.read('auth') != null) {
       return true;

@@ -305,6 +305,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     ],
                   ),
                   const SizedBox(height: 8),
+
                   Obx(
                     () => MultiSelectBottomSheetField(
                       initialValue: controller.selectedSaudeIds,

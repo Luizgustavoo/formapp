@@ -146,7 +146,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                                     'Estado Civil: ${people.peopleLocal! ? people.estado_civil_name : people.maritalStatus?.descricao}'),
                             FormattedText(
                               text: 'Nascimento: ${people.dataNascimento}',
-                              local: true,
+                              local: people.peopleLocal,
                             ),
                             FormattedText(
                                 text: 'Parentesco: ${people.parentesco}'),
