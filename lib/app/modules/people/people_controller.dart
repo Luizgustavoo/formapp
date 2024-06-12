@@ -332,7 +332,7 @@ class PeopleController extends GetxController {
           .join(', ');
 
       String nomesAcometimentosFiltrados = listHealth
-          .where((acometimento) => selectedMedicamentoIds.contains(acometimento.id))
+          .where((acometimento) => selectedSaudeIds.contains(acometimento.id))
           .map((acometimento) => acometimento.nome)
           .join(', ');
 
@@ -415,10 +415,9 @@ class PeopleController extends GetxController {
           .join(', ');
 
       String nomesAcometimentosFiltrados = listHealth
-          .where((acometimento) => selectedMedicamentoIds.contains(acometimento.id))
+          .where((acometimento) => selectedSaudeIds.contains(acometimento.id))
           .map((acometimento) => acometimento.nome)
           .join(', ');
-
 
       People pessoa = People(
         id: int.parse(idPessoaController.text),
