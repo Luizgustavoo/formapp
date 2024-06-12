@@ -27,7 +27,7 @@ class PeopleApiClient {
     try {
       Uri peopleUrl;
 
-      String url = '$baseUrl/v1/familia/list/$userType/$search/$familiaId/$userId?page=$page';
+      String url = '$baseUrl/v1/pessoa/list/$userType/$search/$familiaId/$userId?page=$page';
       peopleUrl = Uri.parse(url);
 
       var response = await httpClient.get(
@@ -380,6 +380,8 @@ class PeopleApiClient {
             "Authorization": token,
           },
         );
+
+        print(json.decode(response.body));
 
         if (response.statusCode == 200) {
           return json.decode(response.body);
