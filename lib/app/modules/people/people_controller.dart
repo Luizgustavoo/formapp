@@ -605,10 +605,20 @@ class PeopleController extends GetxController {
 
     if(selectedPeople!.peopleLocal!){
 
-      selectedSaudeIds.clear();
-      selectedSaudeIds.value = selectedPeople!.acometimentosOffline!.split(',').map(int.parse).toList();
-      selectedMedicamentoIds.clear();
-      selectedMedicamentoIds.value = selectedPeople!.medicamentosOffline!.split(',').map(int.parse).toList();
+      if (selectedPeople!.acometimentosOffline!.isNotEmpty) {
+        selectedSaudeIds.clear();
+        selectedSaudeIds.value = selectedPeople!.acometimentosOffline!
+            .split(',')
+            .map(int.parse)
+            .toList();
+      }
+      if (selectedPeople!.medicamentosOffline!.isNotEmpty) {
+        selectedMedicamentoIds.clear();
+        selectedMedicamentoIds.value = selectedPeople!.medicamentosOffline!
+            .split(',')
+            .map(int.parse)
+            .toList();
+      }
 
     }else{
 
