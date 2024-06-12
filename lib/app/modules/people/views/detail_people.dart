@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -281,13 +282,14 @@ class DetailPeopleView extends GetView<PeopleController> {
                       children: [
                         CircleAvatar(
                           radius: 25,
-                          backgroundImage: people.foto.toString().isEmpty
+                          backgroundImage: people.foto.toString().isEmpty ||
+                              people.foto == null
                               ? const AssetImage(
-                                  'assets/images/default_avatar.jpg')
-                              : NetworkImage(
-                                      '$urlImagem/storage/app/public/${people.foto}')
-                                  as ImageProvider,
-                        )
+                              'assets/images/default_avatar.jpg')
+                              : CachedNetworkImageProvider(
+                              '$urlImagem/storage/app/public/${people.foto}')
+                          as ImageProvider,
+                        ),
                       ],
                     ),
                     const SizedBox(width: 20),

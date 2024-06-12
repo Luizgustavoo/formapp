@@ -48,17 +48,18 @@ class CustomUserCard extends StatelessWidget {
       child: InkWell(
         onTap: UserStorage.getUserType() == 1 && user.quantidadePessoas > 0
             ? () {
-                final familyController = Get.put(FamilyController());
+          final familyController = Get.put(FamilyController());
                 familyController.selectedUser = user;
                 familyController.getFamiliesFilter(user);
 
-                Get.toNamed('/filter-family');
+                Get.toNamed('/filter-family', arguments: user);
               }
             : () {},
         child: ListTile(
           leading: (editaMaster || editaLider || editaFamiliar)
               ? IconButton(
                   onPressed: () {
+                    controller.getTypeUser();
                     controller.selectedUser = user;
                     controller.fillInUserFields();
 
@@ -83,7 +84,7 @@ class CustomUserCard extends StatelessWidget {
                       size: 25),
                 )
               : const CircleAvatar(
-                  radius: 22,
+                  radius: 25,
                   backgroundImage:
                       AssetImage('assets/images/default_avatar.jpg'),
                 ),

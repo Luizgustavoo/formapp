@@ -19,28 +19,16 @@ class PeopleApiClient {
   final box = GetStorage('credenciado');
 
   getAll(String token, {int? page, String? search}) async {
+
     final id = UserStorage.getUserId();
-    final familiaId = box.read('auth')['user']['familia_id'];
+    final userId = UserStorage.getUserId();
+    final familiaId = UserStorage.getFamilyId();
+    final userType = UserStorage.getUserType();
     try {
       Uri peopleUrl;
-      if (familiaId != null && UserStorage.getUserType() == 3) {
-        String url = search != null
-            ? '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/$search/?page=1&limit'
-            : '$baseUrl/v1/pessoa/list-familiar-paginate/id/$familiaId/?page=1&limit';
-        peopleUrl = Uri.parse(url);
-      } else {
-        if (UserStorage.getUserType() == 1) {
-          String url = search != null
-              ? '$baseUrl/v1/pessoa/list-paginate-adm/$search/?page=$page&limit'
-              : '$baseUrl/v1/pessoa/list-paginate-adm/?page=$page&limit';
-          peopleUrl = Uri.parse(url);
-        } else {
-          String url = search != null
-              ? '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/$search/?page=$page&limit'
-              : '$baseUrl/v1/pessoa/list-paginate-credenciado/id/$id/?page=$page&limit';
-          peopleUrl = Uri.parse(url);
-        }
-      }
+
+      String url = '$baseUrl/v1/familia/list/$userType/$search/$familiaId/$userId?page=$page';
+      peopleUrl = Uri.parse(url);
 
       var response = await httpClient.get(
         peopleUrl,

@@ -20,29 +20,14 @@ class FamilyApiClient {
   final box = GetStorage('credenciado');
 
   getAll(String token, {int? page, String? search}) async {
-    final id = box.read('auth')['user']['id'];
+    final userId = UserStorage.getUserId();
     final familiaId = UserStorage.getFamilyId();
+    final userType = UserStorage.getUserType();
     try {
       Uri familyUrl;
 
-      if (UserStorage.getUserType() == 1) {
-        String url = search != null
-            ? '$baseUrl/v1/familia/list-paginate/$search/'
-            : '$baseUrl/v1/familia/list-paginate/';
-        familyUrl = Uri.parse(url);
-      } else if (UserStorage.getUserType() == 2) {
-        String url = search != null
-            ? '$baseUrl/v1/familia/list-paginate/id/$id/$search/?page=$page&limit'
-            : '$baseUrl/v1/familia/list-paginate/id/$id/?page=$page&limit';
-
-        familyUrl = Uri.parse(url);
-      } else {
-        String url = search != null
-            ? '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/$search/?page=$page&limit'
-            : '$baseUrl/v1/familia/list-familiar-paginate/id/$familiaId/?page=$page&limit';
-
-        familyUrl = Uri.parse(url);
-      }
+      String url = '$baseUrl/v1/familia/list/$userType/$search/$familiaId/$userId?page=$page';
+      familyUrl = Uri.parse(url);
 
       var response = await httpClient.get(
         familyUrl,
@@ -79,7 +64,7 @@ class FamilyApiClient {
     try {
       Uri familyUrl;
       String url =
-          '$baseUrl/v1/familia/list-paginate-lider/null/${user!.id}/?page=$page&limit';
+          '$baseUrl/v1/familia/list-paginate-lider/null/${user!.id}?page=$page';
       familyUrl = Uri.parse(url);
 
       var response = await httpClient.get(

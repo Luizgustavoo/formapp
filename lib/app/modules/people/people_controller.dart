@@ -117,16 +117,13 @@ class PeopleController extends GetxController {
     // print(
     //     '======================================================controller PEOPLE==============');
     if (UserStorage.existUser()) {
-      // bool isConnected = await ConnectionStatus.verifyConnection();
-      // if (isConnected) {
-      //
-      // }
+
       Future.wait([
-        //getMaritalStatus(),
         getPeoples(),
-        //getReligion(),
-        //getChurch(),
       ]);
+
+
+
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;
       statusStream.listen((status) {

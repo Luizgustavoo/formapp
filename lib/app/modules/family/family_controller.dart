@@ -86,14 +86,23 @@ class FamilyController extends GetxController
   @override
   void onInit() {
     if (UserStorage.existUser()) {
+
+      Future.wait([
+      getFamilies(),
+      ]);
+
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;
       statusStream.listen((status) {
         if (status == InternetStatus.connected) {
-          getFamilies();
+          Future.wait([
+            getFamilies(),
+          ]);
         }
       });
-      getFamilies();
+
+
+
     }
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -227,6 +236,7 @@ class FamilyController extends GetxController
     try {
       final token = UserStorage.getToken();
       var response = await repository.getAllFilter("Bearer $token", lider);
+
       listFamilyPeoples.value = (response['familias']['data'] as List)
           .map((familiaJson) => Family.fromJson(familiaJson))
           .toList();

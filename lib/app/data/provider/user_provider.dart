@@ -15,11 +15,15 @@ class UserApiClient {
   final box = GetStorage('credenciado');
 
   getAll(String token, {int? page, String? search}) async {
-    final id = UserStorage.getPeopleId();
+
+    final peopleId = UserStorage.getPeopleId();
+    final userId = UserStorage.getUserId();
+    final familiaId = UserStorage.getFamilyId();
+    final userType = UserStorage.getUserType();
     try {
-      String url = search != null
-          ? '$baseUrl/v1/usuario/list-paginate/$id/$search/?page=$page&limit'
-          : '$baseUrl/v1/usuario/list-paginate/$id/?page=$page&limit';
+      String url = '$baseUrl/v1/usuario/list/$userType/$peopleId/$search/$familiaId/$userId?page=$page';
+
+
       var userUrl = Uri.parse(url);
       var response = await httpClient.get(
         userUrl,
