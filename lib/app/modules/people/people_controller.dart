@@ -395,9 +395,6 @@ class PeopleController extends GetxController {
 
   Future<Map<String, dynamic>> updatePeople(bool peopleLocal) async {
 
-
-
-
     if (peopleFormKey.currentState!.validate()) {
       String imagePath = photoUrlPath.value;
 

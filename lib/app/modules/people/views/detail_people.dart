@@ -222,6 +222,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
+
                             final peopleController =
                                 Get.put(PeopleController());
                             peopleController.getMaritalStatus();
@@ -237,8 +238,8 @@ class DetailPeopleView extends GetView<PeopleController> {
                               context: context,
                               builder: (context) => Padding(
                                 padding: MediaQuery.of(context).viewInsets,
-                                child: const AddPeopleFamilyView(
-                                  peopleLocal: false,
+                                child: AddPeopleFamilyView(
+                                  peopleLocal: people.peopleLocal!,
                                   tipoOperacao: 1,
                                 ),
                               ),
