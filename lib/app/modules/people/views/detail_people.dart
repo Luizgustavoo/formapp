@@ -156,7 +156,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             people.peopleLocal == true
                                 ? FormattedText(
                                     text:
-                                        'Acometimento: ${people.acometimentosOfflineNames}',
+                                        'Problemas de Saúde: ${people.acometimentosOfflineNames}',
                                   )
                                 : people.acometimentosSaude != null &&
                                         people.acometimentosSaude!.isNotEmpty
@@ -166,12 +166,12 @@ class DetailPeopleView extends GetView<PeopleController> {
                                         children: [
                                             FormattedText(
                                               text:
-                                                  'Acometimento: ${people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ')}',
+                                                  'Problemas de Saúde: ${people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ')}',
                                             ),
                                           ])
                                     : FormattedText(
                                         text:
-                                            'Acometimentos Saúde: Nenhum acometimento informado.',
+                                            'Problemas de Saúde: Nenhum problema informado.',
                                       ),
                             people.peopleLocal == true
                                 ? FormattedText(

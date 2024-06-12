@@ -351,7 +351,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         color: Colors.black,
                       ),
                       buttonText: const Text(
-                        "Acometimento de Saúde",
+                        "Problemas de Saúde",
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Poppinss',

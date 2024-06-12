@@ -332,7 +332,7 @@ class SignUpView extends GetView<LoginController> {
                                         color: Colors.black,
                                       ),
                                       buttonText: const Text(
-                                        "Acometimento de Saúde",
+                                        "Problemas de Saúde",
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontFamily: 'Poppinss',
