@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
@@ -181,12 +182,45 @@ class PerfilView extends GetView<UserController> {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              TextButton.icon(
-                                onPressed: () {
-                                  controller.logout();
-                                },
-                                icon: const Icon(Icons.exit_to_app_rounded),
-                                label: const Text('SAIR'),
+                              Obx(
+                                () => Visibility(
+                                  visible: !controller.loading.value,
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: TextButton.icon(
+                                      onPressed: () {
+                                        controller.logout();
+                                      },
+                                      icon:
+                                          const Icon(Icons.exit_to_app_rounded),
+                                      label: const Text('SAIR'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Obx(
+                                () => Visibility(
+                                  visible: controller.loading.value,
+                                  child: Container(
+                                    color: Colors.transparent,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                      onPressed: null,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 5,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(height: 10),
                               SizedBox(

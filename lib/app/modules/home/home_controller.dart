@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ucif/app/data/models/count_families_and_people.dart';
 import 'package:ucif/app/data/models/genre_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/home_repository.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
@@ -50,23 +51,21 @@ class HomeController extends GetxController
   Timer? timer2;
   Timer? timer3;
 
-  RxBool isGraphicLoading = true.obs;
   @override
   void onInit() async {
-    bool isConnected = await ConnectionStatus.verifyConnection();
-    if (isConnected) {
-      await getCountFamiliesAndPeople();
-      startTimer();
-      username.value = UserStorage.getUserName();
-      startTimer();
-      await getCountGenre();
-      await getPeoples();
-
-      isGraphicLoading.value = false;
-      clearTouchedIndex();
-    }
-
     super.onInit();
+
+    if (UserStorage.existUser()) {
+      await loadData();
+
+      final internetStatusProvider = Get.find<InternetStatusProvider>();
+      final statusStream = internetStatusProvider.statusStream;
+      statusStream.listen((status) {
+        if (status == InternetStatus.connected) {
+          loadData();
+        }
+      });
+    }
   }
 
   @override
@@ -93,6 +92,18 @@ class HomeController extends GetxController
     touchedIndex.value = -1;
   }
 
+  Future<void> loadData() async {
+    bool isConnected = await ConnectionStatus.verifyConnection();
+    if (isConnected) {
+      await getCountFamiliesAndPeople();
+      startTimer();
+      username.value = UserStorage.getUserName();
+      startTimer();
+      await getCountGenre();
+      await getPeoples();
+    }
+  }
+
   getCountGenre() async {
     try {
       final homeRepository = Get.find<HomeRepository>();
@@ -112,13 +123,13 @@ class HomeController extends GetxController
         totalFamilies.value = resposta.allFamily;
         totalPeoples.value = resposta.allPeople;
         totalLider.value = resposta.allLider;
-
       } else if (UserStorage.getUserType() == 2) {
         totalFamilies.value = resposta.familyUser;
         totalPeoples.value = resposta.peopleUser;
         totalLider.value = resposta.liderUser;
       }
-      UserStorage.setTotalCards(totalFamilies.value, totalLider.value, totalPeoples.value);
+      UserStorage.setTotalCards(
+          totalFamilies.value, totalLider.value, totalPeoples.value);
     } catch (e) {
       ErrorHandler.showError(e);
     }

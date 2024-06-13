@@ -40,11 +40,9 @@ class UserController extends GetxController {
   RxBool isPasswordVisible = false.obs;
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
-
   dynamic mensagem;
 
   final userRepository = Get.find<UserRepository>();
-  // final familyController = Get.put(FamilyController());
   final authRepository = Get.put(AuthRepository());
 
   final ScrollController scrollController = ScrollController();
@@ -59,6 +57,7 @@ class UserController extends GetxController {
   RxList<TypeUser> listTypeUsers = <TypeUser>[].obs;
 
   final RxInt typeUserSelected = 1.obs;
+  RxBool loading = false.obs;
 
   @override
   void onInit() async {
@@ -98,8 +97,10 @@ class UserController extends GetxController {
   }
 
   void logout() async {
+    loading.value = true;
     await FirebaseMessaging.instance.deleteToken();
     authRepository.getLogout();
+    loading.value = false;
   }
 
   Future<void> loadMoreUsers() async {

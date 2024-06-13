@@ -23,10 +23,9 @@ class CreateUserModal extends StatelessWidget {
   final String? titulo;
   final String? tipoOperacao;
 
-  final RxInt typeUserSelected = 1.obs;
-
   @override
   Widget build(BuildContext context) {
+    final RxInt typeUserSelected = user!.tipousuarioId!.obs;
     return Form(
         key: controller.userFormKey,
         child: SingleChildScrollView(

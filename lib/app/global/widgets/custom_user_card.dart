@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/user_model.dart';
@@ -44,7 +45,7 @@ class CustomUserCard extends StatelessWidget {
     return Card(
       elevation: 1,
       margin: const EdgeInsets.only(left: 0, right: 0, top: 5),
-      color: user.tipousuarioId == 2 ? const Color(0xFF1C6399) : null,
+      color: user.tipousuarioId == 2 ? const Color(0xFF014acb) : null,
       child: InkWell(
         onTap: UserStorage.getUserType() == 1 && user.quantidadePessoas > 0
             ? () {
@@ -77,7 +78,7 @@ class CustomUserCard extends StatelessWidget {
                       ),
                     );
                   },
-                  icon: Icon(Icons.edit_outlined,
+                  icon: Icon(Icons.edit,
                       color: user.tipousuarioId == 2
                           ? Colors.white
                           : Colors.blue.shade700,
@@ -112,8 +113,8 @@ class CustomUserCard extends StatelessWidget {
                           }
                         },
                         icon: Icon(
-                          Icons.message_outlined,
-                          size: 25,
+                          CupertinoIcons.bubble_left_bubble_right_fill,
+                          size: 30,
                           color: user.tipousuarioId == 2
                               ? Colors.white
                               : Colors.blue.shade700,
