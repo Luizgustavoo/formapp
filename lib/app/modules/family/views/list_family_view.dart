@@ -12,7 +12,6 @@ import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
 import 'package:ucif/app/global/widgets/custom_family_card.dart';
 import 'package:ucif/app/modules/family/family_controller.dart';
-import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 import 'package:ucif/app/utils/user_storage.dart';
@@ -25,7 +24,7 @@ class FamilyView extends GetView<FamilyController> {
     Timer? debounce;
     double previousScrollPosition = 0.0;
 
-    Map<String,dynamic> totalCard = UserStorage.getTotalCards();
+    Map<String, dynamic> totalCard = UserStorage.getTotalCards();
 
     int families = totalCard.isNotEmpty && totalCard['families'] != null
         ? int.tryParse(totalCard['families'].toString()) ?? 0

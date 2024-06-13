@@ -120,18 +120,14 @@ class CreateUserModal extends StatelessWidget {
                       )),
                   ElevatedButton(
                       onPressed: () async {
-                        // if (typeUserSelected.value == 3 &&
-                        //     controller.familyUser!.value <= 0) {
-                        //   Get.snackbar('Atenção', 'Selecione uma família!',
-                        //       backgroundColor: Colors.red,
-                        //       colorText: Colors.white);
-                        // } else {
                         Map<String, dynamic> retorno = tipoOperacao == 'insert'
                             ? await controller.saveUser()
                             : await controller.updateUser(
                                 user!.id!, typeUserSelected.value);
 
-                        Get.back();
+                        if (retorno['return'] == 0) {
+                          Get.back();
+                        }
 
                         Get.snackbar(
                           snackPosition: SnackPosition.BOTTOM,

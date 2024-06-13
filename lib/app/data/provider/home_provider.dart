@@ -78,7 +78,9 @@ class HomeApiClient {
     try {
       Uri peopleUrl;
       String url =
-          '$baseUrl/v1/pessoa/list-home-page/user/$userId/type/$typeUser/family/$familiaId/$search';
+          '$baseUrl/v1/pessoa/list-home-page/$typeUser/$search/$familiaId/$userId';
+
+      ///pessoa/list-home-page/{userType}/{search?}/{familyId?}/{userId?}
 
       peopleUrl = Uri.parse(url);
 

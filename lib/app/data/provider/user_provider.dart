@@ -15,14 +15,13 @@ class UserApiClient {
   final box = GetStorage('credenciado');
 
   getAll(String token, {int? page, String? search}) async {
-
     final peopleId = UserStorage.getPeopleId();
     final userId = UserStorage.getUserId();
     final familiaId = UserStorage.getFamilyId();
     final userType = UserStorage.getUserType();
     try {
-      String url = '$baseUrl/v1/usuario/list/$userType/$peopleId/$search/$familiaId/$userId?page=$page';
-
+      String url =
+          '$baseUrl/v1/usuario/list/$userType/$peopleId/$search/$familiaId/$userId?page=$page';
 
       var userUrl = Uri.parse(url);
       var response = await httpClient.get(
@@ -137,6 +136,7 @@ class UserApiClient {
 
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
+
         if (response.statusCode == 200) {
           Map<String, dynamic> user = box.read('auth')['pessoa'];
           user['foto'] = json.decode(response.body)['objeto']['foto'];
@@ -168,7 +168,6 @@ class UserApiClient {
           },
           body: requestBody,
         );
-
         if (response.statusCode == 200) {
           Map<String, dynamic> user = box.read('auth')['user'];
           // user['foto'] = json.decode(response.body)['objeto']['foto'];

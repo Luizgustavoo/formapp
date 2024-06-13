@@ -106,11 +106,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               )
                             : const SizedBox(),
                         const SizedBox(width: 10),
-                        Image.asset(
-                          'assets/images/logo_horizontal.png',
-                          width: Get.width * 0.22,
-                          height: Get.height * 0.1,
-                        ),
+                        GestureDetector(
+                            onTap: () {
+                              Get.offAllNamed('/home');
+                            },
+                            child: Image.asset(
+                              'assets/images/logo_horizontal.png',
+                              width: Get.width * 0.22,
+                              height: Get.height * 0.1,
+                            )),
                         const SizedBox(width: 10),
                       ],
                     ),

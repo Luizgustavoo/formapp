@@ -26,7 +26,8 @@ class FamilyApiClient {
     try {
       Uri familyUrl;
 
-      String url = '$baseUrl/v1/familia/list/$userType/$search/$familiaId/$userId?page=$page';
+      String url =
+          '$baseUrl/v1/familia/list/$userType/$search/$familiaId/$userId?page=$page';
       familyUrl = Uri.parse(url);
 
       var response = await httpClient.get(

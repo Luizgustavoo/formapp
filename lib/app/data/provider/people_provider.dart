@@ -19,15 +19,14 @@ class PeopleApiClient {
   final box = GetStorage('credenciado');
 
   getAll(String token, {int? page, String? search}) async {
-
-    final id = UserStorage.getUserId();
     final userId = UserStorage.getUserId();
     final familiaId = UserStorage.getFamilyId();
     final userType = UserStorage.getUserType();
     try {
       Uri peopleUrl;
 
-      String url = '$baseUrl/v1/pessoa/list/$userType/$search/$familiaId/$userId?page=$page';
+      String url =
+          '$baseUrl/v1/pessoa/list/$userType/$search/$familiaId/$userId?page=$page';
       peopleUrl = Uri.parse(url);
 
       var response = await httpClient.get(
@@ -380,8 +379,6 @@ class PeopleApiClient {
             "Authorization": token,
           },
         );
-
-        print(json.decode(response.body));
 
         if (response.statusCode == 200) {
           return json.decode(response.body);

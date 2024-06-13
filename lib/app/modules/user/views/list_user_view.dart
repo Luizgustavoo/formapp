@@ -10,7 +10,6 @@ import 'package:ucif/app/global/shimmer/shimmer_custom_user_card.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_dynamic_rich_text.dart';
 import 'package:ucif/app/global/widgets/custom_user_card.dart';
-import 'package:ucif/app/modules/home/home_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
@@ -22,12 +21,11 @@ class ListUserView extends GetView<UserController> {
   final messageController = Get.put(MessageController());
   @override
   Widget build(BuildContext context) {
-
     var idUserLogged = box.read('auth')['user']['id'];
     double previousScrollPosition = 0.0;
     Timer? debounce;
 
-    Map<String,dynamic> totalCard = UserStorage.getTotalCards();
+    Map<String, dynamic> totalCard = UserStorage.getTotalCards();
 
     int families = totalCard.isNotEmpty && totalCard['families'] != null
         ? int.tryParse(totalCard['families'].toString()) ?? 0
