@@ -10,6 +10,7 @@ import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/global/widgets/custom_camera_modal.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/format_validator.dart';
@@ -131,9 +132,19 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   ),
                   TextFormField(
                     controller: controller.nomePessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Nome Completo'),
+                    decoration: InputDecoration(
+                      suffixIcon: const Icon(Icons.person),
+                      labelStyle: const TextStyle(
+                        color: Colors.black54,
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                      ),
+                      labelText: 'NOME',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     onChanged: (value) {},
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -142,132 +153,150 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Obx(() => DropdownButtonFormField<String>(
-                              value: controller.sexo.value,
-                              onChanged: (value) {
-                                controller.sexo.value = value!;
-                              },
-                              items: [
-                                'Masculino',
-                                'Feminino',
-                                'Não informado'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Sexo'),
-                            )),
-                      ),
-                      const SizedBox(width: 10),
-                      Obx(
-                        () => SizedBox(
-                          width: 150,
-                          child: DropdownButtonFormField<int>(
-                            value: controller.estadoCivilSelected.value,
-                            onChanged: (value) {
-                              controller.estadoCivilSelected.value = value!;
-                            },
-                            items: controller.listMaritalStatus
-                                .map<DropdownMenuItem<int>>((item) {
-                              return DropdownMenuItem<int>(
-                                value: item.id,
-                                child: Text(item.descricao ?? ''),
-                              );
-                            }).toList(),
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Estado Civil',
+                  _gap(),
+                  Obx(() => DropdownButtonFormField<String>(
+                        value: controller.sexo.value,
+                        onChanged: (value) {
+                          controller.sexo.value = value!;
+                        },
+                        items: ['Masculino', 'Feminino', 'Não informado']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        decoration: InputDecoration(
+                            labelStyle: const TextStyle(
+                              color: Colors.black54,
+                              fontFamily: 'Poppins',
+                              fontSize: 12,
                             ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: 'SEXO'),
+                      )),
+                  _gap(),
+                  Obx(
+                    () => DropdownButtonFormField<int>(
+                      value: controller.estadoCivilSelected.value,
+                      onChanged: (value) {
+                        controller.estadoCivilSelected.value = value!;
+                      },
+                      items: controller.listMaritalStatus
+                          .map<DropdownMenuItem<int>>((item) {
+                        return DropdownMenuItem<int>(
+                          value: item.id,
+                          child: Text(item.descricao ?? ''),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                          labelStyle: const TextStyle(
+                            color: Colors.black54,
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
                           ),
-                        ),
-                      )
-                    ],
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          labelText: 'ESTADO CIVIL'),
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: TextFormField(
-                          maxLength: 10,
-                          controller: controller.nascimentoPessoaController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                              errorMaxLines: 6,
-                              counterText: "",
-                              border: OutlineInputBorder(),
-                              labelText: 'Data de Nascimento'),
-                          onChanged: (value) =>
-                              controller.onNascimentoChanged(value),
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !FormattersValidators.validateDateSubmited(
-                                    value)) {
-                              return 'Data inválida';
-                            }
-                            return null;
-                          },
+                  _gap(),
+                  TextFormField(
+                    maxLength: 10,
+                    controller: controller.nascimentoPessoaController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                        errorMaxLines: 6,
+                        counterText: "",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.black54,
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                        ),
+                        suffixIcon: const Icon(Icons.calendar_month_rounded),
+                        labelText: 'DATA DE NASCIMENTO'),
+                    onChanged: (value) => controller.onNascimentoChanged(value),
+                    validator: (value) {
+                      if (value == null ||
+                          value.isEmpty ||
+                          !FormattersValidators.validateDateSubmited(value)) {
+                        return 'Data inválida';
+                      }
+                      return null;
+                    },
+                  ),
+                  _gap(),
+                  Obx(
+                    () => DropdownButtonFormField<String>(
+                      isDense: true,
+                      menuMaxHeight: Get.size.height / 2,
+                      value: controller.parentesco?.value,
+                      onChanged: (value) {
+                        controller.parentesco?.value = value!;
+                      },
+                      items: <String>[
+                        'Avô(ó)',
+                        'Bisavô(ó)',
+                        'Companheiro(a)',
+                        'Cunhado(a)',
+                        'Filho(a)',
+                        'Mãe',
+                        'Outro',
+                        'Padrasto',
+                        'Pai',
+                        'Resp. Legal',
+                        'Madrasta',
+                        'Sobrinho(a)',
+                        'Tio(a)',
+                        'Vodrasto',
+                        'Vodrasta',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: 'Parentesco',
+                        labelStyle: const TextStyle(
+                          color: Colors.black54,
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        flex: 2,
-                        child: Obx(
-                          () => DropdownButtonFormField<String>(
-                            isDense: true,
-                            menuMaxHeight: Get.size.height / 2,
-                            value: controller.parentesco?.value,
-                            onChanged: (value) {
-                              controller.parentesco?.value = value!;
-                            },
-                            items: <String>[
-                              'Avô(ó)',
-                              'Bisavô(ó)',
-                              'Companheiro(a)',
-                              'Cunhado(a)',
-                              'Filho(a)',
-                              'Mãe',
-                              'Outro',
-                              'Padrasto',
-                              'Pai',
-                              'Resp. Legal',
-                              'Madrasta',
-                              'Sobrinho(a)',
-                              'Tio(a)',
-                              'Vodrasto',
-                              'Vodrasta',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Parentesco'),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  _gap(),
                   TextFormField(
                     controller: controller.cpfPessoaController,
                     keyboardType: TextInputType.number,
                     maxLength: 14,
                     onChanged: (value) => controller.onCPFChanged(value),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                         counterText: '',
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon: const Icon(Icons.view_timeline_rounded),
+                        labelStyle: const TextStyle(
+                          color: Colors.black54,
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                        ),
                         labelText: 'CPF'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -276,7 +305,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 8),
+                  _gap(),
                   Row(
                     children: [
                       Expanded(
@@ -284,10 +313,19 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           keyboardType: TextInputType.number,
                           maxLength: 15,
                           controller: controller.celularPessoaController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                               counterText: "",
-                              border: OutlineInputBorder(),
-                              labelText: 'Telefone'),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              suffixIcon: const Icon(Icons.phone),
+                              labelStyle: const TextStyle(
+                                color: Colors.black54,
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                              ),
+                              labelText: 'TELEFONE'),
                           onChanged: (value) =>
                               controller.onPhoneChanged(value),
                         ),
@@ -296,16 +334,25 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       Expanded(
                         child: TextFormField(
                           controller: controller.redeSocialPessoaController,
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Rede Social @'),
+                          decoration: InputDecoration(
+                              counterText: "",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              suffixIcon: const Icon(Icons.alternate_email),
+                              labelStyle: const TextStyle(
+                                color: Colors.black54,
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                              ),
+                              labelText: 'REDE SOCIAL'),
                           onChanged: (value) {},
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-
+                  _gap(),
                   Obx(
                     () => MultiSelectBottomSheetField(
                       initialValue: controller.selectedSaudeIds,
@@ -353,7 +400,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  _gap(),
                   Obx(
                     () => MultiSelectBottomSheetField(
                       initialValue: controller.selectedMedicamentoIds,
@@ -401,7 +448,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Obx(
                     () => DropdownButtonFormField<int>(
                       value: controller.religiaoSelected.value,
@@ -417,11 +464,15 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                           })
                           .toSet()
                           .toList(),
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(), labelText: 'Religião'),
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          labelText: 'RELIGIÃO'),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  _gap(),
                   TextFormField(
                     controller: controller.igrejaPessoaController,
                     readOnly: true,
@@ -454,8 +505,16 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       }
                     },
                     decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: 'Igreja',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelText: 'IGREJA',
+                      labelStyle: const TextStyle(
+                        color: Colors.black54,
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                      ),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.arrow_drop_down),
                         onPressed: () async {
@@ -502,27 +561,111 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 8),
+                  _gap(),
                   TextFormField(
                     controller: controller.funcaoIgrejaPessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Função/Igreja'),
+                    decoration: InputDecoration(
+                        labelStyle: const TextStyle(
+                          color: Colors.black54,
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                        ),
+                        suffixIcon: const Icon(Icons.church_rounded),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: 'FUNÇÃO/IGREJA'),
                   ),
-                  const SizedBox(height: 8),
+                  _gap(),
                   TextFormField(
-                    controller: controller.localTrabalhoPessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Local de Trabalho'),
-                  ),
-                  const SizedBox(height: 8),
+                      controller: controller.localTrabalhoPessoaController,
+                      decoration: InputDecoration(
+                          counterText: "",
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: const Icon(Icons.maps_home_work_rounded),
+                          labelStyle: const TextStyle(
+                            color: Colors.black54,
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                          ),
+                          labelText: 'LOCAL/TRABALHO')),
+                  _gap(),
                   TextFormField(
-                    controller: controller.cargoPessoaController,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Cargo'),
-                  ),
-                  const SizedBox(height: 8),
+                      controller: controller.cargoPessoaController,
+                      decoration: InputDecoration(
+                          counterText: "",
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: const Icon(Icons.work),
+                          labelStyle: const TextStyle(
+                            color: Colors.black54,
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                          ),
+                          labelText: 'CARGO')),
+                  _gap(),
+                  Obx(() {
+                    final familyController = Get.put(FamilyController());
+                    final status = Get.find<InternetStatusProvider>().status;
+                    bool isConnected = status == InternetStatus.connected;
+                    if (status != InternetStatus.connected) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Get.snackbar(
+                          backgroundColor: Colors.orange,
+                          colorText: Colors.white,
+                          'Aviso',
+                          'Você precisa estar conectado à internet para selecionar uma família.',
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      });
+                    }
+                    // Retorna o DropdownButtonFormField com base no status da internet
+                    return DropdownButtonFormField<int>(
+                      isDense: true,
+                      menuMaxHeight: Get.size.height / 2,
+                      value: controller.familySelected!.value > 0
+                          ? controller.familySelected!.value
+                          : null,
+                      onChanged: isConnected
+                          ? (int? value) {
+                              if (value != null) {
+                                controller.familySelected!.value = value;
+                              }
+                            }
+                          : null, // Desabilita a alteração se não estiver conectado
+                      items: [
+                        const DropdownMenuItem<int>(
+                          value: null,
+                          child: Text('Selecione uma família'),
+                        ),
+                        ...familyController.listFamilies
+                            .map<DropdownMenuItem<int>>((Family family) {
+                          return DropdownMenuItem<int>(
+                            value: family.id,
+                            child: Text(family.nome!),
+                          );
+                        }).toList(),
+                      ],
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(10)),
+                        labelText: 'Família',
+                        labelStyle: const TextStyle(
+                          color: Colors.black54,
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                        ),
+                      ),
+                    );
+                  }),
+                  _gap(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -580,4 +723,6 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
       ),
     );
   }
+
+  Widget _gap() => const SizedBox(height: 8);
 }

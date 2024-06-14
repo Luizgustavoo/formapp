@@ -55,6 +55,7 @@ class PeopleController extends GetxController {
   RxString sexo = 'Masculino'.obs;
   RxInt estadoCivilSelected = 1.obs;
   RxInt religiaoSelected = 1.obs;
+  RxInt? familySelected = 0.obs;
   RxString? parentesco = 'Pai'.obs;
   RxString oldImagePath = ''.obs;
 
@@ -117,12 +118,9 @@ class PeopleController extends GetxController {
     // print(
     //     '======================================================controller PEOPLE==============');
     if (UserStorage.existUser()) {
-
       Future.wait([
         getPeoples(),
       ]);
-
-
 
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;
@@ -322,9 +320,9 @@ class PeopleController extends GetxController {
       Religion? religiao = listReligion
           .firstWhere((relig) => relig.id == religiaoSelected.value);
 
-
       String nomesMedicamentosFiltrados = listMedicine
-          .where((medicamento) => selectedMedicamentoIds.contains(medicamento.id))
+          .where(
+              (medicamento) => selectedMedicamentoIds.contains(medicamento.id))
           .map((medicamento) => medicamento.nome)
           .join(', ');
 
@@ -332,7 +330,6 @@ class PeopleController extends GetxController {
           .where((acometimento) => selectedSaudeIds.contains(acometimento.id))
           .map((acometimento) => acometimento.nome)
           .join(', ');
-
 
       People pessoa = People(
         nome: nomePessoaController.text,
@@ -351,7 +348,7 @@ class PeopleController extends GetxController {
         funcaoIgreja: funcaoIgrejaPessoaController.text,
         status: 1,
         usuarioId: box.read('auth')['user']['id'],
-        familiaId: family?.id,
+        familiaId: familySelected!.value,
         foto: imagePath,
         acometimentosOffline: selectedSaudeIds.map((e) => e).join(','),
         medicamentosOffline: selectedMedicamentoIds.map((e) => e).join(','),
@@ -391,10 +388,8 @@ class PeopleController extends GetxController {
   }
 
   Future<Map<String, dynamic>> updatePeople(bool peopleLocal) async {
-
     if (peopleFormKey.currentState!.validate()) {
       String imagePath = photoUrlPath.value;
-
 
       MaritalStatus? estadoCivil = listMaritalStatus
           .firstWhere((estado) => estado.id == estadoCivilSelected.value);
@@ -402,9 +397,9 @@ class PeopleController extends GetxController {
       Religion? religiao = listReligion
           .firstWhere((relig) => relig.id == religiaoSelected.value);
 
-
       String nomesMedicamentosFiltrados = listMedicine
-          .where((medicamento) => selectedMedicamentoIds.contains(medicamento.id))
+          .where(
+              (medicamento) => selectedMedicamentoIds.contains(medicamento.id))
           .map((medicamento) => medicamento.nome)
           .join(', ');
 
@@ -431,6 +426,7 @@ class PeopleController extends GetxController {
         funcaoIgreja: funcaoIgrejaPessoaController.text,
         status: 1,
         usuarioId: UserStorage.getUserId(),
+        familiaId: familySelected!.value,
         foto: imagePath,
         acometimentosOffline: selectedSaudeIds.map((e) => e).join(','),
         medicamentosOffline: selectedMedicamentoIds.map((e) => e).join(','),
@@ -571,7 +567,7 @@ class PeopleController extends GetxController {
     funcaoIgrejaPessoaController.text = selectedPeople!.funcaoIgreja.toString();
     statusPessoaController.text = selectedPeople!.status.toString();
     usuarioId.text = selectedPeople!.usuarioId.toString();
-    familiaId.text = selectedPeople!.familiaId.toString();
+    familySelected?.value = selectedPeople!.family?.id ?? 0;
     igrejaPessoaController.text = selectedPeople!.igrejaId.toString();
 
     if (selectedPeople!.estadoCivilId != null) {
@@ -603,8 +599,7 @@ class PeopleController extends GetxController {
       isImagePicPathSet.value = true;
     }
 
-    if(selectedPeople!.peopleLocal!){
-
+    if (selectedPeople!.peopleLocal!) {
       if (selectedPeople!.acometimentosOffline!.isNotEmpty) {
         selectedSaudeIds.clear();
         selectedSaudeIds.value = selectedPeople!.acometimentosOffline!
@@ -619,9 +614,7 @@ class PeopleController extends GetxController {
             .map(int.parse)
             .toList();
       }
-
-    }else{
-
+    } else {
       if (selectedPeople!.acometimentosSaude != null) {
         selectedSaudeIds.clear();
         for (var saude in selectedPeople!.acometimentosSaude!) {
@@ -636,8 +629,6 @@ class PeopleController extends GetxController {
         }
       }
     }
-
-
   }
 
   void setImagePeople(String path) {
@@ -723,16 +714,17 @@ class PeopleController extends GetxController {
         List<int> saudeIdsOffline = [];
         List<int> medicamentosIdsOffline = [];
 
-        if(people.medicamentosOffline!.isNotEmpty){
-          List<String> stringMedicamentosIds = people.medicamentosOffline!.split(',');
-          medicamentosIdsOffline = stringMedicamentosIds.map(int.parse).toList();
+        if (people.medicamentosOffline!.isNotEmpty) {
+          List<String> stringMedicamentosIds =
+              people.medicamentosOffline!.split(',');
+          medicamentosIdsOffline =
+              stringMedicamentosIds.map(int.parse).toList();
         }
 
-        if(people.acometimentosOffline!.isNotEmpty){
+        if (people.acometimentosOffline!.isNotEmpty) {
           List<String> stringSaudeIds = people.acometimentosOffline!.split(',');
           saudeIdsOffline = stringSaudeIds.map(int.parse).toList();
         }
-
 
         var mensagem = await repository.insertPeopleLocalToApi(
             "Bearer $token", people, saudeIdsOffline, medicamentosIdsOffline);
@@ -778,7 +770,7 @@ class PeopleController extends GetxController {
     People people = People(
       id: id,
     );
-     mensagem = await repository.deletePeopleLocal(people);
+    mensagem = await repository.deletePeopleLocal(people);
 
     getPeoples();
 

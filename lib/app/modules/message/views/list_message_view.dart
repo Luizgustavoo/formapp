@@ -15,30 +15,48 @@ class MessageView extends GetView<MessageController> {
     return Scaffold(
         appBar: CustomAppBar(
           showPadding: false,
-          title: 'Notificações',
+          title: '',
         ),
-        body: Container(
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadiusDirectional.only(
-                  topStart: Radius.circular(15), topEnd: Radius.circular(15))),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Obx(() => Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: controller.listMessages.length,
-                        itemBuilder: (context, index) {
-                          Message message = controller.listMessages[index];
-                          return CustomCardMessage(
-                            message: message,
-                          );
-                        }),
-                  )),
-            ],
+        body: RefreshIndicator(
+          onRefresh: () async {
+            controller.getMessages();
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFFf1f5ff),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Notificações',
+                    style: TextStyle(fontFamily: 'Poppinss', fontSize: 16),
+                  ),
+                  const Divider(
+                    height: 5,
+                    thickness: 2,
+                    color: Color(0xFF1C6399),
+                  ),
+                  const SizedBox(height: 10),
+                  Obx(() => Expanded(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: controller.listMessages.length,
+                            itemBuilder: (context, index) {
+                              Message message = controller.listMessages[index];
+                              return CustomCardMessage(
+                                message: message,
+                              );
+                            }),
+                      )),
+                ],
+              ),
+            ),
           ),
         ));
   }

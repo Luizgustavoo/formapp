@@ -157,7 +157,7 @@ class SignUpView extends GetView<LoginController> {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                 ),
-                                                labelText: 'Estado Civil'),
+                                                labelText: 'ESTADO CIVIL'),
                                           ),
                                         ),
                                       )
@@ -271,7 +271,8 @@ class SignUpView extends GetView<LoginController> {
                                       Expanded(
                                         flex: 2,
                                         child: TextFormField(
-                                          // controller: controller.redeSocialPessoaController,
+                                          controller: controller
+                                              .redeSocialPessoaController,
                                           decoration: InputDecoration(
                                               counterText: "",
                                               border: OutlineInputBorder(
@@ -416,7 +417,7 @@ class SignUpView extends GetView<LoginController> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
-                                          labelText: 'Religião'),
+                                          labelText: 'RELIGIÃO'),
                                     ),
                                   ),
                                   _gap(),
@@ -469,7 +470,12 @@ class SignUpView extends GetView<LoginController> {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
-                                            labelText: 'Igreja',
+                                            labelText: 'IGREJA',
+                                            labelStyle: const TextStyle(
+                                              color: Colors.black54,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12,
+                                            ),
                                             suffixIcon: IconButton(
                                               icon: const Icon(
                                                   Icons.arrow_drop_down),
@@ -829,5 +835,5 @@ class SignUpView extends GetView<LoginController> {
     );
   }
 
-  Widget _gap() => const SizedBox(height: 7);
+  Widget _gap() => const SizedBox(height: 8);
 }

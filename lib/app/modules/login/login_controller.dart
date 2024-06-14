@@ -300,7 +300,7 @@ class LoginController extends GetxController {
           retorno = {
             "return": 0,
             "message":
-                "Sucesso! Fique atento ao seu e-mail cadastrado, pois iremos informar o status da sua solicitação."
+                'Seu login foi cadastrado com sucesso. Você já pode entrar no app.'
           };
         } else if (mensagem['message'] == 'ja_existe') {
           retorno = {

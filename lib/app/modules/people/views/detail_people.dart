@@ -283,12 +283,12 @@ class DetailPeopleView extends GetView<PeopleController> {
                         CircleAvatar(
                           radius: 25,
                           backgroundImage: people.foto.toString().isEmpty ||
-                              people.foto == null
+                                  people.foto == null
                               ? const AssetImage(
-                              'assets/images/default_avatar.jpg')
+                                  'assets/images/default_avatar.jpg')
                               : CachedNetworkImageProvider(
-                              '$urlImagem/storage/app/public/${people.foto}')
-                          as ImageProvider,
+                                      '$urlImagem/storage/app/public/${people.foto}')
+                                  as ImageProvider,
                         ),
                       ],
                     ),
@@ -301,12 +301,21 @@ class DetailPeopleView extends GetView<PeopleController> {
                           width: Get.width * 0.55,
                           child: Text(
                             people.nome!.toUpperCase(),
-                            overflow: TextOverflow.clip,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                                 overflow: TextOverflow.clip,
                                 fontFamily: 'Poppinss',
                                 fontSize: 12),
                           ),
+                        ),
+                        Text(
+                          people.family?.nome != null
+                              ? 'FAMÍLIA: ${people.family!.nome}'
+                              : 'FAMÍLIA: NÃO VINCULADO',
+                          style: const TextStyle(
+                              fontFamily: 'Poppinss',
+                              fontSize: 12,
+                              color: Color(0xFF1C6399)),
                         ),
                         Text(
                           'ID: ${people.id}',

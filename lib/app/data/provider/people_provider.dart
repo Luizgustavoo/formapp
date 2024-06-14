@@ -256,6 +256,7 @@ class PeopleApiClient {
           "funcao_igreja": pessoa.funcaoIgreja!,
           "usuario_id": pessoa.usuarioId.toString(),
           "status": pessoa.status.toString(),
+          "familia_id": pessoa.familiaId.toString(),
           "parentesco": pessoa.parentesco!,
         });
 
