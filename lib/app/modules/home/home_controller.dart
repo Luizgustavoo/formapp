@@ -137,6 +137,13 @@ class HomeController extends GetxController
 
   void startTimer() {
     // Inicialize `timer`, `timer2` e `timer3` com novos temporizadores
+
+    counter.value = totalFamilies.value;
+    counter2.value = totalPeoples.value;
+    counter3.value = totalLider.value;
+
+
+    /*
     timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (counter < totalFamilies.value) {
         counter++;
@@ -160,6 +167,8 @@ class HomeController extends GetxController
         timer3.cancel();
       }
     });
+
+    */
   }
 
   Future<void> getPeoples({int? page, String? search}) async {

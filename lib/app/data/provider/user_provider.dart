@@ -138,10 +138,10 @@ class UserApiClient {
         var response = await http.Response.fromStream(streamedResponse);
 
         if (response.statusCode == 200) {
-          Map<String, dynamic> user = box.read('auth')['pessoa'];
-          user['foto'] = json.decode(response.body)['objeto']['foto'];
+          Map<String, dynamic> user2 = box.read('auth')['pessoa'];
+          user2['foto'] = json.decode(response.body)['objeto']['foto'];
           Map<String, dynamic> auth = box.read('auth');
-          auth['pessoa'] = user;
+          auth['pessoa'] = user2;
           box.write('auth', auth);
 
           return json.decode(response.body);
@@ -169,13 +169,21 @@ class UserApiClient {
           body: requestBody,
         );
         if (response.statusCode == 200) {
-          Map<String, dynamic> user = box.read('auth')['user'];
-          // user['foto'] = json.decode(response.body)['objeto']['foto'];
-          user['nome'] = json.decode(response.body)['objeto']['nome'];
-          // UserStorage.changeName.value = user['nome'];
-          Map<String, dynamic> auth = box.read('auth');
-          auth['user'] = user;
-          box.write('auth', auth);
+
+
+          if(user.id! == UserStorage.getUserId()){
+            Map<String, dynamic> user2 = box.read('auth')['user'];
+            // user['foto'] = json.decode(response.body)['objeto']['foto'];
+            user2['nome'] = json.decode(response.body)['objeto']['nome'];
+            // UserStorage.changeName.value = user['nome'];
+            Map<String, dynamic> auth = box.read('auth');
+            auth['user'] = user2;
+            box.write('auth', auth);
+          }
+
+
+
+
           return json.decode(response.body);
         } else if (response.statusCode == 422 ||
             json.decode(response.body)['message'] == "ja_existe") {
