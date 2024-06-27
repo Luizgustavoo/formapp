@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/database_helper.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/provider/internet_status_provider.dart';
-import 'package:formapp/app/data/provider/via_cep.dart';
-import 'package:formapp/app/data/repository/family_repository.dart';
-import 'package:formapp/app/utils/format_validator.dart';
-import 'package:formapp/app/utils/connection_service.dart';
-import 'package:formapp/app/utils/user_storage.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:showcaseview/showcaseview.dart';
+import 'package:ucif/app/data/database_helper.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/provider/internet_status_provider.dart';
+import 'package:ucif/app/data/provider/via_cep.dart';
+import 'package:ucif/app/data/repository/family_repository.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
+import 'package:ucif/app/utils/format_validator.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class FamilyController extends GetxController
-    with SingleGetTickerProviderMixin {
+    with GetSingleTickerProviderStateMixin {
   TextEditingController searchController = TextEditingController();
+  TextEditingController searchControllerModal = TextEditingController();
   TextEditingController idFamiliaController = TextEditingController();
   TextEditingController nomeFamiliaController = TextEditingController();
   TextEditingController cepFamiliaController = TextEditingController();
@@ -36,6 +39,9 @@ class FamilyController extends GetxController
   List<People>? listPessoas = [];
 
   RxList<Family> listFamilies = <Family>[].obs;
+  RxList<Family> listFamilyPeoples = <Family>[].obs;
+  RxList<People> listPeoples = <People>[].obs;
+  RxList<Family> listFamiliesDropDown = <Family>[].obs;
   final GlobalKey<FormState> familyFormKey = GlobalKey<FormState>();
 
   RxBool residenceOwn = false.obs;
@@ -50,53 +56,205 @@ class FamilyController extends GetxController
   AnimationController? animationController;
   dynamic mensagem;
 
-  GlobalKey editFamily = GlobalKey();
-  GlobalKey messageFamily = GlobalKey();
-  GlobalKey addFamily = GlobalKey();
-  GlobalKey supportFamily = GlobalKey();
-  GlobalKey addMember = GlobalKey();
-  GlobalKey disableFamily = GlobalKey();
-
   final DatabaseHelper localDatabase = DatabaseHelper();
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
   final status = Get.find<InternetStatusProvider>().status;
 
+  User? selectedUser;
   final showCaseViewShown = false.obs;
 
-  dynamic context = Get.context;
+  RxBool isLoadingFamilies = false.obs;
+  RxBool isLoadingFamiliesFiltered = false.obs;
+
+  Rx<Color> corFundoScaffold = Colors.white.obs;
+
+  final ScrollController scrollController = ScrollController();
+  final ScrollController scrollControllerModal = ScrollController();
+  final ScrollController scrollFilterFamily = ScrollController();
+
+  int currentPage = 1;
+  bool isLoadingMore = false;
+
+  User userSelected = User();
+  RxString totalFamily = ''.obs;
+  RxString totalPeoples = ''.obs;
+  RxString totalMale = ''.obs;
+  RxString totalFemale = ''.obs;
+  RxString totalNoSex = ''.obs;
 
   @override
   void onInit() {
     if (UserStorage.existUser()) {
+
+      Future.wait([
+      getFamilies(),
+      ]);
+
       final internetStatusProvider = Get.find<InternetStatusProvider>();
       final statusStream = internetStatusProvider.statusStream;
       statusStream.listen((status) {
         if (status == InternetStatus.connected) {
-          getFamilies();
+          Future.wait([
+            getFamilies(),
+          ]);
         }
       });
-      getFamilies();
 
-      // int idLogado = box.read('auth')['user']['id'];
 
-      // List storedUserIds = StorageManager.getUserIds();
 
-      checkShowcase();
     }
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        if (!isLoadingMore) {
+          loadMoreFamilies().then((value) => isLoadingFamilies.value = false);
+        }
+      }
+    });
+    scrollControllerModal.addListener(() {
+      if (scrollControllerModal.position.pixels ==
+          scrollControllerModal.position.maxScrollExtent) {
+        if (!isLoadingMore) {
+          loadMoreFamilies().then((value) => isLoadingFamilies.value = false);
+        }
+      }
+    });
+    scrollFilterFamily.addListener(() {
+      if (scrollFilterFamily.position.pixels ==
+          scrollFilterFamily.position.maxScrollExtent) {
+        if (!isLoadingMore) {
+          loadMoreFamiliesFiltered()
+              .then((value) => isLoadingFamiliesFiltered.value = false);
+        }
+      }
+    });
 
     super.onInit();
   }
 
-  void searchFamily(String query) {
-    if (query.isEmpty) {
-      getFamilies();
-    } else {
-      listFamilies.assignAll(listFamilies
-          .where((family) =>
-              family.nome!.toLowerCase().contains(query.toLowerCase()))
-          .toList());
+  Future<void> loadMoreFamilies() async {
+    try {
+      String? search;
+      if (searchController.text.isNotEmpty) {
+        search = searchController.text;
+      } else if (searchControllerModal.text.isNotEmpty) {
+        search = searchControllerModal.text;
+      }
+      final token = UserStorage.getToken();
+      isLoadingMore = true;
+      final nextPage = currentPage + 1;
+      final moreFamilies = await repository.getAll("Bearer $token",
+          page: nextPage, search: search);
+      if (moreFamilies.isNotEmpty) {
+        for (final family in moreFamilies) {
+          if (!listFamilies
+              .any((existingFamily) => existingFamily.id == family.id)) {
+            listFamilies.add(family);
+          }
+        }
+        currentPage = nextPage;
+      }
+    } catch (e) {
+      ErrorHandler.showError(e);
+    } finally {
+      isLoadingMore = false;
     }
+  }
+
+  Future<void> loadMoreFamiliesFiltered() async {
+    try {
+      final token = UserStorage.getToken();
+      isLoadingMore = true;
+      final nextPage = currentPage + 1;
+      final moreFamilies = await repository
+          .getAllFilter("Bearer $token", selectedUser!, page: nextPage);
+      if (moreFamilies.isNotEmpty) {
+        for (final people in moreFamilies['pessoas']['data'] as List) {
+          if (!listPeoples
+              .any((existingPeople) => existingPeople.id == people['id'])) {
+            listPeoples.add(People.fromJson(people));
+          }
+        }
+        currentPage = nextPage;
+      }
+    } catch (e) {
+      ErrorHandler.showError(e);
+    } finally {
+      isLoadingMore = false;
+    }
+  }
+
+  void searchFamily(String query) async {
+    try {
+      if (query.isEmpty) {
+        await getFamilies();
+      } else {
+        final filteredFamilies = listFamilies
+            .where((family) =>
+                family.nome!.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        listFamilies.assignAll(filteredFamilies);
+      }
+    } catch (error) {
+      ErrorHandler.showError(error);
+    } finally {
+      if (query.isEmpty) {
+        loadMoreFamilies(); // Carrega mais famílias quando a pesquisa é limpa
+      }
+    }
+  }
+
+  Future<void> getFamilies({int? page, String? search}) async {
+    isLoadingFamilies.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listFamilies.value =
+          await repository.getAll("Bearer $token", page: page, search: search);
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingFamilies.value = false;
+  }
+
+  Future<void> getFamiliesDropDown() async {
+    isLoadingFamilies.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listFamiliesDropDown.value =
+          await repository.getAllDropDown("Bearer $token");
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingFamilies.value = false;
+  }
+
+  Future<void> getFamiliesFilter(User lider) async {
+    isLoadingFamiliesFiltered.value = true;
+    try {
+      final token = UserStorage.getToken();
+      var response = await repository.getAllFilter("Bearer $token", lider);
+
+      listFamilyPeoples.value = (response['familias']['data'] as List)
+          .map((familiaJson) => Family.fromJson(familiaJson))
+          .toList();
+      listPeoples.value = (response['pessoas']['data'] as List)
+          .map((pessoaJson) => People.fromJson(pessoaJson))
+          .toList();
+
+      totalFamily.value = response['total_familias'].toString();
+      totalPeoples.value = response['total_pessoas'].toString();
+      totalMale.value = response['total_masculino'].toString();
+      totalFemale.value = response['total_feminino'].toString();
+      totalNoSex.value = response['total_sem_sexo'].toString();
+
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingFamiliesFiltered.value = false;
   }
 
   void searchFamilyUserId(String query) {
@@ -107,34 +265,6 @@ class FamilyController extends GetxController
             .toList());
       });
     }
-  }
-
-  void checkShowcase() {
-    final userId = getUserId();
-    final shown = box.read('showcaseShown_$userId') ?? false;
-    if (!shown) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(Get.context!).startShowCase([
-          addFamily,
-          editFamily,
-          messageFamily,
-          supportFamily,
-          addMember,
-          disableFamily,
-        ]);
-      });
-      box.write('showcaseShown_$userId', true);
-    }
-  }
-
-  int getUserId() {
-    final userId = box.read('userId');
-    return userId ?? 0; // Ou algum valor padrão, dependendo da sua lógica
-  }
-
-  void clearShowcase() {
-    final userId = getUserId();
-    box.remove('showcaseShown_$userId');
   }
 
   Future<Map<String, dynamic>> saveFamily() async {
@@ -152,12 +282,9 @@ class FamilyController extends GetxController
         status: 1,
         usuarioId: UserStorage.getUserId(),
       );
-
       final token = UserStorage.getToken();
-
       mensagem = await repository.insertFamily("Bearer $token", family);
       if (mensagem != null) {
-        print(mensagem['message']);
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
           getFamilies();
@@ -177,7 +304,7 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<Map<String, dynamic>> updateFamily(int id) async {
+  Future<Map<String, dynamic>> updateFamily(int id, bool familyLocal) async {
     if (familyFormKey.currentState!.validate()) {
       Family family = Family(
         id: id,
@@ -193,10 +320,9 @@ class FamilyController extends GetxController
         status: 1,
         usuarioId: UserStorage.getUserId(),
       );
-
       final token = UserStorage.getToken();
-
-      final mensagem = await repository.updateFamily("Bearer $token", family);
+      final mensagem =
+          await repository.updateFamily("Bearer $token", family, familyLocal);
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -219,45 +345,29 @@ class FamilyController extends GetxController
     return retorno;
   }
 
-  Future<Map<String, dynamic>> deleteFamily(int id) async {
+  deleteFamily(int id, bool familyLocal) async {
     Family family = Family(
       id: id,
     );
-
     final token = UserStorage.getToken();
-
-    if (await ConnectionStatus.verifyConnection()) {
-      mensagem = await repository.deleteFamily("Bearer $token", family);
-    } else {
-      //mensagem = localDatabase.delete(family.id!, 'family_table');
-    }
-
-    if (mensagem != null) {
-      if (mensagem['message'] == 'success') {
-        retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
-      } else if (mensagem['message'] == 'ja_existe') {
-        retorno = {
-          "return": 1,
-          "message": "Já existe uma família com esse nome!"
-        };
-      }
-    }
+    mensagem =
+        await repository.deleteFamily("Bearer $token", family, familyLocal);
 
     getFamilies();
 
-    return retorno;
+    return mensagem;
   }
 
   Future<Map<String, dynamic>> sendFamilyToAPIOffline(Family family) async {
     try {
       if (await ConnectionStatus.verifyConnection()) {
         final token = UserStorage.getToken();
-        var mensagem = await repository.insertFamily("Bearer $token", family);
-
-        //await localDatabase.delete(family.id!, 'family_table');
+        var mensagem =
+            await repository.insertFamilyLocalToAPi("Bearer $token", family);
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {
+            deleteFamily(family.id!, true);
             retorno = {
               "return": 0,
               "message": "Operação realizada com sucesso!"
@@ -267,31 +377,19 @@ class FamilyController extends GetxController
               "return": 1,
               "message": "Já existe uam família com esse nome!"
             };
+          } else {
+            retorno = {"return": 1, "message": "Falha!"};
           }
         }
+        getFamilies();
       }
-      getFamilies();
     } catch (e) {
-      print('Erro ao enviar dados da família para a API: $e');
+      ErrorHandler.showError(e);
     }
     return retorno;
   }
 
-  Future<Map<String, dynamic>> sendFamilyToAPI(Family family) async {
-    await sendFamilyToAPIOffline(family);
-    return retorno;
-  }
-
-  Future<void> getFamilies() async {
-    try {
-      final token = UserStorage.getToken();
-      listFamilies.value = await repository.getAll("Bearer $token");
-      update();
-    } catch (e) {}
-  }
-
   void clearAllFamilyTextFields() {
-    // Lista de todos os TextEditingController
     final textControllers = [
       idFamiliaController,
       nomeFamiliaController,
@@ -305,7 +403,6 @@ class FamilyController extends GetxController
       statusFamiliaController,
     ];
 
-    // Itera sobre todos os TextEditingController e limpa cada um deles
     for (final controller in textControllers) {
       controller.clear();
     }
@@ -326,24 +423,26 @@ class FamilyController extends GetxController
     statusFamiliaController.text = selectedFamily!.status.toString();
   }
 
-  //?PARTE RESPONSAVEL PELO CEP */
   void searchCEP() async {
-    final cep = cepFamiliaController.text;
-    final addressData = await ViaCEPService.getAddressFromCEP(cep);
+    bool isConnected = await ConnectionStatus.verifyConnection();
 
-    if (addressData.containsKey('error')) {
-      Get.snackbar(
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 2),
-          'Erro',
-          'Erro ao obter dados do CEP: ${addressData['error']}');
-      clearCEP();
-    } else {
-      ruaFamiliaController.text = addressData['logradouro'];
-      bairroFamiliaController.text = addressData['bairro'];
-      cidadeFamiliaController.text = addressData['localidade'];
-      uf.value = addressData['uf'];
+    if (isConnected && cepFamiliaController.text.isNotEmpty) {
+      final cep = cepFamiliaController.text;
+      final addressData = await ViaCEPService.getAddressFromCEP(cep);
+      if (addressData.containsKey('error')) {
+        Get.snackbar(
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 2),
+            'Erro',
+            'Erro ao obter dados do CEP: ${addressData['error']}');
+        clearCEP();
+      } else {
+        ruaFamiliaController.text = addressData['logradouro'];
+        bairroFamiliaController.text = addressData['bairro'];
+        cidadeFamiliaController.text = addressData['localidade'];
+        uf.value = addressData['uf'];
+      }
     }
   }
 
@@ -355,9 +454,7 @@ class FamilyController extends GetxController
     complementoFamiliaController.text = '';
     numeroCasaFamiliaController.text = '';
   }
-  //?FINAL DA PARTE RESPONSAVEL PELO CEP */
 
-  /*PARTE RESPONSAVEL PELA FORMATACAO*/
   void onCEPChanged(String cep) {
     final formattedCEP = FormattersValidators.formatCEP(cep);
     cepFamiliaController.value = TextEditingValue(

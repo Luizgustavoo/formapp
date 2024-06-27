@@ -1,4 +1,5 @@
-import 'package:formapp/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 
 class User {
   int? id;
@@ -14,22 +15,34 @@ class User {
   String? tokenFirebase;
   dynamic familiaId;
   Family? family;
+  People? people;
+  dynamic foto;
+  dynamic mensagens;
+  dynamic quantidadeFamilias;
+  dynamic quantidadePessoas;
+  dynamic pessoaId;
+  List<People>? pessoas;
 
-  User({
-    this.id,
-    this.nome,
-    this.username,
-    this.tipousuarioId,
-    this.status,
-    this.dataCadastro,
-    this.dataUpdate,
-    this.user,
-    this.usuarioId,
-    this.senha,
-    this.tokenFirebase,
-    this.familiaId,
-    this.family,
-  });
+  User(
+      {this.id,
+      this.nome,
+      this.username,
+      this.tipousuarioId,
+      this.status,
+      this.dataCadastro,
+      this.dataUpdate,
+      this.user,
+      this.usuarioId,
+      this.senha,
+      this.tokenFirebase,
+      this.familiaId,
+      this.family,
+      this.foto,
+      this.people,
+      this.quantidadePessoas,
+      this.mensagens,
+      this.quantidadeFamilias,
+      this.pessoaId});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,6 +58,18 @@ class User {
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
     familiaId = json['familia_id'] as dynamic;
     family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
+    people = json['pessoa'] != null ? People.fromJson(json['pessoa']) : null;
+    foto = json['foto'];
+    mensagens = json['mensagens'];
+    quantidadeFamilias = json['quantidade_familias'];
+    quantidadePessoas = json['quantidade_pessoas'];
+    pessoaId = json['pessoa_id'];
+    if (json['pessoas'] != null) {
+      pessoas = <People>[];
+      json['pessoas'].forEach((v) {
+        pessoas!.add(People.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +88,14 @@ class User {
       data['usuario'] = user!.toJson();
     }
     data['familia_id'] = familiaId;
+    data['foto'] = foto;
+    data['mensagens'] = mensagens;
+    data['quantidade_familias'] = quantidadeFamilias;
+    data['quantidade_pessoas'] = quantidadePessoas;
+    data['pessoa_id'] = pessoaId;
+    if (pessoas != null) {
+      data['pessoas'] = pessoas!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

@@ -1,30 +1,66 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/database_helper.dart';
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/people_database_helper.dart';
-import 'package:formapp/app/utils/connection_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/database_helper.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/data/people_database_helper.dart';
+import 'package:ucif/app/utils/connection_service.dart';
+import 'package:ucif/app/utils/error_handler.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class PeopleApiClient {
   final http.Client httpClient = http.Client();
   final PeopleDatabaseHelper localDatabase = PeopleDatabaseHelper();
   final box = GetStorage('credenciado');
 
-  getAll(String token) async {
-    final id = box.read('auth')['user']['id'];
-    final familiaId = box.read('auth')['user']['familia_id'];
+  getAll(String token, {int? page, String? search}) async {
+    final userId = UserStorage.getUserId();
+    final familiaId = UserStorage.getFamilyId();
+    final userType = UserStorage.getUserType();
     try {
       Uri peopleUrl;
-      if (familiaId != null) {
-        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list-familiar/id/$familiaId');
-      } else {
-        peopleUrl = Uri.parse('$baseUrl/v1/pessoa/list/id/$id');
+
+      String url =
+          '$baseUrl/v1/pessoa/list/$userType/$search/$familiaId/$userId?page=$page';
+      peopleUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        peopleUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
       }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  getAllMember(String token, int? familiaId) async {
+    try {
+      Uri peopleUrl;
+
+      String url = '$baseUrl/v1/pessoa/list-familiar/id/$familiaId';
+      peopleUrl = Uri.parse(url);
 
       var response = await httpClient.get(
         peopleUrl,
@@ -46,40 +82,53 @@ class PeopleApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
 
-  insertPeople(
-      String token, People pessoa, File imageFile, bool peopleLocal) async {
+  getAllFilter(String token, {int? page, User? user}) async {
     try {
-      if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
+      Uri peopleUrl;
+
+      String url =
+          '$baseUrl/v1/pessoa/list-paginate-lider/${user!.id}/?page=$page&limit';
+      peopleUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        peopleUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  insertPeople(String token, People pessoa, File imageFile, bool peopleLocal,
+      List? saude, List? medicamento) async {
+    try {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/create');
 
         var request = http.MultipartRequest('POST', pessoaUrl);
@@ -90,8 +139,6 @@ class PeopleApiClient {
           "cpf": pessoa.cpf!,
           "data_nascimento": pessoa.dataNascimento!,
           "estadocivil_id": pessoa.estadoCivilId.toString(),
-          "titulo_eleitor": pessoa.tituloEleitor!,
-          "zona_eleitoral": pessoa.zonaEleitoral!,
           "telefone": pessoa.telefone!,
           "rede_social": pessoa.redeSocial!,
           "provedor_casa": pessoa.provedorCasa!,
@@ -105,18 +152,23 @@ class PeopleApiClient {
           "familia_id": pessoa.familiaId.toString(),
           "parentesco": pessoa.parentesco!,
         });
+        if (saude != null) {
+          request.fields['saude'] = json.encode(saude);
+        }
+        if (medicamento != null) {
+          request.fields['medicamento'] = json.encode(medicamento);
+        }
 
         if (imageFile.path.isNotEmpty) {
           request.files.add(await http.MultipartFile.fromPath(
-            'foto', // Nome do campo que a API espera para a imagem
-            imageFile.path, // Caminho do arquivo da imagem
+            'foto',
+            imageFile.path,
           ));
         }
 
         request.headers.addAll({
           'Accept': 'application/json',
           'Authorization': token,
-          // Adicione outros cabeçalhos conforme necessário
         });
 
         var response = await request.send();
@@ -139,15 +191,8 @@ class PeopleApiClient {
           var box = GetStorage('credenciado');
           box.erase();
           Get.offAllNamed('/login');
-        } else {
-          Get.defaultDialog(
-            title: "Error",
-            content: const Text('erro'),
-          );
         }
       } else {
-        //SALVANDO DADOS LOCALMENTE
-
         final dbHelper = DatabaseHelper();
         dynamic retorno = await dbHelper.insertPeople(pessoa);
 
@@ -165,24 +210,30 @@ class PeopleApiClient {
           };
         }
 
-        // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
-
-        print(json.decode(jsonResponse));
 
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
 
-  updatePeople(String token, People pessoa, File imageFile,
-      String? oldImagePath, bool peopleLocal) async {
+  List<int> stringToIntList(String input) {
+    List<String> stringList = input.split(',');
+    List<int> intList = stringList.map(int.parse).toList();
+    return intList;
+  }
+
+  updatePeople(
+      String token,
+      People pessoa,
+      File imageFile,
+      String? oldImagePath,
+      bool peopleLocal,
+      List? saude,
+      List? medicamento) async {
     try {
       if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
         var pessoaUrl = Uri.parse('$baseUrl/v1/pessoa/update/${pessoa.id}');
@@ -195,8 +246,6 @@ class PeopleApiClient {
           "cpf": pessoa.cpf!,
           "data_nascimento": pessoa.dataNascimento!,
           "estadocivil_id": pessoa.estadoCivilId.toString(),
-          "titulo_eleitor": pessoa.tituloEleitor!,
-          "zona_eleitoral": pessoa.zonaEleitoral!,
           "telefone": pessoa.telefone!,
           "rede_social": pessoa.redeSocial!,
           "provedor_casa": pessoa.provedorCasa!,
@@ -211,10 +260,17 @@ class PeopleApiClient {
           "parentesco": pessoa.parentesco!,
         });
 
+        if (saude != null) {
+          request.fields['saude'] = json.encode(saude);
+        }
+        if (medicamento != null) {
+          request.fields['medicamento'] = json.encode(medicamento);
+        }
+
         if (imageFile.path.isNotEmpty && imageFile.path != oldImagePath) {
           request.files.add(await http.MultipartFile.fromPath(
-            'foto', // Nome do campo que a API espera para a imagem
-            imageFile.path, // Caminho do arquivo da imagem
+            'foto',
+            imageFile.path,
           ));
         }
 
@@ -222,7 +278,6 @@ class PeopleApiClient {
           "Content-Type": "multipart/form-data",
           'Accept': 'application/json',
           'Authorization': token,
-          // Adicione outros cabeçalhos conforme necessário
         });
 
         var response = await request.send();
@@ -245,17 +300,10 @@ class PeopleApiClient {
           var box = GetStorage('credenciado');
           box.erase();
           Get.offAllNamed('/login');
-        } else {
-          Get.defaultDialog(
-            title: "Error",
-            content: const Text('erro'),
-          );
         }
       } else {
-        //alterando a pessoa local
-
         final dbHelper = DatabaseHelper();
-        dynamic retorno = await dbHelper.insertPeople(pessoa);
+        dynamic retorno = await dbHelper.updatePeople(pessoa);
 
         Map<String, dynamic> responseData = {};
 
@@ -271,18 +319,12 @@ class PeopleApiClient {
           };
         }
 
-        // Converter o mapa em uma string JSON
         String jsonResponse = jsonEncode(responseData);
-
-        print(json.decode(jsonResponse));
 
         return json.decode(jsonResponse);
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
@@ -319,65 +361,80 @@ class PeopleApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError("Sem conexão!");
     }
     return null;
   }
 
-  Future<List<People>> getAllPeopleLocally() async {
-    return await localDatabase.getAllPeople();
-  }
-
-  Future<dynamic> savePeopleLocal(People people) async {
-    People peopleData = People(
-      nome: people.nome,
-      foto: people.foto,
-      sexo: people.sexo,
-      cpf: people.cpf,
-      dataNascimento: people.dataNascimento,
-      estadoCivilId: people.estadoCivilId,
-      tituloEleitor: people.tituloEleitor,
-      zonaEleitoral: people.zonaEleitoral,
-      telefone: people.telefone,
-      redeSocial: people.redeSocial,
-      provedorCasa: people.provedorCasa,
-      igrejaId: people.igrejaId,
-      localTrabalho: people.localTrabalho,
-      cargoTrabalho: people.cargoTrabalho,
-      religiaoId: people.religiaoId,
-      funcaoIgreja: people.funcaoIgreja,
-      usuarioId: people.usuarioId,
-      status: people.status,
-      dataCadastro: people.dataCadastro,
-      dataUpdate: people.dataUpdate,
-      familiaId: people.familiaId,
-      parentesco: people.parentesco,
-    );
-
-    return await localDatabase.insertPeople(peopleData);
-  }
-
-  Future<void> deletePeopleLocally(People people) async {
+  deletePeople(String token, People people, bool peopleLocal) async {
     try {
-      if (people.id != null) {
-        //await localDatabase.delete(people.id!, 'family_table');
-        print('Família excluída localmente com sucesso');
-      } else {
-        print('ID da família é nulo. Não é possível excluir.');
+      if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
+        var peopleUrl = Uri.parse('$baseUrl/v1/pessoa/delete/${people.id}');
+
+        var response = await httpClient.delete(
+          peopleUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          return json.decode(response.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(response.body)['message'] == "ja_existe") {
+          return json.decode(response.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(response.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
       }
-    } catch (e) {
-      print('Erro ao excluir família localmente: $e');
-      rethrow;
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
     }
+    return null;
+  }
+
+  deletePeopleLocal(People people) async {
+    try {
+      //remover offline
+      final dbHelper = DatabaseHelper();
+      dynamic retorno = await dbHelper.deletePeople(people.id!);
+
+      Map<String, dynamic> responseData = {};
+
+      if (retorno > 0) {
+        responseData = {
+          'code': 0,
+          'message': 'Operação realizada com sucesso!',
+        };
+      } else {
+        responseData = {
+          'code': 1,
+          'message': 'Falha ao realizar a operação!',
+        };
+      }
+
+      String jsonResponse = jsonEncode(responseData);
+
+      return json.decode(jsonResponse);
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
   }
 }

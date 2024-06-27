@@ -1,6 +1,6 @@
-import 'package:formapp/app/data/models/people_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 
 class PeopleDatabaseHelper {
   static const String dbName = 'family_database.db';

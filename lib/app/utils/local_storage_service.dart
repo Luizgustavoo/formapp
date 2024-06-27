@@ -1,6 +1,6 @@
 import 'package:get_storage/get_storage.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 
 class LocalStorageService {
   static final _familiaBox = GetStorage('families');
@@ -16,30 +16,12 @@ class LocalStorageService {
   static Future<int> savePeopleLocally(People people) async {
     people.id ??= _generateUniqueId();
     await _familiaBox.write('people_${people.id}', people.toJson());
-    print(people.toJson());
     return int.parse('${people.id}');
   }
 
   static int _generateUniqueId() {
-    // Implemente sua lógica para gerar um ID único aqui, por exemplo, usando a data e hora atual
     return DateTime.now().millisecondsSinceEpoch;
   }
-
-  // static List<Family> getFamiliesLocally() {
-  //   List<Family> families = [];
-  //   _familiaBox.getKeys().forEach((key) {
-  //     if (key.startsWith('family_')) {
-  //       var familyJson = _familiaBox.read(key);
-  //       if (familyJson != null) {
-  //         var family = Family.fromJson(familyJson);
-  //         families.add(family);
-  //       }
-  //     }
-  //   });
-
-  //   print(families.first.nome);
-  //   return families;
-  // }
 
   static List<Family> getFamiliesLocally() {
     List<Family> families = [];
@@ -58,7 +40,6 @@ class LocalStorageService {
   }
 
   static List<People>? _getPeopleForFamily(int? familyId) {
-    print(familyId);
     if (familyId == null) return null;
 
     List<People> peopleList = [];

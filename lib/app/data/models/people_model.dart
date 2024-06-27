@@ -1,5 +1,12 @@
-import 'package:formapp/app/data/models/family_service_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
+// ignore_for_file: non_constant_identifier_names
+
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/health_model.dart';
+import 'package:ucif/app/data/models/marital_status_model.dart';
+import 'package:ucif/app/data/models/medicine_model.dart';
+import 'package:ucif/app/data/models/religion_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 
 class People {
   int? id;
@@ -25,8 +32,26 @@ class People {
   String? dataUpdate;
   int? familiaId;
   String? parentesco;
+  String? username;
+  String? senha;
   List<FamilyService>? atendimentos;
+  List<Health>? acometimentosSaude;
+  List<Medicine>? medicamentos;
   User? user;
+  Family? family;
+  Religion? religion;
+  MaritalStatus? maritalStatus;
+  bool? peopleLocal = false;
+  User? userSistema;
+  String? medicamentosOffline;
+  String? acometimentosOffline;
+
+  String? medicamentosOfflineNames;
+  String? acometimentosOfflineNames;
+
+  String? estado_civil_name;
+  String? usuario_name;
+  String? religiao_name;
 
   People({
     this.id,
@@ -54,6 +79,20 @@ class People {
     this.parentesco,
     this.atendimentos,
     this.user,
+    this.religion,
+    this.username,
+    this.senha,
+    this.maritalStatus,
+    this.peopleLocal,
+    this.family,
+    this.userSistema,
+    this.acometimentosOffline,
+    this.acometimentosOfflineNames,
+    this.estado_civil_name,
+    this.usuario_name,
+    this.religiao_name,
+    this.medicamentosOffline,
+    this.medicamentosOfflineNames,
   });
 
   People.fromJson(Map<String, dynamic> json) {
@@ -77,16 +116,39 @@ class People {
     usuarioId = json['usuario_id'];
     status = json['status'];
     dataCadastro = json['data_cadastro'];
+    username = json['username'];
+    senha = json['senha'];
     dataUpdate = json['data_update'];
     familiaId = json['familia_id'];
     parentesco = json['parentesco'];
     user = json['usuario'] != null ? User.fromJson(json['usuario']) : null;
+    userSistema = json['usuario_sistema'] != null
+        ? User.fromJson(json['usuario_sistema'])
+        : null;
     if (json['atendimentos'] != null) {
       atendimentos = <FamilyService>[];
       json['atendimentos'].forEach((v) {
         atendimentos!.add(FamilyService.fromJson(v));
       });
     }
+    if (json['acometimentossaude'] != null) {
+      acometimentosSaude = <Health>[];
+      json['acometimentossaude'].forEach((v) {
+        acometimentosSaude!.add(Health.fromJson(v));
+      });
+    }
+    if (json['medicamentos'] != null) {
+      medicamentos = <Medicine>[];
+      json['medicamentos'].forEach((v) {
+        medicamentos!.add(Medicine.fromJson(v));
+      });
+    }
+    family = json['familia'] != null ? Family.fromJson(json['familia']) : null;
+    religion =
+        json['religiao'] != null ? Religion.fromJson(json['religiao']) : null;
+    maritalStatus = json['estadocivil'] != null
+        ? MaritalStatus.fromJson(json['estadocivil'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -113,9 +175,18 @@ class People {
     data['data_cadastro'] = dataCadastro;
     data['data_update'] = dataUpdate;
     data['familia_id'] = familiaId;
+    data['username'] = username;
+    data['senha'] = senha;
     data['parentesco'] = parentesco;
     if (atendimentos != null) {
       data['atendimentos'] = atendimentos!.map((v) => v.toJson()).toList();
+    }
+    if (acometimentosSaude != null) {
+      data['acometimentossaude'] =
+          acometimentosSaude!.map((v) => v.toJson()).toList();
+    }
+    if (medicamentos != null) {
+      data['medicamentos'] = medicamentos!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -128,8 +199,6 @@ class People {
       'sexo': sexo,
       'cpf': cpf,
       'data_nascimento': dataNascimento,
-      'estadocivil_id': estadoCivilId,
-      'titulo_eleitor': tituloEleitor,
       'zona_eleitoral': zonaEleitoral,
       'telefone': telefone,
       'rede_social': redeSocial,
@@ -145,6 +214,14 @@ class People {
       'data_update': dataUpdate,
       'familia_id': familiaId,
       'parentesco': parentesco,
+      'medicamentosOffline': medicamentosOffline,
+      'acometimentosOffline': acometimentosOffline,
+      'estadocivil_id': estadoCivilId,
+      'medicamentosOfflineNames': medicamentosOfflineNames,
+      'acometimentosOfflineNames': acometimentosOfflineNames,
+      'religiao_name': religiao_name,
+      'usuario_name': usuario_name,
+      'estado_civil_name': estado_civil_name
     };
   }
 }

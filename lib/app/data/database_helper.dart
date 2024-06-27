@@ -1,7 +1,7 @@
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/people_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
@@ -49,6 +49,7 @@ class DatabaseHelper {
           nome TEXT,
           cpf TEXT,
           estadocivil_id INTEGER,
+          estado_civil_name TEXT,
           parentesco TEXT,
           provedor_casa TEXT,
           sexo TEXT,
@@ -62,11 +63,17 @@ class DatabaseHelper {
           funcao_igreja TEXT,
           status TEXT,
           usuario_id INTEGER,
+          usuario_name TEXT,
           igreja_id TEXT,
           religiao_id INTEGER,
+          religiao_name TEXT,
           familia_id INTEGER,
           data_cadastro TEXT,
-          data_update TEXT
+          data_update TEXT,
+          medicamentosOffline TEXT,
+          medicamentosOfflineNames TEXT,
+          acometimentosOffline TEXT,
+          acometimentosOfflineNames TEXT
       )
     ''');
   }
@@ -74,6 +81,16 @@ class DatabaseHelper {
   Future<int> insertFamily(Family family) async {
     final db = await database;
     return await db.insert('families', family.toMap());
+  }
+
+  Future<int> updateFamily(Family family) async {
+    final db = await database;
+    return await db.update(
+      'families',
+      family.toMap(),
+      where: 'id = ?',
+      whereArgs: [family.id],
+    );
   }
 
   Future<int> insertPeople(People people) async {
@@ -91,7 +108,22 @@ class DatabaseHelper {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getFamiliesWithPeople() async {
+  Future<int> deletePeople(int peopleId) async {
+    int delete = 0;
+    final db = await database;
+    delete += await db.delete('people', where: 'id = ?', whereArgs: [peopleId]);
+    return delete;
+  }
+
+  Future<int> deleFamily(int familyId) async {
+    int delete = 0;
+    final db = await database;
+    delete +=
+        await db.delete('families', where: 'id = ?', whereArgs: [familyId]);
+    return delete;
+  }
+
+  Future<List<Map<String, dynamic>>> getFamiliesOffline() async {
     final db = await database;
     return await db.rawQuery('''
       SELECT 
@@ -108,7 +140,15 @@ class DatabaseHelper {
       families.status AS status_familia,
       families.data_cadastro AS data_cadastro_familia,
       families.data_update AS data_update_familia,
-      families.cep AS cep_familia,
+      families.cep AS cep_familia
+      FROM families
+    ''');
+  }
+
+  Future<List<Map<String, dynamic>>> getPeoplesOffline() async {
+    final db = await database;
+    return await db.rawQuery('''
+      SELECT 
       people.id AS id_people,
       people.nome AS nome_people,
       people.foto AS foto_people,
@@ -116,8 +156,6 @@ class DatabaseHelper {
       people.cpf AS cpf_people,
       people.data_nascimento AS data_nascimento_people,
       people.estadocivil_id AS estadocivil_id_people,
-      people.titulo_eleitor AS titulo_eleitor_people,
-      people.zona_eleitoral AS zona_eleitoral_people,
       people.telefone AS telefone_people,
       people.rede_social AS rede_social_people,
       people.provedor_casa AS provedor_casa_people,
@@ -131,9 +169,15 @@ class DatabaseHelper {
       people.data_cadastro AS data_cadastro_people,
       people.data_update AS data_update_people,
       people.familia_id AS familia_id_people,
-      people.parentesco AS parentesco_people
-      FROM families
-      LEFT JOIN people ON families.id = people.familia_id
+      people.parentesco AS parentesco_people,
+      people.medicamentosOffline AS medicamentosOffline,
+      people.medicamentosOfflineNames AS medicamentosOfflineNames,
+      people.acometimentosOffline AS acometimentosOffline,
+      people.acometimentosOfflineNames AS acometimentosOfflineNames,
+      people.estado_civil_name as estadoCivilName,
+      people.usuario_name as usuarioName,
+      people.religiao_name as religiaoName
+      FROM people
     ''');
   }
 }

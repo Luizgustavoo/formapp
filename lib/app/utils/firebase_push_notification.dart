@@ -5,15 +5,33 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/modules/chat/chat_controller.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 Future<void> handleBackgroundMessage(message) async {
   FirebaseMessaging.instance.getInitialMessage().then(
     (remoteMessage) {
       final Map<String, dynamic>? data = remoteMessage?.data;
+
       if (data != null &&
           data.containsKey('click_action') &&
-          data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK') {
-        Get.toNamed('/list-message');
+          data.containsKey('user') &&
+          data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+          data['user'] != null &&
+          UserStorage.existUser()) {
+        Map<String, dynamic> jsonMap = jsonDecode(data['user']);
+        User user = User.fromJson(jsonMap);
+
+        Get.offAllNamed('/chat', arguments: user);
+      } else if (data != null &&
+          data.containsKey('click_action') &&
+          data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+          UserStorage.existUser()) {
+        Get.offAllNamed('/list-message');
       }
     },
   );
@@ -21,6 +39,9 @@ Future<void> handleBackgroundMessage(message) async {
 
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
+
+  final messageController = Get.put(MessageController());
+  final chatController = Get.put(ChatController());
 
   final _androidChannel = const AndroidNotificationChannel(
     'high_importance_channel',
@@ -31,9 +52,29 @@ class FirebaseApi {
   final _localNotifications = FlutterLocalNotificationsPlugin();
 
   void handleMessage(RemoteMessage? message) {
-    if (message == null) return;
+    if (message == null || !UserStorage.existUser()) return;
 
-    Get.toNamed('/list-message');
+    final userController = Get.put(UserController());
+    messageController.getMessages();
+    chatController.getChat();
+    userController.getUsers();
+
+    final Map<String, dynamic> data = message.data;
+
+    if (data.containsKey('click_action') &&
+        data.containsKey('user') &&
+        data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+        data['user'] != null &&
+        UserStorage.existUser()) {
+      Map<String, dynamic> jsonMap = jsonDecode(data['user']);
+      People people = People.fromJson(jsonMap);
+
+      Get.offAllNamed('/chat', arguments: people);
+    } else if (data.containsKey('click_action') &&
+        data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
+        UserStorage.existUser()) {
+      Get.offAllNamed('/list-message');
+    }
   }
 
   Future initLocalNotifications() async {
@@ -61,10 +102,20 @@ class FirebaseApi {
     );
     _firebaseMessaging.getInitialMessage().then(handleMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+    FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if (notification == null) return;
+
+      final userController = Get.put(UserController());
+      messageController.getMessages();
+      chatController.getChat();
+      userController.getUsers();
 
       _localNotifications.show(
         notification.hashCode,

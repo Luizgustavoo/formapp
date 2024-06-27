@@ -1,5 +1,5 @@
-import 'package:formapp/app/data/models/people_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
+import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
 
 class Family {
   int? id;
@@ -19,6 +19,16 @@ class Family {
   User? user;
   List<People>? pessoas;
   bool? familyLocal = false;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Family &&
+          runtimeType == other.runtimeType &&
+          id == other.id; // Adicione outros atributos se necessário
+
+  @override
+  int get hashCode => id.hashCode; // Use outros atributos se necessário
 
   Family(
       {this.id,

@@ -1,5 +1,5 @@
-import 'package:formapp/app/modules/initial/initial_controller.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/modules/initial/initial_controller.dart';
 
 class InitialBinding implements Bindings {
   @override

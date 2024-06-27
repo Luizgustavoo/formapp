@@ -1,19 +1,29 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/base_url.dart';
-import 'package:formapp/app/data/models/user_model.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/utils/error_handler.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class UserApiClient {
   final http.Client httpClient = http.Client();
   final box = GetStorage('credenciado');
 
-  getAll(String token) async {
+  getAll(String token, {int? page, String? search}) async {
+    final peopleId = UserStorage.getPeopleId();
+    final userId = UserStorage.getUserId();
+    final familiaId = UserStorage.getFamilyId();
+    final userType = UserStorage.getUserType();
     try {
-      var userUrl = Uri.parse('$baseUrl/v1/usuario/list/');
+      String url =
+          '$baseUrl/v1/usuario/list/$userType/$peopleId/$search/$familiaId/$userId?page=$page';
+
+      var userUrl = Uri.parse(url);
       var response = await httpClient.get(
         userUrl,
         headers: {
@@ -21,7 +31,6 @@ class UserApiClient {
           "Authorization": token,
         },
       );
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else if (response.statusCode == 401 &&
@@ -34,32 +43,9 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.snackbar(
-        'Sem Conexão',
-        'Você está sem conexão com a internet.',
-        duration: const Duration(seconds: 3),
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(10),
-        animationDuration: const Duration(milliseconds: 1500),
-        isDismissible: true,
-        overlayBlur: 0,
-        mainButton: TextButton(
-          onPressed: () => Get.back(),
-          child: const Text(
-            'Fechar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
+      //
     }
     return null;
   }
@@ -101,68 +87,121 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Errorou",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
 
-  updateUser(String token, User user) async {
+  updateUser(
+      String token, User user, File? imageFile, String? oldImagePath) async {
     try {
+      oldImagePath = UserStorage.getUserPhoto();
       var userUrl = Uri.parse('$baseUrl/v1/usuario/update/${user.id}');
 
       var requestBody = {
         "nome": user.nome,
-        "tipousuario_id": user.tipousuarioId.toString(),
-        "username": user.username,
-        "senha": user.senha,
+        "tipousuario_id": UserStorage.getUserType() == 1
+            ? user.tipousuarioId.toString()
+            : UserStorage.getUserType().toString(),
         "status": user.status.toString(),
         "usuario_id": user.usuarioId.toString(),
       };
 
-      var response = await httpClient.put(
-        userUrl,
-        headers: {
-          "Accept": "application/json",
+      if (user.username!.isNotEmpty) {
+        requestBody['username'] = user.username;
+      }
+
+      if (user.senha!.isNotEmpty) {
+        requestBody['senha'] = user.senha;
+      }
+
+      if (imageFile != null &&
+          imageFile.path.isNotEmpty &&
+          imageFile.path != oldImagePath) {
+        var request = http.MultipartRequest('POST', userUrl);
+        requestBody.removeWhere((key, value) => value == null);
+        request.fields.addAll(requestBody.cast<String, String>());
+        request.files.add(await http.MultipartFile.fromPath(
+          'foto',
+          imageFile.path,
+        ));
+
+        request.headers.addAll({
+          "Content-Type": "multipart/form-data",
+          'Accept': 'application/json',
           "Authorization": token,
-        },
-        body: requestBody,
-      );
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else if (response.statusCode == 422 ||
-          json.decode(response.body)['message'] == "ja_existe") {
-        return json.decode(response.body);
-      } else if (response.statusCode == 401 &&
-          json.decode(response.body)['message'] == "Token has expired") {
-        Get.defaultDialog(
-          title: "Expirou",
-          content: const Text(
-              'O token de autenticação expirou, faça login novamente.'),
-        );
-        var box = GetStorage('credenciado');
-        box.erase();
-        Get.offAllNamed('/login');
+        });
+
+        var streamedResponse = await request.send();
+        var response = await http.Response.fromStream(streamedResponse);
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> user2 = box.read('auth')['pessoa'];
+          user2['foto'] = json.decode(response.body)['objeto']['foto'];
+          Map<String, dynamic> auth = box.read('auth');
+          auth['pessoa'] = user2;
+          box.write('auth', auth);
+
+          return json.decode(response.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(response.body)['message'] == "ja_existe") {
+          return json.decode(response.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(response.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        }
       } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
+        var response = await httpClient.post(
+          userUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+          body: requestBody,
         );
+        if (response.statusCode == 200) {
+
+
+          if(user.id! == UserStorage.getUserId()){
+            Map<String, dynamic> user2 = box.read('auth')['user'];
+            // user['foto'] = json.decode(response.body)['objeto']['foto'];
+            user2['nome'] = json.decode(response.body)['objeto']['nome'];
+            // UserStorage.changeName.value = user['nome'];
+            Map<String, dynamic> auth = box.read('auth');
+            auth['user'] = user2;
+            box.write('auth', auth);
+          }
+
+
+
+
+          return json.decode(response.body);
+        } else if (response.statusCode == 422 ||
+            json.decode(response.body)['message'] == "ja_existe") {
+          return json.decode(response.body);
+        } else if (response.statusCode == 401 &&
+            json.decode(response.body)['message'] == "Token has expired") {
+          Get.defaultDialog(
+            title: "Expirou",
+            content: const Text(
+                'O token de autenticação expirou, faça login novamente.'),
+          );
+          var box = GetStorage('credenciado');
+          box.erase();
+          Get.offAllNamed('/login');
+        }
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -189,17 +228,9 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
-      );
+      ErrorHandler.showError(err);
     }
     return null;
   }
@@ -236,17 +267,150 @@ class UserApiClient {
         var box = GetStorage('credenciado');
         box.erase();
         Get.offAllNamed('/login');
-      } else {
-        Get.defaultDialog(
-          title: "Error",
-          content: const Text('erro'),
-        );
       }
     } catch (err) {
-      Get.defaultDialog(
-        title: "Erro",
-        content: Text("$err"),
+      ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
+  getAllTypeUser(String token) async {
+    try {
+      var churchUrl = Uri.parse('$baseUrl/v1/tipousuario/list');
+      var response = await httpClient.get(
+        churchUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
       );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
+  approveUser(String token, int tipoUsuarioId, int idAprovacao, int idMensagem,
+      int usuarioId, int familiaId, String action) async {
+    try {
+      var approveUser = Uri.parse('$baseUrl/v1/usuario/aprovar-negar');
+
+      var requestBody = {
+        "idAprovacao": idAprovacao.toString(),
+        "tipousuario_id": tipoUsuarioId.toString(),
+        "idMensagem": idMensagem.toString(),
+        "usuario_id": usuarioId.toString(),
+        "action": action
+      };
+
+      if (tipoUsuarioId == 3) {
+        requestBody['familia_id'] = familiaId.toString();
+      }
+
+      var response = await httpClient.post(
+        approveUser,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
+    }
+    return null;
+  }
+
+  deleteAccount(String token, String password) async {
+    final id = UserStorage.getUserId();
+    var loginUrl = Uri.parse('$baseUrl/v1/usuario/remove/$id');
+
+    try {
+      var response = await httpClient.post(loginUrl, headers: {
+        "Accept": "application/json",
+        "Authorization": token,
+      }, body: {
+        'senha': password
+      });
+
+      return json.decode(response.body);
+    } catch (e) {
+      ErrorHandler.showError('Sem Conexão');
+    }
+    return null;
+  }
+
+  //TRANSFORMAR PESSOA EM USUARIO
+  insertUserPeople(String token, User user) async {
+    try {
+      var userUrl = Uri.parse('$baseUrl/v1/usuario/createuserpeople');
+
+      var requestBody = {
+        "nome": user.nome.toString(),
+        "username": user.username.toString().trim(),
+        "senha": user.senha.toString().trim(),
+        "usuario_id": user.usuarioId.toString(),
+        "tipousuario_id": user.tipousuarioId.toString(),
+        "pessoa_id": user.pessoaId.toString()
+      };
+
+      var response = await httpClient.post(
+        userUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+        body: requestBody,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 422 ||
+          json.decode(response.body)['message'] == "ja_existe") {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError(err);
     }
     return null;
   }

@@ -1,23 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:formapp/app/modules/family/family_binding.dart';
-import 'package:formapp/app/modules/family/views/list_family_view.dart';
-import 'package:formapp/app/modules/home/home_binding.dart';
-import 'package:formapp/app/modules/home/home_view.dart';
-import 'package:formapp/app/modules/initial/initial_binding.dart';
-import 'package:formapp/app/modules/initial/initial_view.dart';
-import 'package:formapp/app/modules/login/login_binding.dart';
-import 'package:formapp/app/modules/login/login_view.dart';
-import 'package:formapp/app/modules/message/message_binding.dart';
-import 'package:formapp/app/modules/message/views/list_message_view.dart';
-import 'package:formapp/app/modules/people/people_binding.dart';
-import 'package:formapp/app/modules/people/views/list_people_view.dart';
-import 'package:formapp/app/modules/user/user_binding.dart';
-import 'package:formapp/app/modules/user/views/list_user_view.dart';
-import 'package:formapp/app/routes/app_routes.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/modules/chat/chat_binding.dart';
+import 'package:ucif/app/modules/chat/chat_view.dart';
+import 'package:ucif/app/modules/family/family_binding.dart';
+import '../modules/family/views/list_family_filter_view.dart';
+import '../modules/family/views/list_family_view.dart';
+import 'package:ucif/app/modules/home/home_binding.dart';
+import 'package:ucif/app/modules/home/home_view.dart';
+import 'package:ucif/app/modules/initial/initial_binding.dart';
+import 'package:ucif/app/modules/initial/initial_view.dart';
+import 'package:ucif/app/modules/login/login_binding.dart';
+import 'package:ucif/app/modules/login/views/login_view.dart';
+import 'package:ucif/app/modules/login/views/signup_view.dart';
+import 'package:ucif/app/modules/message/message_binding.dart';
+import 'package:ucif/app/modules/message/views/list_message_view.dart';
+import 'package:ucif/app/modules/people/people_binding.dart';
+import 'package:ucif/app/modules/people/views/detail_people.dart';
+import 'package:ucif/app/modules/people/views/list_member_family_view.dart';
+import 'package:ucif/app/modules/people/views/list_people_view.dart';
+import 'package:ucif/app/modules/user/user_binding.dart';
+import 'package:ucif/app/modules/user/views/list_user_view.dart';
+import 'package:ucif/app/modules/user/views/perfil_view.dart';
+import 'package:ucif/app/routes/app_routes.dart';
 
 class AppPages {
-  static late BuildContext context;
   static final routes = [
     GetPage(
       name: Routes.INITIAL,
@@ -36,7 +41,12 @@ class AppPages {
     ),
     GetPage(
       name: Routes.LIST_FAMILY,
-      page: () => FamilyView(),
+      page: () => const FamilyView(),
+      binding: FamilyBinding(),
+    ),
+    GetPage(
+      name: Routes.FILTERED_FAMILY,
+      page: () => FamilyFilterView(),
       binding: FamilyBinding(),
     ),
     GetPage(
@@ -50,9 +60,34 @@ class AppPages {
       binding: PeopleBinding(),
     ),
     GetPage(
+      name: Routes.DETAIL_PEOPLE,
+      page: () => const DetailPeopleView(),
+      binding: PeopleBinding(),
+    ),
+    GetPage(
+      name: Routes.MEMBER_FAMILY,
+      page: () => const FamilyMemberView(),
+      binding: PeopleBinding(),
+    ),
+    GetPage(
       name: Routes.LIST_MESSAGE,
       page: () => const MessageView(),
       binding: MessageBinding(),
+    ),
+    GetPage(
+      name: Routes.PERFIL,
+      page: () => const PerfilView(),
+      binding: UserBinding(),
+    ),
+    GetPage(
+      name: Routes.SIGNUP,
+      page: () => const SignUpView(),
+      binding: LoginBinding(),
+    ),
+    GetPage(
+      name: Routes.CHAT,
+      page: () => const ChatView(),
+      binding: ChatBinding(),
     ),
   ];
 }

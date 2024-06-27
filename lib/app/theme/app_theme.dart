@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/utils/custom_route.dart';
+import 'package:ucif/app/utils/custom_route.dart';
 
 final ThemeData appThemeData = ThemeData(
-  scaffoldBackgroundColor: Colors.white.withAlpha(240),
+  scaffoldBackgroundColor: const Color(0xFF014acb),
   elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.orange.shade500,
+    backgroundColor: const Color(0xFF014acb),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(5),
     ),
@@ -16,11 +16,11 @@ final ThemeData appThemeData = ThemeData(
       borderRadius: BorderRadius.circular(5),
     ),
   )),
-  appBarTheme: AppBarTheme(
-    iconTheme: const IconThemeData(color: Colors.white),
+  appBarTheme: const AppBarTheme(
+    iconTheme: IconThemeData(color: Colors.white),
     centerTitle: true,
-    backgroundColor: Colors.orange.shade500,
-    titleTextStyle: const TextStyle(
+    backgroundColor: Color(0xFF014acb),
+    titleTextStyle: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.bold,
       fontFamily: 'Poppins',
@@ -31,6 +31,8 @@ final ThemeData appThemeData = ThemeData(
     indicatorColor: Colors.grey.shade900,
   ),
   cardTheme: CardTheme(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
   expansionTileTheme: const ExpansionTileThemeData(
@@ -49,7 +51,7 @@ final ThemeData appThemeData = ThemeData(
         borderSide: BorderSide.none, borderRadius: BorderRadius.circular(5)),
   ),
   useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade900),
   visualDensity: VisualDensity.adaptivePlatformDensity,
   pageTransitionsTheme: PageTransitionsTheme(builders: {
     TargetPlatform.android: CustomPageTransitionsBuilder(),

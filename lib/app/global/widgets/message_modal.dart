@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/modules/message/message_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/family_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
 
 class MessageModal extends StatelessWidget {
   MessageModal({
@@ -33,12 +33,12 @@ class MessageModal extends StatelessWidget {
               style: CustomTextStyle.title(context),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
+          const Padding(
+            padding: EdgeInsets.only(right: 5),
             child: Divider(
               height: 5,
               thickness: 3,
-              color: Colors.orange.shade500,
+              color: Color(0xFF1C6399),
             ),
           ),
           const SizedBox(height: 10),

@@ -1,7 +1,27 @@
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class UserStorage {
   static final _box = GetStorage('credenciado');
+  static RxString changeName = ''.obs;
+
+  static void setTotalCards(int families, int liders, int peoples) {
+    final data = {
+      'families': families,
+      'liders': liders,
+      'peoples': peoples,
+    };
+    _box.write('total_card', data);
+  }
+
+  static Map<String, dynamic> getTotalCards() {
+    final data = _box.read('total_card');
+    if (data != null) {
+      return Map<String, dynamic>.from(data);
+    } else {
+      return {};
+    }
+  }
 
   static bool existUser() {
     if (_box.read('auth') != null) {
@@ -10,23 +30,36 @@ class UserStorage {
     return false;
   }
 
+  static bool existPeople() {
+    if (_box.read('auth')['pessoa'] != null) {
+      return true;
+    }
+    return false;
+  }
+
   static String getToken() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['access_token'];
     }
     return "";
   }
 
+  static String getUserPhoto() {
+    if (existUser() && existPeople()) {
+      return _box.read('auth')['pessoa']['foto'] ?? "";
+    }
+    return "";
+  }
+
   static void clearBox() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
-      _box.erase();
+      final box = GetStorage();
+      box.remove('auth');
+      box.erase();
     }
   }
 
   static int getUserId() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['user']['id'];
     }
@@ -34,15 +67,27 @@ class UserStorage {
   }
 
   static String getUserName() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['user']['nome'];
     }
     return "";
   }
 
+  static String getUserLogin() {
+    if (existUser()) {
+      return _box.read('auth')['user']['username'];
+    }
+    return "";
+  }
+
+  static int getPeopleId() {
+    if (existUser()) {
+      return _box.read('auth')['user']['pessoa_id'];
+    }
+    return 0;
+  }
+
   static int getUserType() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser()) {
       return _box.read('auth')['user']['tipousuario_id'];
     }
@@ -50,9 +95,8 @@ class UserStorage {
   }
 
   static int getFamilyId() {
-    // Lê a lista de IDs do armazenamento ou retorna uma lista vazia se não existir
     if (existUser() && getUserType() == 3) {
-      return _box.read('auth')['user']['familia_id'];
+      return _box.read('auth')['pessoa']['familia_id'] ?? 0;
     }
     return 0;
   }

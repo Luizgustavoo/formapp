@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:formapp/app/data/models/family_model.dart';
-import 'package:formapp/app/data/models/user_model.dart';
-import 'package:formapp/app/modules/family/family_controller.dart';
-import 'package:formapp/app/modules/home/home_controller.dart';
-import 'package:formapp/app/modules/user/user_controller.dart';
-import 'package:formapp/app/utils/custom_text_style.dart';
-import 'package:formapp/app/utils/user_storage.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+import 'package:ucif/app/modules/family/family_controller.dart';
+import 'package:ucif/app/modules/home/home_controller.dart';
+import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/custom_text_style.dart';
+import 'package:ucif/app/utils/user_storage.dart';
 
 class CreateUserModal extends StatelessWidget {
   CreateUserModal({
@@ -27,8 +25,7 @@ class CreateUserModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final familiaId = familyController.box.read('auth')['user']['familia_id'];
-    final selectedFamily = familyController.selectedFamily;
+    final RxInt typeUserSelected = user!.tipousuarioId!.obs;
     return Form(
         key: controller.userFormKey,
         child: SingleChildScrollView(
@@ -44,12 +41,12 @@ class CreateUserModal extends StatelessWidget {
                   style: CustomTextStyle.title(context),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 5),
+              const Padding(
+                padding: EdgeInsets.only(right: 5),
                 child: Divider(
                   height: 5,
                   thickness: 3,
-                  color: Colors.orange.shade500,
+                  color: Color(0xFF1C6399),
                 ),
               ),
               const SizedBox(
@@ -66,7 +63,7 @@ class CreateUserModal extends StatelessWidget {
                     border: OutlineInputBorder()),
               ),
               const SizedBox(
-                height: 8,
+                height: 10,
               ),
               TextFormField(
                 enabled: tipoOperacao == 'update' ? false : true,
@@ -80,55 +77,34 @@ class CreateUserModal extends StatelessWidget {
                     border: OutlineInputBorder()),
               ),
               const SizedBox(
-                height: 8,
+                height: 10,
               ),
-              Obx(() => TextFormField(
-                    validator: (value) {
-                      return controller.validatePassword(value);
-                    },
-                    controller: controller.passwordController,
-                    obscureText: !controller.isPasswordVisible.value,
-                    decoration: InputDecoration(
-                        suffixIcon: Obx(() => IconButton(
-                              icon: Icon(
-                                  controller.isPasswordVisible.value
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                  color: Colors.black54),
-                              onPressed: () {
-                                controller.isPasswordVisible.value =
-                                    !controller.isPasswordVisible.value;
-                              },
-                            )),
-                        labelText: 'Senha',
-                        border: const OutlineInputBorder()),
-                  )),
-              const SizedBox(
-                height: 8,
-              ),
-              if (familiaId == null) ...[
+              if (UserStorage.getUserType() == 1) ...[
                 Obx(
-                  () => DropdownButtonFormField<int>(
-                    isDense: true,
-                    menuMaxHeight: Get.size.height / 2,
-                    value: user?.family?.id,
-                    onChanged: (int? value) {
-                      controller.selectedFamily!.value = value!;
-                    },
-                    items: familyController.listFamilies
-                        .map<DropdownMenuItem<int>>((Family family) {
-                      return DropdownMenuItem<int>(
-                        value: family.id,
-                        child: Text(family.nome!),
-                      );
-                    }).toList(),
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Família'),
+                  () => SizedBox(
+                    child: DropdownButtonFormField<int>(
+                      value: typeUserSelected.value,
+                      onChanged: (value) {
+                        typeUserSelected.value = value!;
+                      },
+                      items: controller.listTypeUsers
+                          // .where((item) => item.id != 3)
+                          .map<DropdownMenuItem<int>>((item) {
+                        return DropdownMenuItem<int>(
+                          value: item.id,
+                          child: Text(item.descricao ?? ''),
+                        );
+                      }).toList(),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Tipo Usuário',
+                      ),
+                    ),
                   ),
                 ),
               ],
               const SizedBox(
-                height: 16,
+                height: 10,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -145,17 +121,13 @@ class CreateUserModal extends StatelessWidget {
                       onPressed: () async {
                         Map<String, dynamic> retorno = tipoOperacao == 'insert'
                             ? await controller.saveUser()
-                            : await controller.updateUser(user!.id!);
+                            : await controller.updateUser(
+                                user!.id!, typeUserSelected.value);
 
-                        if (tipoOperacao == 'update' &&
-                            retorno['return'] == 0 &&
-                            user!.id == UserStorage.getUserId()) {
-                          homeController.logout();
-                        }
-                        if (tipoOperacao == 'insert' &&
-                            retorno['return'] == 0) {
+                        if (retorno['return'] == 0) {
                           Get.back();
                         }
+
                         Get.snackbar(
                           snackPosition: SnackPosition.BOTTOM,
                           duration: const Duration(milliseconds: 1500),
