@@ -61,10 +61,18 @@ class PeopleRepository {
   }
 
   insertPeople(String token, People pessoa, File imageFile, bool peopleLocal,
-      List? saude, List? medicamento) async {
+      List? saude, List? medicamento, String email, String senha) async {
     try {
       var response = await apiClient.insertPeople(
-          token, pessoa, imageFile, peopleLocal, saude, medicamento);
+        token,
+        pessoa,
+        imageFile,
+        peopleLocal,
+        saude,
+        medicamento,
+        email,
+        senha,
+      );
 
       return response;
     } catch (e) {
@@ -133,9 +141,11 @@ class PeopleRepository {
       final parentescoPeople = row['parentesco_people'] as String?;
 
       final medicamentosOffline = row['medicamentosOffline'] as String?;
-      final medicamentosOfflineNames = row['medicamentosOfflineNames'] as String?;
+      final medicamentosOfflineNames =
+          row['medicamentosOfflineNames'] as String?;
       final acometimentosOffline = row['acometimentosOffline'] as String?;
-      final acometimentosOfflineNames = row['acometimentosOfflineNames'] as String?;
+      final acometimentosOfflineNames =
+          row['acometimentosOfflineNames'] as String?;
 
       final estadoCivilName = row['estadoCivilName'] as String?;
       final usuarioName = row['usuarioName'] as String?;
@@ -170,20 +180,19 @@ class PeopleRepository {
             medicamentosOffline: medicamentosOffline,
             medicamentosOfflineNames: medicamentosOfflineNames,
             estado_civil_name: estadoCivilName,
-            usuario_name:usuarioName,
-            religiao_name:religiaoName
-        ));
+            usuario_name: usuarioName,
+            religiao_name: religiaoName));
       }
     }
 
     return peoples;
   }
 
-  insertPeopleLocalToApi(
-      String token, People people, List? saude, List? medicamento) async {
+  insertPeopleLocalToApi(String token, People people, List? saude,
+      List? medicamento, String email, String senha) async {
     try {
       var response = await apiClient.insertPeople(
-          token, people, File(''), false, saude, medicamento);
+          token, people, File(''), false, saude, medicamento, email, senha);
 
       return response;
     } catch (e) {

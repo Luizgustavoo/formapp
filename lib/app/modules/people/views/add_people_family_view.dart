@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
@@ -14,6 +13,7 @@ import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/format_validator.dart';
+import 'package:ucif/app/utils/services.dart';
 
 class AddPeopleFamilyView extends GetView<PeopleController> {
   const AddPeopleFamilyView({
@@ -301,6 +301,10 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Preencha o cpf";
+                      }
+
+                      if (!Services.validCPF(value)) {
+                        return "CPF inválido";
                       }
                       return null;
                     },
@@ -665,6 +669,67 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                       ),
                     );
                   }),
+                  _gap(),
+                  if (tipoOperacao == 0) ...[
+                    TextFormField(
+                      controller: controller.emailTempPessoaController,
+                      decoration: InputDecoration(
+                          counterText: '',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          suffixIcon: const Icon(Icons.mail_lock_rounded),
+                          labelStyle: const TextStyle(
+                            color: Colors.black54,
+                            fontFamily: 'Poppins',
+                            fontSize: 12,
+                          ),
+                          labelText: 'E-mail'),
+                      validator: (value) {
+                        if (value!.isNotEmpty) {
+                          if (!Services.validEmail(value)) {
+                            return "E-mail inválido";
+                          }
+                        }
+                        return null;
+                      },
+                    ),
+                    _gap(),
+                    Obx(
+                      () => TextFormField(
+                        controller: controller.senhaTempPessoaController,
+                        obscureText: !controller.isPasswordVisible.value,
+                        keyboardType: TextInputType.number,
+                        maxLength: 20,
+                        decoration: InputDecoration(
+                            counterText: '',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            suffixIcon: Obx(
+                              () => IconButton(
+                                icon: Icon(
+                                    controller.isPasswordVisible.value
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: Colors.black54),
+                                onPressed: () {
+                                  controller.isPasswordVisible.value =
+                                      !controller.isPasswordVisible.value;
+                                },
+                              ),
+                            ),
+                            labelStyle: const TextStyle(
+                              color: Colors.black54,
+                              fontFamily: 'Poppins',
+                              fontSize: 12,
+                            ),
+                            labelText: 'Senha'),
+                      ),
+                    ),
+                  ],
                   _gap(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

@@ -1,10 +1,12 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:ucif/app/modules/login/login_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
 import 'package:ucif/app/utils/format_validator.dart';
+import 'package:ucif/app/utils/services.dart';
 
 class SignUpView extends GetView<LoginController> {
   const SignUpView({super.key});
@@ -210,6 +212,9 @@ class SignUpView extends GetView<LoginController> {
                                           validator: (value) {
                                             if (value!.isEmpty) {
                                               return 'Digite seu CPF';
+                                            }
+                                            if (!Services.validCPF(value)) {
+                                              return "CPF inválido";
                                             }
                                             return null;
                                           },
@@ -663,41 +668,43 @@ class SignUpView extends GetView<LoginController> {
                                         obscureText:
                                             !controller.isPasswordVisible.value,
                                         decoration: InputDecoration(
-                                            contentPadding:
-                                                const EdgeInsets.only(left: 10),
-                                            isDense: true,
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            labelText: 'SENHA',
-                                            labelStyle: const TextStyle(
-                                                color: Colors.black54,
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12),
-                                            hintText: 'Digite sua senha...',
-                                            hintStyle: const TextStyle(
-                                                color: Colors.black54,
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12),
-                                            border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            suffixIcon: Obx(() => IconButton(
-                                                  icon: Icon(
-                                                      controller
-                                                              .isPasswordVisible
-                                                              .value
-                                                          ? Icons.visibility_off
-                                                          : Icons.visibility,
-                                                      color: Colors.black54),
-                                                  onPressed: () {
-                                                    controller.isPasswordVisible
-                                                            .value =
-                                                        !controller
-                                                            .isPasswordVisible
-                                                            .value;
-                                                  },
-                                                ))),
+                                          contentPadding:
+                                              const EdgeInsets.only(left: 10),
+                                          isDense: true,
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          labelText: 'SENHA',
+                                          labelStyle: const TextStyle(
+                                              color: Colors.black54,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                          hintText: 'Digite sua senha...',
+                                          hintStyle: const TextStyle(
+                                              color: Colors.black54,
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          suffixIcon: Obx(
+                                            () => IconButton(
+                                              icon: Icon(
+                                                  controller.isPasswordVisible
+                                                          .value
+                                                      ? Icons.visibility_off
+                                                      : Icons.visibility,
+                                                  color: Colors.black54),
+                                              onPressed: () {
+                                                controller.isPasswordVisible
+                                                        .value =
+                                                    !controller
+                                                        .isPasswordVisible
+                                                        .value;
+                                              },
+                                            ),
+                                          ),
+                                        ),
                                       )),
                                   const SizedBox(height: 8),
                                   SizedBox(

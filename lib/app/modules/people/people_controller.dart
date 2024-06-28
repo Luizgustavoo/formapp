@@ -3,32 +3,30 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:ucif/app/data/models/health_model.dart';
-import 'package:ucif/app/data/models/medicine_model.dart';
-import 'package:ucif/app/data/repository/health_repository.dart';
-import 'package:ucif/app/data/repository/medicine_repository.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:ucif/app/data/models/church_model.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/family_service_model.dart';
+import 'package:ucif/app/data/models/health_model.dart';
 import 'package:ucif/app/data/models/marital_status_model.dart';
+import 'package:ucif/app/data/models/medicine_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
+import 'package:ucif/app/data/repository/health_repository.dart';
 import 'package:ucif/app/data/repository/marital_status_repository.dart';
+import 'package:ucif/app/data/repository/medicine_repository.dart';
 import 'package:ucif/app/data/repository/people_repository.dart';
 import 'package:ucif/app/data/repository/religion_repository.dart';
 import 'package:ucif/app/utils/connection_service.dart';
 import 'package:ucif/app/utils/error_handler.dart';
 import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();
@@ -45,6 +43,9 @@ class PeopleController extends GetxController {
   TextEditingController familiaId = TextEditingController();
   TextEditingController igrejaPessoaController = TextEditingController();
 
+  TextEditingController emailTempPessoaController = TextEditingController();
+  TextEditingController senhaTempPessoaController = TextEditingController();
+
   TextEditingController searchController = TextEditingController();
 
   var photoUrlPath = ''.obs;
@@ -58,6 +59,7 @@ class PeopleController extends GetxController {
   RxInt? familySelected = 0.obs;
   RxString? parentesco = 'Pai'.obs;
   RxString oldImagePath = ''.obs;
+  RxBool isPasswordVisible = false.obs;
 
   RxList<People> listPeoples = <People>[].obs;
   RxList<People> listPeopleFamilies = <People>[].obs;
@@ -361,12 +363,15 @@ class PeopleController extends GetxController {
       final token = box.read('auth')['access_token'];
 
       mensagem = await repository.insertPeople(
-          "Bearer $token",
-          pessoa,
-          File(photoUrlPath.value),
-          peopleLocal,
-          selectedSaudeIds,
-          selectedMedicamentoIds);
+        "Bearer $token",
+        pessoa,
+        File(photoUrlPath.value),
+        peopleLocal,
+        selectedSaudeIds,
+        selectedMedicamentoIds,
+        emailTempPessoaController.text,
+        senhaTempPessoaController.text,
+      );
 
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
@@ -727,7 +732,13 @@ class PeopleController extends GetxController {
         }
 
         var mensagem = await repository.insertPeopleLocalToApi(
-            "Bearer $token", people, saudeIdsOffline, medicamentosIdsOffline);
+          "Bearer $token",
+          people,
+          saudeIdsOffline,
+          medicamentosIdsOffline,
+          emailTempPessoaController.text,
+          senhaTempPessoaController.text,
+        );
 
         if (mensagem != null) {
           if (mensagem['message'] == 'success') {

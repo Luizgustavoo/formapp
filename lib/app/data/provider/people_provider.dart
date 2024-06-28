@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -125,7 +126,7 @@ class PeopleApiClient {
   }
 
   insertPeople(String token, People pessoa, File imageFile, bool peopleLocal,
-      List? saude, List? medicamento) async {
+      List? saude, List? medicamento, String? email, String? senha) async {
     try {
       bool isConnected = await ConnectionStatus.verifyConnection();
       if (isConnected && !peopleLocal) {
@@ -157,6 +158,14 @@ class PeopleApiClient {
         }
         if (medicamento != null) {
           request.fields['medicamento'] = json.encode(medicamento);
+        }
+
+        if (email != null) {
+          request.fields['email'] = email;
+        }
+
+        if (senha != null) {
+          request.fields['senha'] = senha;
         }
 
         if (imageFile.path.isNotEmpty) {
