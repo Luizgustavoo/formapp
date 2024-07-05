@@ -7,6 +7,7 @@ import 'package:ucif/app/data/models/unread_message_model.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
+import 'package:ucif/app/utils/services.dart';
 
 class UnreadView extends GetView<MessageController> {
   const UnreadView({super.key});
@@ -80,7 +81,8 @@ class UnreadView extends GetView<MessageController> {
                                                     .destinatarioId.value =
                                                 unreadMessage.pessoaId!;
                                             chatController.chatChange();
-
+                                            Services.setRoute(
+                                                '/list-unread-message');
                                             Get.toNamed(
                                               '/chat',
                                               arguments: People(

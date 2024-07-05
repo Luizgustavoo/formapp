@@ -5,9 +5,7 @@ import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/models/chat_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
-import 'package:ucif/app/modules/home/home_controller.dart';
-import 'package:ucif/app/modules/message/message_controller.dart';
-import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/services.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 class ChatView extends GetView<ChatController> {
@@ -47,128 +45,123 @@ class ChatView extends GetView<ChatController> {
           .jumpTo(controller.scrollController.position.maxScrollExtent);
     });
 
-    return Scaffold(
-      appBar: AppBar(
-          leadingWidth: Get.width * .25,
-          title: Text(people.nome ?? ""),
-          leading: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    if (Get.previousRoute == '/detail-people') {
-                      final homeController = Get.put(HomeController());
-                      homeController.counter;
-                      homeController.counter2;
-                      homeController.counter3;
-                      Get.offAllNamed('/detail-people', arguments: people);
-                    } else if (Get.previousRoute == '/list-user') {
-                      final userController = Get.find<UserController>();
-                      userController.getUsers();
-                      Get.offNamed('/list-user');
-                    } else if (Get.previousRoute == '/list-unread-message') {
-                      if (!Navigator.of(context).userGestureInProgress) {
-                        final messageController = Get.put(MessageController());
-                        messageController.listUnreadMessages.clear();
-                        messageController.getUnreadMessages();
-                        Get.back();
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (Services.getRoute() == '/detail-people') {
+          Get.offAllNamed('/detail-people', arguments: people);
+        } else {
+          Get.offAllNamed(Services.getRoute());
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+            leadingWidth: Get.width * .25,
+            title: Text(people.nome ?? ""),
+            leading: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      if (Services.getRoute() == '/detail-people') {
+                        Get.offAllNamed('/detail-people', arguments: people);
+                      } else {
+                        Get.offAllNamed(Services.getRoute());
                       }
-                    } else {
-                      Get.back();
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                  )),
-              CircleAvatar(
-                backgroundImage: people.foto != null
-                    ? NetworkImage(
-                            '$urlImagem/storage/app/public/${people.foto}')
-                        as ImageProvider<Object>?
-                    : const AssetImage('assets/images/default_avatar.jpg'),
-              )
-            ],
-          )),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.only(
-            topStart: Radius.circular(15),
-            topEnd: Radius.circular(15),
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                    )),
+                CircleAvatar(
+                  backgroundImage: people.foto != null
+                      ? NetworkImage(
+                              '$urlImagem/storage/app/public/${people.foto}')
+                          as ImageProvider<Object>?
+                      : const AssetImage('assets/images/default_avatar.jpg'),
+                )
+              ],
+            )),
+        body: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadiusDirectional.only(
+              topStart: Radius.circular(15),
+              topEnd: Radius.circular(15),
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Obx(
-              () => Expanded(
-                child: SingleChildScrollView(
-                  controller: controller.scrollController,
-                  child: Column(
-                    children:
-                        List.generate(controller.listChats.length, (index) {
-                      final chat = controller.listChats[index];
-                      final mensagemRemetente =
-                          chat.remetenteId == UserStorage.getPeopleId();
-                      return Row(
-                        mainAxisAlignment: mensagemRemetente
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        children: [
-                          ChatMessageWidget(
-                            mensagemRemetente: mensagemRemetente,
-                            chat: chat,
-                            remetenteId: UserStorage.getUserId(),
-                            people: people,
-                          ),
-                        ],
-                      );
-                    }),
+          child: Column(
+            children: [
+              Obx(
+                () => Expanded(
+                  child: SingleChildScrollView(
+                    controller: controller.scrollController,
+                    child: Column(
+                      children:
+                          List.generate(controller.listChats.length, (index) {
+                        final chat = controller.listChats[index];
+                        final mensagemRemetente =
+                            chat.remetenteId == UserStorage.getPeopleId();
+                        return Row(
+                          mainAxisAlignment: mensagemRemetente
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            ChatMessageWidget(
+                              mensagemRemetente: mensagemRemetente,
+                              chat: chat,
+                              remetenteId: UserStorage.getUserId(),
+                              people: people,
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Flexible(
-                    child: SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: Get.height * 0.2,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: controller.chatController,
-                            maxLines: null,
-                            decoration: InputDecoration(
-                              hintText: 'Digite sua mensagem...',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  borderSide:
-                                      const BorderSide(color: Colors.black)),
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: Get.height * 0.2,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: controller.chatController,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                hintText: 'Digite sua mensagem...',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderSide:
+                                        const BorderSide(color: Colors.black)),
+                              ),
+                              textInputAction: TextInputAction.send,
+                              onSubmitted: (_) => controller.sendChat(),
+                              onTap: () {
+                                scrollToBottomIfNeeded();
+                              },
                             ),
-                            textInputAction: TextInputAction.send,
-                            onSubmitted: (_) => controller.sendChat(),
-                            onTap: () {
-                              scrollToBottomIfNeeded();
-                            },
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: () => controller.sendChat(),
-                  ),
-                ],
-              ),
-            )
-          ],
+                    IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () => controller.sendChat(),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

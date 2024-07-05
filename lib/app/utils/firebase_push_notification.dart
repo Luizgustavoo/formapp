@@ -10,6 +10,7 @@ import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/modules/chat/chat_controller.dart';
 import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
+import 'package:ucif/app/utils/services.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
 Future<void> handleBackgroundMessage(message) async {
@@ -25,7 +26,7 @@ Future<void> handleBackgroundMessage(message) async {
           UserStorage.existUser()) {
         Map<String, dynamic> jsonMap = jsonDecode(data['user']);
         User user = User.fromJson(jsonMap);
-
+        Services.setRoute('/home');
         Get.offAllNamed('/chat', arguments: user);
       } else if (data != null &&
           data.containsKey('click_action') &&
@@ -56,6 +57,7 @@ class FirebaseApi {
 
     final userController = Get.put(UserController());
     messageController.getMessages();
+    messageController.getUnreadMessages();
     chatController.getChat();
     userController.getUsers();
 
@@ -68,7 +70,7 @@ class FirebaseApi {
         UserStorage.existUser()) {
       Map<String, dynamic> jsonMap = jsonDecode(data['user']);
       People people = People.fromJson(jsonMap);
-
+      Services.setRoute('/home');
       Get.offAllNamed('/chat', arguments: people);
     } else if (data.containsKey('click_action') &&
         data['click_action'] == 'FLUTTER_NOTIFICATION_CLICK' &&
@@ -114,6 +116,7 @@ class FirebaseApi {
 
       final userController = Get.put(UserController());
       messageController.getMessages();
+      messageController.getUnreadMessages();
       chatController.getChat();
       userController.getUsers();
 
