@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/base_url.dart';
+import 'package:ucif/app/modules/message/message_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/user/user_controller.dart';
 import 'package:ucif/app/utils/custom_text_style.dart';
@@ -17,6 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? userName;
 
   final bool? showPadding;
+
   final String? title;
 
   @override
@@ -28,8 +30,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Size.fromHeight(Get.height * factor);
   }
 
-  //final messageController = Get.put(MessageController());
-
   final RxString greeting = ''.obs;
 
   @override
@@ -37,7 +37,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     RxString changeName = UserStorage.getUserName().obs;
     final currentTime = DateTime.now();
     greeting.value = getGreeting(currentTime);
-    //messageController.getMessages();
+
+    final messageController = Get.put(MessageController());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      messageController.getUnreadMessages();
+    });
 
     ever(greeting, (_) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -120,22 +125,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     Row(
                       children: [
-                        if (UserStorage.getUserType() == 1) ...[
-                          Stack(
-                            children: [
-                              IconButton(
+                        messageController.listUnreadMessages.isNotEmpty
+                            ? IconButton(
                                 onPressed: () {
-                                  Get.toNamed('/list-message');
+                                  final messageController =
+                                      Get.put(MessageController());
+                                  messageController.getUnreadMessages();
+                                  Get.toNamed('/list-unread-message');
                                 },
                                 icon: const Icon(
-                                  Icons.notifications_rounded,
+                                  Icons.sms,
                                   color: Colors.white,
                                   size: 28,
                                 ),
-                              ),
-                              const SizedBox()
-                            ],
+                              )
+                            : const SizedBox(),
+                        const SizedBox(),
+                        if (UserStorage.getUserType() == 1) ...[
+                          IconButton(
+                            onPressed: () {
+                              Get.toNamed('/list-message');
+                            },
+                            icon: const Icon(
+                              Icons.notifications_rounded,
+                              color: Colors.white,
+                              size: 28,
+                            ),
                           ),
+                          const SizedBox(),
                         ],
                         if (ModalRoute.of(context)!.settings.name != '/perfil')
                           IconButton(

@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/message_model.dart';
+import 'package:ucif/app/data/models/unread_message_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/repository/message_repository.dart';
 import 'package:ucif/app/utils/connection_service.dart';
@@ -14,6 +15,7 @@ class MessageController extends GetxController {
   TextEditingController subjectController = TextEditingController();
   TextEditingController messageController = TextEditingController();
   RxList<Message> listMessages = <Message>[].obs;
+  RxList<UnreadMessage> listUnreadMessages = <UnreadMessage>[].obs;
   final repository = Get.put(MessageRepository());
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
@@ -22,6 +24,7 @@ class MessageController extends GetxController {
   RxInt quantidadeMensagensNaoLidas = 0.obs;
   final box = GetStorage('credenciado');
   var message = Message().obs;
+  var isLoading = true.obs;
 
   @override
   void onInit() {
@@ -42,6 +45,18 @@ class MessageController extends GetxController {
 
       quantidadeMensagensNaoLidas.value =
           listMessages.where((message) => message.lida == 'nao').length;
+    }
+  }
+
+  Future<void> getUnreadMessages() async {
+    isLoading.value = true; // Define estado de carregamento como true
+    try {
+      final token = UserStorage.getToken();
+      listUnreadMessages.value =
+          await repository.getAllUnreadMessage("Bearer $token");
+      update();
+    } finally {
+      isLoading.value = false; // Define estado de carregamento como false
     }
   }
 

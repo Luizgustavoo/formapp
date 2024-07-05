@@ -1,5 +1,6 @@
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/models/message_model.dart';
+import 'package:ucif/app/data/models/unread_message_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/message_provider.dart';
 import 'package:ucif/app/utils/error_handler.dart';
@@ -15,6 +16,20 @@ class MessageRepository {
     if (response != null) {
       response.forEach((e) {
         list.add(Message.fromJson(e));
+      });
+    }
+
+    return list;
+  }
+
+  getAllUnreadMessage(String token) async {
+    List<UnreadMessage> list = <UnreadMessage>[];
+
+    var response = await apiClient.getAllUnreadMessage(token);
+
+    if (response != null) {
+      response.forEach((e) {
+        list.add(UnreadMessage.fromJson(e));
       });
     }
 

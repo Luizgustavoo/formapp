@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:ucif/app/modules/chat/chat_binding.dart';
 import 'package:ucif/app/modules/chat/chat_view.dart';
 import 'package:ucif/app/modules/family/family_binding.dart';
+import 'package:ucif/app/modules/message/views/list_unread_message_view.dart';
 import '../modules/family/views/list_family_filter_view.dart';
 import '../modules/family/views/list_family_view.dart';
 import 'package:ucif/app/modules/home/home_binding.dart';
@@ -72,6 +73,11 @@ class AppPages {
     GetPage(
       name: Routes.LIST_MESSAGE,
       page: () => const MessageView(),
+      binding: MessageBinding(),
+    ),
+    GetPage(
+      name: Routes.UNREAD_MESSAGE,
+      page: () => const UnreadView(),
       binding: MessageBinding(),
     ),
     GetPage(

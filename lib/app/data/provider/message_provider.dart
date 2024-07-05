@@ -50,6 +50,38 @@ class MessageApiClient {
     return null;
   }
 
+  getAllUnreadMessage(String token) async {
+    final id = box.read('auth')['user']['id'];
+
+    try {
+      var messageUrl = Uri.parse('$baseUrl/v1/chat/unread/$id');
+
+      var response = await httpClient.get(
+        messageUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError('Sem Conexão');
+    }
+    return null;
+  }
+
   insertMessage(
       String token, Family? family, Message message, User? user) async {
     final id = UserStorage.getUserId();
