@@ -22,9 +22,13 @@ class CustomCardMessage extends StatelessWidget {
       margin: const EdgeInsets.only(left: 0, right: 0, top: 2, bottom: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ExpansionTile(
+        expandedAlignment: Alignment.centerLeft,
+        dense: true,
         childrenPadding: const EdgeInsets.all(10.0),
         tilePadding: const EdgeInsets.all(8),
-        title: const Text('NOTIFICAÇÃO'),
+        title: Text(message!.titulo!.toUpperCase(),
+            style: const TextStyle(
+                fontFamily: 'Poppins', fontSize: 14, color: Colors.black54)),
         subtitle: Text(
           formattedDate,
           style: const TextStyle(
@@ -34,9 +38,9 @@ class CustomCardMessage extends StatelessWidget {
         ),
         children: [
           Text(
-            message!.titulo!.toUpperCase(),
+            message!.descricao!.toUpperCase(),
             style: const TextStyle(
-                fontFamily: 'Poppins', fontSize: 16, color: Colors.black54),
+                fontFamily: 'Poppinss', fontSize: 12, color: Colors.black54),
           )
         ],
       ),
