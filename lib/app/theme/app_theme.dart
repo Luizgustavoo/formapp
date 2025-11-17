@@ -27,10 +27,10 @@ final ThemeData appThemeData = ThemeData(
       color: Colors.white,
     ),
   ),
-  tabBarTheme: TabBarTheme(
+  tabBarTheme: TabBarThemeData(
     indicatorColor: Colors.grey.shade900,
   ),
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
   expansionTileTheme: const ExpansionTileThemeData(
