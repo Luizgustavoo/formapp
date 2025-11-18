@@ -16,6 +16,8 @@ import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
+import '../../../global/widgets/create_service_modal.dart';
+
 class ListPeopleView extends GetView<PeopleController> {
   const ListPeopleView({super.key});
 
@@ -281,17 +283,19 @@ class ListPeopleView extends GetView<PeopleController> {
                       label: 'Atendimento',
                       labelStyle: const TextStyle(fontFamily: "Poppins"),
                       onTap: () {
-                        final familyController = Get.put(FamilyController());
-                        familyController.clearAllFamilyTextFields();
+                        controller.clearAtendimento();
+                        controller.getAllbyUser();
+                        controller.getAllCategories();
+
                         showModalBottomSheet(
                           isScrollControlled: true,
                           isDismissible: false,
                           context: context,
                           builder: (context) => Padding(
                             padding: MediaQuery.of(context).viewInsets,
-                            child: CreateFamilyModal(
+                            child: CreateAttendanceModal(
                               tipoOperacao: 'insert',
-                              titulo: "Cadastro de Família",
+                              titulo: "Cadastro de Atendimento",
                             ),
                           ),
                         );

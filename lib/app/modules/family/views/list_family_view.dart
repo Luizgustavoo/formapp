@@ -283,8 +283,11 @@ class FamilyView extends GetView<FamilyController> {
                       label: 'Atendimento',
                       labelStyle: const TextStyle(fontFamily: "Poppins"),
                       onTap: () {
-                        final familyController = Get.put(FamilyController());
-                        familyController.clearAllFamilyTextFields();
+                        final peopleController = Get.find<PeopleController>();
+                        peopleController.clearAtendimento();
+                        peopleController.getAllbyUser();
+                        peopleController.getAllCategories();
+
                         showModalBottomSheet(
                           isScrollControlled: true,
                           isDismissible: false,

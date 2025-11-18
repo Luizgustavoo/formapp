@@ -2,21 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Para formatar a data
 import 'package:ucif/app/data/models/people_model.dart'; // Importe conforme o seu código
+import 'package:ucif/app/data/models/service_category_model.dart';
 import 'package:ucif/app/modules/people/people_controller.dart'; // O controller que gerencia a lógica
 import 'package:ucif/app/utils/custom_text_style.dart'; // Estilos personalizados
-
-// Estruturas de dados fictícias para Dropdown
-class Category {
-  final int id;
-  final String name;
-  Category(this.id, this.name);
-}
-
-class AttendancePerson {
-  final int id;
-  final String name;
-  AttendancePerson(this.id, this.name);
-}
 
 class CreateAttendanceModal extends StatelessWidget {
   CreateAttendanceModal({
@@ -32,20 +20,6 @@ class CreateAttendanceModal extends StatelessWidget {
 
   // Assumindo que a PeopleController agora gerencia a lógica de Atendimento
   final PeopleController controller = Get.find();
-
-  // Dados fictícios para as categorias e pessoas
-  final List<Category> categories = [
-    Category(1, 'Assistência Social'),
-    Category(2, 'Saúde'),
-    Category(3, 'Educação'),
-    Category(4, 'Moradia'),
-  ];
-
-  final List<AttendancePerson> peopleList = [
-    AttendancePerson(101, 'João da Silva'),
-    AttendancePerson(102, 'Maria Souza'),
-    AttendancePerson(103, 'Carlos Lima'),
-  ];
 
   // Função para abrir o DatePicker
   Future<void> _selectDate(BuildContext context) async {
@@ -63,12 +37,6 @@ class CreateAttendanceModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Adicionar observáveis para os campos de atendimento no PeopleController
-    // Ex: final Rx<Category?> selectedCategory = Rx<Category?>(null);
-    // Ex: final Rx<AttendancePerson?> selectedPerson = Rx<AttendancePerson?>(null);
-    // Ex: final Rx<DateTime?> attendanceDate = Rx<DateTime?>(null);
-    // Ex: final TextEditingController notesController = TextEditingController();
-
     return Form(
       key: controller.serviceFormKey, // Reutilizando a key, você pode renomear
       child: SingleChildScrollView(
@@ -95,12 +63,12 @@ class CreateAttendanceModal extends StatelessWidget {
 
             // --- Seleção de Categoria (categoria_id) ---
             Obx(
-              () => DropdownButtonFormField<Category>(
+              () => DropdownButtonFormField<CategoriaAtendimento>(
                 isDense: true,
                 menuMaxHeight: Get.size.height / 2,
                 value: controller.selectedCategory.value,
                 hint: const Text('Selecione a Categoria'),
-                onChanged: (Category? newValue) {
+                onChanged: (CategoriaAtendimento? newValue) {
                   controller.selectedCategory.value = newValue;
                 },
                 validator: (value) {
@@ -109,11 +77,12 @@ class CreateAttendanceModal extends StatelessWidget {
                   }
                   return null;
                 },
-                items: categories
-                    .map<DropdownMenuItem<Category>>((Category category) {
-                  return DropdownMenuItem<Category>(
+                items: controller.listCategoriasAtendimento.value
+                    .map<DropdownMenuItem<CategoriaAtendimento>>(
+                        (CategoriaAtendimento category) {
+                  return DropdownMenuItem<CategoriaAtendimento>(
                     value: category,
-                    child: Text(category.name),
+                    child: Text(category.nome),
                   );
                 }).toList(),
                 decoration: const InputDecoration(
@@ -124,29 +93,29 @@ class CreateAttendanceModal extends StatelessWidget {
 
             // --- Seleção de Pessoa (pessoa_id) ---
             Obx(
-              () => DropdownButtonFormField<AttendancePerson>(
+              () => DropdownButtonFormField<People>(
                 isDense: true,
                 menuMaxHeight: Get.size.height / 2,
                 value: controller.selectedPerson.value,
-                hint: const Text('Selecione o Atendente'),
-                onChanged: (AttendancePerson? newValue) {
+                hint: const Text('Selecione um familiar'),
+                onChanged: (People? newValue) {
                   controller.selectedPerson.value = newValue;
                 },
                 validator: (value) {
                   if (value == null) {
-                    return 'Por favor, selecione um atendente';
+                    return 'Por favor, selecione um familiar';
                   }
                   return null;
                 },
-                items: peopleList.map<DropdownMenuItem<AttendancePerson>>(
-                    (AttendancePerson person) {
-                  return DropdownMenuItem<AttendancePerson>(
+                items: controller.listPeoplesDropDown.value
+                    .map<DropdownMenuItem<People>>((People person) {
+                  return DropdownMenuItem<People>(
                     value: person,
-                    child: Text(person.name),
+                    child: Text(person.nome ?? 'Sem nome'),
                   );
                 }).toList(),
                 decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Atendente'),
+                    border: OutlineInputBorder(), labelText: 'Familiar'),
               ),
             ),
             const SizedBox(height: 10),
@@ -211,14 +180,9 @@ class CreateAttendanceModal extends StatelessWidget {
                     onPressed: () async {
                       // **Lógica de Validação e Salvar Atendimento**
                       if (controller.serviceFormKey.currentState!.validate()) {
-                        // Coloque aqui a chamada para salvar/atualizar o atendimento
-                        // Ex: await controller.saveAttendance();
-                        // Vou simular um retorno
-                        Map<String, dynamic> retorno = {
-                          'return': 0,
-                          'message':
-                              'Atendimento ${tipoOperacao == 'insert' ? 'salvo' : 'alterado'} com sucesso!'
-                        };
+                        Map<String, dynamic> retorno = tipoOperacao == 'insert'
+                            ? await controller.saveAtendimento()
+                            : await controller.saveAtendimento();
 
                         if (retorno['return'] == 0) {
                           Get.back();

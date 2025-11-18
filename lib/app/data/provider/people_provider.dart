@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:ucif/app/data/base_url.dart';
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/service_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/people_database_helper.dart';
 import 'package:ucif/app/utils/connection_service.dart';
@@ -441,6 +442,118 @@ class PeopleApiClient {
       String jsonResponse = jsonEncode(responseData);
 
       return json.decode(jsonResponse);
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  getAllbyUser(String token) async {
+    final userId = UserStorage.getUserId();
+    try {
+      Uri peopleUrl;
+
+      String url = '$baseUrl/v1/pessoa/list/id/$userId';
+      peopleUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        peopleUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  getAllCategories(String token) async {
+    final userId = UserStorage.getUserId();
+    try {
+      Uri peopleUrl;
+
+      String url = '$baseUrl/v1/categoriaatendimento/list';
+      peopleUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        peopleUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  insertAtendimento(String token, Atendimento atendimento) async {
+    try {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected) {
+        //SALVANDO DADOS NA API
+        var familyUrl = Uri.parse('$baseUrl/v1/atendimento/create');
+
+        var requestBody = {
+          "data_atendimento": atendimento.dataAtendimento.toString(),
+          "observacoes": atendimento.observacoes.toString(),
+          "usuario_id": atendimento.usuarioId.toString(),
+          "pessoa_id": atendimento.pessoaId.toString(),
+          "categoria_id": atendimento.categoriaId.toString(),
+        };
+
+        var response = await httpClient.post(
+          familyUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+          body: requestBody,
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return json.decode(response.body);
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('Sem conexão com a internet!'),
+        );
+      }
     } catch (err) {
       ErrorHandler.showError("Sem conexão!");
     }

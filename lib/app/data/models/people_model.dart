@@ -224,4 +224,14 @@ class People {
       'estado_civil_name': estado_civil_name
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is People && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

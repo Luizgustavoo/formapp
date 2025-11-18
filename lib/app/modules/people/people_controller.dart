@@ -14,6 +14,8 @@ import 'package:ucif/app/data/models/marital_status_model.dart';
 import 'package:ucif/app/data/models/medicine_model.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/religion_model.dart';
+import 'package:ucif/app/data/models/service_category_model.dart';
+import 'package:ucif/app/data/models/service_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
 import 'package:ucif/app/data/repository/church_repository.dart';
@@ -54,11 +56,12 @@ class PeopleController extends GetxController {
   final GlobalKey<FormState> peopleFormKey = GlobalKey<FormState>();
 
   final GlobalKey<FormState> serviceFormKey = GlobalKey<FormState>();
-  final Rx<dynamic?> selectedCategory = Rx<dynamic?>(null);
+  final Rx<CategoriaAtendimento?> selectedCategory =
+      Rx<CategoriaAtendimento?>(null);
 
   // 3. pessoa_id (BigInt/int)
   // Usamos o modelo AttendancePerson para armazenar a pessoa (atendente) selecionada.
-  final Rx<dynamic?> selectedPerson = Rx<dynamic?>(null);
+  final Rx<People?> selectedPerson = Rx<People?>(null);
 
   // 4. data_atendimento (datetime)
   // Armazena a data selecionada pelo DatePicker.
@@ -78,6 +81,9 @@ class PeopleController extends GetxController {
   RxBool isPasswordVisible = false.obs;
 
   RxList<People> listPeoples = <People>[].obs;
+  RxList<People> listPeoplesDropDown = <People>[].obs;
+  RxList<CategoriaAtendimento> listCategoriasAtendimento =
+      <CategoriaAtendimento>[].obs;
   RxList<People> listPeopleFamilies = <People>[].obs;
   RxList<People> listFamilyMembers = <People>[].obs;
 
@@ -107,6 +113,8 @@ class PeopleController extends GetxController {
   final medicineRepository = Get.put(MedicineRepository());
 
   RxBool isLoading = true.obs;
+  RxBool isLoadingPeopleDropDown = false.obs;
+  RxBool isLoadingCategoriasAtendimento = false.obs;
 
   Map<String, dynamic> retorno = {"return": 1, "message": ""};
 
@@ -271,6 +279,32 @@ class PeopleController extends GetxController {
       ErrorHandler.showError(e);
     }
     isLoading.value = false;
+  }
+
+  Future<void> getAllbyUser() async {
+    isLoadingPeopleDropDown.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listPeoplesDropDown.value =
+          await repository.getAllbyUser("Bearer $token");
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingPeopleDropDown.value = false;
+  }
+
+  Future<void> getAllCategories() async {
+    isLoadingCategoriasAtendimento.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listCategoriasAtendimento.value =
+          await repository.getAllCategories("Bearer $token");
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingCategoriasAtendimento.value = false;
   }
 
   Future<void> getFamilyMembers(int? familiaId) async {
@@ -798,9 +832,52 @@ class PeopleController extends GetxController {
       id: id,
     );
     mensagem = await repository.deletePeopleLocal(people);
-
     getPeoples();
-
     return mensagem;
+  }
+
+  Future<Map<String, dynamic>> saveAtendimento() async {
+    if (serviceFormKey.currentState!.validate()) {
+      if (selectedCategory.value == null || selectedPerson.value == null) {
+        return {"return": 1, "message": "Categoria e/ou familiar invalido(s)!"};
+      }
+
+      Atendimento atendimento = Atendimento(
+        id: 0,
+        categoriaId: selectedCategory.value!.id,
+        pessoaId: selectedPerson.value!.id!,
+        dataAtendimento: attendanceDate.value ?? DateTime.now(),
+        observacoes: notesController.text,
+        usuarioId: UserStorage.getUserId(),
+      );
+      final token = UserStorage.getToken();
+      mensagem =
+          await repository.insertAtendimento("Bearer $token", atendimento);
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        }
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe um atendimento com esse nome!"
+        };
+      }
+      clearAtendimento();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos do atendimento!"
+      };
+    }
+
+    return retorno;
+  }
+
+  void clearAtendimento() {
+    selectedCategory(null);
+    selectedPerson(null);
+    attendanceDate(null);
+    notesController.clear();
   }
 }

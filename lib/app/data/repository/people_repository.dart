@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:ucif/app/data/database_helper.dart';
 import 'package:ucif/app/data/models/people_model.dart';
+import 'package:ucif/app/data/models/service_category_model.dart';
+import 'package:ucif/app/data/models/service_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 import 'package:ucif/app/data/provider/people_provider.dart';
 import 'package:ucif/app/utils/connection_service.dart';
@@ -36,6 +38,40 @@ class PeopleRepository {
           list.add(family);
         }
       }
+    }
+    return list;
+  }
+
+  getAllbyUser(String token) async {
+    List<People> list = <People>[];
+
+    var responseLocal = await getPeoplesOffline();
+
+    for (People peopleLocal in responseLocal) {
+      peopleLocal.peopleLocal = true;
+      list.add(peopleLocal);
+    }
+
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAllbyUser(token);
+      response.forEach((e) {
+        People p = People.fromJson(e);
+        p.peopleLocal = false;
+        list.add(p);
+      });
+    }
+    return list;
+  }
+
+  getAllCategories(String token) async {
+    List<CategoriaAtendimento> list = <CategoriaAtendimento>[];
+
+    if (await ConnectionStatus.verifyConnection()) {
+      var response = await apiClient.getAllCategories(token);
+      response.forEach((e) {
+        CategoriaAtendimento c = CategoriaAtendimento.fromJson(e);
+        list.add(c);
+      });
     }
     return list;
   }
@@ -213,6 +249,16 @@ class PeopleRepository {
   deletePeopleLocal(People people) async {
     try {
       var response = await apiClient.deletePeopleLocal(people);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+  }
+
+  insertAtendimento(String token, Atendimento atendimento) async {
+    try {
+      var response = await apiClient.insertAtendimento(token, atendimento);
 
       return response;
     } catch (e) {

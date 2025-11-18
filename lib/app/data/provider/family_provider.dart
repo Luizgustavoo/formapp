@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -29,6 +30,8 @@ class FamilyApiClient {
       String url =
           '$baseUrl/v1/familia/list/$userType/$search/$familiaId/$userId?page=$page';
       familyUrl = Uri.parse(url);
+
+      print(token);
 
       var response = await httpClient.get(
         familyUrl,

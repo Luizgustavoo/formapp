@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -53,6 +53,21 @@ void main() async {
       theme: appThemeData,
       initialRoute: Routes.INITIAL,
       getPages: AppPages.routes,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
+      // Defina as localidades que seu app suporta
+      supportedLocales: const [
+        Locale('pt', 'BR'), // Português do Brasil
+        // Adicione outros idiomas que você suporta, se houver
+        // Locale('en', 'US'), // Inglês
+      ],
+
+      // Opcional: Definir a localidade padrão
+      locale: const Locale('pt', 'BR'),
     ),
   );
 }
