@@ -80,15 +80,20 @@ class FirebaseApi {
   }
 
   Future initLocalNotifications() async {
-    const iOS = IOSInitializationSettings();
+    // const iOS = IOSInitializationSettings();
+    const iOS = InitializationSettings();
     const android = AndroidInitializationSettings('@drawable/ic_launcher');
-    const settings = InitializationSettings(android: android, iOS: iOS);
+    const settings = InitializationSettings(android: android);
 
-    await _localNotifications.initialize(settings,
-        onSelectNotification: (payload) {
-      final message = RemoteMessage.fromMap(jsonDecode(payload!));
-      handleMessage(message);
-    });
+    await _localNotifications.initialize(
+      settings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        if (response.payload != null) {
+          final message = RemoteMessage.fromMap(jsonDecode(response.payload!));
+          handleMessage(message);
+        }
+      },
+    );
 
     final plataform = _localNotifications.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
@@ -125,17 +130,13 @@ class FirebaseApi {
         notification.title,
         notification.body,
         NotificationDetails(
-            android: AndroidNotificationDetails(
-              _androidChannel.id,
-              _androidChannel.name,
-              channelDescription: _androidChannel.description,
-              icon: '@drawable/ic_launcher',
-            ),
-            iOS: const IOSNotificationDetails(
-              presentAlert: true,
-              presentBadge: true,
-              presentSound: true,
-            )),
+          android: AndroidNotificationDetails(
+            _androidChannel.id,
+            _androidChannel.name,
+            channelDescription: _androidChannel.description,
+            icon: '@drawable/ic_launcher',
+          ),
+        ),
         payload: jsonEncode(message.toMap()),
       );
     });

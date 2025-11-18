@@ -268,6 +268,35 @@ class ListPeopleView extends GetView<PeopleController> {
                         );
                       },
                     ),
+                    SpeedDialChild(
+                      backgroundColor: const Color(0xFF014acb),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.group,
+                          color: Colors.white,
+                        ),
+                      ),
+                      label: 'Atendimento',
+                      labelStyle: const TextStyle(fontFamily: "Poppins"),
+                      onTap: () {
+                        final familyController = Get.put(FamilyController());
+                        familyController.clearAllFamilyTextFields();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CreateFamilyModal(
+                              tipoOperacao: 'insert',
+                              titulo: "Cadastro de Família",
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 )
               : const SizedBox(),

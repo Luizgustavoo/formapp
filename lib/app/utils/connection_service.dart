@@ -8,6 +8,6 @@ abstract class ConnectionStatus {
 }
 
 class ConnectivityService {
-  Stream<ConnectivityResult> get connectivityStream =>
+  Stream<List<ConnectivityResult>> get connectivityStream =>
       Connectivity().onConnectivityChanged;
 }

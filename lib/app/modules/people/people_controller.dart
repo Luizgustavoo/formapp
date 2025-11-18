@@ -52,6 +52,22 @@ class PeopleController extends GetxController {
   var isImagePicPathSet = false.obs;
 
   final GlobalKey<FormState> peopleFormKey = GlobalKey<FormState>();
+
+  final GlobalKey<FormState> serviceFormKey = GlobalKey<FormState>();
+  final Rx<dynamic?> selectedCategory = Rx<dynamic?>(null);
+
+  // 3. pessoa_id (BigInt/int)
+  // Usamos o modelo AttendancePerson para armazenar a pessoa (atendente) selecionada.
+  final Rx<dynamic?> selectedPerson = Rx<dynamic?>(null);
+
+  // 4. data_atendimento (datetime)
+  // Armazena a data selecionada pelo DatePicker.
+  final Rx<DateTime?> attendanceDate = Rx<DateTime?>(null);
+
+  // 5. observacoes (longtext)
+  // Controlador para o campo de texto de observações.
+  final notesController = TextEditingController();
+
   RxBool provedorCheckboxValue = false.obs;
   RxString sexo = 'Masculino'.obs;
   RxInt estadoCivilSelected = 1.obs;

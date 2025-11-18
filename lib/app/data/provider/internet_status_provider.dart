@@ -1,8 +1,8 @@
 import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ucif/app/utils/connection_service.dart';
 
 enum InternetStatus { connected, disconnected }
 
@@ -16,8 +16,10 @@ class InternetStatusProvider extends GetxController {
 
   @override
   void onInit() {
-    ConnectivityService().connectivityStream.listen(updateStatus);
-    super.onInit();
+    // ConnectivityService()
+    //     .connectivityStream
+    //     .listen(updateStatus as void Function(List<ConnectivityResult> event)?);
+    // super.onInit();
   }
 
   void setStatus(InternetStatus status) {

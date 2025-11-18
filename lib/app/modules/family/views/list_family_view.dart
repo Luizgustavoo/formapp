@@ -16,6 +16,8 @@ import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
+import '../../../global/widgets/create_service_modal.dart';
+
 class FamilyView extends GetView<FamilyController> {
   const FamilyView({super.key});
 
@@ -263,6 +265,35 @@ class FamilyView extends GetView<FamilyController> {
                             child: const AddPeopleFamilyView(
                               peopleLocal: false,
                               tipoOperacao: 0,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SpeedDialChild(
+                      backgroundColor: const Color(0xFF014acb),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          Icons.group,
+                          color: Colors.white,
+                        ),
+                      ),
+                      label: 'Atendimento',
+                      labelStyle: const TextStyle(fontFamily: "Poppins"),
+                      onTap: () {
+                        final familyController = Get.put(FamilyController());
+                        familyController.clearAllFamilyTextFields();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CreateAttendanceModal(
+                              tipoOperacao: 'insert',
+                              titulo: "Cadastro de Atendimento",
                             ),
                           ),
                         );
