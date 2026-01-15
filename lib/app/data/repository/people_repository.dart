@@ -88,6 +88,28 @@ class PeopleRepository {
     return list;
   }
 
+  Future<List<Atendimento>> getAllService(String token, int? peopleId) async {
+    List<Atendimento> list = <Atendimento>[];
+
+    try {
+      final hasConnection = await ConnectionStatus.verifyConnection();
+      if (!hasConnection) {
+        throw Exception('Sem conexão com a internet');
+      }
+
+      final response = await apiClient.getAllService(token, peopleId);
+
+      for (final e in response['data']) {
+        list.add(Atendimento.fromJson(e));
+      }
+
+      return list;
+    } catch (e) {
+      // Relança o erro para o controller tratar (ErrorHandler.showError)
+      rethrow;
+    }
+  }
+
   getAllFilter(String token, User user, {int? page}) async {
     if (await ConnectionStatus.verifyConnection()) {
       var response =
@@ -246,6 +268,16 @@ class PeopleRepository {
     }
   }
 
+  deleteAtendimento(String token, int atendimentoId) async {
+    try {
+      var response = await apiClient.deleteService(token, atendimentoId);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+  }
+
   deletePeopleLocal(People people) async {
     try {
       var response = await apiClient.deletePeopleLocal(people);
@@ -259,6 +291,16 @@ class PeopleRepository {
   insertAtendimento(String token, Atendimento atendimento) async {
     try {
       var response = await apiClient.insertAtendimento(token, atendimento);
+
+      return response;
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+  }
+
+  updateAtendimento(String token, Atendimento atendimento) async {
+    try {
+      var response = await apiClient.updateAtendimento(token, atendimento);
 
       return response;
     } catch (e) {

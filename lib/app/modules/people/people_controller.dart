@@ -86,6 +86,7 @@ class PeopleController extends GetxController {
       <CategoriaAtendimento>[].obs;
   RxList<People> listPeopleFamilies = <People>[].obs;
   RxList<People> listFamilyMembers = <People>[].obs;
+  RxList<Atendimento> listServices = <Atendimento>[].obs;
 
   final box = GetStorage('credenciado');
   RxList<MaritalStatus> listMaritalStatus = <MaritalStatus>[].obs;
@@ -113,6 +114,7 @@ class PeopleController extends GetxController {
   final medicineRepository = Get.put(MedicineRepository());
 
   RxBool isLoading = true.obs;
+  RxBool isLoadingServices = false.obs;
   RxBool isLoadingPeopleDropDown = false.obs;
   RxBool isLoadingCategoriasAtendimento = false.obs;
 
@@ -132,6 +134,11 @@ class PeopleController extends GetxController {
 
   int currentPage = 1;
   bool isLoadingMore = false;
+
+  final TextEditingController dateServiceController = TextEditingController();
+  final TextEditingController observationServiceController =
+      TextEditingController();
+  final RxString selectedServiceCategory = ''.obs;
 
   Widget searchChild(x) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
@@ -320,6 +327,21 @@ class PeopleController extends GetxController {
       ErrorHandler.showError(e);
     }
     isLoading.value = false;
+  }
+
+  Future<void> getServices(int? peopleId) async {
+    isLoadingServices.value = true;
+    try {
+      final token = UserStorage.getToken();
+      listServices.clear();
+      listServices.value =
+          await repository.getAllService("Bearer $token", peopleId);
+
+      update();
+    } catch (e) {
+      ErrorHandler.showError(e);
+    }
+    isLoadingServices.value = false;
   }
 
   Future<void> getPeoplesFilter(User user) async {
@@ -827,6 +849,15 @@ class PeopleController extends GetxController {
     return mensagem;
   }
 
+  deleteAtendimento(int id) async {
+    final token = UserStorage.getToken();
+    mensagem = await repository.deleteAtendimento("Bearer $token", id);
+
+    await getServices(selectedPerson.value?.id);
+
+    return mensagem;
+  }
+
   deletePeopleLocal(int id) async {
     People people = People(
       id: id,
@@ -838,8 +869,8 @@ class PeopleController extends GetxController {
 
   Future<Map<String, dynamic>> saveAtendimento() async {
     if (serviceFormKey.currentState!.validate()) {
-      if (selectedCategory.value == null || selectedPerson.value == null) {
-        return {"return": 1, "message": "Categoria e/ou familiar invalido(s)!"};
+      if (selectedCategory.value == null) {
+        return {"return": 1, "message": "Categoria inválida!"};
       }
 
       Atendimento atendimento = Atendimento(
@@ -871,6 +902,46 @@ class PeopleController extends GetxController {
       };
     }
 
+    getServices(selectedPerson.value!.id!);
+    return retorno;
+  }
+
+  Future<Map<String, dynamic>> updateAtendimento(int id) async {
+    if (serviceFormKey.currentState!.validate()) {
+      if (selectedCategory.value == null) {
+        return {"return": 1, "message": "Categoria inválida!"};
+      }
+
+      Atendimento atendimento = Atendimento(
+        id: id,
+        categoriaId: selectedCategory.value!.id,
+        pessoaId: selectedPerson.value!.id!,
+        dataAtendimento: attendanceDate.value ?? DateTime.now(),
+        observacoes: notesController.text,
+        usuarioId: UserStorage.getUserId(),
+      );
+      final token = UserStorage.getToken();
+      mensagem =
+          await repository.updateAtendimento("Bearer $token", atendimento);
+      if (mensagem != null) {
+        if (mensagem['message'] == 'success') {
+          retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
+        }
+      } else if (mensagem['message'] == 'ja_existe') {
+        retorno = {
+          "return": 1,
+          "message": "Já existe um atendimento com esse nome!"
+        };
+      }
+      clearAtendimento();
+    } else {
+      retorno = {
+        "return": 1,
+        "message": "Preencha todos os campos do atendimento!"
+      };
+    }
+
+    getServices(selectedPerson.value!.id!);
     return retorno;
   }
 
@@ -879,5 +950,30 @@ class PeopleController extends GetxController {
     selectedPerson(null);
     attendanceDate(null);
     notesController.clear();
+  }
+
+  void initAttendanceForm({
+    required String tipoOperacao,
+    Atendimento? atendimento,
+  }) async {
+    if (tipoOperacao == 'update' && atendimento != null) {
+      // Data
+      attendanceDate.value = atendimento.dataAtendimento;
+
+      // Observações
+      notesController.text = atendimento.observacoes ?? '';
+
+      await getAllCategories();
+
+      // Categoria (precisa existir na lista)
+      selectedCategory.value = listCategoriasAtendimento.firstWhereOrNull(
+        (c) => c.id == atendimento.categoriaId,
+      );
+    } else {
+      // Limpa formulário (insert)
+      attendanceDate.value = null;
+      notesController.clear();
+      selectedCategory.value = null;
+    }
   }
 }

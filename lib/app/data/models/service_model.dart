@@ -1,3 +1,6 @@
+import 'package:ucif/app/data/models/service_category_model.dart';
+import 'package:ucif/app/data/models/user_model.dart';
+
 class Atendimento {
   // Campos obrigatórios (NOT NULL)
   final int id; // int(11)
@@ -6,6 +9,9 @@ class Atendimento {
   final DateTime dataAtendimento; // datetime
   final String observacoes; // longtext
   final int usuarioId; // bigint(20) - Foreign Key
+
+  final CategoriaAtendimento? categoria;
+  final User? usuario;
 
   // Campos opcionais (NULL SIM)
   final DateTime? dataCadastro; // datetime - Padrão: current_timestamp()
@@ -18,6 +24,8 @@ class Atendimento {
     required this.dataAtendimento,
     required this.observacoes,
     required this.usuarioId,
+    this.categoria,
+    this.usuario,
     this.dataCadastro,
     this.dataUpdate,
   });
@@ -42,6 +50,17 @@ class Atendimento {
       // Campos que aceitam NULL
       dataCadastro: parseDateTime(json['data_cadastro']),
       dataUpdate: parseDateTime(json['data_update']),
+      categoria: json['categoria'] != null
+          ? CategoriaAtendimento.fromJson(
+              json['categoria'] as Map<String, dynamic>,
+            )
+          : null,
+
+      usuario: json['usuario'] != null
+          ? User.fromJson(
+              json['usuario'] as Map<String, dynamic>,
+            )
+          : null,
     );
   }
 
@@ -57,6 +76,8 @@ class Atendimento {
       'data_cadastro':
           dataCadastro?.toIso8601String(), // Usa ?. para Null Safety
       'data_update': dataUpdate?.toIso8601String(), // Usa ?. para Null Safety
+      'categoria': categoria?.toJson(),
+      'usuario': usuario?.toJson(),
     };
   }
 }

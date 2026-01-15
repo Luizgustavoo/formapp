@@ -91,6 +91,77 @@ class PeopleApiClient {
     return null;
   }
 
+  getAllService(String token, int? peopleId) async {
+    try {
+      Uri peopleUrl;
+
+      String url = '$baseUrl/v1/atendimentos/pessoa/$peopleId';
+      peopleUrl = Uri.parse(url);
+
+      var response = await httpClient.get(
+        peopleUrl,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+              'O token de autenticação expirou, faça login novamente.'),
+        );
+        var box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  Future<void> deleteService(String token, int atendimentoId) async {
+    try {
+      final url = '$baseUrl/v1/atendimento/delete/$atendimentoId';
+      final uri = Uri.parse(url);
+
+      final response = await httpClient.delete(
+        uri,
+        headers: {
+          "Accept": "application/json",
+          "Authorization": token,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return;
+      }
+
+      if (response.statusCode == 401 &&
+          json.decode(response.body)['message'] == "Token has expired") {
+        Get.defaultDialog(
+          title: "Expirou",
+          content: const Text(
+            'O token de autenticação expirou, faça login novamente.',
+          ),
+        );
+        final box = GetStorage('credenciado');
+        box.erase();
+        Get.offAllNamed('/login');
+        return;
+      }
+
+      throw Exception(json.decode(response.body)['message']);
+    } catch (e) {
+      ErrorHandler.showError("Erro ao remover atendimento");
+    }
+  }
+
   getAllFilter(String token, {int? page, User? user}) async {
     try {
       Uri peopleUrl;
@@ -532,6 +603,51 @@ class PeopleApiClient {
         };
 
         var response = await httpClient.post(
+          familyUrl,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": token,
+          },
+          body: requestBody,
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return json.decode(response.body);
+        } else {
+          Get.defaultDialog(
+            title: "Error",
+            content: const Text('erro'),
+          );
+        }
+      } else {
+        Get.defaultDialog(
+          title: "Error",
+          content: const Text('Sem conexão com a internet!'),
+        );
+      }
+    } catch (err) {
+      ErrorHandler.showError("Sem conexão!");
+    }
+    return null;
+  }
+
+  updateAtendimento(String token, Atendimento atendimento) async {
+    try {
+      bool isConnected = await ConnectionStatus.verifyConnection();
+      if (isConnected) {
+        //SALVANDO DADOS NA API
+        var familyUrl =
+            Uri.parse('$baseUrl/v1/atendimento/update/${atendimento.id}');
+
+        var requestBody = {
+          "data_atendimento": atendimento.dataAtendimento.toString(),
+          "observacoes": atendimento.observacoes.toString(),
+          "usuario_id": atendimento.usuarioId.toString(),
+          "pessoa_id": atendimento.pessoaId.toString(),
+          "categoria_id": atendimento.categoriaId.toString(),
+        };
+
+        var response = await httpClient.patch(
           familyUrl,
           headers: {
             "Accept": "application/json",

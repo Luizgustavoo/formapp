@@ -88,40 +88,46 @@ class SignUpView extends GetView<LoginController> {
                                       Expanded(
                                         flex: 2,
                                         child: DropdownButtonFormField<String>(
-                                          value: controller.sexo.value,
+                                          isExpanded: true,
+                                          initialValue: controller.sexo.value,
                                           onChanged: (value) {
                                             controller.sexo.value = value!;
                                           },
                                           validator: (value) {
                                             if (value == null ||
                                                 value.isEmpty) {
-                                              return 'Selecione uma sexo';
+                                              return 'Selecione um sexo';
                                             }
                                             return null;
                                           },
-                                          items: [
+                                          items: const [
                                             'Masculino',
                                             'Feminino',
-                                            'Não informado'
-                                          ].map<DropdownMenuItem<String>>(
-                                              (String value) {
+                                            'Não informado',
+                                          ].map((value) {
                                             return DropdownMenuItem<String>(
                                               value: value,
-                                              child: Text(value),
+                                              child: Text(
+                                                value,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             );
                                           }).toList(),
                                           decoration: InputDecoration(
-                                              labelStyle: const TextStyle(
-                                                color: Colors.black54,
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12,
-                                              ),
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide.none,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              labelText: 'SEXO'),
+                                            isDense: true,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 14,
+                                            ),
+                                            labelText: 'SEXO',
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(width: 5),
@@ -133,7 +139,7 @@ class SignUpView extends GetView<LoginController> {
                                               await controller
                                                   .getMaritalStatus();
                                             },
-                                            value: controller
+                                            initialValue: controller
                                                 .estadoCivilSelected.value,
                                             onChanged: (value) {
                                               controller.estadoCivilSelected
@@ -402,7 +408,8 @@ class SignUpView extends GetView<LoginController> {
                                   _gap(),
                                   Obx(
                                     () => DropdownButtonFormField<int>(
-                                      value: controller.religiaoSelected.value,
+                                      initialValue:
+                                          controller.religiaoSelected.value,
                                       onChanged: (value) {
                                         controller.religiaoSelected.value =
                                             value!;
@@ -602,7 +609,9 @@ class SignUpView extends GetView<LoginController> {
                                   _gap(),
                                   Obx(
                                     () => DropdownButtonFormField<int>(
-                                      value: controller.leaderSelected.value,
+                                      isExpanded: true,
+                                      initialValue:
+                                          controller.leaderSelected.value,
                                       onChanged: (value) {
                                         controller.leaderSelected.value =
                                             value!;
@@ -613,25 +622,30 @@ class SignUpView extends GetView<LoginController> {
                                         }
                                         return null;
                                       },
-                                      items: controller.listLeader
-                                          .map<DropdownMenuItem<int>>((item) {
+                                      items: controller.listLeader.map((item) {
                                         return DropdownMenuItem<int>(
                                           value: item.id,
-                                          child: Text(item.nome ?? ''),
+                                          child: Text(
+                                            item.nome ?? '',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         );
                                       }).toList(),
                                       decoration: InputDecoration(
-                                          labelStyle: const TextStyle(
-                                            color: Colors.black54,
-                                            fontFamily: 'Poppins',
-                                            fontSize: 12,
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          labelText: 'Liderança'),
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 14,
+                                        ),
+                                        labelText: 'Liderança',
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   _gap(),

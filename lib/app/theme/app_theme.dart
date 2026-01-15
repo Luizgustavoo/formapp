@@ -10,6 +10,10 @@ final ThemeData appThemeData = ThemeData(
       borderRadius: BorderRadius.circular(5),
     ),
   )),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: Color(0xFF014acb),
+    foregroundColor: Color(0xFF014acb),
+  ),
   textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
     shape: RoundedRectangleBorder(

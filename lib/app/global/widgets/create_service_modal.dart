@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart'; // Para formatar a data
-import 'package:ucif/app/data/models/people_model.dart'; // Importe conforme o seu código
 import 'package:ucif/app/data/models/service_category_model.dart';
 import 'package:ucif/app/modules/people/people_controller.dart'; // O controller que gerencia a lógica
-import 'package:ucif/app/utils/custom_text_style.dart'; // Estilos personalizados
+import 'package:ucif/app/utils/custom_text_style.dart';
+
+import '../../data/models/service_model.dart'; // Estilos personalizados
 
 class CreateAttendanceModal extends StatelessWidget {
   CreateAttendanceModal({
     Key? key,
-    this.people,
+    this.atendimento,
     required this.titulo,
     required this.tipoOperacao,
-  }) : super(key: key);
+  }) : super(key: key) {
+    controller.initAttendanceForm(
+      tipoOperacao: tipoOperacao!,
+      atendimento: atendimento,
+    );
+  }
 
-  final People? people; // Talvez seja a pessoa que está sendo atendida
+  final Atendimento?
+      atendimento; // Talvez seja a pessoa que está sendo atendida
   final String? titulo;
   final String? tipoOperacao;
 
@@ -62,6 +69,35 @@ class CreateAttendanceModal extends StatelessWidget {
             ),
 
             // --- Seleção de Categoria (categoria_id) ---
+
+            Obx(
+              () => TextFormField(
+                readOnly: true,
+                controller: TextEditingController(
+                  text: controller.attendanceDate.value == null
+                      ? ''
+                      : DateFormat('dd/MM/yyyy')
+                          .format(controller.attendanceDate.value!),
+                ),
+                onTap: () => _selectDate(context),
+                decoration: InputDecoration(
+                  labelText: 'Data de Atendimento',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () => _selectDate(context),
+                  ),
+                ),
+                validator: (value) {
+                  if (controller.attendanceDate.value == null) {
+                    return 'Por favor, selecione a data';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+
             Obx(
               () => DropdownButtonFormField<CategoriaAtendimento>(
                 isDense: true,
@@ -91,63 +127,7 @@ class CreateAttendanceModal extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // --- Seleção de Pessoa (pessoa_id) ---
-            Obx(
-              () => DropdownButtonFormField<People>(
-                isDense: true,
-                menuMaxHeight: Get.size.height / 2,
-                value: controller.selectedPerson.value,
-                hint: const Text('Selecione um familiar'),
-                onChanged: (People? newValue) {
-                  controller.selectedPerson.value = newValue;
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Por favor, selecione um familiar';
-                  }
-                  return null;
-                },
-                items: controller.listPeoplesDropDown.value
-                    .map<DropdownMenuItem<People>>((People person) {
-                  return DropdownMenuItem<People>(
-                    value: person,
-                    child: Text(person.nome ?? 'Sem nome'),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Familiar'),
-              ),
-            ),
-            const SizedBox(height: 10),
-
             // --- Data de Atendimento (data_atendimento) ---
-            Obx(
-              () => TextFormField(
-                readOnly: true,
-                controller: TextEditingController(
-                  text: controller.attendanceDate.value == null
-                      ? ''
-                      : DateFormat('dd/MM/yyyy')
-                          .format(controller.attendanceDate.value!),
-                ),
-                onTap: () => _selectDate(context),
-                decoration: InputDecoration(
-                  labelText: 'Data de Atendimento',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: () => _selectDate(context),
-                  ),
-                ),
-                validator: (value) {
-                  if (controller.attendanceDate.value == null) {
-                    return 'Por favor, selecione a data';
-                  }
-                  return null;
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
 
             // --- Observações (observacoes) ---
             TextFormField(
@@ -182,7 +162,8 @@ class CreateAttendanceModal extends StatelessWidget {
                       if (controller.serviceFormKey.currentState!.validate()) {
                         Map<String, dynamic> retorno = tipoOperacao == 'insert'
                             ? await controller.saveAtendimento()
-                            : await controller.saveAtendimento();
+                            : await controller
+                                .updateAtendimento(atendimento!.id);
 
                         if (retorno['return'] == 0) {
                           Get.back();

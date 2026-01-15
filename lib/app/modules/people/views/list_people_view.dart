@@ -16,8 +16,6 @@ import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
-import '../../../global/widgets/create_service_modal.dart';
-
 class ListPeopleView extends GetView<PeopleController> {
   const ListPeopleView({super.key});
 
@@ -265,37 +263,6 @@ class ListPeopleView extends GetView<PeopleController> {
                             child: const AddPeopleFamilyView(
                               peopleLocal: false,
                               tipoOperacao: 0,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SpeedDialChild(
-                      backgroundColor: const Color(0xFF014acb),
-                      child: const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Icon(
-                          Icons.group,
-                          color: Colors.white,
-                        ),
-                      ),
-                      label: 'Atendimento',
-                      labelStyle: const TextStyle(fontFamily: "Poppins"),
-                      onTap: () {
-                        controller.clearAtendimento();
-                        controller.getAllbyUser();
-                        controller.getAllCategories();
-
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          isDismissible: false,
-                          context: context,
-                          builder: (context) => Padding(
-                            padding: MediaQuery.of(context).viewInsets,
-                            child: CreateAttendanceModal(
-                              tipoOperacao: 'insert',
-                              titulo: "Cadastro de Atendimento",
                             ),
                           ),
                         );

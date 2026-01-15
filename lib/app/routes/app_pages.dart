@@ -2,9 +2,6 @@ import 'package:get/get.dart';
 import 'package:ucif/app/modules/chat/chat_binding.dart';
 import 'package:ucif/app/modules/chat/chat_view.dart';
 import 'package:ucif/app/modules/family/family_binding.dart';
-import 'package:ucif/app/modules/message/views/list_unread_message_view.dart';
-import '../modules/family/views/list_family_filter_view.dart';
-import '../modules/family/views/list_family_view.dart';
 import 'package:ucif/app/modules/home/home_binding.dart';
 import 'package:ucif/app/modules/home/home_view.dart';
 import 'package:ucif/app/modules/initial/initial_binding.dart';
@@ -14,6 +11,7 @@ import 'package:ucif/app/modules/login/views/login_view.dart';
 import 'package:ucif/app/modules/login/views/signup_view.dart';
 import 'package:ucif/app/modules/message/message_binding.dart';
 import 'package:ucif/app/modules/message/views/list_message_view.dart';
+import 'package:ucif/app/modules/message/views/list_unread_message_view.dart';
 import 'package:ucif/app/modules/people/people_binding.dart';
 import 'package:ucif/app/modules/people/views/detail_people.dart';
 import 'package:ucif/app/modules/people/views/list_member_family_view.dart';
@@ -22,6 +20,10 @@ import 'package:ucif/app/modules/user/user_binding.dart';
 import 'package:ucif/app/modules/user/views/list_user_view.dart';
 import 'package:ucif/app/modules/user/views/perfil_view.dart';
 import 'package:ucif/app/routes/app_routes.dart';
+
+import '../modules/family/views/list_family_filter_view.dart';
+import '../modules/family/views/list_family_view.dart';
+import '../modules/people/views/list_services_view.dart';
 
 class AppPages {
   static final routes = [
@@ -68,6 +70,11 @@ class AppPages {
     GetPage(
       name: Routes.MEMBER_FAMILY,
       page: () => const FamilyMemberView(),
+      binding: PeopleBinding(),
+    ),
+    GetPage(
+      name: Routes.SERVICES,
+      page: () => const ServicesView(),
       binding: PeopleBinding(),
     ),
     GetPage(

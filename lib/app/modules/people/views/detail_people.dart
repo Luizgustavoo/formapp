@@ -69,7 +69,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             }
                           },
                           icon: FontAwesomeIcons.whatsapp,
-                          description: 'Conversar\n no whatsapp',
+                          description: 'WhatsApp',
                         ),
                         if (Get.previousRoute == '/member-family') ...[
                           const SizedBox(
@@ -94,7 +94,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             }
                           },
                           icon: Icons.wechat_sharp,
-                          description: 'Enviar msg\npelo UCIF',
+                          description: 'UCIF',
                         ),
                         Get.previousRoute == '/member-family'
                             ? const SizedBox()
@@ -115,8 +115,26 @@ class DetailPeopleView extends GetView<PeopleController> {
                                   }
                                 },
                                 icon: Icons.groups_2,
-                                description: 'Ver membros\nda família',
+                                description: 'Família',
                               ),
+                        TopCard(
+                          onTap: () async {
+                            if (await ConnectionStatus.verifyConnection()) {
+                              controller.getServices(people.id);
+                              controller.selectedPerson.value = people;
+                              Get.toNamed('/services');
+                            } else {
+                              Get.snackbar('Falha',
+                                  'Verifique sua conexão e tente novamente!',
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  duration: const Duration(seconds: 3),
+                                  colorText: Colors.white,
+                                  backgroundColor: Colors.red);
+                            }
+                          },
+                          icon: FontAwesomeIcons.handHoldingHeart,
+                          description: 'Atendimentos',
+                        ),
                       ]
                     ],
                   ),

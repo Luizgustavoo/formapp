@@ -19,4 +19,5 @@ abstract class Routes {
   static const PERFIL = '/perfil';
   static const SIGNUP = '/signup';
   static const CHAT = '/chat';
+  static const SERVICES = '/services';
 }
