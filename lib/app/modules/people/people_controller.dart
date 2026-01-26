@@ -140,6 +140,13 @@ class PeopleController extends GetxController {
       TextEditingController();
   final RxString selectedServiceCategory = ''.obs;
 
+  final attendanceDateController = TextEditingController();
+
+  void setAttendanceDate(DateTime date) {
+    attendanceDate.value = date;
+    attendanceDateController.text = DateFormat('dd/MM/yyyy').format(date);
+  }
+
   Widget searchChild(x) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
         child:
@@ -200,6 +207,8 @@ class PeopleController extends GetxController {
   @override
   void onClose() {
     searchController.text = '';
+    attendanceDateController.dispose();
+    notesController.dispose();
     super.onClose();
   }
 
@@ -946,32 +955,35 @@ class PeopleController extends GetxController {
   }
 
   void clearAtendimento() {
-    selectedCategory(null);
+    selectedCategory.value = null;
     selectedPerson(null);
     attendanceDate(null);
+    attendanceDateController.clear();
     notesController.clear();
+
+    _attendanceFormInitialized = false; // 🔴 IMPORTANTE
   }
+
+  bool _attendanceFormInitialized = false;
 
   void initAttendanceForm({
     required String tipoOperacao,
     Atendimento? atendimento,
   }) async {
-    if (tipoOperacao == 'update' && atendimento != null) {
-      // Data
-      attendanceDate.value = atendimento.dataAtendimento;
+    await getAllCategories();
 
-      // Observações
+    if (tipoOperacao == 'update' && atendimento != null) {
+      attendanceDate.value = atendimento.dataAtendimento;
+      setAttendanceDate(atendimento.dataAtendimento);
+
       notesController.text = atendimento.observacoes ?? '';
 
-      await getAllCategories();
-
-      // Categoria (precisa existir na lista)
       selectedCategory.value = listCategoriasAtendimento.firstWhereOrNull(
         (c) => c.id == atendimento.categoriaId,
       );
     } else {
-      // Limpa formulário (insert)
       attendanceDate.value = null;
+      attendanceDateController.clear();
       notesController.clear();
       selectedCategory.value = null;
     }

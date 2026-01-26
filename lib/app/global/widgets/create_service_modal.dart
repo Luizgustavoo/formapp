@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart'; // Para formatar a data
 import 'package:ucif/app/data/models/service_category_model.dart';
 import 'package:ucif/app/modules/people/people_controller.dart'; // O controller que gerencia a lógica
 import 'package:ucif/app/utils/custom_text_style.dart';
 
 import '../../data/models/service_model.dart'; // Estilos personalizados
 
-class CreateAttendanceModal extends StatelessWidget {
-  CreateAttendanceModal({
+class CreateAttendanceModal extends StatefulWidget {
+  const CreateAttendanceModal({
     Key? key,
     this.atendimento,
     required this.titulo,
     required this.tipoOperacao,
-  }) : super(key: key) {
-    controller.initAttendanceForm(
-      tipoOperacao: tipoOperacao!,
-      atendimento: atendimento,
-    );
-  }
+  }) : super(key: key);
 
-  final Atendimento?
-      atendimento; // Talvez seja a pessoa que está sendo atendida
-  final String? titulo;
-  final String? tipoOperacao;
+  final Atendimento? atendimento;
+  final String titulo;
+  final String tipoOperacao;
 
+  @override
+  State<CreateAttendanceModal> createState() => _CreateAttendanceModalState();
+}
+
+class _CreateAttendanceModalState extends State<CreateAttendanceModal> {
   // Assumindo que a PeopleController agora gerencia a lógica de Atendimento
   final PeopleController controller = Get.find();
 
@@ -38,8 +36,20 @@ class CreateAttendanceModal extends StatelessWidget {
       locale: const Locale('pt', 'BR'), // Adapte a localização, se necessário
     );
     if (picked != null) {
-      controller.attendanceDate.value = picked;
+      controller.setAttendanceDate(picked);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.initAttendanceForm(
+        tipoOperacao: widget.tipoOperacao,
+        atendimento: widget.atendimento,
+      );
+    });
   }
 
   @override
@@ -53,7 +63,7 @@ class CreateAttendanceModal extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              titulo!,
+              widget.titulo ?? '',
               style: CustomTextStyle.title(context),
             ),
             const Padding(
@@ -70,31 +80,24 @@ class CreateAttendanceModal extends StatelessWidget {
 
             // --- Seleção de Categoria (categoria_id) ---
 
-            Obx(
-              () => TextFormField(
-                readOnly: true,
-                controller: TextEditingController(
-                  text: controller.attendanceDate.value == null
-                      ? ''
-                      : DateFormat('dd/MM/yyyy')
-                          .format(controller.attendanceDate.value!),
+            TextFormField(
+              readOnly: true,
+              controller: controller.attendanceDateController,
+              onTap: () => _selectDate(context),
+              decoration: InputDecoration(
+                labelText: 'Data de Atendimento',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.calendar_today),
+                  onPressed: () => _selectDate(context),
                 ),
-                onTap: () => _selectDate(context),
-                decoration: InputDecoration(
-                  labelText: 'Data de Atendimento',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: () => _selectDate(context),
-                  ),
-                ),
-                validator: (value) {
-                  if (controller.attendanceDate.value == null) {
-                    return 'Por favor, selecione a data';
-                  }
-                  return null;
-                },
               ),
+              validator: (_) {
+                if (controller.attendanceDate.value == null) {
+                  return 'Por favor, selecione a data';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 10),
 
@@ -160,10 +163,11 @@ class CreateAttendanceModal extends StatelessWidget {
                     onPressed: () async {
                       // **Lógica de Validação e Salvar Atendimento**
                       if (controller.serviceFormKey.currentState!.validate()) {
-                        Map<String, dynamic> retorno = tipoOperacao == 'insert'
-                            ? await controller.saveAtendimento()
-                            : await controller
-                                .updateAtendimento(atendimento!.id);
+                        Map<String, dynamic> retorno =
+                            widget.tipoOperacao == 'insert'
+                                ? await controller.saveAtendimento()
+                                : await controller
+                                    .updateAtendimento(widget.atendimento!.id);
 
                         if (retorno['return'] == 0) {
                           Get.back();
@@ -181,7 +185,7 @@ class CreateAttendanceModal extends StatelessWidget {
                       }
                     },
                     child: Text(
-                      tipoOperacao == 'insert' ? 'SALVAR' : 'ALTERAR',
+                      widget.tipoOperacao == 'insert' ? 'SALVAR' : 'ALTERAR',
                       style: CustomTextStyle.button(context),
                     )),
               ],

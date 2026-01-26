@@ -155,14 +155,14 @@ class DetailPeopleView extends GetView<PeopleController> {
                           children: [
                             FormattedText(
                                 text:
-                                    'Líder: ${people.peopleLocal! ? UserStorage.getUserName() : people.user?.nome}'),
+                                    'Líder: ${(people.peopleLocal != null) ? UserStorage.getUserName() : people.user?.nome}'),
                             const SizedBox(height: 15),
                             FormattedText(
                                 text: 'Provedor: ${people.provedorCasa}'),
                             FormattedText(text: 'Sexo: ${people.sexo}'),
                             FormattedText(
                                 text:
-                                    'Estado Civil: ${people.peopleLocal! ? people.estado_civil_name : people.maritalStatus?.descricao}'),
+                                    'Estado Civil: ${(people.peopleLocal != null) ? people.estado_civil_name : people.maritalStatus?.descricao}'),
                             FormattedText(
                               text: 'Nascimento: ${people.dataNascimento}',
                               local: people.peopleLocal,
@@ -187,7 +187,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                                         children: [
                                             FormattedText(
                                               text:
-                                                  'Problemas de Saúde: ${people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ')}',
+                                                  'Problemas de Saúde: ${people.acometimentosSaude != null ? people.acometimentosSaude!.map((acomentimento) => acomentimento.nome).join(', ') : ''}',
                                             ),
                                           ])
                                     : FormattedText(
@@ -217,7 +217,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                             const SizedBox(height: 15),
                             FormattedText(
                                 text:
-                                    'Religião: ${people.peopleLocal! ? people.religiao_name : people.religion?.descricao}'),
+                                    'Religião: ${(people.peopleLocal != null) ? people.religiao_name : people.religion?.descricao}'),
                             FormattedText(text: 'Igreja: ${people.igrejaId}'),
                             FormattedText(
                                 text: 'Função Igreja: ${people.funcaoIgreja}'),
@@ -318,7 +318,7 @@ class DetailPeopleView extends GetView<PeopleController> {
                         SizedBox(
                           width: Get.width * 0.55,
                           child: Text(
-                            people.nome!.toUpperCase(),
+                            people.nome?.toUpperCase() ?? '',
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                                 overflow: TextOverflow.clip,

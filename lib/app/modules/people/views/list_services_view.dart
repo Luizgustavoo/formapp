@@ -15,15 +15,18 @@ class ServicesView extends GetView<PeopleController> {
 
   @override
   Widget build(BuildContext context) {
+    final DateTime hoje = DateTime.now();
+    final DateTime hojeSemHora = DateTime(hoje.year, hoje.month, hoje.day);
+
     return Scaffold(
       appBar: CustomAppBar(
         showPadding: false,
-        title: '',
+        title: controller.selectedPerson.value?.nome ?? '',
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           controller.clearAtendimento();
-          controller.getAllCategories();
+          //controller.getAllCategories();
           showModalBottomSheet(
             isScrollControlled: true,
             isDismissible: false,
@@ -117,6 +120,24 @@ class ServicesView extends GetView<PeopleController> {
                                   ? Colors.blueAccent.shade100
                                   : Colors.blueAccent;
 
+                              final DateTime dataAtendimentoSemHora = DateTime(
+                                atendimento.dataAtendimento.year,
+                                atendimento.dataAtendimento.month,
+                                atendimento.dataAtendimento.day,
+                              );
+
+                              Color backgroundDateColor;
+
+                              if (dataAtendimentoSemHora
+                                  .isBefore(hojeSemHora)) {
+                                backgroundDateColor = Colors.redAccent;
+                              } else if (dataAtendimentoSemHora
+                                  .isAtSameMomentAs(hojeSemHora)) {
+                                backgroundDateColor = Colors.green;
+                              } else {
+                                backgroundDateColor = Colors.blueAccent;
+                              }
+
                               return AnimationConfiguration.staggeredList(
                                 position: index,
                                 duration: const Duration(milliseconds: 250),
@@ -177,15 +198,36 @@ class ServicesView extends GetView<PeopleController> {
                                           /// Data e usuário
                                           Row(
                                             children: [
-                                              Icon(Icons.calendar_today,
-                                                  size: 14,
-                                                  color: colorGreyBlack),
+                                              Icon(
+                                                Icons.calendar_today,
+                                                size: 14,
+                                                color: colorGreyBlack,
+                                              ),
                                               const SizedBox(width: 6),
-                                              Text(
-                                                dataFormatada,
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: colorGreyBlack),
+                                              SizedBox(
+                                                child: Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 4,
+                                                    vertical: 2,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: backgroundDateColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                  child: Text(
+                                                    dataFormatada,
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors
+                                                          .white, // mantém a cor do texto
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                               const SizedBox(width: 16),
                                               Icon(Icons.person_outline,
@@ -240,8 +282,9 @@ class ServicesView extends GetView<PeopleController> {
                                                             isScrollControlled:
                                                                 true,
                                                             context: context,
-                                                            builder: (_) =>
-                                                                Padding(
+                                                            builder:
+                                                                (context) =>
+                                                                    Padding(
                                                               padding: MediaQuery
                                                                       .of(context)
                                                                   .viewInsets,

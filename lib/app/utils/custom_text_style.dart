@@ -18,8 +18,8 @@ class CustomTextStyle {
   }
 
   static TextStyle? titleWhite(BuildContext context) {
-    return const TextStyle(
-        fontSize: 23,
+    return TextStyle(
+        fontSize: MediaQuery.of(context).size.width * .04,
         color: Colors.white,
         fontFamily: 'Poppins',
         overflow: TextOverflow.ellipsis);
