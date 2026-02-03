@@ -193,6 +193,75 @@ class ServicesView extends GetView<PeopleController> {
                                                 color: colorGreyBlack),
                                           ),
 
+                                          const SizedBox(height: 10),
+
+                                          if (atendimento
+                                              .arquivos.isNotEmpty) ...[
+                                            const SizedBox(height: 10),
+                                            Wrap(
+                                              spacing: 4,
+                                              runSpacing: 4,
+                                              children: atendimento.arquivos
+                                                  .asMap()
+                                                  .entries
+                                                  .map((entry) {
+                                                final int index = entry.key;
+                                                final arquivo = entry.value;
+
+                                                return GestureDetector(
+                                                  onTap: () => _abrirGaleria(
+                                                      context,
+                                                      atendimento.arquivos,
+                                                      arquivo),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .blueGrey.shade50,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      border: Border.all(
+                                                          color: Colors.blueGrey
+                                                              .shade100),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        const Icon(
+                                                            Icons
+                                                                .image_outlined,
+                                                            size: 22,
+                                                            color: Colors
+                                                                .blueGrey),
+                                                        const SizedBox(
+                                                            height: 4),
+                                                        SizedBox(
+                                                          width: 60,
+                                                          child: Text(
+                                                            "Arquivo ${index + 1}",
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        10),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            ),
+                                          ],
+
                                           const SizedBox(height: 12),
 
                                           /// Data e usuário
@@ -290,6 +359,8 @@ class ServicesView extends GetView<PeopleController> {
                                                                   .viewInsets,
                                                               child:
                                                                   CreateAttendanceModal(
+                                                                getPeoples:
+                                                                    false,
                                                                 atendimento:
                                                                     atendimento,
                                                                 tipoOperacao:
@@ -334,6 +405,63 @@ class ServicesView extends GetView<PeopleController> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _abrirGaleria(
+      BuildContext context, List arquivos, dynamic arquivoInicial) {
+    final PageController pageController = PageController(
+      initialPage: arquivos.indexOf(arquivoInicial),
+    );
+
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.8),
+      builder: (_) => Dialog(
+        insetPadding: const EdgeInsets.all(10),
+        backgroundColor: Colors.transparent,
+        child: Stack(
+          children: [
+            PageView.builder(
+              controller: pageController,
+              itemCount: arquivos.length,
+              itemBuilder: (_, index) {
+                final img = arquivos[index];
+
+                return InteractiveViewer(
+                  minScale: 1,
+                  maxScale: 4,
+                  child: Center(
+                    child: Image.network(
+                      img.url,
+                      headers: {
+                        "Authorization": "Bearer ${UserStorage.getToken()}"
+                      },
+                      fit: BoxFit.contain,
+                      loadingBuilder: (c, child, progress) {
+                        if (progress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder: (_, __, ___) =>
+                          const Icon(Icons.broken_image, color: Colors.white),
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            /// Botão fechar
+            Positioned(
+              top: 10,
+              right: 10,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ],
         ),
       ),
     );

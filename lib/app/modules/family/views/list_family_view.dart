@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/family_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
@@ -276,18 +277,16 @@ class FamilyView extends GetView<FamilyController> {
                         width: 40,
                         height: 40,
                         child: Icon(
-                          Icons.group,
+                          FontAwesomeIcons.handHoldingHeart,
                           color: Colors.white,
                         ),
                       ),
-                      label: 'Atendimento',
+                      label: 'Lançar Atendimento',
                       labelStyle: const TextStyle(fontFamily: "Poppins"),
                       onTap: () {
-                        final peopleController = Get.find<PeopleController>();
+                        final peopleController = Get.put(PeopleController());
                         peopleController.clearAtendimento();
-                        peopleController.getAllbyUser();
-                        peopleController.getAllCategories();
-
+                        //controller.getAllCategories();
                         showModalBottomSheet(
                           isScrollControlled: true,
                           isDismissible: false,
@@ -295,6 +294,7 @@ class FamilyView extends GetView<FamilyController> {
                           builder: (context) => Padding(
                             padding: MediaQuery.of(context).viewInsets,
                             child: CreateAttendanceModal(
+                              getPeoples: true,
                               tipoOperacao: 'insert',
                               titulo: "Cadastro de Atendimento",
                             ),

@@ -70,5 +70,9 @@
 	<false/>
 	<key>com.apple.security.files.user-selected.read-only</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>Precisamos da câmera para tirar fotos do atendimento.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Precisamos acessar suas fotos para anexar ao atendimento.</string>
 </dict>
 </plist>

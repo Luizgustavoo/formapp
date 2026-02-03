@@ -288,9 +288,11 @@ class PeopleRepository {
     }
   }
 
-  insertAtendimento(String token, Atendimento atendimento) async {
+  insertAtendimento(
+      String token, Atendimento atendimento, List<File> imagens) async {
     try {
-      var response = await apiClient.insertAtendimento(token, atendimento);
+      var response =
+          await apiClient.insertAtendimento(token, atendimento, imagens);
 
       return response;
     } catch (e) {
@@ -298,10 +300,19 @@ class PeopleRepository {
     }
   }
 
-  updateAtendimento(String token, Atendimento atendimento) async {
+  updateAtendimento(
+    String token,
+    Atendimento atendimento,
+    List<File> novasImagens,
+    List<int> removerImagensIds,
+  ) async {
     try {
-      var response = await apiClient.updateAtendimento(token, atendimento);
-
+      var response = await apiClient.updateAtendimento(
+        token,
+        atendimento,
+        novasImagens,
+        removerImagensIds,
+      );
       return response;
     } catch (e) {
       ErrorHandler.showError(e);

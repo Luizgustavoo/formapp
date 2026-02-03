@@ -30,6 +30,8 @@ import 'package:ucif/app/utils/format_validator.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../data/models/attendance_image_model.dart';
+
 class PeopleController extends GetxController {
   TextEditingController idPessoaController = TextEditingController();
   TextEditingController nomePessoaController = TextEditingController();
@@ -52,6 +54,12 @@ class PeopleController extends GetxController {
 
   var photoUrlPath = ''.obs;
   var isImagePicPathSet = false.obs;
+
+  final ImagePicker _picker = ImagePicker();
+
+  RxList<AttendanceImage> attendanceImages = <AttendanceImage>[].obs;
+
+  RxList<int> removedImageIds = <int>[].obs;
 
   final GlobalKey<FormState> peopleFormKey = GlobalKey<FormState>();
 
@@ -141,6 +149,36 @@ class PeopleController extends GetxController {
   final RxString selectedServiceCategory = ''.obs;
 
   final attendanceDateController = TextEditingController();
+
+  void removeAttendanceImage(int index, int fileId) {
+    attendanceImages.removeAt(index);
+    removedImageIds.add(fileId);
+  }
+
+  Future<void> pickImagesFromGallery() async {
+    final List<XFile> images = await _picker.pickMultiImage(imageQuality: 70);
+
+    if (images.isNotEmpty) {
+      attendanceImages.addAll(
+        images.map(
+          (e) => AttendanceImage(file: File(e.path)),
+        ),
+      );
+    }
+  }
+
+  Future<void> pickImageFromCamera() async {
+    final XFile? photo = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 70,
+    );
+
+    if (photo != null) {
+      attendanceImages.add(
+        AttendanceImage(file: File(photo.path)),
+      );
+    }
+  }
 
   void setAttendanceDate(DateTime date) {
     attendanceDate.value = date;
@@ -278,6 +316,23 @@ class PeopleController extends GetxController {
         loadMorePeoples(); // Carrega mais famílias quando a pesquisa é limpa
       }
     }
+  }
+
+  Future<List<People>> getPeopleDropdown({
+    required String filter,
+    required int page,
+    required int take,
+  }) async {
+    final token = UserStorage.getToken();
+
+    // A sua API já retorna por página
+    final results = await repository.getAll(
+      "Bearer $token",
+      page: page,
+      search: filter.isNotEmpty ? filter : null,
+    );
+
+    return results;
   }
 
   Future<void> getPeoples(
@@ -891,8 +946,17 @@ class PeopleController extends GetxController {
         usuarioId: UserStorage.getUserId(),
       );
       final token = UserStorage.getToken();
-      mensagem =
-          await repository.insertAtendimento("Bearer $token", atendimento);
+
+      final newFiles = attendanceImages
+          .where((img) => img.isNew)
+          .map((img) => img.file!)
+          .toList();
+
+      mensagem = await repository.insertAtendimento(
+        "Bearer $token",
+        atendimento,
+        newFiles,
+      );
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
@@ -904,6 +968,7 @@ class PeopleController extends GetxController {
         };
       }
       clearAtendimento();
+      attendanceImages.clear(); // limpa após salvar
     } else {
       retorno = {
         "return": 1,
@@ -930,8 +995,18 @@ class PeopleController extends GetxController {
         usuarioId: UserStorage.getUserId(),
       );
       final token = UserStorage.getToken();
-      mensagem =
-          await repository.updateAtendimento("Bearer $token", atendimento);
+
+      final newFiles = attendanceImages
+          .where((img) => img.isNew) // só imagens novas
+          .map((img) => img.file!) // pega o File
+          .toList();
+
+      mensagem = await repository.updateAtendimento(
+        "Bearer $token",
+        atendimento,
+        newFiles,
+        removedImageIds,
+      );
       if (mensagem != null) {
         if (mensagem['message'] == 'success') {
           retorno = {"return": 0, "message": "Operação realizada com sucesso!"};
@@ -943,6 +1018,8 @@ class PeopleController extends GetxController {
         };
       }
       clearAtendimento();
+      attendanceImages.clear();
+      removedImageIds.clear();
     } else {
       retorno = {
         "return": 1,
@@ -970,6 +1047,8 @@ class PeopleController extends GetxController {
     required String tipoOperacao,
     Atendimento? atendimento,
   }) async {
+    //
+    attendanceImages.clear();
     await getAllCategories();
 
     if (tipoOperacao == 'update' && atendimento != null) {
@@ -977,6 +1056,17 @@ class PeopleController extends GetxController {
       setAttendanceDate(atendimento.dataAtendimento);
 
       notesController.text = atendimento.observacoes ?? '';
+
+      if (atendimento.arquivos != null) {
+        attendanceImages.addAll(
+          atendimento.arquivos!.map(
+            (arq) => AttendanceImage(
+              id: arq.id,
+              url: arq.url, // URL que sua API retorna
+            ),
+          ),
+        );
+      }
 
       selectedCategory.value = listCategoriasAtendimento.firstWhereOrNull(
         (c) => c.id == atendimento.categoriaId,

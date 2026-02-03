@@ -39,7 +39,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.HOME,
-      page: () => const HomeView(),
+      page: () => HomeView(),
       binding: HomeBinding(),
     ),
     GetPage(

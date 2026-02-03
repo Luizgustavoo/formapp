@@ -20,7 +20,7 @@ class PeopleApiClient {
   final PeopleDatabaseHelper localDatabase = PeopleDatabaseHelper();
   final box = GetStorage('credenciado');
 
-  getAll(String token, {int? page, String? search}) async {
+  Future<dynamic> getAll(String token, {int? page, String? search}) async {
     final userId = UserStorage.getUserId();
     final familiaId = UserStorage.getFamilyId();
     final userType = UserStorage.getUserType();
@@ -57,7 +57,7 @@ class PeopleApiClient {
     return null;
   }
 
-  getAllMember(String token, int? familiaId) async {
+  Future<dynamic> getAllMember(String token, int? familiaId) async {
     try {
       Uri peopleUrl;
 
@@ -91,7 +91,7 @@ class PeopleApiClient {
     return null;
   }
 
-  getAllService(String token, int? peopleId) async {
+  Future<dynamic> getAllService(String token, int? peopleId) async {
     try {
       Uri peopleUrl;
 
@@ -162,7 +162,7 @@ class PeopleApiClient {
     }
   }
 
-  getAllFilter(String token, {int? page, User? user}) async {
+  Future<dynamic> getAllFilter(String token, {int? page, User? user}) async {
     try {
       Uri peopleUrl;
 
@@ -197,8 +197,15 @@ class PeopleApiClient {
     return null;
   }
 
-  insertPeople(String token, People pessoa, File imageFile, bool peopleLocal,
-      List? saude, List? medicamento, String? email, String? senha) async {
+  Future<dynamic> insertPeople(
+      String token,
+      People pessoa,
+      File imageFile,
+      bool peopleLocal,
+      List? saude,
+      List? medicamento,
+      String? email,
+      String? senha) async {
     try {
       bool isConnected = await ConnectionStatus.verifyConnection();
       if (isConnected && !peopleLocal) {
@@ -307,7 +314,7 @@ class PeopleApiClient {
     return intList;
   }
 
-  updatePeople(
+  Future<dynamic> updatePeople(
       String token,
       People pessoa,
       File imageFile,
@@ -410,7 +417,7 @@ class PeopleApiClient {
     return null;
   }
 
-  changePeopleFamily(String token, People people) async {
+  Future<dynamic> changePeopleFamily(String token, People people) async {
     try {
       var familyUrl = Uri.parse('$baseUrl/v1/pessoa/change/${people.id}');
 
@@ -449,7 +456,8 @@ class PeopleApiClient {
     return null;
   }
 
-  deletePeople(String token, People people, bool peopleLocal) async {
+  Future<dynamic> deletePeople(
+      String token, People people, bool peopleLocal) async {
     try {
       if (await ConnectionStatus.verifyConnection() && !peopleLocal) {
         var peopleUrl = Uri.parse('$baseUrl/v1/pessoa/delete/${people.id}');
@@ -490,7 +498,7 @@ class PeopleApiClient {
     return null;
   }
 
-  deletePeopleLocal(People people) async {
+  Future<dynamic> deletePeopleLocal(People people) async {
     try {
       //remover offline
       final dbHelper = DatabaseHelper();
@@ -519,7 +527,7 @@ class PeopleApiClient {
     return null;
   }
 
-  getAllbyUser(String token) async {
+  Future<dynamic> getAllbyUser(String token) async {
     final userId = UserStorage.getUserId();
     try {
       Uri peopleUrl;
@@ -553,7 +561,7 @@ class PeopleApiClient {
     return null;
   }
 
-  getAllCategories(String token) async {
+  Future<dynamic> getAllCategories(String token) async {
     final userId = UserStorage.getUserId();
     try {
       Uri peopleUrl;
@@ -587,92 +595,115 @@ class PeopleApiClient {
     return null;
   }
 
-  insertAtendimento(String token, Atendimento atendimento) async {
+  Future<dynamic> insertAtendimento(
+      String token, Atendimento atendimento, List<File> imagens) async {
     try {
       bool isConnected = await ConnectionStatus.verifyConnection();
-      if (isConnected) {
-        //SALVANDO DADOS NA API
-        var familyUrl = Uri.parse('$baseUrl/v1/atendimento/create');
-
-        var requestBody = {
-          "data_atendimento": atendimento.dataAtendimento.toString(),
-          "observacoes": atendimento.observacoes.toString(),
-          "usuario_id": atendimento.usuarioId.toString(),
-          "pessoa_id": atendimento.pessoaId.toString(),
-          "categoria_id": atendimento.categoriaId.toString(),
-        };
-
-        var response = await httpClient.post(
-          familyUrl,
-          headers: {
-            "Accept": "application/json",
-            "Authorization": token,
-          },
-          body: requestBody,
-        );
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          return json.decode(response.body);
-        } else {
-          Get.defaultDialog(
-            title: "Error",
-            content: const Text('erro'),
-          );
-        }
-      } else {
+      if (!isConnected) {
         Get.defaultDialog(
-          title: "Error",
-          content: const Text('Sem conexão com a internet!'),
+            title: "Error", content: const Text('Sem conexão com a internet!'));
+        return null;
+      }
+
+      var uri = Uri.parse('$baseUrl/v1/atendimento/create');
+
+      var request = http.MultipartRequest('POST', uri);
+
+      request.headers.addAll({
+        "Accept": "application/json",
+        "Authorization": token,
+      });
+
+      request.fields['data_atendimento'] =
+          atendimento.dataAtendimento.toIso8601String();
+      request.fields['observacoes'] = atendimento.observacoes ?? '';
+      request.fields['usuario_id'] = atendimento.usuarioId.toString();
+      request.fields['pessoa_id'] = atendimento.pessoaId.toString();
+      request.fields['categoria_id'] = atendimento.categoriaId.toString();
+
+      /// 📸 ADICIONA IMAGENS
+      for (var img in imagens) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'imagens[]', // backend deve esperar array
+            img.path,
+          ),
         );
       }
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return json.decode(response.body);
+      } else {
+        Get.defaultDialog(
+            title: "Error", content: Text('Erro ${response.statusCode}'));
+      }
     } catch (err) {
-      ErrorHandler.showError("Sem conexão!");
+      ErrorHandler.showError("Erro ao enviar atendimento com imagens");
     }
+
     return null;
   }
 
-  updateAtendimento(String token, Atendimento atendimento) async {
+  Future<dynamic> updateAtendimento(
+    String token,
+    Atendimento atendimento,
+    List<File> novasImagens,
+    List<int> removerImagensIds,
+  ) async {
     try {
       bool isConnected = await ConnectionStatus.verifyConnection();
-      if (isConnected) {
-        //SALVANDO DADOS NA API
-        var familyUrl =
-            Uri.parse('$baseUrl/v1/atendimento/update/${atendimento.id}');
-
-        var requestBody = {
-          "data_atendimento": atendimento.dataAtendimento.toString(),
-          "observacoes": atendimento.observacoes.toString(),
-          "usuario_id": atendimento.usuarioId.toString(),
-          "pessoa_id": atendimento.pessoaId.toString(),
-          "categoria_id": atendimento.categoriaId.toString(),
-        };
-
-        var response = await httpClient.patch(
-          familyUrl,
-          headers: {
-            "Accept": "application/json",
-            "Authorization": token,
-          },
-          body: requestBody,
-        );
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          return json.decode(response.body);
-        } else {
-          Get.defaultDialog(
-            title: "Error",
-            content: const Text('erro'),
-          );
-        }
-      } else {
+      if (!isConnected) {
         Get.defaultDialog(
-          title: "Error",
-          content: const Text('Sem conexão com a internet!'),
+            title: "Error", content: const Text('Sem conexão com a internet!'));
+        return null;
+      }
+
+      var uri = Uri.parse('$baseUrl/v1/atendimento/update/${atendimento.id}');
+      var request = http.MultipartRequest(
+          'POST', uri); // PATCH multipart é ruim, usar POST
+
+      request.headers.addAll({
+        "Accept": "application/json",
+        "Authorization": token,
+      });
+
+      request.fields['_method'] = 'PATCH'; // Laravel entende como PATCH
+
+      request.fields['data_atendimento'] =
+          atendimento.dataAtendimento.toIso8601String();
+      request.fields['observacoes'] = atendimento.observacoes ?? '';
+      request.fields['usuario_id'] = atendimento.usuarioId.toString();
+      request.fields['pessoa_id'] = atendimento.pessoaId.toString();
+      request.fields['categoria_id'] = atendimento.categoriaId.toString();
+
+      /// 🗑 IDS DE IMAGENS PARA REMOVER
+      for (var id in removerImagensIds) {
+        request.fields['remover_imagens[]'] = id.toString();
+      }
+
+      /// 📸 NOVAS IMAGENS
+      for (var img in novasImagens) {
+        request.files.add(
+          await http.MultipartFile.fromPath('imagens[]', img.path),
         );
       }
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        Get.defaultDialog(
+            title: "Error", content: Text('Erro ${response.statusCode}'));
+      }
     } catch (err) {
-      ErrorHandler.showError("Sem conexão!");
+      ErrorHandler.showError("Erro ao atualizar atendimento");
     }
+
     return null;
   }
 }

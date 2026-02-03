@@ -1,6 +1,8 @@
 import 'package:ucif/app/data/models/service_category_model.dart';
 import 'package:ucif/app/data/models/user_model.dart';
 
+import 'file_service_model.dart';
+
 class Atendimento {
   // Campos obrigatórios (NOT NULL)
   final int id; // int(11)
@@ -17,6 +19,8 @@ class Atendimento {
   final DateTime? dataCadastro; // datetime - Padrão: current_timestamp()
   final DateTime? dataUpdate; // datetime - Padrão: current_timestamp()
 
+  final List<ArquivoAtendimento> arquivos;
+
   Atendimento({
     required this.id,
     required this.categoriaId,
@@ -28,6 +32,7 @@ class Atendimento {
     this.usuario,
     this.dataCadastro,
     this.dataUpdate,
+    this.arquivos = const [],
   });
 
   /// Construtor factory para desserializar (Converter JSON para objeto Dart)
@@ -61,6 +66,12 @@ class Atendimento {
               json['usuario'] as Map<String, dynamic>,
             )
           : null,
+
+      arquivos: json['arquivos'] != null
+          ? List<ArquivoAtendimento>.from(
+              json['arquivos'].map((x) => ArquivoAtendimento.fromJson(x)),
+            )
+          : [],
     );
   }
 

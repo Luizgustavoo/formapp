@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/global/shimmer/shimmer_custom_people_card.dart';
 import 'package:ucif/app/global/widgets/custom_app_bar.dart';
 import 'package:ucif/app/global/widgets/custom_people_card.dart';
 import 'package:ucif/app/modules/home/home_controller.dart';
+import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/utils/user_storage.dart';
 
+import '../../global/widgets/create_service_modal.dart';
+
 class HomeView extends GetView<HomeController> {
-  const HomeView({Key? key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
+
+  final peopleController = Get.put(PeopleController());
 
   @override
   Widget build(BuildContext context) {
@@ -111,11 +116,11 @@ class HomeView extends GetView<HomeController> {
             ),
             height: 100,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: UserStorage.getUserType() == 3 ? 50 : 80),
+                      horizontal: UserStorage.getUserType() == 3 ? 50 : 30),
                   child: SizedBox(
                     height: 35,
                     width: double.infinity,
@@ -124,21 +129,29 @@ class HomeView extends GetView<HomeController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ElevatedButton(
+                              ElevatedButton.icon(
+                                  icon: Icon(
+                                    Icons.people_alt_sharp,
+                                    color: Colors.white,
+                                  ),
                                   onPressed: () {
                                     Get.toNamed('/list-family');
                                   },
-                                  child: const Text(
+                                  label: const Text(
                                     'VER FAMÍLIA',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Poppinss'),
                                   )),
-                              ElevatedButton(
+                              ElevatedButton.icon(
+                                  icon: Icon(
+                                    Icons.emoji_people,
+                                    color: Colors.white,
+                                  ),
                                   onPressed: () {
                                     Get.toNamed('/list-user');
                                   },
-                                  child: const Text(
+                                  label: const Text(
                                     'VER LIDERANÇA',
                                     style: TextStyle(
                                         color: Colors.white,
@@ -146,15 +159,55 @@ class HomeView extends GetView<HomeController> {
                                   )),
                             ],
                           )
-                        : ElevatedButton(
-                            onPressed: () {
-                              Get.toNamed('/list-people');
-                            },
-                            child: const Text(
-                              'VER TODOS',
-                              style: TextStyle(
-                                  color: Colors.white, fontFamily: 'Poppinss'),
-                            )),
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton.icon(
+                                  icon: Icon(
+                                    Icons.people_alt_sharp,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    Get.toNamed('/list-people');
+                                  },
+                                  label: const Text(
+                                    'VER TODOS',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Poppinss'),
+                                  )),
+                              ElevatedButton.icon(
+                                  icon: Icon(
+                                    FontAwesomeIcons.handHoldingHeart,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    peopleController.clearAtendimento();
+                                    //controller.getAllCategories();
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      isDismissible: false,
+                                      context: context,
+                                      builder: (context) => Padding(
+                                        padding:
+                                            MediaQuery.of(context).viewInsets,
+                                        child: CreateAttendanceModal(
+                                          getPeoples: true,
+                                          tipoOperacao: 'insert',
+                                          titulo: "Cadastro de Atendimento",
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  label: const Text(
+                                    'ATENDIMENTO',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Poppinss'),
+                                  )),
+                            ],
+                          ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -168,8 +221,8 @@ class HomeView extends GetView<HomeController> {
                 ),
                 Image.asset(
                   'assets/images/logo-wip.png',
-                  width: 44,
-                  height: 44,
+                  width: MediaQuery.of(context).size.width * .1,
+                  height: MediaQuery.of(context).size.height * .05,
                 ),
               ],
             ),

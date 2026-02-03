@@ -1,10 +1,13 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/models/service_category_model.dart';
 import 'package:ucif/app/modules/people/people_controller.dart'; // O controller que gerencia a lógica
 import 'package:ucif/app/utils/custom_text_style.dart';
 
-import '../../data/models/service_model.dart'; // Estilos personalizados
+import '../../data/models/service_model.dart';
+import '../../utils/user_storage.dart'; // Estilos personalizados
 
 class CreateAttendanceModal extends StatefulWidget {
   const CreateAttendanceModal({
@@ -12,11 +15,13 @@ class CreateAttendanceModal extends StatefulWidget {
     this.atendimento,
     required this.titulo,
     required this.tipoOperacao,
+    this.getPeoples = false,
   }) : super(key: key);
 
   final Atendimento? atendimento;
   final String titulo;
   final String tipoOperacao;
+  final bool getPeoples;
 
   @override
   State<CreateAttendanceModal> createState() => _CreateAttendanceModalState();
@@ -99,6 +104,70 @@ class _CreateAttendanceModalState extends State<CreateAttendanceModal> {
                 return null;
               },
             ),
+            Visibility(visible: widget.getPeoples, child: SizedBox(height: 10)),
+
+            Visibility(
+              visible: widget.getPeoples,
+              child: Obx(() {
+                return DropdownSearch<People>(
+                  // Mantenha a vinculação
+                  selectedItem: controller.selectedPerson.value,
+                  itemAsString: (People p) => p.nome ?? '',
+                  compareFn: (People item, People selectedItem) =>
+                      item.id == selectedItem.id,
+
+                  // Função de busca
+                  items: (String filter, LoadProps? loadProps) async {
+                    // O segredo do scroll infinito no v6:
+                    // O loadProps.skip diz quantos itens já existem na lista do popup
+                    final skip = loadProps?.skip ?? 0;
+                    final take =
+                        20000; // Defina um take fixo ou vindo do loadProps
+                    final page = (skip ~/ take) + 1;
+
+                    debugPrint(
+                        "🔍 API chamando: Página $page, Filtro '$filter'");
+
+                    return await controller.getPeopleDropdown(
+                      filter: filter,
+                      page: page,
+                      take: take,
+                    );
+                  },
+
+                  popupProps: PopupProps.menu(
+                    showSearchBox: true,
+                    // IMPORTANTE: Para scroll infinito com API, disableFilter deve ser TRUE
+                    // para evitar que o componente tente filtrar localmente o que já veio do banco.
+                    disableFilter: true,
+
+                    infiniteScrollProps: const InfiniteScrollProps(
+                        // Remova o LoadProps daqui, deixe o widget gerenciar o skip internamente
+                        // através da função items
+                        ),
+
+                    itemBuilder: (context, item, isSelected, isDisabled) {
+                      return ListTile(
+                        title: Text(item.nome ?? ''),
+                        selected: isSelected,
+                      );
+                    },
+                  ),
+
+                  onChanged: (People? newValue) {
+                    controller.selectedPerson.value = newValue;
+                  },
+
+                  decoratorProps: const DropDownDecoratorProps(
+                    decoration: InputDecoration(
+                      labelText: 'Selecione uma pessoa',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                );
+              }),
+            ),
+
             const SizedBox(height: 10),
 
             Obx(
@@ -144,6 +213,83 @@ class _CreateAttendanceModalState extends State<CreateAttendanceModal> {
                 border: OutlineInputBorder(),
               ),
             ),
+
+            const SizedBox(height: 10),
+            Text('Fotos do Atendimento',
+                style: CustomTextStyle.subtitle(context)),
+
+            const SizedBox(height: 8),
+
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: controller.pickImageFromCamera,
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Câmera'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: controller.pickImagesFromGallery,
+                    icon: const Icon(Icons.photo_library),
+                    label: const Text('Galeria'),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            Obx(() => controller.attendanceImages.isEmpty
+                ? const Text('Nenhuma imagem adicionada')
+                : SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.attendanceImages.length,
+                      itemBuilder: (_, index) {
+                        final img = controller.attendanceImages[index];
+                        return Stack(
+                          children: [
+                            Container(
+                                margin: const EdgeInsets.only(right: 8),
+                                width: 100,
+                                height: 100,
+                                child: img.isNew
+                                    ? Image.file(img.file!, fit: BoxFit.cover)
+                                    : Image.network(
+                                        img.url!,
+                                        fit: BoxFit.cover,
+                                        headers: {
+                                          "Authorization":
+                                              "Bearer ${UserStorage.getToken()}",
+                                        },
+                                        errorBuilder: (_, __, ___) =>
+                                            const Icon(Icons.broken_image),
+                                      )),
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: GestureDetector(
+                                onTap: () => controller.removeAttendanceImage(
+                                    index, img.id!),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black54,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.close,
+                                      color: Colors.white, size: 18),
+                                ),
+                              ),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  )),
 
             const SizedBox(height: 20),
 

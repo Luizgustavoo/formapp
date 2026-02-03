@@ -117,7 +117,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                         style: CustomTextStyle.button2(context),
                       ),
                       Obx(() => Switch(
-                            activeColor: Colors.blue.shade700,
+                            activeThumbColor: Colors.blue.shade700,
                             inactiveThumbColor: Colors.blue.shade500,
                             inactiveTrackColor: Colors.blue.shade100,
                             value: controller.provedorCheckboxValue.value,
@@ -155,7 +155,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   ),
                   _gap(),
                   Obx(() => DropdownButtonFormField<String>(
-                        value: controller.sexo.value,
+                        initialValue: controller.sexo.value,
                         onChanged: (value) {
                           controller.sexo.value = value!;
                         },
@@ -181,7 +181,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                   _gap(),
                   Obx(
                     () => DropdownButtonFormField<int>(
-                      value: controller.estadoCivilSelected.value,
+                      initialValue: controller.estadoCivilSelected.value,
                       onChanged: (value) {
                         controller.estadoCivilSelected.value = value!;
                       },
@@ -239,7 +239,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     () => DropdownButtonFormField<String>(
                       isDense: true,
                       menuMaxHeight: Get.size.height / 2,
-                      value: controller.parentesco?.value,
+                      initialValue: controller.parentesco?.value,
                       onChanged: (value) {
                         controller.parentesco?.value = value!;
                       },
@@ -405,57 +405,55 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     ),
                   ),
                   _gap(),
-                  Obx(
-                    () => MultiSelectBottomSheetField(
-                      initialValue: controller.selectedMedicamentoIds,
-                      selectedColor: const Color(0xFF014acb),
-                      isDismissible: false,
-                      searchable: true,
-                      items: controller.listMedicine.map((item) {
-                        return MultiSelectItem(item.id, item.nome ?? '');
-                      }).toList(),
-                      selectedItemsTextStyle: const TextStyle(
-                          color: Colors.black, fontFamily: 'Poppinss'),
-                      listType: MultiSelectListType.LIST,
-                      searchHint: 'Pesquisar',
-                      onConfirm: (values) {
-                        controller.selectedMedicamentoIds.value =
-                            List<int>.from(values);
-                      },
-                      title: const Text(''),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      cancelText: const Text(
-                        'CANCELAR',
-                        style: TextStyle(
-                            fontFamily: 'Poppinss', color: Color(0xFF014acb)),
-                      ),
-                      confirmText: const Text(
-                        'OK',
-                        style: TextStyle(
-                            fontFamily: 'Poppinss', color: Color(0xFF014acb)),
-                      ),
-                      buttonIcon: const Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.black,
-                      ),
-                      buttonText: const Text(
-                        "Uso de Medicamento",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'Poppinss',
-                          fontSize: 14,
+                  Obx(() => MultiSelectBottomSheetField(
+                        initialValue: controller.selectedMedicamentoIds,
+                        selectedColor: const Color(0xFF014acb),
+                        isDismissible: false,
+                        searchable: true,
+                        items: controller.listMedicine.map((item) {
+                          return MultiSelectItem(item.id, item.nome ?? '');
+                        }).toList(),
+                        selectedItemsTextStyle: const TextStyle(
+                            color: Colors.black, fontFamily: 'Poppinss'),
+                        listType: MultiSelectListType.LIST,
+                        searchHint: 'Pesquisar',
+                        onConfirm: (values) {
+                          controller.selectedMedicamentoIds.value =
+                              List<int>.from(values);
+                        },
+                        title: const Text(''),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                      ),
-                    ),
-                  ),
+                        cancelText: const Text(
+                          'CANCELAR',
+                          style: TextStyle(
+                              fontFamily: 'Poppinss', color: Color(0xFF014acb)),
+                        ),
+                        confirmText: const Text(
+                          'OK',
+                          style: TextStyle(
+                              fontFamily: 'Poppinss', color: Color(0xFF014acb)),
+                        ),
+                        buttonIcon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black,
+                        ),
+                        buttonText: const Text(
+                          "Uso de Medicamento",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Poppinss',
+                            fontSize: 14,
+                          ),
+                        ),
+                      )),
                   const SizedBox(height: 12),
                   Obx(
                     () => DropdownButtonFormField<int>(
-                      value: controller.religiaoSelected.value,
+                      initialValue: controller.religiaoSelected.value,
                       onChanged: (value) {
                         controller.religiaoSelected.value = value!;
                       },
@@ -633,7 +631,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                     return DropdownButtonFormField<int>(
                       isDense: true,
                       menuMaxHeight: Get.size.height / 2,
-                      value: controller.familySelected!.value > 0
+                      initialValue: controller.familySelected!.value > 0
                           ? controller.familySelected!.value
                           : null,
                       onChanged: isConnected
@@ -654,7 +652,7 @@ class AddPeopleFamilyView extends GetView<PeopleController> {
                             value: family.id,
                             child: Text(family.nome!),
                           );
-                        }).toList(),
+                        }),
                       ],
                       decoration: InputDecoration(
                         border: OutlineInputBorder(

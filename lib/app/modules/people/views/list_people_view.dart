@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:ucif/app/data/models/people_model.dart';
 import 'package:ucif/app/data/provider/internet_status_provider.dart';
@@ -15,6 +16,8 @@ import 'package:ucif/app/modules/family/family_controller.dart';
 import 'package:ucif/app/modules/people/people_controller.dart';
 import 'package:ucif/app/modules/people/views/add_people_family_view.dart';
 import 'package:ucif/app/utils/user_storage.dart';
+
+import '../../../global/widgets/create_service_modal.dart';
 
 class ListPeopleView extends GetView<PeopleController> {
   const ListPeopleView({super.key});
@@ -263,6 +266,37 @@ class ListPeopleView extends GetView<PeopleController> {
                             child: const AddPeopleFamilyView(
                               peopleLocal: false,
                               tipoOperacao: 0,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SpeedDialChild(
+                      backgroundColor: const Color(0xFF014acb),
+                      child: const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(
+                          FontAwesomeIcons.handHoldingHeart,
+                          color: Colors.white,
+                        ),
+                      ),
+                      label: 'Lançar Atendimento',
+                      labelStyle: const TextStyle(fontFamily: "Poppins"),
+                      onTap: () {
+                        final peopleController = Get.put(PeopleController());
+                        peopleController.clearAtendimento();
+                        //controller.getAllCategories();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Padding(
+                            padding: MediaQuery.of(context).viewInsets,
+                            child: CreateAttendanceModal(
+                              getPeoples: true,
+                              tipoOperacao: 'insert',
+                              titulo: "Cadastro de Atendimento",
                             ),
                           ),
                         );
