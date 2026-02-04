@@ -1,3 +1,10 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+val keystorePropertiesFile = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -6,16 +13,26 @@ plugins {
 }
 
 android {
-    namespace = "br.com.ucif.ucif"
+    namespace = "br.com.ucif.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {
-        applicationId = "br.com.ucif.ucif"
+        applicationId = "br.com.ucif.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
     }
 
     // Java 11 + desugaring (necessário para vários plugins)
@@ -29,12 +46,20 @@ android {
         jvmTarget = "11"
     }
 
+    // buildTypes {
+    //     release {
+    //         // Usar a assinatura debug até configurar uma keystore
+    //         signingConfig = signingConfigs.getByName("debug")
+    //     }
+    // }
+
     buildTypes {
-        release {
-            // Usar a assinatura debug até configurar uma keystore
-            signingConfig = signingConfigs.getByName("debug")
-        }
+    release {
+        signingConfig = signingConfigs.getByName("release")
+        isMinifyEnabled = false
+        isShrinkResources = false
     }
+}
 }
 
 flutter {
